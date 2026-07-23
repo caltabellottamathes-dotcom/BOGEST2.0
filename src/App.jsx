@@ -28,6 +28,7 @@ import YellowPreview from '@/pages/YellowPreview';
 import BurgundyPreview from '@/pages/BurgundyPreview';
 import PowderBluePreview from '@/pages/PowderBluePreview';
 import Instagram from '@/pages/Instagram';
+import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -71,6 +72,7 @@ const AuthenticatedApp = () => {
         <Route path="/burgundy-preview" element={<BurgundyPreview />} />
         <Route path="/powder-blue-preview" element={<PowderBluePreview />} />
         <Route path="/instagram" element={<Instagram />} />
+        <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
