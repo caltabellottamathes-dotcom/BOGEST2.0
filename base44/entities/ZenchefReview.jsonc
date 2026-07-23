@@ -1,0 +1,50 @@
+{
+  "name": "ZenchefReview",
+  "type": "object",
+  "properties": {
+    "author_name": {
+      "type": "string",
+      "description": "Name of the reviewer"
+    },
+    "rating": {
+      "type": "number",
+      "description": "Rating from 1 to 5"
+    },
+    "text": {
+      "type": "string",
+      "description": "Review text content"
+    },
+    "title": {
+      "type": "string",
+      "description": "Optional review title"
+    },
+    "date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the review was submitted"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Which restaurant location"
+    },
+    "source": {
+      "type": "string",
+      "default": "Zenchef",
+      "description": "Review source platform"
+    },
+    "review_id": {
+      "type": "string",
+      "description": "Unique Zenchef review ID for deduplication"
+    }
+  },
+  "required": [
+    "author_name",
+    "rating",
+    "location"
+  ]
+}

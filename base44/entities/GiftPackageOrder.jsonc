@@ -1,0 +1,92 @@
+{
+  "name": "GiftPackageOrder",
+  "type": "object",
+  "properties": {
+    "customer_name": {
+      "type": "string",
+      "description": "Customer name"
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email"
+    },
+    "customer_phone": {
+      "type": "string",
+      "description": "Customer phone"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Pickup location"
+    },
+    "pickup_date": {
+      "type": "string",
+      "description": "Pickup date"
+    },
+    "pickup_time": {
+      "type": "string",
+      "description": "Pickup time"
+    },
+    "items": {
+      "type": "array",
+      "description": "Ordered packages/items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "total": {
+      "type": "number",
+      "description": "Total price in EUR"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "ready",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "stripe_session_id": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "seen": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "customer_name",
+    "location",
+    "items",
+    "total"
+  ]
+}

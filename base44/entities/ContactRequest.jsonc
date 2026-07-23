@@ -1,0 +1,50 @@
+{
+  "name": "ContactRequest",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Sender name"
+    },
+    "email": {
+      "type": "string",
+      "description": "Sender email"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message content"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Optional subject"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Which location to send the message to"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "read",
+        "replied",
+        "archived"
+      ],
+      "default": "new"
+    },
+    "seen": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "message"
+  ]
+}

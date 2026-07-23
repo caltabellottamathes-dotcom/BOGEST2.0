@@ -1,0 +1,62 @@
+{
+  "name": "VisitorProfile",
+  "type": "object",
+  "properties": {
+    "visitor_id": {
+      "type": "string",
+      "description": "Anonymous browser-local unique ID (generated client-side)"
+    },
+    "name": {
+      "type": "string",
+      "description": "Visitor's first name, if shared during conversation"
+    },
+    "email": {
+      "type": "string",
+      "description": "Visitor's email, if shared"
+    },
+    "preferred_location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Preferred restaurant location"
+    },
+    "favorite_dish": {
+      "type": "string",
+      "description": "Mentioned favorite dish or category"
+    },
+    "allergies": {
+      "type": "string",
+      "description": "Known allergies or dietary restrictions"
+    },
+    "visit_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of website visits"
+    },
+    "conversation_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of conversations with the digital host"
+    },
+    "last_visit": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last website visit timestamp"
+    },
+    "last_conversation": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last conversation timestamp"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-form notes extracted from conversations"
+    }
+  },
+  "required": [
+    "visitor_id"
+  ]
+}

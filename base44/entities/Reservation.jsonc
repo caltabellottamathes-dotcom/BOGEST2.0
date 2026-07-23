@@ -1,0 +1,73 @@
+{
+  "name": "Reservation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the guest"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email address"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Phone number"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Restaurant location"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Reservation date"
+    },
+    "time": {
+      "type": "string",
+      "description": "Reservation time (e.g. 19:00)"
+    },
+    "guests": {
+      "type": "number",
+      "description": "Number of guests"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Special requests or notes"
+    },
+    "allergies": {
+      "type": "string",
+      "description": "Allergy information"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "confirmed",
+        "cancelled",
+        "completed"
+      ],
+      "default": "pending",
+      "description": "Reservation status"
+    },
+    "seen": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether admin has seen this reservation"
+    }
+  },
+  "required": [
+    "name",
+    "email",
+    "phone",
+    "location",
+    "date",
+    "time",
+    "guests"
+  ]
+}

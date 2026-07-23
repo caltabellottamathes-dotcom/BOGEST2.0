@@ -1,0 +1,56 @@
+{
+  "name": "InstagramPost",
+  "type": "object",
+  "properties": {
+    "caption": {
+      "type": "string",
+      "description": "Post caption text"
+    },
+    "media_url": {
+      "type": "string",
+      "description": "URL to the post media (image or video)"
+    },
+    "permalink": {
+      "type": "string",
+      "description": "Instagram post permalink"
+    },
+    "username": {
+      "type": "string",
+      "description": "Instagram username that posted"
+    },
+    "location_name": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Which restaurant location this post belongs to"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "IMAGE",
+        "VIDEO",
+        "CAROUSEL_ALBUM"
+      ],
+      "default": "IMAGE",
+      "description": "Type of Instagram media"
+    },
+    "posted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the post was published on Instagram"
+    },
+    "instagram_id": {
+      "type": "string",
+      "description": "Unique Instagram media ID"
+    }
+  },
+  "required": [
+    "media_url",
+    "permalink",
+    "username",
+    "location_name"
+  ]
+}

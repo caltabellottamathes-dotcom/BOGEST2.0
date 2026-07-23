@@ -1,0 +1,106 @@
+{
+  "name": "Order",
+  "type": "object",
+  "properties": {
+    "customer_name": {
+      "type": "string",
+      "description": "Customer name"
+    },
+    "customer_email": {
+      "type": "string",
+      "description": "Customer email"
+    },
+    "customer_phone": {
+      "type": "string",
+      "description": "Customer phone"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder"
+      ],
+      "description": "Pickup location"
+    },
+    "pickup_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Pickup date"
+    },
+    "pickup_time": {
+      "type": "string",
+      "description": "Pickup time"
+    },
+    "items": {
+      "type": "array",
+      "description": "Ordered items",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "qty": {
+            "type": "number"
+          },
+          "price": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "total": {
+      "type": "number",
+      "description": "Total price in EUR"
+    },
+    "order_type": {
+      "type": "string",
+      "enum": [
+        "takeaway",
+        "catering"
+      ],
+      "default": "takeaway"
+    },
+    "payment_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "paid",
+        "refunded"
+      ],
+      "default": "pending"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "preparing",
+        "ready",
+        "completed",
+        "cancelled"
+      ],
+      "default": "new",
+      "description": "Order status"
+    },
+    "stripe_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session ID"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Special notes"
+    },
+    "seen": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "customer_name",
+    "location",
+    "pickup_date",
+    "items",
+    "total"
+  ]
+}

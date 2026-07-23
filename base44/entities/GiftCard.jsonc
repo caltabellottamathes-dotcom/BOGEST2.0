@@ -1,0 +1,68 @@
+{
+  "name": "GiftCard",
+  "type": "object",
+  "properties": {
+    "code": {
+      "type": "string",
+      "description": "Unique gift card code (e.g. BOGEST-XXXX-XXXX)"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Original value of the gift card in EUR"
+    },
+    "balance": {
+      "type": "number",
+      "description": "Remaining balance in EUR"
+    },
+    "recipient_name": {
+      "type": "string",
+      "description": "Name of the recipient"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "Email of the recipient (for digital cards)"
+    },
+    "sender_name": {
+      "type": "string",
+      "description": "Name of the sender / buyer"
+    },
+    "message": {
+      "type": "string",
+      "description": "Personal message"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "digital",
+        "physical",
+        "store"
+      ],
+      "default": "store",
+      "description": "digital = sent by email, physical = pickup, store = sold in restaurant"
+    },
+    "location": {
+      "type": "string",
+      "description": "Associated restaurant location"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "partially_used",
+        "spent",
+        "expired",
+        "void"
+      ],
+      "default": "active"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Internal admin notes"
+    }
+  },
+  "required": [
+    "code",
+    "amount",
+    "balance"
+  ]
+}

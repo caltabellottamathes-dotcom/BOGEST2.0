@@ -1,0 +1,267 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Menu, X, Sun, Moon, ChevronDown, ArrowRight } from 'lucide-react';
+import { useTheme } from '@/lib/ThemeContext';
+import { useLang } from '@/lib/LangContext';
+import { LANGUAGES } from '@/lib/i18n';
+
+
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { lang, t, changeLang } = useLang();
+  const location = useLocation();
+  const langRef = useRef(null);
+
+  const isHome = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY;
+      // Show/hide based on scroll direction
+      if (y < 80) {
+        setVisible(true);
+        setScrolled(false);
+      } else {
+        setScrolled(true);
+        if (y > lastScrollY + 10) {
+          setVisible(false); // scrolling down
+        } else if (y < lastScrollY - 5) {
+          setVisible(true); // scrolling up
+        }
+      }
+      setLastScrollY(y);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    setMobileOpen(false);
+    setLangOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [mobileOpen]);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (langRef.current && !langRef.current.contains(e.target)) setLangOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
+
+  const navLinks = [
+    { label: t('nav_menu'), path: '/menu' },
+    { label: t('nav_locations'), path: '/locations' },
+    { label: t('nav_about'), path: '/about' },
+    { label: t('nav_takeaway'), path: '/takeaway' },
+    { label: t('nav_giftcards'), path: '/gift-cards' },
+    { label: t('nav_jobs'), path: '/jobs' },
+    { label: t('nav_groups'), path: '/groups' },
+    { label: t('nav_contact'), path: '/contact' },
+  ];
+
+  const isTransparent = isHome && !scrolled;
+
+  return (
+    <>
+      <motion.header
+       initial={{ y: 0 }}
+       animate={{ y: 0 }}
+       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+       className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 rounded-b-2xl ${
+         isTransparent
+           ? 'bg-transparent'
+           : 'bg-background/30 backdrop-blur-2xl border-b border-white/10 shadow-sm'
+       }`}
+       style={!isTransparent ? { boxShadow: '0 1px 0 rgba(255,255,255,0.08)' } : {}}
+      >
+        <nav className="w-full px-6 md:px-10 lg:px-16 h-16 md:h-20 flex items-center justify-between gap-6">
+          {/* Logo — wordmark only, hide when mobile menu is open to avoid overlap */}
+          <Link to="/" className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+            <span className={`font-heading text-xl font-bold tracking-wider transition-colors duration-300 ${
+              isTransparent ? 'text-white' : 'text-foreground'
+            }`}>
+              BOG<span className="text-primary italic">È</span>ST
+            </span>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden lg:flex items-center gap-7">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`font-body text-xs tracking-widest uppercase transition-colors duration-300 hover:text-primary ${
+                  isTransparent
+                    ? (location.pathname === link.path ? 'text-white' : 'text-white/60')
+                    : (location.pathname === link.path ? 'text-primary' : 'text-foreground/70')
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right controls */}
+          <div className="flex items-center gap-1 md:gap-2">
+            {/* Language switcher */}
+            <div className="relative" ref={langRef}>
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className={`hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-md font-body text-xs tracking-widest uppercase transition-colors duration-300 ${
+                  isTransparent ? 'text-white/60 hover:text-white' : 'text-primary/70 hover:text-primary'
+                }`}
+              >
+                {lang.toUpperCase()}
+                <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${langOpen ? 'rotate-180' : ''}`} />
+              </button>
+              <AnimatePresence>
+                {langOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full right-0 mt-2 bg-background/60 backdrop-blur-2xl border border-white/10 rounded-xl shadow-xl overflow-hidden min-w-[110px]"
+                  >
+                    {LANGUAGES.map((l) => (
+                      <button
+                        key={l.code}
+                        onClick={() => { changeLang(l.code); setLangOpen(false); }}
+                        className={`w-full text-left px-4 py-2.5 font-body text-xs hover:bg-white/5 transition-colors duration-200 ${
+                          lang === l.code ? 'text-primary font-medium' : 'text-foreground/80'
+                        }`}
+                      >
+                        {l.name}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              className={`p-2.5 rounded-full transition-colors duration-300 min-w-[40px] min-h-[40px] flex items-center justify-center ${
+                isTransparent ? 'text-white/60 hover:text-white' : 'text-primary/70 hover:text-primary'
+              }`}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
+            {/* Reserve CTA */}
+            <Link
+              to="/reserve"
+              className={`hidden md:inline-flex px-5 py-2 rounded-full font-body text-xs tracking-widest uppercase transition-all duration-500 ${
+                isTransparent
+                  ? 'border border-white/30 text-white hover:bg-white/10'
+                  : 'bg-primary text-primary-foreground hover:bg-primary/90'
+              }`}
+            >
+              {t('nav_reserve')}
+            </Link>
+
+            {/* Mobile menu button */}
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className={`lg:hidden p-2.5 rounded-xl transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-50 ${
+                  isTransparent ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-secondary'
+                }`}
+                aria-label={mobileOpen ? 'Menu sluiten' : 'Menu openen'}
+              >
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+          </div>
+        </nav>
+      </motion.header>
+
+      {/* Mobile Menu */}
+      <AnimatePresence>
+      {mobileOpen && (
+      <>
+      {/* Backdrop */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+        className="fixed inset-0 z-[59] bg-black/20 backdrop-blur-md"
+        onClick={() => setMobileOpen(false)}
+      />
+      <motion.div
+        initial={{ opacity: 0, x: '100%' }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: '100%' }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        className="fixed top-16 right-4 bottom-4 z-[61] w-72 sm:w-80 flex flex-col rounded-2xl overflow-hidden md:top-20"
+        style={{
+          background: theme === 'dark' ? 'rgba(10,10,10,0.45)' : 'rgba(255,255,255,0.15)',
+          backdropFilter: 'blur(32px)',
+          WebkitBackdropFilter: 'blur(32px)',
+          border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.25)',
+        }}
+      >
+        <nav className="flex-1 flex flex-col justify-start px-6 gap-0.5 overflow-y-auto py-6 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+          {navLinks.map((link, i) => (
+            <Link
+              key={link.path}
+              to={link.path}
+              onClick={() => setMobileOpen(false)}
+              className="block font-heading text-sm font-medium tracking-wider uppercase transition-colors duration-200 hover:text-primary py-2.5"
+              style={{ color: location.pathname === link.path ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.90)' : 'hsl(var(--foreground))') }}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="px-6 pb-3">
+          <Link to="/reserve" onClick={() => setMobileOpen(false)}
+            className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full transition-all duration-300 hover:bg-primary/90">
+            {t('nav_reserve')}
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="px-6 pb-6 flex items-center gap-3 border-t pt-4" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)' }}>
+          {LANGUAGES.map(l => (
+            <button
+              key={l.code}
+              onClick={() => { changeLang(l.code); }}
+              className="font-body text-xs tracking-widest uppercase transition-colors duration-300 py-1.5 px-2.5 min-h-[36px]"
+              style={{ color: lang === l.code ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'hsl(var(--muted-foreground))'), fontWeight: lang === l.code ? 600 : 400 }}
+            >
+              {l.code}
+            </button>
+          ))}
+          <button
+            onClick={toggleTheme}
+            className="ml-auto p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full transition-colors"
+            style={{ color: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'hsl(var(--muted-foreground))' }}
+          >
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
+          </button>
+        </div>
+      </motion.div>
+      </>
+      )}
+      </AnimatePresence>
+    </>
+  );
+}
