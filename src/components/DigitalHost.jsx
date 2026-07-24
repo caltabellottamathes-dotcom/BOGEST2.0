@@ -937,6 +937,10 @@ export default function DigitalHost() {
   const inputRef = useRef(null);
   const entryShownRef = useRef(false);
   const weatherRef = useRef(null);
+  const conversationRef = useRef(null);
+  const subscriptionRef = useRef(null);
+  const greetingRef = useRef(null);
+  const responsePendingRef = useRef(false);
 
   const pageGreeting = s.page_greetings[location.pathname] || s.page_greetings.default;
   const pageChips = s.page_chips[location.pathname] || [s.chip_location, s.chip_reserve, s.chip_menu];
@@ -959,6 +963,7 @@ export default function DigitalHost() {
         : lang === 'en'
         ? "Of course! I'm here to help. You can always find me in the bottom-right corner too. What can I do for you?"
         : "Natuurlijk! Ik ben er graag voor u. Ge kunt me trouwens altijd terugvinden rechtsonder op de pagina. Waar kan ik u mee helpen?";
+      greetingRef.current = heroGreeting;
       setMessages([{ role: 'assistant', content: heroGreeting, actions: [] }]);
       sounds.open();
       setPhase('chat');
@@ -1041,7 +1046,19 @@ export default function DigitalHost() {
     prevLangRef.current = lang;
     historyRef.current = [];
     setMessages([]);
+    // Reset agent conversation on language change
+    if (subscriptionRef.current) { try { subscriptionRef.current(); } catch {} subscriptionRef.current = null; }
+    conversationRef.current = null;
+    greetingRef.current = null;
+    responsePendingRef.current = false;
   }, [lang]);
+
+  // Cleanup agent subscription on unmount
+  useEffect(() => {
+    return () => {
+      if (subscriptionRef.current) { try { subscriptionRef.current(); } catch {} }
+    };
+  }, []);
 
   // FAB blink effect — blink every ~18s while minimized
   useEffect(() => {
@@ -1060,38 +1077,52 @@ export default function DigitalHost() {
   const scrollCtx = cs.scroll(pastHero);
   const memoryCtx = cs.memory(visitorMemory, visitorProfile);
 
+  const ensureConversation = async () => {
+    if (conversationRef.current) return conversationRef.current;
+    const conv = await base44.agents.createConversation({
+      agent_name: 'VraagHetAanBogest',
+      metadata: { name: 'Bogèst Digital Host', lang },
+    });
+    conversationRef.current = conv;
+    subscriptionRef.current = base44.agents.subscribeToConversation(conv.id, (data) => {
+      const agentMessages = (data.messages || []).map(m => {
+        if (m.role === 'user') return { role: 'user', content: m.content || '' };
+        const parsed = parseActions(m.content || '');
+        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards };
+      });
+      const greeting = greetingRef.current ? [{ role: 'assistant', content: greetingRef.current, actions: [] }] : [];
+      setMessages([...greeting, ...agentMessages]);
+      const last = agentMessages[agentMessages.length - 1];
+      if (last?.role === 'assistant' && last?.content && responsePendingRef.current) {
+        responsePendingRef.current = false;
+        setIsLoading(false);
+        sounds.receive();
+        speakText(last.content);
+      }
+    });
+    return conv;
+  };
+
   const sendMessage = async (text) => {
     const userText = (text || input).trim();
     if (!userText || isLoading) return;
     setInput(''); setPhase('chat'); sounds.send();
-    setMessages(prev => [...prev, { role: 'user', content: userText }]);
     setIsLoading(true);
+    responsePendingRef.current = true;
 
-    // Add user message to history
-    historyRef.current = [...historyRef.current, { role: 'user', content: userText }];
-
-    // Build prompt: system context + conversation history + latest user message
-    const menuCtx = menuContext ? `\n${menuContext}` : '';
-    const systemContext = `${getSystemPrompt(lang)}${menuCtx}\n\n---\n${langPrompt}\n${timeCtx}\n${deviceCtx}\n${scrollCtx}\n${weatherCtx}\n${memoryCtx}\n${(cs.page || (() => ''))(location.pathname || '/')}\n\n${cs.cards_instr}`;
-
-    // Keep last 10 turns to avoid token bloat
-    const trimmedHistory = historyRef.current.slice(-10);
-    const historyText = trimmedHistory.slice(0, -1).map(m => `${m.role === 'user' ? 'Bezoeker' : 'Gastheer'}: ${m.content}`).join('\n');
-    const fullPrompt = `${systemContext}\n\n${historyText ? `Gespreksgeschiedenis:\n${historyText}\n\n` : ''}Bezoeker: ${userText}`;
+    // Show greeting locally if no conversation yet and no messages
+    if (!conversationRef.current && messages.length === 0) {
+      greetingRef.current = pageGreeting;
+      setMessages([{ role: 'assistant', content: pageGreeting, actions: [] }]);
+    }
 
     try {
-      const response = await base44.integrations.Core.InvokeLLM({ prompt: fullPrompt });
-      const { clean, actions, photos, cards } = parseActions(response);
-      // Add assistant reply to history
-      historyRef.current = [...historyRef.current, { role: 'assistant', content: response }];
-      setMessages(prev => [...prev, { role: 'assistant', content: clean, actions, photos, cards }]);
-      sounds.receive();
-      speakText(clean);
-      // Increment conversation counter
+      const conv = await ensureConversation();
+      await base44.agents.addMessage(conv, { role: 'user', content: userText });
       incrementConversation();
-      // Try to extract profile info from the user's message (name, preferences)
       extractProfileInfo(userText, updateProfile);
-    } finally {
+    } catch {
+      responsePendingRef.current = false;
       setIsLoading(false);
     }
   };
@@ -1101,6 +1132,7 @@ export default function DigitalHost() {
     sessionStorage.setItem('bogest-host-seen', '1');
     if (messages.length === 0) {
       historyRef.current = [];
+      greetingRef.current = pageGreeting;
       setMessages([{ role: 'assistant', content: pageGreeting, actions: [] }]);
     }
     sounds.open(); setPhase('chat');
