@@ -16,10 +16,10 @@ const LOGO_URL = 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
   nl: {
-    title: 'Bogèst Gastheer',
+    title: 'Vraag het aan Bogèst',
     assistant: 'Digitale assistent',
     placeholder: 'Stel gerust uw vraag...',
-    footer_text: 'Digitale gastheer · Reservaties via',
+    footer_text: 'Vraag het aan Bogèst · Reservaties via',
     footer_link: 'de website',
     fab_label: 'Digitale gastheer',
     fab_cta: 'Vraag het aan Bogèst',
@@ -110,13 +110,13 @@ const HOST_STRINGS = {
     },
   },
   fr: {
-    title: 'Hôte Bogèst',
+    title: 'Vraag het aan Bogèst',
     assistant: 'Assistant numérique',
     placeholder: 'Posez votre question...',
-    footer_text: 'Hôte numérique · Réservations via',
+    footer_text: 'Vraag het aan Bogèst · Réservations via',
     footer_link: 'le site',
     fab_label: 'Hôte numérique',
-    fab_cta: 'Demandez à Bogèst',
+    fab_cta: 'Vraag het aan Bogèst',
     chat_to: 'Cliquer pour chatter →',
     close_skip: 'Juste regarder',
     greeting_morning: 'Bonjour',
@@ -200,13 +200,13 @@ const HOST_STRINGS = {
     },
   },
   en: {
-    title: 'Bogèst Host',
+    title: 'Vraag het aan Bogèst',
     assistant: 'Digital assistant',
     placeholder: 'Ask your question...',
-    footer_text: 'Digital host · Reservations via',
+    footer_text: 'Vraag het aan Bogèst · Reservations via',
     footer_link: 'the website',
     fab_label: 'Digital host',
-    fab_cta: 'Ask Bogèst',
+    fab_cta: 'Vraag het aan Bogèst',
     chat_to: 'Click to chat →',
     close_skip: 'Just browsing',
     greeting_morning: 'Good morning',
@@ -1081,7 +1081,7 @@ export default function DigitalHost() {
     if (conversationRef.current) return conversationRef.current;
     const conv = await base44.agents.createConversation({
       agent_name: 'VraagHetAanBogest',
-      metadata: { name: 'Bogèst Digital Host', lang },
+      metadata: { name: 'Vraag het aan Bogèst', lang },
     });
     conversationRef.current = conv;
     subscriptionRef.current = base44.agents.subscribeToConversation(conv.id, (data) => {
