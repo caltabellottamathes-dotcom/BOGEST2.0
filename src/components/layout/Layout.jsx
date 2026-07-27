@@ -6,6 +6,7 @@ import GlassPanelWrapper, { isPanelPath } from '@/components/GlassPanel';
 import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
+import DIdAgent from '@/components/DIdAgent';
 
 export default function Layout() {
   const location = useLocation();
@@ -66,6 +67,9 @@ export default function Layout() {
 
       {/* ElevenLabs Conversational AI Widget — floating on the left */}
       <ElevenLabsAgent />
+
+      {/* D-ID Visual AI Agent — floating widget on the right */}
+      <DIdAgent />
     </div>
   );
 }

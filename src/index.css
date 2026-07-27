@@ -137,6 +137,17 @@ div[class*="convai"] {
   z-index: 99999 !important;
 }
 
+/* D-ID Visual Agent — ensure it renders above all app content */
+[data-name="did-agent"],
+div[id*="did-agent"],
+div[class*="did-agent"],
+div[id*="d-id"],
+div[class*="d-id"],
+did-agent,
+#did-agent {
+  z-index: 99999 !important;
+}
+
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
