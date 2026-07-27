@@ -5,7 +5,7 @@ import Footer from './Footer';
 import GlassPanelWrapper, { isPanelPath } from '@/components/GlassPanel';
 import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
-import DIdAgent from '@/components/DIdAgent';
+import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 
 export default function Layout() {
   const location = useLocation();
@@ -64,8 +64,8 @@ export default function Layout() {
       {/* Digital Host — visible on all pages */}
       <DigitalHost />
 
-      {/* D-ID Visual AI Agent — floating widget on the left */}
-      <DIdAgent />
+      {/* ElevenLabs Conversational AI Widget — floating on the left */}
+      <ElevenLabsAgent />
     </div>
   );
 }

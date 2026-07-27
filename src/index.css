@@ -128,14 +128,12 @@ body.modal-open {
 /* Hide scrollbar inside digital host chat */
 .chat-messages-hide-scrollbar::-webkit-scrollbar { display: none; }
 
-/* D-ID Visual Agent — ensure it renders above all app content */
-[data-name="did-agent"],
-div[id*="did-agent"],
-div[class*="did-agent"],
-div[id*="d-id"],
-div[class*="d-id"],
-did-agent,
-#did-agent {
+/* ElevenLabs Conversational AI Widget — ensure it renders above all app content */
+elevenlabs-convai,
+div[id*="elevenlabs"],
+div[class*="elevenlabs"],
+div[id*="convai"],
+div[class*="convai"] {
   z-index: 99999 !important;
 }
 
