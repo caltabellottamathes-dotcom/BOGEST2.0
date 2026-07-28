@@ -151,3 +151,17 @@ did-agent,
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
+
+/* Widget Panel — force injected widgets to fill their panel container */
+.widget-panel-content > [data-name="did-agent"],
+.widget-panel-content > elevenlabs-convai {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  left: auto !important;
+  bottom: auto !important;
+  margin: 0 !important;
+}

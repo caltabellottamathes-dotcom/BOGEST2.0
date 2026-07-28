@@ -7,7 +7,6 @@ import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import DIdAgent from '@/components/DIdAgent';
-import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
 export default function Layout() {
   const location = useLocation();
@@ -38,12 +37,6 @@ export default function Layout() {
       document.body.style.width = '';
     };
   }, [isPanel]);
-
-  // Make third-party widgets (D-ID, ElevenLabs) draggable so they never block the digital host
-  useEffect(() => {
-    const disconnect = observeAndMakeDraggable();
-    return () => disconnect();
-  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background" style={{ overflow: 'visible' }}>
