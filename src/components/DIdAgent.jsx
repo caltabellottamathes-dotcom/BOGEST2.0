@@ -13,8 +13,8 @@ export default function DIdAgent() {
     script.src = 'https://agent.d-id.com/v2/index.js';
     script.async = true;
     script.setAttribute('data-mode', 'fabio');
-    script.setAttribute('data-client-key', 'ck_B9rjjvkJFcHGVq2VnIl9Z');
-    script.setAttribute('data-agent-id', 'v2_agt_FA7pkt1L');
+    script.setAttribute('data-client-key', 'ck_xGE5L6igl10AjBTVFm19O');
+    script.setAttribute('data-agent-id', 'v2_agt_BTdCgq_e');
     script.setAttribute('data-name', 'did-agent');
     script.setAttribute('data-monitor', 'true');
     script.setAttribute('data-orientation', 'horizontal');
