@@ -7,40 +7,69 @@ export default async function(req) {
       return Response.json({ error: "DID_API_KEY secret not set" }, { status: 500 });
     }
 
-    // Determine allowed domains from request origin
-    const url = new URL(req.url);
-    const origin = req.headers.get("origin") || req.headers.get("referer") || url.origin;
-    const requestHost = new URL(origin).origin;
+    const headers = {
+      "Authorization": `Basic ${apiKey}`,
+      "Content-Type": "application/json",
+    };
 
-    // Include common dev/preview domains + the requesting domain
-    const allowedDomains = [...new Set([
-      requestHost,
-      "https://app.base44.com",
-      "http://localhost:5173",
-      "http://localhost:3000",
-    ])];
+    // 1. Try to GET existing client key first
+    const getRes = await fetch("https://api.d-id.com/agents/client-key", { headers });
 
-    const response = await fetch("https://api.d-id.com/agents/client-key", {
-      method: "POST",
-      headers: {
-        "Authorization": `Basic ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ allowed_domains: allowedDomains }),
-    });
+    let clientKey;
+    if (getRes.ok) {
+      const data = await getRes.json();
+      clientKey = data.client_key;
+    } else if (getRes.status === 404) {
+      // No existing key — create one
+      const url = new URL(req.url);
+      const origin = req.headers.get("origin") || req.headers.get("referer") || url.origin;
+      const requestHost = new URL(origin).origin;
 
-    if (!response.ok) {
-      const errorText = await response.text();
+      const allowedDomains = [...new Set([
+        requestHost,
+        "https://app.base44.com",
+        "http://localhost:5173",
+        "http://localhost:3000",
+      ])];
+
+      const postRes = await fetch("https://api.d-id.com/agents/client-key", {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ allowed_domains: allowedDomains }),
+      });
+
+      if (!postRes.ok) {
+        const errorText = await postRes.text();
+        return Response.json(
+          { error: `D-ID create key error: ${postRes.status} - ${errorText}` },
+          { status: postRes.status }
+        );
+      }
+
+      const postData = await postRes.json();
+      clientKey = postData.client_key;
+    } else {
+      const errorText = await getRes.text();
       return Response.json(
-        { error: `D-ID API error: ${response.status} - ${errorText}`, key_prefix: apiKey.substring(0, 15) },
-        { status: response.status }
+        { error: `D-ID get key error: ${getRes.status} - ${errorText}` },
+        { status: getRes.status }
       );
     }
 
-    const data = await response.json();
+    // 2. List agents to find the agent ID
+    let agentId = null;
+    const agentsRes = await fetch("https://api.d-id.com/agents", { headers });
+    if (agentsRes.ok) {
+      const agentsData = await agentsRes.json();
+      const agents = Array.isArray(agentsData) ? agentsData : (agentsData.agents || []);
+      if (agents.length > 0) {
+        agentId = agents[0].id || agents[0]._id;
+      }
+    }
+
     return Response.json({
-      client_key: data.client_key,
-      agent_id: data.agent_id,
+      client_key: clientKey,
+      agent_id: agentId,
     });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
