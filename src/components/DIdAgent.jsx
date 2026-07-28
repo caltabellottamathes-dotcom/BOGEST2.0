@@ -1,22 +1,16 @@
-import { useEffect, useRef } from 'react';
-import { useTheme } from '@/lib/ThemeContext';
+import { useEffect, useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import WidgetPanel from '@/components/WidgetPanel';
-import { Video } from 'lucide-react';
 
 /**
- * D-ID Visual AI Agent — wrapped in a slide-out WidgetPanel.
- * After the D-ID script injects its widget element, we port it into
- * the panel's content container so it slides with the panel.
+ * D-ID Visual AI Agent — fetches a client key from the backend function,
+ * then injects the D-ID widget script.
+ * The Bogèst agent (VraagHetBogest) is the brain; this widget is just the visual avatar.
+ * Chat input is hidden so visitors interact through the digital host, not the D-ID widget directly.
+ * The digital host calls window.DID_AGENTS_API.functions.speak() to make this avatar speak.
  */
 export default function DIdAgent() {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const contentRef = useRef(null);
-  const configRef = useRef(null);
-  const observerRef = useRef(null);
+  const [config, setConfig] = useState(null);
 
-  // Fetch client key + agent ID from backend, then inject the D-ID script
   useEffect(() => {
     let cancelled = false;
     base44.functions.invoke('getDIdClientKey', {})
@@ -24,38 +18,15 @@ export default function DIdAgent() {
         if (cancelled) return;
         const data = res.data || res;
         if (data?.client_key) {
-          configRef.current = data;
-          loadScript();
+          setConfig({ clientKey: data.client_key, agentId: data.agent_id });
         }
       })
       .catch(() => {});
     return () => { cancelled = true; };
   }, []);
 
-  const tryMoveWidget = () => {
-    if (!contentRef.current) return;
-    const widget = document.querySelector('[data-name="did-agent"]');
-    if (widget && widget.parentElement !== contentRef.current) {
-      contentRef.current.appendChild(widget);
-      widget.style.setProperty('position', 'relative', 'important');
-      widget.style.setProperty('width', '100%', 'important');
-      widget.style.setProperty('height', '100%', 'important');
-      widget.style.setProperty('inset', 'auto', 'important');
-      widget.style.setProperty('margin', '0', 'important');
-    }
-  };
-
-  const loadScript = () => {
-    const config = configRef.current;
+  useEffect(() => {
     if (!config) return;
-
-    // Observe for the widget element and move it into our panel
-    if (!observerRef.current) {
-      observerRef.current = new MutationObserver(() => tryMoveWidget());
-      observerRef.current.observe(document.body, { childList: true, subtree: true });
-    }
-    tryMoveWidget();
-
     if (document.querySelector('script[data-d-id-loaded="true"]')) return;
 
     const script = document.createElement('script');
@@ -67,22 +38,18 @@ export default function DIdAgent() {
     script.setAttribute('data-agent-id', config.agentId);
     script.setAttribute('data-name', 'did-agent');
     script.setAttribute('data-monitor', 'true');
+    script.setAttribute('data-orientation', 'horizontal');
+    script.setAttribute('data-position', 'right');
     script.setAttribute('data-open-mode', 'compact');
     script.setAttribute('data-show-chat-toggle', 'false');
     script.setAttribute('data-auto-connect', 'true');
     script.setAttribute('data-d-id-loaded', 'true');
     document.body.appendChild(script);
-  };
 
-  return (
-    <WidgetPanel
-      label="Avatar"
-      icon={Video}
-      topOffset="180px"
-      panelWidth={96}
-      panelHeight={120}
-      isDark={isDark}
-      contentRef={contentRef}
-    />
-  );
+    return () => {
+      // Keep the script across route changes — removing it would destroy the widget.
+    };
+  }, [config]);
+
+  return null;
 }
