@@ -1080,7 +1080,7 @@ export default function DigitalHost() {
   const ensureConversation = async () => {
     if (conversationRef.current) return conversationRef.current;
     const conv = await base44.agents.createConversation({
-      agent_name: 'VraagHetAanBogest',
+      agent_name: 'VraagHetBogest',
       metadata: { name: 'Vraag het aan Bogèst', lang },
     });
     conversationRef.current = conv;

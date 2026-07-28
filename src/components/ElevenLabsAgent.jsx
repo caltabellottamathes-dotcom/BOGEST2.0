@@ -22,6 +22,6 @@ export default function ElevenLabsAgent() {
   }, []);
 
   return (
-    <elevenlabs-convai agent-id="agent_6201kymxj69zfzs9zffss5gk0d3j"></elevenlabs-convai>
+    <elevenlabs-convai agent-id="agent_6601kyn1xnn8ebm9m9ahk52ghmr5"></elevenlabs-convai>
   );
 }
