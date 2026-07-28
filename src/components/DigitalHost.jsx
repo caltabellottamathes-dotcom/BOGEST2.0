@@ -906,13 +906,8 @@ export default function DigitalHost() {
     const clean = text.replace(/\[ACTIONS:.*?\]/gs, '').replace(/\[PHOTO:.*?\]/gs, '').trim();
     if (!clean) return;
     try {
-      const langCode = lang === 'fr' ? 'fr' : lang === 'en' ? 'en' : 'nl';
-      const result = await base44.integrations.Core.GenerateSpeech({ text: clean.slice(0, 300), voice: 'honey', language_code: langCode });
-      if (result?.url) {
-        if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
-        const audio = new Audio(result.url);
-        audioRef.current = audio;
-        audio.play();
+      if (window.DID_AGENTS_API?.functions?.speak) {
+        window.DID_AGENTS_API.functions.speak({ type: 'text', input: clean.slice(0, 500) });
       }
     } catch {}
   };
@@ -1057,6 +1052,9 @@ export default function DigitalHost() {
   useEffect(() => {
     return () => {
       if (subscriptionRef.current) { try { subscriptionRef.current(); } catch {} }
+      if (window.DID_AGENTS_API?.functions?.interrupt) {
+        try { window.DID_AGENTS_API.functions.interrupt(); } catch {}
+      }
     };
   }, []);
 
@@ -1333,7 +1331,9 @@ export default function DigitalHost() {
                 <div className="flex items-center gap-1.5">
                   <button
                     onClick={() => {
-                      if (speechEnabled && audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
+                      if (speechEnabled && window.DID_AGENTS_API?.functions?.interrupt) {
+                        window.DID_AGENTS_API.functions.interrupt();
+                      }
                       setSpeechEnabled(v => !v);
                     }}
                     title={speechEnabled ? s.speech_off : s.speech_on}
