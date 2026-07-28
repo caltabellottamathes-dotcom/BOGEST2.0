@@ -1176,11 +1176,11 @@ export default function DigitalHost() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed bottom-[80px] right-4 sm:bottom-[92px] sm:right-6 z-[79] cursor-pointer"
+                  className="fixed top-[72px] right-4 sm:top-[80px] sm:right-6 z-[79] cursor-pointer"
                   style={{ maxWidth: 'min(calc(100vw - 32px), 300px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
-                  <div className="px-5 py-4 rounded-2xl rounded-br-sm relative"
+                  <div className="px-5 py-4 rounded-2xl rounded-tr-sm relative"
                     style={{
                       background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
                       backdropFilter: 'blur(60px) saturate(220%)',
@@ -1202,7 +1202,7 @@ export default function DigitalHost() {
                       </div>
                     )}
                   </div>
-                  <div className="absolute bottom-[-5px] right-5 w-2.5 h-2.5 rotate-45"
+                  <div className="absolute top-[-5px] right-5 w-2.5 h-2.5 -rotate-45"
                     style={{
                       background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
                       backdropFilter: 'blur(60px)', WebkitBackdropFilter: 'blur(60px)',
@@ -1222,7 +1222,7 @@ export default function DigitalHost() {
               onClick={() => openChat()}
               onMouseEnter={() => setFabExpanded(true)}
               onMouseLeave={() => setFabExpanded(false)}
-              className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
+              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
               style={{
                 /* Circle: 56px mobile, 64px desktop. Pill when expanded */
                 width: fabExpanded ? 'auto' : undefined,
