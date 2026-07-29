@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
 
         // Use the review endpoint with date range
         const reviewRes = await fetch(
-          `${apiBase}/${uid}/review/${fmt(startDate)}/${fmt(endDate)}/0/250`,
+          `${API_BASE}/${uid}/review/${fmt(startDate)}/${fmt(endDate)}/0/250`,
           {
             headers: {
               'ApiKey': apiKey,
@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
         if (!reviewRes.ok) {
           // Fallback: try the restaurants/{uid}/reviews endpoint
           const altRes = await fetch(
-            `${apiBase}/restaurants/${uid}/reviews`,
+            `${API_BASE}/restaurants/${uid}/reviews`,
             {
               headers: {
                 'ApiKey': apiKey,

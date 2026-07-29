@@ -80,8 +80,9 @@ function formatDate(dateStr) {
 export default function ReviewsSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [page, setPage] = useState(0);
+  const [showAll, setShowAll] = useState(false);
   const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
   const isMobile = useIsMobile();
   const perPage = isMobile ? 1 : 3;
@@ -89,8 +90,8 @@ export default function ReviewsSection() {
   const safePage = Math.min(page, pages - 1);
   const visible = reviews.slice(safePage * perPage, safePage * perPage + perPage);
 
-  useEffect(() => {
-    base44.entities.ZenchefReview.list('-date', 50)
+  const loadReviews = () => {
+    base44.entities.ZenchefReview.list('-date', 100)
       .then(dbReviews => {
         if (dbReviews && dbReviews.length > 0) {
           const mapped = dbReviews
@@ -107,6 +108,15 @@ export default function ReviewsSection() {
         }
       })
       .catch(() => {});
+  };
+
+  useEffect(() => {
+    loadReviews();
+    // Live-refresh whenever a new review is synced into the database.
+    const unsubscribe = base44.entities.ZenchefReview.subscribe((event) => {
+      if (event && (event.type === 'create' || event.type === 'update')) loadReviews();
+    });
+    return () => { try { unsubscribe(); } catch {} };
   }, []);
 
   return (
@@ -190,17 +200,45 @@ export default function ReviewsSection() {
         </div>
 
         {/* Pagination dots */}
-        <div className="flex justify-center gap-2 mt-8">
-          {Array.from({ length: pages }).map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'
-              }`}
-            />
-          ))}
-        </div>
+        {!showAll && (
+          <div className="flex justify-center gap-2 mt-8">
+            {Array.from({ length: pages }).map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'
+                }`}
+              />
+            ))}
+          </div>
+        )}
+
+        {reviews.length > perPage && (
+          <div className="flex justify-center mt-6">
+            <button onClick={() => setShowAll(s => !s)} className="font-body text-xs tracking-widest uppercase text-primary hover:underline">
+              {showAll
+                ? (lang === 'fr' ? 'Voir moins' : lang === 'en' ? 'Show less' : 'Toon minder')
+                : (lang === 'fr' ? 'Voir tous les avis' : lang === 'en' ? 'Show all reviews' : 'Toon alle reviews')}
+            </button>
+          </div>
+        )}
+
+        {showAll && (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+            {reviews.map((review, i) => (
+              <div key={i} className="relative p-6 rounded-xl border border-border bg-background/60 backdrop-blur-md hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-start justify-between mb-4">
+                  <Stars count={review.rating} />
+                  <span className="font-body text-[10px] tracking-widest uppercase text-muted-foreground/60">{review.source}</span>
+                </div>
+                <p className="font-body text-sm text-foreground leading-relaxed mb-5 italic">"{review.text}"</p>
+                <p className="font-heading text-sm font-semibold text-foreground">{review.name}</p>
+                <p className="font-body text-xs text-muted-foreground">{review.location}{review.date ? ` · ${review.date}` : ''}</p>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

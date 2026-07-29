@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Briefcase } from 'lucide-react';
+import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Briefcase, Mail, Phone, Footprints } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,82 +7,118 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import PanelHero from '@/components/PanelHero';
 
+// Actuele vacatures — overgenomen van bogest.be/joinus
 const openings = [
   {
-    title: 'Keukenhulp',
-    location: 'Hasselt / Borgloon',
-    type: 'Deeltijds of voltijds',
-    desc: 'We zijn op zoek naar een enthousiaste keukenhulp die ons team versterkt.',
-    fullText: `Bij Bogèst staan kwaliteit en ambacht centraal. Als keukenhulp ben je een onmisbare schakel in ons keukenteam. Je helpt bij de voorbereiding van verse ingrediënten, het schoonmaken en organiseren van de keuken en de ondersteuning van de kok tijdens de service.
+    title: 'Zaalverantwoordelijke',
+    location: 'Bogèst Hasselt',
+    type: 'Voltijds · M/V',
+    desc: 'Een verbindende leider met passie voor service, sfeer en kwaliteit voor onze authentieke zaak in Hasselt-Wimmertingen.',
+    applyEmail: 'info@bogest-hasselt.be',
+    applyPhone: '0473 77 87 49',
+    walkIn: 'Marah (Hasselt)',
+    fullText: `Voor Bogèst Hasselt, onze authentieke zaak in Hasselt-Wimmertingen, zoeken we een voltijdse zaalverantwoordelijke M/V. Bij Bogèst draait alles om kwaliteit, gastvrijheid en een gulhartige restaurantbeleving. Jij zorgt ervoor dat onze gasten zich welkom voelen, het zaalteam sterk samenwerkt en iedere service vlot verloopt.
 
-Wat we zoeken:
-— Gemotiveerde teamspeler met passie voor de horeca
-— Bereidheid om ook in het weekend te werken
-— Flexibel en stressbestendig karakter
-— Ervaring is een plus, maar geen vereiste — wij leiden u op
+Wat ga je doen?
+— Je geeft leiding aan het zaalteam en maakt de personeelsplanning op.
+— Je zorgt iedere dag voor een optimale gastenervaring.
+— Je gaat gastgericht om met vragen en handelt speciale verzoeken professioneel af.
+— Je stroomlijnt de serviceprocessen en bewaakt een constante kwaliteit.
+— Je werkt nauw samen met de keuken en andere afdelingen voor een naadloze service.
+— Je helpt bij de werving, opleiding en coaching van nieuwe medewerkers.
 
-Wat wij bieden:
-— Competitief loon conform de horeca-sector
-— Warme werksfeer in een groeiend bedrijf
-— Mogelijkheid tot uitbreiding van uren
-— Gratis maaltijd tijdens dienst`,
+Wie zoeken we?
+— Je straalt positieve energie uit en hebt een proactieve houding.
+— Je beschikt over sterke communicatieve en leidinggevende vaardigheden.
+— Je hebt minimaal enkele jaren ervaring in zaalbeheer of als leidinggevende in de horeca.
+— Je werkt gestructureerd en behoudt je kalmte tijdens drukke momenten.
+— Je weet medewerkers te motiveren, coachen en inspireren.
+— Je bent gastgericht, representatief en hands-on.
+
+Wat bieden wij?
+— Een aantrekkelijke, marktconforme verloning met groeimogelijkheden.
+— Een bedrijfswagen, afhankelijk van je ervaring.
+— Twee vaste vrije dagen per week.
+— Vijf avondservices, zonder lunchservice.
+— Doorgroeimogelijkheden binnen een collegiaal topteam.
+— Werken in een authentiek steakhouse met een passie voor kwaliteit.
+— Stabiliteit en groei binnen drie gevestigde locaties in Limburg.
+
+Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat mooie gebaar begint bij oprechte gastvrijheid, en daar speel jij als zaalverantwoordelijke een sleutelrol in.`,
   },
   {
-    title: 'Kelner(in)',
-    location: 'Heusden-Zolder',
-    type: 'Weekenden',
-    desc: 'Je bent gastvrij, stressbestendig en werkt graag in een dynamisch team.',
-    fullText: `Als kelner(in) bij Bogèst Heusden-Zolder ben jij het gezicht van onze zaak. Je verwelkomt gasten hartelijk, neemt bestellingen op en zorgt voor een vlekkeloze bediening.
-
-Wat we zoeken:
-— Gastvrij en communicatief sterk
-— Stressbestendig tijdens drukke avonden
-— Kennis van wijnen en bier is een grote plus
-— Vlotte omgang met kassasystemen
-
-Wat wij bieden:
-— Aantrekkelijk loon + tips
-— Weekend-uren (vrijdag, zaterdag, zondag)
-— Familiale werksfeer
-— Kansen op groei binnen het bedrijf`,
-  },
-  {
-    title: 'Barista / Barman(vrouw)',
-    location: 'Alle vestigingen',
-    type: 'Variabele uren',
-    desc: 'Passie voor drankbereiding en klantcontact staan centraal.',
-    fullText: `Als barista/barman(vrouw) creëer je een aangename eerste indruk aan onze bar.
-
-Wat we zoeken:
-— Kennis van koffie, cocktails en wijnen
-— Vlotte babbel en oog voor detail
-— Bereidheid om op meerdere locaties te werken
-— Hygiënebewust en georganiseerd
-
-Wat wij bieden:
-— Variabele uren — ook ideaal als bijverdienste
-— Opleiding van onze ervaren bartenders
-— Werken in een authentieke hoeve-setting
-— Aantrekkelijk uurloon`,
-  },
-  {
-    title: 'Sous-chef',
-    location: 'Lommel (nieuw)',
+    title: 'Grillkok',
+    location: 'Bogèst Heusden-Zolder',
     type: 'Voltijds',
-    desc: 'Word mee de basis van onze nieuwste vestiging in Lommel.',
-    fullText: `Bogèst opent binnenkort haar vierde vestiging in Lommel. Als sous-chef ben jij de rechterhand van de chef-kok.
+    desc: 'Ben jij op je best achter een gloeiende grill? Een mooi stuk vlees perfect tot zijn recht laten komen?',
+    applyEmail: 'info@bogest-heusdenzolder.be',
+    applyPhone: '011 18 21 20',
+    walkIn: 'Mieke (Heusden-Zolder)',
+    fullText: `Ben jij op je best achter een gloeiende grill? Weet jij hoe je een mooi stuk vlees perfect tot zijn recht laat komen? Dan hebben wij misschien een plaats voor jou in ons team in Heusden-Zolder. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot onze beroemde spare ribs: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
 
-Wat we zoeken:
-— Minimum 3 jaar ervaring in de horeca-keuken
-— Passie voor kwaliteitsvlees en ambachtelijke bereiding
-— Leiderschapskwaliteiten en teamgeest
-— Bereidheid om mee te bouwen aan een nieuwe vestiging
+Wat ga je doen?
+— Je bereidt onze vleesgerechten met respect voor product en bakwijze.
+— Je bewaakt de kwaliteit en perfecte cuisson van elk gerecht.
+— Je werkt vlot en georganiseerd tijdens de service.
+— Je vormt samen met de keuken- en zaalploeg één sterk team.
+— Je helpt van ieder bord een echt Bogèst-moment te maken.
 
-Wat wij bieden:
-— Competitief voltijds salaris
-— Directe samenwerking met de chef-kok en directie
-— Unieke kans om mee te bouwen aan een nieuwe locatie
-— Groeipad naar chef-kok op termijn`,
+Wie zoeken we?
+— Je hebt ervaring als grillkok of een sterke passie voor grillen en vleesbereidingen.
+— Je kent het verschil tussen bleu, saignant en à point.
+— Je werkt netjes, nauwkeurig en stressbestendig.
+— Je bent betrouwbaar en een echte teamspeler.
+— Je draagt kwaliteit, smaak en gasttevredenheid hoog in het vaandel.
+
+Wat bieden wij?
+— Een aantrekkelijke, marktconforme verloning afhankelijk van je ervaring.
+— Twee vaste vrije dagen per week.
+— Vijf avondservices, zonder lunchservice.
+— Een stabiele functie binnen een collegiaal en ervaren team.
+— Werken met kwaliteitsvlees, verse producten en huisbereide gerechten.
+— Ruimte om je vakkennis verder te ontwikkelen en door te groeien.
+
+Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we onze gasten iedere dag willen bieden, en daar hebben we jouw talent voor nodig.`,
+  },
+  {
+    title: 'Grillkok / koude kant',
+    location: 'Bogèst Borgloon',
+    type: 'Voltijds · M/V',
+    desc: 'Gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten — thuis achter de grill én aan de koude kant.',
+    applyEmail: 'info@bogest-borgloon.be',
+    applyPhone: '012 21 06 90',
+    walkIn: 'Ramin (Borgloon)',
+    fullText: `Ben jij gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten? Voel jij je thuis achter de grill én aan de koude kant van de keuken? Voor Bogèst Borgloon zoeken we een voltijdse grillkok / medewerker koude kant M/V. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot verzorgde voorgerechten, frisse salades en huisbereide desserts: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
+
+Wat ga je doen?
+— Je bereidt onze vleesgerechten met respect voor product en bakwijze.
+— Je bewaakt de kwaliteit en perfecte cuisson van elk gerecht.
+— Je verzorgt de mise-en-place en bereidingen van de koude kant.
+— Je werkt mee aan onze voorgerechten, salades en koude garnituren.
+— Je zorgt voor een verzorgde afwerking van onze huisbereide desserts.
+— Je bewaakt de presentatie en kwaliteit van ieder bord.
+— Je werkt vlot en georganiseerd tijdens de service.
+— Je stemt goed af met de warme keuken, koude kant en zaalploeg.
+— Je houdt je werkplek netjes en volgt de hygiënevoorschriften correct op.
+
+Wie zoeken we?
+— Je hebt ervaring als grillkok, kok of keukenmedewerker.
+— Je kent de verschillende bakwijzen of bent gemotiveerd om deze perfect te leren.
+— Je hebt oog voor smaak, presentatie en detail.
+— Je kunt zelfstandig werken, maar bent ook een echte teamspeler.
+— Je werkt netjes, nauwkeurig en stressbestendig.
+— Je bent betrouwbaar, gemotiveerd en hands-on.
+
+Wat bieden wij?
+— Een aantrekkelijke, marktconforme verloning afhankelijk van je ervaring.
+— Twee vaste vrije dagen per week.
+— Vijf avondservices, zonder lunchservice.
+— Een stabiele voltijdse functie binnen een collegiaal en ervaren team.
+— Werken met kwaliteitsvlees, verse producten en huisbereide gerechten.
+— Ruimte om je vakkennis verder te ontwikkelen en door te groeien.
+— Stabiliteit en groeimogelijkheden binnen drie gevestigde locaties in Limburg.
+
+Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we onze gasten iedere dag willen bieden, en daar hebben we jouw talent voor nodig.`,
   },
 ];
 
@@ -136,6 +172,27 @@ function JobCard({ job, onSelect, isSelected }) {
                   </div>
                 ))}
               </div>
+
+              {(job.applyEmail || job.applyPhone || job.walkIn) && (
+                <div className="mb-4 p-3 rounded-lg space-y-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  {job.applyEmail && (
+                    <a href={`mailto:${job.applyEmail}`} className="flex items-center gap-2 font-body text-xs text-foreground hover:text-primary transition-colors">
+                      <Mail className="w-3.5 h-3.5 text-primary" /> {job.applyEmail}
+                    </a>
+                  )}
+                  {job.applyPhone && (
+                    <a href={`tel:${job.applyPhone.replace(/\s/g, '')}`} className="flex items-center gap-2 font-body text-xs text-muted-foreground hover:text-primary transition-colors">
+                      <Phone className="w-3.5 h-3.5 text-primary" /> {job.applyPhone}
+                    </a>
+                  )}
+                  {job.walkIn && (
+                    <p className="flex items-center gap-2 font-body text-xs text-muted-foreground">
+                      <Footprints className="w-3.5 h-3.5 text-primary" /> Langskomen? Vraag naar {job.walkIn}
+                    </p>
+                  )}
+                </div>
+              )}
+
               <button onClick={() => onSelect(job)}
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 transition-all duration-300">
                 <Briefcase className="w-3.5 h-3.5" /> {t('btn_apply')}
@@ -180,6 +237,23 @@ export default function Jobs() {
                 </SectionReveal>
               ))}
             </div>
+
+            <SectionReveal delay={0.1}>
+              <div className="mt-8 p-5 rounded-2xl border border-border" style={{ background: 'hsl(var(--card))' }}>
+                <h3 className="font-heading text-base font-semibold text-foreground mb-2">Liever langslopen?</h3>
+                <p className="font-body text-sm text-muted-foreground mb-3">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
+                <ul className="space-y-1.5 font-body text-sm text-muted-foreground">
+                  <li>📍 <span className="text-foreground">Borgloon</span> — vraag naar Ramin</li>
+                  <li>📍 <span className="text-foreground">Hasselt</span> — vraag naar Marah</li>
+                  <li>📍 <span className="text-foreground">Heusden-Zolder</span> — vraag naar Mieke</li>
+                </ul>
+                <div className="mt-4 pt-4 border-t border-border/50">
+                  <p className="font-body text-xs text-muted-foreground">
+                    Voor een vlotte start vragen we u bij een sollicitatie volgende zaken mee te brengen: uw identiteitskaart, bankkaart en een e-mailadres (voor de digitale loonbrief bij de loonberekening).
+                  </p>
+                </div>
+              </div>
+            </SectionReveal>
           </div>
 
           <SectionReveal direction="right" delay={0.1}>

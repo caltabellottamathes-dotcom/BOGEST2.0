@@ -1,0 +1,45 @@
+{
+  "name": "Daily Zenchef Review Sync",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "daily_zenchef_review_sync",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "sync_reviews": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "syncZenchefReviews",
+            "args": {}
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Sync Zenchef reviews",
+            "description": "Pull the latest guest reviews from Zenchef for all three locations into the database"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Pulls the latest guest reviews from Zenchef for all three locations (Hasselt, Borgloon, Heusden-Zolder) into the database once a day at 06:00 (Europe/Amsterdam), so the website always shows fresh reviews.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 6 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Amsterdam",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}
