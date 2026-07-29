@@ -16,10 +16,10 @@ export default function Home() {
       <HeroSection />
       <StatsSection />
       <StorySection />
+      <LocationsPreview />
       <PhilosophySection />
       <SeasonalSection />
       <CTACards />
-      <LocationsPreview />
       <ReviewsSection />
     </>
   );

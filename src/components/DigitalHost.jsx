@@ -12,6 +12,7 @@ import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import { syncToTopic } from '@/lib/websiteSyncEngine';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
+import { usePanelShift } from '@/hooks/usePanelShift';
 
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
@@ -1020,6 +1021,7 @@ export default function DigitalHost() {
   const { lang } = useLang();
   const isDark = theme === 'dark';
   const location = useLocation();
+  const shift = usePanelShift();
 
   const s = HOST_STRINGS[lang] || HOST_STRINGS.nl;
   const langPrompt = lang === 'fr' ? 'Répondez TOUJOURS en français.' : lang === 'en' ? 'ALWAYS respond in English.' : 'Antwoord ALTIJD in het Nederlands.';
@@ -1334,7 +1336,7 @@ export default function DigitalHost() {
               {proactiveMsg && (
                 isMobile ? (
                   <motion.div
-                    initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -24 }}
+                    initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: -24 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     className="fixed top-3 left-3 right-3 z-[100000] cursor-pointer"
                     onClick={() => openChatWithProactive(proactiveMsg.msg, proactiveMsg.actions)}
@@ -1368,7 +1370,7 @@ export default function DigitalHost() {
                   </motion.div>
                 ) : (
                   <motion.div
-                    initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, x: shift, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     className="fixed bottom-[120px] right-[184px] z-[60] cursor-pointer"
                     style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
@@ -1411,7 +1413,7 @@ export default function DigitalHost() {
             {/* FAB — circle by default, pill on hover */}
             <motion.button
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: blinking ? [1, 0.4, 1, 0.5, 1] : 1, scale: blinking ? [1, 1.06, 1, 1.04, 1] : 1, y: 0 }}
+              animate={{ opacity: blinking ? [1, 0.4, 1, 0.5, 1] : 1, scale: blinking ? [1, 1.06, 1, 1.04, 1] : 1, x: shift, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 20 }}
               transition={{ duration: blinking ? 1.2 : 0.4, ease: blinking ? 'easeInOut' : [0.22, 1, 0.36, 1] }}
               onClick={() => openChat()}
@@ -1473,7 +1475,7 @@ export default function DigitalHost() {
               onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } setPhase('minimized'); }}
             />
             <motion.div
-              initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: 24 }}
               transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               className="fixed z-[80] flex flex-col overflow-hidden
                 /* Mobile: full-width bottom sheet, fixed height so keyboard pushes content up naturally */

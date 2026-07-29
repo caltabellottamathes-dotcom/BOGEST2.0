@@ -163,6 +163,7 @@ const BASE_LOCATIONS = [
   {
     slug: 'lommel',
     name: 'Bogèst Lommel',
+    active: false,
     city: 'Lommel',
     region: 'Limburg',
     address: 'Lommel, Limburg',
