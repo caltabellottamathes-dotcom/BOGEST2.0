@@ -54,7 +54,7 @@ export default function FloatingVideo() {
     setPlaying(false);
   };
 
-  const base = isDesktop ? 172 : 132;
+  const base = isDesktop ? 172 : 112;
   const scale = playing ? (isDesktop ? 1.34 : 1.18) : 1;
 
   return (

@@ -14,7 +14,7 @@ import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
 const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/f33cb896e_popuphost.mp4';
-const MOBILE_WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/18575a0ff_MobilePOP-UP.mp4';
+const MOBILE_WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/a0758be5f_popuphost_.mp4';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -927,7 +927,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}
             <div className="sm:hidden absolute left-0 right-0 bottom-0 h-16 pointer-events-none"
@@ -997,6 +997,7 @@ export default function DigitalHost() {
   const [pastHero, setPastHero] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const [fabExpanded, setFabExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   const [visitorMemory] = useState(() => touchVisitorMemory());
   const { profile: visitorProfile, updateProfile, incrementConversation } = useVisitorProfile();
   const { menuContext, popularItems } = useMenuKnowledge(lang);
@@ -1027,6 +1028,13 @@ export default function DigitalHost() {
     return () => window.removeEventListener('bogest:hero-scroll', handler);
   }, []);
 
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsMobile(mq.matches);
+    try { mq.addEventListener('change', update); } catch { mq.addListener(update); }
+    return () => { try { mq.removeEventListener('change', update); } catch { mq.removeListener(update); } };
+  }, []);
+
   // Listen for hero button click — open chat with a special hero greeting
   useEffect(() => {
     const handler = () => {
@@ -1048,8 +1056,6 @@ export default function DigitalHost() {
   // Entry flow
   useEffect(() => {
     if (entryShownRef.current) return;
-    const seen = sessionStorage.getItem('bogest-host-seen');
-    if (seen) { setPhase('minimized'); return; }
     const t = setTimeout(() => { entryShownRef.current = true; setPhase('entry'); sounds.open(); }, 1200);
     return () => clearTimeout(t);
   }, []);
@@ -1264,10 +1270,10 @@ export default function DigitalHost() {
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   className="fixed bottom-[120px] right-[144px] sm:right-[184px] z-[60] cursor-pointer"
-                  style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
+                  style={{ maxWidth: isMobile ? 'min(calc(100vw - 150px), 260px)' : 'min(calc(100vw - 160px), 300px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
-                  <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
+                  <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl rounded-r-sm relative"
                     style={{
                       background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
                       backdropFilter: 'blur(60px) saturate(220%)',
@@ -1280,7 +1286,7 @@ export default function DigitalHost() {
                       style={{ color: 'rgba(255,255,255,0.75)' }}>
                       <X className="w-2.5 h-2.5" />
                     </button>
-                    <p className="font-body text-[13px] leading-relaxed pr-4" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
+                    <p className="font-body text-[12px] sm:text-[13px] leading-relaxed pr-4" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
                     {proactiveMsg.actions?.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2.5">
                         {proactiveMsg.actions.map((a, i) => (
