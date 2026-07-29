@@ -69,10 +69,11 @@
     "guest-memory-personalisation",
     "live-social-media-connector",
     "location-recommendation",
-    "personalised-recommendation-logic"
+    "personalised-recommendation-logic",
+    "welcome-and-intent-detection"
   ],
   "selected_workspace_skill_ids": [],
-  "model": "automatic",
+  "model": "gemini_3_flash",
   "whatsapp_greeting": "",
   "telegram_greeting": "",
   "line_greeting": "",
