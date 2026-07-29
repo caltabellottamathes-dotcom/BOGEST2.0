@@ -12,7 +12,7 @@ import { usePanelShift } from '@/hooks/usePanelShift';
 const VIDEO_SRC =
   'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/53f5d005a_Host_Salvo_VideoCard.mp4';
 const IDLE_VIDEO_SRC =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/12d74964e_Hostinactive.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/a94c6bef7_Hostinactive_new.mp4';
 
 export default function FloatingVideo() {
   const mainRef = useRef(null);
@@ -51,10 +51,12 @@ export default function FloatingVideo() {
       v.muted = false;
       v.currentTime = 0;
       void v.play();
-    } else if (v.paused) {
-      void v.play();
     } else {
+      // Click again → close, stop the main video and resume the idle loop
       v.pause();
+      v.currentTime = 0;
+      setActive(false);
+      setPlaying(false);
     }
   };
 

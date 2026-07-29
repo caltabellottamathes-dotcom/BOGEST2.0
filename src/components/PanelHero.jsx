@@ -3,11 +3,12 @@ import { motion } from 'framer-motion';
 
 export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage }) {
   return (
-    <section className="relative w-full pt-28 md:pt-36 pb-12 md:pb-16 px-6 md:px-10 lg:px-16 border-b border-border/40 overflow-hidden">
+    <section className="relative w-full pt-20 md:pt-36 pb-12 md:pb-16 px-6 md:px-10 lg:px-16 border-b border-border/40 overflow-hidden">
       {/* Background photo */}
       {bgImage && (
         <div className="absolute inset-0 z-0">
           <img src={bgImage} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-background/80 pointer-events-none" />
         </div>
       )}
       {!bgImage && <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />}

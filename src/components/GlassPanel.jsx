@@ -5,21 +5,19 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/lib/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Shared glass surface — same look as navbar/footer per theme
+// Shared glass surface — the same frosted-glass look as the digital host's chat window
 function GlassPanelSurface() {
-  const { theme } = useTheme();
-  const isLight = theme === 'light';
   return (
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
         borderRadius: '24px 0 0 0',
-        background: isLight ? 'hsl(var(--background) / 0.30)' : 'rgba(0,0,0,0.38)',
-        backdropFilter: 'blur(40px)',
-        WebkitBackdropFilter: 'blur(40px)',
-        borderTop: isLight ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.10)',
-        borderLeft: isLight ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
-        boxShadow: isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)',
+        background: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(40px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+        borderTop: '1px solid rgba(255,255,255,0.16)',
+        borderLeft: '1px solid rgba(255,255,255,0.16)',
+        boxShadow: '0 -24px 80px rgba(0,0,0,0.50)',
       }}
     />
   );
