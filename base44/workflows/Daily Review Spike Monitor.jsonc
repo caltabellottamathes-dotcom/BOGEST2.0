@@ -1,0 +1,47 @@
+{
+  "name": "Daily Review Spike Monitor",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "daily_review_spike_monitor",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "check_spike": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "systemTools",
+            "args": {
+              "action": "reviewSpike"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Review spike check",
+            "description": "Detect 3+ new reviews in 24h"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Checks once a day at 09:00 (Europe/Amsterdam) whether 3+ new guest reviews arrived in the last 24h and logs a system.reviewSpike event when so.",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * *",
+      "one_time_date": null,
+      "timezone": "Europe/Amsterdam",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}
