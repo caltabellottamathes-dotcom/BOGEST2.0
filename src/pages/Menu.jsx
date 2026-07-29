@@ -19,6 +19,15 @@ function PageHero() {
   );
 }
 
+function slugify(s) {
+  return String(s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
 function CategoryRow({ cat }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
@@ -40,7 +49,7 @@ function CategoryRow({ cat }) {
         </div>
         <div className="lg:col-span-8">
           {cat.items.map(item => (
-            <div key={item.id} className="group flex items-baseline justify-between gap-4 py-3.5 border-b border-border/50 last:border-0">
+            <div key={item.id} data-highlight={slugify(loc(item.name, 'nl'))} className="group flex items-baseline justify-between gap-4 py-3.5 border-b border-border/50 last:border-0">
               <div>
                 <span className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300">
                   {loc(item.name, lang)}

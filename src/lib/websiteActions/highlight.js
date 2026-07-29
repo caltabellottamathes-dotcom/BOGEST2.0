@@ -16,17 +16,17 @@ function ensureStyle() {
   css.textContent = `
     .${HIGHLIGHT_CLASS} {
       animation: websiteHighlightPulse 1.4s ease-out 2;
-      outline: 3px solid hsl(80 35% 33% / 0.9) !important;
+      outline: 3px solid hsl(var(--primary) / 0.9) !important;
       outline-offset: 6px;
-      box-shadow: 0 0 0 8px hsl(80 35% 33% / 0.18), 0 8px 30px hsl(80 35% 33% / 0.25) !important;
+      box-shadow: 0 0 0 8px hsl(var(--primary) / 0.18), 0 8px 30px hsl(var(--primary) / 0.25) !important;
       border-radius: 10px;
       position: relative;
       z-index: 60;
       transition: outline-offset 0.3s ease;
     }
     @keyframes websiteHighlightPulse {
-      0%, 100% { outline-color: hsl(80 35% 33% / 0.95); box-shadow: 0 0 0 8px hsl(80 35% 33% / 0.18); }
-      50%      { outline-color: hsl(80 35% 33% / 0.40); box-shadow: 0 0 0 14px hsl(80 35% 33% / 0.10); }
+      0%, 100% { outline-color: hsl(var(--primary) / 0.95); box-shadow: 0 0 0 8px hsl(var(--primary) / 0.18); }
+      50%      { outline-color: hsl(var(--primary) / 0.40); box-shadow: 0 0 0 14px hsl(var(--primary) / 0.10); }
     }
   `;
   document.head.appendChild(css);

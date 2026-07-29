@@ -51,3 +51,32 @@ export function minimizeElevenLabsWidget({ retries = 10, interval = 120 } = {}) 
 export function isElevenLabsExpanded() {
   return Boolean(findCollapseButton());
 }
+
+/**
+ * Dispatch the widget's official expand/collapse event. The widget listens for
+ * `elevenlabs-agent:expand` (on document and its host) and toggles its sheet
+ * accordingly — this is more robust than poking the shadow-DOM button.
+ */
+export function dispatchWidgetExpand(action) {
+  if (typeof document === 'undefined') return;
+  document.dispatchEvent(
+    new CustomEvent('elevenlabs-agent:expand', {
+      detail: { action },
+      bubbles: true,
+      composed: true,
+    })
+  );
+}
+
+/** Expand the widget sheet (so the transcript is rendered for the scanner). */
+export function expandElevenLabsWidget() {
+  dispatchWidgetExpand('expand');
+}
+
+/** Collapse the widget to its compact state, with a button-click fallback. */
+export function collapseElevenLabsWidget() {
+  dispatchWidgetExpand('collapse');
+  setTimeout(() => {
+    if (isElevenLabsExpanded()) minimizeElevenLabsWidget();
+  }, 300);
+}
