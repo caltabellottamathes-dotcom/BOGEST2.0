@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
-import { minimizeElevenLabsWidget, expandElevenLabsWidget } from '@/lib/elevenLabsWidget';
-import { startProactiveNavigation } from '@/lib/proactiveNavigation';
+import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
 
 // Actions that visibly change what's on screen. After a successful one, the
 // widget auto-minimizes so the visitor can immediately see the result. Actions
@@ -65,23 +64,8 @@ export default function ElevenLabsAgent() {
     };
     el.addEventListener('elevenlabs-convai:call', onCall);
 
-    // Proactive navigation — scan the agent transcript for mentions of pages,
-    // dishes, locations and features, then navigate + minimize deterministically.
-    const stopScanner = startProactiveNavigation(el);
-
-    // Keep the transcript sheet expanded while the visitor is interacting so the
-    // scanner can read the agent's replies; re-expand at the start of each turn.
-    const expand = () => expandElevenLabsWidget();
-    el.addEventListener('conversationStarted', expand);
-    document.addEventListener('elevenlabs-agent:user-message', expand);
-    document.addEventListener('elevenlabs-agent:user-activity', expand);
-
     return () => {
       el.removeEventListener('elevenlabs-convai:call', onCall);
-      stopScanner();
-      el.removeEventListener('conversationStarted', expand);
-      document.removeEventListener('elevenlabs-agent:user-message', expand);
-      document.removeEventListener('elevenlabs-agent:user-activity', expand);
     };
   }, []);
 
@@ -91,7 +75,6 @@ export default function ElevenLabsAgent() {
       agent-id="agent_6601kyn1xnn8ebm9m9ahk52ghmr5"
       dismissible="true"
       placement="bottom-right"
-      transcript="true"
     ></elevenlabs-convai>
   );
 }
