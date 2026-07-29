@@ -115,7 +115,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="font-body font-semibold text-[11px] md:text-[13px] tracking-[0.32em] uppercase text-white/80 max-w-sm mb-8"
+            className="font-body font-semibold text-[10px] md:text-[13px] tracking-[0.32em] uppercase text-white/80 max-w-sm mb-8"
           >
             {t('hero_subtitle')}
           </motion.p>

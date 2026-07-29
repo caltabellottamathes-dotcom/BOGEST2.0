@@ -1266,43 +1266,82 @@ export default function DigitalHost() {
             {/* Proactive bubble */}
             <AnimatePresence>
               {proactiveMsg && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed bottom-[120px] right-[144px] sm:right-[184px] z-[60] cursor-pointer"
-                  style={{ maxWidth: isMobile ? 'min(calc(100vw - 150px), 260px)' : 'min(calc(100vw - 160px), 300px)' }}
-                  onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
-                >
-                  <div className="px-4 py-3 sm:px-5 sm:py-4 rounded-2xl rounded-r-sm relative"
-                    style={{
-                      background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
-                      backdropFilter: 'blur(60px) saturate(220%)',
-                      WebkitBackdropFilter: 'blur(60px) saturate(220%)',
-                      border: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                      boxShadow: isDark ? '0 12px 40px rgba(120,90,10,0.40), 0 0 0 1px rgba(231,205,112,0.18)' : '0 12px 40px rgba(74,83,32,0.25), 0 0 0 1px rgba(107,122,63,0.15)',
-                    }}>
-                    <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
-                      className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors"
-                      style={{ color: 'rgba(255,255,255,0.75)' }}>
-                      <X className="w-2.5 h-2.5" />
-                    </button>
-                    <p className="font-body text-[12px] sm:text-[13px] leading-relaxed pr-4" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
-                    {proactiveMsg.actions?.length > 0 && (
-                      <div className="flex flex-wrap gap-1.5 mt-2.5">
-                        {proactiveMsg.actions.map((a, i) => (
-                          <ProactiveActionButton key={i} label={a.label} url={a.url} onClick={() => setProactiveMsg(null)} />
-                        ))}
+                isMobile ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: -28, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -28, scale: 0.96 }}
+                    transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                    className="fixed top-3 left-3 right-3 z-[60] cursor-pointer"
+                    onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
+                  >
+                    <div className="flex items-start gap-3 px-4 py-3 rounded-2xl"
+                      style={{
+                        background: isDark ? 'rgba(20,14,0,0.94)' : 'rgba(40,46,16,0.96)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+                        border: isDark ? '1px solid rgba(231,205,112,0.45)' : '1px solid rgba(107,122,63,0.55)',
+                        boxShadow: isDark ? '0 12px 32px rgba(0,0,0,0.50)' : '0 12px 32px rgba(40,46,16,0.30)',
+                      }}>
+                      <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+                        style={{ background: 'rgba(231,205,112,0.16)', border: '1px solid rgba(231,205,112,0.40)' }}>
+                        <span className="w-2 h-2 rounded-full bg-primary" />
+                      </span>
+                      <div className="flex-1 min-w-0 pr-1">
+                        <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-0.5" style={{ color: 'rgba(231,205,112,0.90)' }}>Bogèst</p>
+                        <p className="font-body text-[13px] leading-snug line-clamp-2" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
+                        {proactiveMsg.actions?.length > 0 && (
+                          <div className="flex flex-wrap gap-1.5 mt-2">
+                            {proactiveMsg.actions.map((a, i) => (
+                              <ProactiveActionButton key={i} label={a.label} url={a.url} onClick={() => setProactiveMsg(null)} />
+                            ))}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                  <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45"
-                    style={{
-                      background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
-                      backdropFilter: 'blur(60px)', WebkitBackdropFilter: 'blur(60px)',
-                      borderTop: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                      borderRight: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                    }} />
-                </motion.div>
+                      <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
+                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors -mr-1"
+                        style={{ color: 'rgba(255,255,255,0.60)' }}>
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="fixed bottom-[120px] right-[184px] z-[60] cursor-pointer"
+                    style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
+                    onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
+                  >
+                    <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
+                      style={{
+                        background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
+                        backdropFilter: 'blur(60px) saturate(220%)',
+                        WebkitBackdropFilter: 'blur(60px) saturate(220%)',
+                        border: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
+                        boxShadow: isDark ? '0 12px 40px rgba(120,90,10,0.40), 0 0 0 1px rgba(231,205,112,0.18)' : '0 12px 40px rgba(74,83,32,0.25), 0 0 0 1px rgba(107,122,63,0.15)',
+                      }}>
+                      <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
+                        className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors"
+                        style={{ color: 'rgba(255,255,255,0.75)' }}>
+                        <X className="w-2.5 h-2.5" />
+                      </button>
+                      <p className="font-body text-[13px] leading-relaxed pr-4" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
+                      {proactiveMsg.actions?.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 mt-2.5">
+                          {proactiveMsg.actions.map((a, i) => (
+                            <ProactiveActionButton key={i} label={a.label} url={a.url} onClick={() => setProactiveMsg(null)} />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                    <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45"
+                      style={{
+                        background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
+                        backdropFilter: 'blur(60px)', WebkitBackdropFilter: 'blur(60px)',
+                        borderTop: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
+                        borderRight: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
+                      }} />
+                  </motion.div>
+                )
               )}
             </AnimatePresence>
 
