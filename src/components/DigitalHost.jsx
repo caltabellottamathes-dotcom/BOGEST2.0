@@ -828,8 +828,8 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
     if (cards?.length || photos?.length || instagrams?.length) return;
     if (!actions || actions.length === 0) return;
     const internal = actions.filter((a) => a.url && String(a.url).startsWith('/'));
-    if (internal.length !== 1) return;
-    if ((content || '').length > 200) return;
+    if (internal.length === 0) return;
+    if ((content || '').length > 240) return;
     const target = internal[0].url;
     const t = setTimeout(() => {
       dispatchUIAction({ type: 'openPage', args: [target] });
@@ -948,9 +948,13 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     fullIntro = `${greeting}! ${[line1, line2, line3].filter(Boolean).join(' ')}\n\n${question}`;
   }
 
-  const panelStyle = isDark
-    ? { background: 'rgba(8,8,8,0.95)', backdropFilter: 'blur(48px)', WebkitBackdropFilter: 'blur(48px)', border: '1px solid rgba(255,255,255,0.11)' }
-    : { background: 'rgba(254,252,248,0.97)', backdropFilter: 'blur(48px)', WebkitBackdropFilter: 'blur(48px)', border: '1px solid rgba(74,83,32,0.26)' };
+  // Frosted glass — matches the chat window + proactive badges (unified look).
+  const panelStyle = {
+    background: 'rgba(255,255,255,0.08)',
+    backdropFilter: 'blur(40px) saturate(160%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+    border: '1px solid rgba(255,255,255,0.16)',
+  };
 
   return (
     <>
@@ -1479,7 +1483,7 @@ export default function DigitalHost() {
                 bottom: kbOffset > 0 ? `${kbOffset}px` : undefined,
                 height: kbOffset > 0 ? `${Math.min((typeof window !== 'undefined' && window.visualViewport?.height || 520) * 0.85, 500)}px` : 'min(72dvh, 520px)',
                 /* Tablet+ override */
-                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '24px' } : {}),
+                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '24px', right: '96px' } : {}),
                 boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >
