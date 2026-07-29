@@ -1,18 +1,19 @@
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 
 /**
  * Floating welcome video — replaces the D-ID visual agent widget.
  *
- * Sits as a square floating button on the right side (where the D-ID widget
- * was). The video is paused by default showing its first frame; clicking it
- * starts playback, and when it finishes it resets to the first frame and stops.
+ * Sits as a square floating button on the right side, layered above the
+ * ElevenLabs widget. The video is paused by default showing its first frame;
+ * clicking it starts playback, and when it finishes it resets to the first
+ * frame and stops. A red "1" badge in the top-right corner hints a message is
+ * waiting.
  */
 const VIDEO_SRC =
   'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/629bc14ad_WelkomSalvo.mp4';
 
 export default function FloatingVideo() {
   const videoRef = useRef(null);
-  const [playing, setPlaying] = useState(false);
 
   const toggle = () => {
     const v = videoRef.current;
@@ -28,7 +29,6 @@ export default function FloatingVideo() {
   const handleEnded = () => {
     const v = videoRef.current;
     if (v) v.currentTime = 0;
-    setPlaying(false);
   };
 
   return (
@@ -36,28 +36,21 @@ export default function FloatingVideo() {
       type="button"
       onClick={toggle}
       aria-label="Welkom video afspelen"
-      className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-[99999] grid place-items-center overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10 bg-black group cursor-pointer"
-      style={{ width: 112, height: 112 }}
+      className="fixed right-4 sm:right-5 z-[100001] grid place-items-center overflow-hidden rounded-2xl shadow-2xl ring-1 ring-black/10 bg-black cursor-pointer"
+      style={{ width: 140, height: 140, bottom: 56 }}
     >
       <video
         ref={videoRef}
         src={VIDEO_SRC}
         playsInline
         preload="metadata"
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
         onEnded={handleEnded}
         className="h-full w-full object-cover"
       />
-      {!playing && (
-        <span className="absolute inset-0 grid place-items-center bg-black/30 transition-colors group-hover:bg-black/20">
-          <span className="grid place-items-center h-9 w-9 rounded-full bg-white/90 text-black shadow-lg">
-            <svg viewBox="0 0 24 24" className="h-4 w-4 translate-x-[1px]" fill="currentColor">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-          </span>
-        </span>
-      )}
+      {/* Unread message notification badge */}
+      <span className="absolute -top-1.5 -right-1.5 grid place-items-center min-w-6 h-6 px-1.5 rounded-full bg-red-600 text-white text-xs font-bold shadow-lg ring-2 ring-white">
+        1
+      </span>
     </button>
   );
 }

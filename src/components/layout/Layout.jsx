@@ -76,7 +76,7 @@ export default function Layout() {
       {/* Digital Host — visible on all pages */}
       <DigitalHost />
 
-      {/* ElevenLabs Conversational AI Widget — floating on the bottom-left */}
+      {/* ElevenLabs Conversational AI Widget — floating on the bottom-right */}
       <ElevenLabsAgent />
 
       {/* Floating welcome video — replaces the D-ID widget, bottom-right */}
