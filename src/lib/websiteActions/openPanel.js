@@ -27,17 +27,18 @@ const OPEN_TARGETS = {
   'digital-host': { type: 'event', event: 'bogest:open-host' },
 };
 
-registerAction('open', async ({ target, data }) => {
+registerAction('open', async ({ target, options = {}, data = {} }) => {
   if (!target) return { error: 'missing_target' };
   const key = String(target).toLowerCase().trim();
   const def = OPEN_TARGETS[key];
   if (!def) return { error: 'unknown_target', target };
   if (def.type === 'navigate') {
-    return websiteAction({ action: 'navigate', target: def.path });
+    const res = await websiteAction({ action: 'navigate', target: def.path, options });
+    return { message: res.success ? `Opened ${target}` : res.message, path: res.path, via: 'navigate' };
   }
   if (def.type === 'event') {
-    window.dispatchEvent(new CustomEvent(def.event, { detail: data || {} }));
-    return { opened: target };
+    window.dispatchEvent(new CustomEvent(def.event, { detail: { ...data, ...options } }));
+    return { message: `Opened ${target}`, via: 'event' };
   }
   return { error: 'unknown_type' };
 });

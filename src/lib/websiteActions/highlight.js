@@ -32,7 +32,7 @@ function ensureStyle() {
   document.head.appendChild(css);
 }
 
-registerAction('highlight', async ({ target, data }) => {
+registerAction('highlight', async ({ target, options = {}, data = {} }) => {
   if (!target) return { error: 'missing_target' };
   ensureStyle();
   const key = String(target).toLowerCase().trim();
@@ -47,7 +47,8 @@ registerAction('highlight', async ({ target, data }) => {
   void el.offsetWidth; // restart animation
   el.classList.add(HIGHLIGHT_CLASS);
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  const duration = Number.isFinite(data?.duration) ? data.duration : 5000;
+  const duration = Number.isFinite(options?.duration) ? options.duration
+    : Number.isFinite(data?.duration) ? data.duration : 5000;
   setTimeout(() => el.classList.remove(HIGHLIGHT_CLASS), duration);
-  return { highlighted: target };
+  return { message: `Highlighted ${target}`, element: target };
 });

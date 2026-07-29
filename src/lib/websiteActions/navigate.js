@@ -32,15 +32,15 @@ const ROUTES = {
   instagram: '/instagram', social: '/instagram',
 };
 
-registerAction('navigate', async ({ target }) => {
+registerAction('navigate', async ({ target, options = {} }) => {
   if (!target) return { error: 'missing_target' };
   const key = String(target).toLowerCase().trim();
   const path = ROUTES[key] ?? (key.startsWith('/') ? key : null);
   if (!path) return { error: 'unknown_target', target };
   if (typeof navigateFn === 'function') {
-    navigateFn(path);
+    navigateFn(path, { replace: Boolean(options.replace) });
   } else {
     window.location.assign(path);
   }
-  return { navigated: path };
+  return { message: `Navigated to ${path}`, path };
 });
