@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ArrowUpRight, MapPin, Phone, Mail } from 'lucide-react';
 import RestaurantPanel from '@/components/RestaurantPanel';
@@ -14,6 +14,20 @@ export default function LocationDetail() {
   const locations = getLocations(lang);
   const loc = locations.find(l => l.slug === slug);
   const [showRestaurantPanel, setShowRestaurantPanel] = useState(false);
+
+  // Voice/agent orchestration: open the restaurant-and-spaces panel or close it
+  // when the digital host (or a websiteAction close) asks. The sync engine
+  // dispatches these events after navigating to this location's page.
+  useEffect(() => {
+    const openSpaces = () => setShowRestaurantPanel(true);
+    const closePanel = () => setShowRestaurantPanel(false);
+    window.addEventListener('bogest:open-spaces', openSpaces);
+    window.addEventListener('bogest:close-panel', closePanel);
+    return () => {
+      window.removeEventListener('bogest:open-spaces', openSpaces);
+      window.removeEventListener('bogest:close-panel', closePanel);
+    };
+  }, []);
 
   // Get restaurant spaces for this location
   const getRestaurantData = () => {

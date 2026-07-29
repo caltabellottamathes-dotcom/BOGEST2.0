@@ -6,20 +6,24 @@ import { routeTopic } from '@/lib/websiteSyncRouter';
  * The ElevenLabs agent just talks naturally. This engine listens to the agent's
  * speech (via the widget's onMessage transcript hook) and to its websiteAction
  * tool calls, maps what it's talking about to a website content entry through
- * the two-stage router, and drives the page (navigate / scroll / highlight) so
- * the website stays synchronized with the conversation automatically — the
- * visitor never has to ask.
+ * the two-stage router, and drives the page (navigate / scroll / highlight /
+ * openLocation / close) so the website stays synchronized with the
+ * conversation automatically — the visitor never has to ask.
  *
- * Dedup: the same target won't re-fire within a short window, so the page
- * doesn't jitter on every word.
+ * Behaviour highlights:
+ *  - Specific location → open that location's info page AND its
+ *    restaurant-and-spaces panel (openLocation).
+ *  - "Close / never mind" → dismiss any open panel.
+ *  - Dedup: the same target won't re-fire within a short window, so the page
+ *    doesn't jitter on every word.
  */
 
 let lastTargetId = null;
 let lastTargetAt = 0;
 let debounceTimer = null;
-const DEDUP_MS = 12000;
-const DEBOUNCE_MS = 900;
-const NAV_RENDER_MS = 650;
+const DEDUP_MS = 6000;
+const DEBOUNCE_MS = 600;
+const NAV_RENDER_MS = 700;
 
 function resetDedupIfStale() {
   if (lastTargetId && Date.now() - lastTargetAt > DEDUP_MS) {
@@ -30,10 +34,14 @@ function resetDedupIfStale() {
 async function executeEntry(entry) {
   if (!entry) return { success: false, message: 'no_entry' };
   resetDedupIfStale();
-  if (entry.id === lastTargetId) {
+
+  // openLocation dedupes by its page (opening Borgloon then "spaces of Borgloon"
+  // are the same outcome and shouldn't fire twice).
+  const dedupKey = entry.action === 'openLocation' ? 'open:' + entry.page : entry.id;
+  if (dedupKey === lastTargetId) {
     return { success: true, message: 'already_here', target: entry.id };
   }
-  lastTargetId = entry.id;
+  lastTargetId = dedupKey;
   lastTargetAt = Date.now();
 
   const here = window.location.pathname;
@@ -41,6 +49,20 @@ async function executeEntry(entry) {
 
   if (action === 'navigate') {
     return await window.websiteAction({ action: 'navigate', target });
+  }
+
+  if (action === 'close') {
+    return await window.websiteAction({ action: 'close', target: target || 'panel' });
+  }
+
+  if (action === 'openLocation') {
+    if (page && here !== page) {
+      const navRes = await window.websiteAction({ action: 'navigate', target: page });
+      if (!navRes?.success) return navRes;
+      await new Promise((r) => setTimeout(r, NAV_RENDER_MS + 150));
+    }
+    window.dispatchEvent(new CustomEvent('bogest:open-spaces', { detail: { slug: target } }));
+    return { success: true, message: 'opened location + spaces panel', target, page };
   }
 
   // scroll / highlight — make sure we're on the right page first
@@ -92,7 +114,7 @@ export function onTranscriptMessage(msg) {
 /**
  * Called when the agent invokes the websiteAction client tool.
  *
- * For any content action (go/sync/navigate/scroll/highlight) the target is
+ * For any content action (navigate/scroll/highlight/go/sync) the target is
  * treated as free text and routed through the two-stage router — the website
  * decides the right page/section/dish from the index, so the agent never has
  * to know exact names. close/search pass through unchanged, and an explicit

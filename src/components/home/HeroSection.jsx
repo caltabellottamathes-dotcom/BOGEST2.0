@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
-import BogestLogo from '@/components/BogestLogo';
 
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
@@ -60,9 +59,15 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          {/* Logo — large, above text */}
+          {/* Logo — the Bogèst bull & knife mark, rendered white over the hero */}
           <div className="mb-6">
-            <BogestLogo className="text-6xl md:text-8xl lg:text-9xl tracking-wide opacity-90" />
+            <img
+              src="https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png"
+              alt="Bogèst"
+              draggable={false}
+              className="h-28 md:h-40 lg:h-52 w-auto opacity-90 select-none"
+              style={{ filter: 'grayscale(1) brightness(2.2)', mixBlendMode: 'screen' }}
+            />
           </div>
 
           {/* Eyebrow */}
