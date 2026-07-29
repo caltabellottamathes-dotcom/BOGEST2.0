@@ -1225,6 +1225,18 @@ export default function DigitalHost() {
     if (preload) setTimeout(() => sendMessage(preload), 80);
   };
 
+  // Open the chat with a proactive notification message already shown as the
+  // first assistant message (the message the visitor just tapped).
+  const openChatWithProactive = (msg, actions) => {
+    setProactiveMsg(null);
+    sessionStorage.setItem('bogest-host-seen', '1');
+    historyRef.current = [];
+    greetingRef.current = msg;
+    setMessages([{ role: 'assistant', content: msg, actions: actions || [] }]);
+    sounds.open();
+    setPhase('chat');
+  };
+
   const handleEntryChip = (chip) => {
     sessionStorage.setItem('bogest-host-seen', '1');
     if (chip === s.chip_explore || chip === s.close_skip) { setPhase('minimized'); return; }
@@ -1268,26 +1280,23 @@ export default function DigitalHost() {
               {proactiveMsg && (
                 isMobile ? (
                   <motion.div
-                    initial={{ opacity: 0, y: -28, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -28, scale: 0.96 }}
-                    transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
-                    className="fixed top-3 left-3 right-3 z-[60] cursor-pointer"
-                    onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
+                    initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -24 }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                    className="fixed top-3 left-3 right-3 z-[100000] cursor-pointer"
+                    onClick={() => openChatWithProactive(proactiveMsg.msg, proactiveMsg.actions)}
                   >
                     <div className="flex items-start gap-3 px-4 py-3 rounded-2xl"
                       style={{
-                        background: isDark ? 'rgba(20,14,0,0.94)' : 'rgba(40,46,16,0.96)',
-                        backdropFilter: 'blur(24px) saturate(180%)',
-                        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-                        border: isDark ? '1px solid rgba(231,205,112,0.45)' : '1px solid rgba(107,122,63,0.55)',
-                        boxShadow: isDark ? '0 12px 32px rgba(0,0,0,0.50)' : '0 12px 32px rgba(40,46,16,0.30)',
+                        background: 'rgba(12,10,6,0.55)',
+                        backdropFilter: 'blur(20px) saturate(160%)',
+                        WebkitBackdropFilter: 'blur(20px) saturate(160%)',
+                        border: '1px solid rgba(231,205,112,0.22)',
+                        boxShadow: '0 8px 28px rgba(0,0,0,0.45)',
                       }}>
-                      <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
-                        style={{ background: 'rgba(231,205,112,0.16)', border: '1px solid rgba(231,205,112,0.40)' }}>
-                        <span className="w-2 h-2 rounded-full bg-primary" />
-                      </span>
-                      <div className="flex-1 min-w-0 pr-1">
+                      <span className="flex-shrink-0 mt-1.5 w-2 h-2 rounded-full bg-primary" />
+                      <div className="flex-1 min-w-0">
                         <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-0.5" style={{ color: 'rgba(231,205,112,0.90)' }}>Bogèst</p>
-                        <p className="font-body text-[13px] leading-snug line-clamp-2" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
+                        <p className="font-body text-[13px] leading-snug" style={{ color: 'rgba(255,255,255,0.95)' }}>{proactiveMsg.msg}</p>
                         {proactiveMsg.actions?.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
                             {proactiveMsg.actions.map((a, i) => (
@@ -1297,8 +1306,8 @@ export default function DigitalHost() {
                         )}
                       </div>
                       <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
-                        className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center transition-colors -mr-1"
-                        style={{ color: 'rgba(255,255,255,0.60)' }}>
+                        className="flex-shrink-0 -mr-1 w-6 h-6 rounded-full flex items-center justify-center transition-colors"
+                        style={{ color: 'rgba(255,255,255,0.55)' }}>
                         <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
