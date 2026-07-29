@@ -7,6 +7,7 @@ import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import FloatingVideo from '@/components/FloatingVideo';
+import UIActionOverlay from '@/components/UIActionOverlay';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
@@ -81,6 +82,9 @@ export default function Layout() {
 
       {/* Floating welcome video — replaces the D-ID widget, bottom-right */}
       <FloatingVideo />
+
+      {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
+      <UIActionOverlay />
     </div>
   );
 }

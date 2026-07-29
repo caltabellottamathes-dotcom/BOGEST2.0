@@ -10,6 +10,7 @@ import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
+import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
@@ -627,14 +628,21 @@ function parseActions(text) {
     return '';
   });
 
+  // Extract UIACTION tags — [UIACTION:type|arg1|arg2] (Section 5 UI Action vocabulary)
+  const uiActions = [];
+  const textNoUi = textNoIg.replace(/\[UIACTION:\s*([^|\]]+)(?:\|([^\]]*))?\]/g, (_, t, rest) => {
+    uiActions.push({ type: t.trim(), args: rest ? rest.split('|').map(s => s.trim()) : [] });
+    return '';
+  });
+
   // Extract ACTIONS tags
-  const match = textNoIg.match(/\[ACTIONS:\s*(.+?)\]/s);
-  if (!match) return { clean: textNoIg.trim(), actions: [], photos, cards, instagrams };
+  const match = textNoUi.match(/\[ACTIONS:\s*(.+?)\]/s);
+  if (!match) return { clean: textNoUi.trim(), actions: [], photos, cards, instagrams, uiActions };
   const actions = match[1].split(',').map(s => {
     const parts = s.split('|').map(x => x.trim());
     return { label: parts[0], url: parts[1] };
   }).filter(a => a.label && a.url);
-  return { clean: textNoIg.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards, instagrams };
+  return { clean: textNoUi.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards, instagrams, uiActions };
 }
 
 async function fetchWeather(lang = 'nl') {
@@ -796,7 +804,20 @@ function InstagramCard({ post }) {
   );
 }
 
-function AssistantBubble({ content, actions, photos, cards, instagrams, isDark, onLinkClick }) {
+function AssistantBubble({ content, actions, photos, cards, instagrams, uiActions, isDark, onLinkClick }) {
+  const uiDispatchedRef = useRef(false);
+  useEffect(() => {
+    if (uiDispatchedRef.current) return;
+    if (!uiActions || uiActions.length === 0) return;
+    uiDispatchedRef.current = true;
+    const navTypes = ['openPage', 'openSection', 'openReservation', 'openContact', 'openGiftCards'];
+    uiActions.forEach((a, i) => {
+      setTimeout(() => {
+        dispatchUIAction(a);
+        if (navTypes.includes(a.type)) onLinkClick?.();
+      }, 250 + i * 400);
+    });
+  }, [uiActions]);
   return (
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
@@ -1175,7 +1196,7 @@ export default function DigitalHost() {
       const agentMessages = (data.messages || []).map(m => {
         if (m.role === 'user') return { role: 'user', content: m.content || '' };
         const parsed = parseActions(m.content || '');
-        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards, instagrams: parsed.instagrams };
+        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards, instagrams: parsed.instagrams, uiActions: parsed.uiActions };
       });
       const greeting = greetingRef.current ? [{ role: 'assistant', content: greetingRef.current, actions: [] }] : [];
       setMessages([...greeting, ...agentMessages]);
@@ -1468,7 +1489,7 @@ export default function DigitalHost() {
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
-                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} isDark={isDark} onLinkClick={() => setPhase('minimized')} />
+                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} onLinkClick={() => setPhase('minimized')} />
                 ))}
                 {messages.length === 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">
