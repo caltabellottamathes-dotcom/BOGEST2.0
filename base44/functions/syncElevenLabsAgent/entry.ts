@@ -134,7 +134,11 @@ export default async function(req) {
           if (tGetRes.ok) {
             const tFull = await tGetRes.json();
             const cfg = tFull.tool_config || tFull;
-            const updatedCfg = { ...cfg, force_pre_tool_speech: true, pre_tool_speech: 'auto', disable_interruptions: false, interruption_mode: 'allow' };
+            // `pre_tool_speech` enum (auto|force|off) is the real field — "force"
+            // makes the agent speak BEFORE the tool runs, so it keeps talking
+            // while the page navigates/scrolls/highlights. The boolean
+            // `force_pre_tool_speech` is just a derived display flag.
+            const updatedCfg = { ...cfg, pre_tool_speech: 'force', disable_interruptions: false, interruption_mode: 'allow' };
             const tPatchRes = await fetch(`https://api.elevenlabs.io/v1/convai/tools/${toolId}`, {
               method: 'PATCH',
               headers: authHeaders(),
