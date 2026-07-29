@@ -909,8 +909,8 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
-        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col"
-          style={{ maxWidth: 420, maxHeight: '92vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
+        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex"
+          style={{ maxWidth: 680, maxHeight: '88vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
 
           {/* Close */}
           <button onClick={onSkip}
@@ -919,25 +919,19 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <X className="w-3.5 h-3.5" />
           </button>
 
-          {/* Welcome video — vertical (portrait), plays with sound, stops at end */}
-          <div className="relative w-full flex-shrink-0" style={{ aspectRatio: '9 / 16', maxHeight: '56vh' }}>
+          {/* Welcome video — left, vertical, pure (no overlays), plays with sound, stops at end */}
+          <div className="relative flex-shrink-0 w-[36%] sm:w-[42%] min-h-[280px]">
             <video
               ref={videoRef}
               src={WELCOME_VIDEO_URL}
               autoPlay playsInline
-              className="w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Online badge */}
-            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-              style={{ background: 'rgba(8,8,8,0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
-              <span className="w-2 h-2 rounded-full bg-primary" style={{ boxShadow: '0 0 6px rgba(231,205,112,0.8)' }} />
-              <span className="font-body text-[9px] tracking-[0.18em] uppercase" style={{ color: 'rgba(255,235,160,0.92)' }}>{s.assistant}</span>
-            </div>
           </div>
 
-          {/* Body */}
-          <div className="px-6 pt-5 pb-6 overflow-y-auto flex-1">
-            <div className="flex items-center gap-3 mb-4">
+          {/* Content — right */}
+          <div className="flex-1 flex flex-col px-5 sm:px-6 py-5 overflow-y-auto">
+            <div className="flex items-center gap-3 mb-4 pr-8">
               <LogoAvatar size="lg" online isDark={isDark} />
               <div>
                 <p className="font-heading text-xl font-bold text-foreground leading-tight">{s.entry_headline}</p>
@@ -948,7 +942,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <p className="font-body text-sm text-foreground/85 leading-relaxed mb-5 whitespace-pre-line">{fullIntro}</p>
 
             {/* Action buttons */}
-            <div className="space-y-2.5">
+            <div className="space-y-2.5 mt-auto">
               <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={onChat} variant="primary" />
               <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={onLiveConversation} />
               <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={onSkip} variant="ghost" />
@@ -1051,7 +1045,7 @@ export default function DigitalHost() {
     clearTimeout(inactivityRef.current);
     if (phase === 'chat') return;
     // First trigger after 12s, subsequent after 20s
-    const delay = proactiveIndexRef.current === 0 ? 20000 : 35000;
+    const delay = proactiveIndexRef.current === 0 ? 6000 : 30000;
     inactivityRef.current = setTimeout(() => {
       // Build a varied pool: fun facts + conversational invites + weather-aware messages
       const pool = [...(s.proactive_facts || []), ...(s.proactive_invites || [])];
@@ -1250,8 +1244,8 @@ export default function DigitalHost() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[60] cursor-pointer"
-                  style={{ maxWidth: 'min(calc(100vw - 32px), 320px)' }}
+                  className="fixed bottom-4 right-[84px] sm:right-[92px] z-[60] cursor-pointer"
+                  style={{ maxWidth: 'min(calc(100vw - 104px), 300px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
                   <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
