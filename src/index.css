@@ -152,6 +152,13 @@ did-agent,
   z-index: 99999 !important;
 }
 
+/* Periodic single blink for the floating welcome video */
+@keyframes bogest-blink {
+  0%, 88%, 100% { opacity: 1; }
+  90% { opacity: 0.3; }
+  92% { opacity: 1; }
+}
+
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }
