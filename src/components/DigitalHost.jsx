@@ -9,7 +9,6 @@ import { getSystemPrompt } from '@/lib/digitalHostKnowledge';
 import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
-import { syncToTopic } from '@/lib/websiteSyncEngine';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 import { usePanelShift } from '@/hooks/usePanelShift';
@@ -809,40 +808,45 @@ function InstagramCard({ post }) {
   );
 }
 
-function AssistantBubble({ content, actions, photos, cards, instagrams, uiActions, isDark, onLinkClick }) {
-  const uiDispatchedRef = useRef(false);
-  useEffect(() => {
-    if (uiDispatchedRef.current) return;
-    if (!uiActions || uiActions.length === 0) return;
-    uiDispatchedRef.current = true;
-    const navTypes = ['openPage', 'openSection', 'openReservation', 'openContact', 'openGiftCards'];
-    uiActions.forEach((a, i) => {
-      setTimeout(() => {
-        dispatchUIAction(a);
-        if (navTypes.includes(a.type)) onLinkClick?.();
-      }, 250 + i * 400);
-    });
-  }, [uiActions]);
+const PAGE_LABELS = {
+  nl: { '/menu':'Menu','/reserve':'Reserveren','/locations':'Vestigingen','/gift-cards':'Cadeaubonnen','/contact':'Contact','/takeaway':'Afhalen','/groups':'Groepen','/about':'Ons verhaal','/instagram':'Instagram' },
+  fr: { '/menu':'Menu','/reserve':'Réserver','/locations':'Adresses','/gift-cards':'Bons cadeaux','/contact':'Contact','/takeaway':'À emporter','/groups':'Groupes','/about':'Notre histoire','/instagram':'Instagram' },
+  en: { '/menu':'Menu','/reserve':'Reserve','/locations':'Locations','/gift-cards':'Gift cards','/contact':'Contact','/takeaway':'Takeaway','/groups':'Groups','/about':'Our story','/instagram':'Instagram' },
+};
 
-  // Proactive auto-action fallback: when the host didn't emit a [UIACTION:] tag
-  // but its reply is a short directive with a single internal action button (no
-  // rich media), perform that action automatically so the visitor is taken
-  // there without having to click.
-  useEffect(() => {
-    if (uiActions && uiActions.length > 0) return;
-    if (cards?.length || photos?.length || instagrams?.length) return;
-    if (!actions || actions.length === 0) return;
-    const internal = actions.filter((a) => a.url && String(a.url).startsWith('/'));
-    if (internal.length === 0) return;
-    if ((content || '').length > 240) return;
-    const target = internal[0].url;
-    const t = setTimeout(() => {
-      dispatchUIAction({ type: 'openPage', args: [target] });
-      onLinkClick?.();
-    }, 200);
-    return () => clearTimeout(t);
-  }, [uiActions, actions, cards, photos, instagrams, content]);
+const UIACTION_LABELS = {
+  nl: { openReservation:'Reserveren', openContact:'Contact', openGiftCards:'Cadeaubonnen', openGallery:"Foto's bekijken", displaySocialPosts:'Instagram bekijken', displayReviews:'Reviews bekijken', displayMaps:'Op de kaart', scroll:'Tonen', highlight:'Tonen' },
+  fr: { openReservation:'Réserver', openContact:'Contact', openGiftCards:'Bons cadeaux', openGallery:'Voir les photos', displaySocialPosts:'Voir Instagram', displayReviews:'Voir les avis', displayMaps:'Voir sur la carte', scroll:'Voir', highlight:'Voir' },
+  en: { openReservation:'Reserve', openContact:'Contact', openGiftCards:'Gift cards', openGallery:'View photos', displaySocialPosts:'View Instagram', displayReviews:'View reviews', displayMaps:'View on map', scroll:'Show', highlight:'Show' },
+};
 
+function uiActionLabel(a, lang) {
+  if (a.type === 'openPage' || a.type === 'openSection') {
+    const path = a.args && a.args[0];
+    const map = PAGE_LABELS[lang] || PAGE_LABELS.nl;
+    if (path && path.indexOf('/locations/') === 0) {
+      const slug = path.split('/')[2];
+      return slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace('-', ' ') : 'Locatie';
+    }
+    return (path && map[path]) || (path || (lang === 'fr' ? 'Ouvrir' : 'Openen'));
+  }
+  const L = UIACTION_LABELS[lang] || UIACTION_LABELS.nl;
+  return L[a.type] || (a.args && a.args[0]) || (lang === 'fr' ? 'Ouvrir' : 'Openen');
+}
+
+function UiActionButton({ uiAction, label, isNav, isDark, onLinkClick }) {
+  return (
+    <button
+      onClick={() => { dispatchUIAction(uiAction); if (isNav) onLinkClick?.(); }}
+      className="inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] hover:opacity-90 cursor-pointer"
+      style={isDark ? { background:'rgba(20,14,0,0.55)', border:'1px solid rgba(231,205,112,0.35)', color:'rgba(255,235,160,0.92)' } : { background:'rgba(107,122,63,0.08)', border:'1px solid rgba(107,122,63,0.25)', color:'hsl(var(--foreground))' }}
+    >
+      {label}<ChevronRight className="w-2.5 h-2.5 opacity-60" />
+    </button>
+  );
+}
+
+function AssistantBubble({ content, actions, photos, cards, instagrams, uiActions, isDark, lang, onLinkClick }) {
   return (
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
@@ -858,6 +862,16 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
         {actions?.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
             {actions.map((a, i) => <ActionButton key={i} label={a.label} url={a.url} isDark={isDark} onClick={onLinkClick} />)}
+          </div>
+        )}
+        {uiActions?.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
+            {uiActions.map((a, i) => {
+              const label = uiActionLabel(a, lang);
+              if (!label) return null;
+              const isNav = ['openPage','openSection','openReservation','openContact','openGiftCards'].includes(a.type);
+              return <UiActionButton key={`ui-${i}`} uiAction={a} label={label} isNav={isNav} isDark={isDark} onLinkClick={onLinkClick} />;
+            })}
           </div>
         )}
       </div>
@@ -1257,9 +1271,9 @@ export default function DigitalHost() {
     setIsLoading(true);
     responsePendingRef.current = true;
 
-    // Proactively sync the website to the user's topic — open the relevant
-    // page/panel the moment they mention it, without waiting for the reply.
-    syncToTopic(userText).catch(() => {});
+    // The digital host presents navigation as action buttons in the chat —
+    // it does not auto-open panels/pages. (Only the text host; the ElevenLabs
+    // voice widget still drives the site itself.)
 
     // Show greeting locally if no conversation yet and no messages
     if (!conversationRef.current && messages.length === 0) {
@@ -1537,7 +1551,7 @@ export default function DigitalHost() {
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
-                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} onLinkClick={() => setPhase('minimized')} />
+                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => setPhase('minimized')} />
                 ))}
                 {messages.length === 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">
