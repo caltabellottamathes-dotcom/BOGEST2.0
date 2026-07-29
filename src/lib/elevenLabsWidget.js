@@ -51,3 +51,34 @@ export function minimizeElevenLabsWidget({ retries = 10, interval = 120 } = {}) 
 export function isElevenLabsExpanded() {
   return Boolean(findCollapseButton());
 }
+
+/**
+ * Start a live (voice) conversation with the ElevenLabs agent.
+ *
+ * Uses the widget element's public `startConversation()` method. Falls back
+ * to clicking the orb / expand button inside the widget's open shadow root
+ * if the method is unavailable on this build.
+ *
+ * @returns {boolean} true if a conversation could be started.
+ */
+export function startElevenLabsConversation() {
+  const widget = getWidget();
+  if (!widget) return false;
+  try {
+    if (typeof widget.startConversation === 'function') {
+      widget.startConversation();
+      return true;
+    }
+  } catch { /* fall through to click fallback */ }
+  try {
+    const root = widget.shadowRoot;
+    if (root) {
+      const btn =
+        root.querySelector('button[aria-label="Expand widget"]') ||
+        root.querySelector('button[aria-label="Start call"]') ||
+        root.querySelector('button');
+      if (btn) { btn.click(); return true; }
+    }
+  } catch { /* ignore */ }
+  return false;
+}

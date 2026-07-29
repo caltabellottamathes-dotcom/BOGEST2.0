@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, ChevronRight, ExternalLink } from 'lucide-react';
+import { X, Send, ChevronRight, ExternalLink, MessageCircle, Mic, Compass } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/lib/ThemeContext';
@@ -8,10 +8,12 @@ import { useLang } from '@/lib/LangContext';
 import { getSystemPrompt } from '@/lib/digitalHostKnowledge';
 import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
+import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
+const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ada51c1e1_VideoProject4.mp4';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -41,6 +43,14 @@ const HOST_STRINGS = {
     chip_reserve: 'Tafel reserveren',
     chip_menu: 'Mag ik iets aanraden?',
     chip_explore: 'Ik kijk even rond',
+    entry_headline: 'Welkom bij Bogèst',
+    entry_sub: 'Hoe wilt u vandaag kennismaken?',
+    entry_chat: 'Chat met de gastheer',
+    entry_chat_sub: 'Stel uw vraag via tekst',
+    entry_live: 'Live gesprek voeren',
+    entry_live_sub: 'Spreek met onze gastheer',
+    entry_explore: 'Zelf ontdekken',
+    entry_explore_sub: 'Ik kijk even rond',
     capabilities: ['Menu aanbevelingen', 'Tafel reserveren', 'Vestigingen & uren', 'Wijn- & bieradvies', 'Cadeaubonnen', 'Groepen & events'],
     speech_on: 'Spraak inschakelen',
     speech_off: 'Spraak uitschakelen',
@@ -135,6 +145,14 @@ const HOST_STRINGS = {
     chip_reserve: 'Réserver une table',
     chip_menu: 'Quelle est la recommandation ?',
     chip_explore: 'Je regarde juste',
+    entry_headline: 'Bienvenue chez Bogèst',
+    entry_sub: 'Comment souhaitez-vous découvrir Bogèst ?',
+    entry_chat: "Discuter avec l'hôte",
+    entry_chat_sub: 'Posez votre question par écrit',
+    entry_live: 'Conversation en direct',
+    entry_live_sub: 'Parlez à notre hôte',
+    entry_explore: 'Explorer par vous-même',
+    entry_explore_sub: 'Je regarde juste',
     capabilities: ['Recommandations menu', 'Réserver une table', 'Lieux & horaires', 'Conseils vin & bière', 'Bons cadeaux', 'Groupes & événements'],
     speech_on: 'Activer la voix',
     speech_off: 'Désactiver la voix',
@@ -225,6 +243,14 @@ const HOST_STRINGS = {
     chip_reserve: 'Reserve a table',
     chip_menu: "What's the recommendation?",
     chip_explore: 'Just browsing',
+    entry_headline: 'Welcome to Bogèst',
+    entry_sub: 'How would you like to explore today?',
+    entry_chat: 'Chat with the host',
+    entry_chat_sub: 'Ask your question in text',
+    entry_live: 'Have a live conversation',
+    entry_live_sub: 'Talk to our host',
+    entry_explore: 'Explore by yourself',
+    entry_explore_sub: 'Just browsing',
     capabilities: ['Menu recommendations', 'Book a table', 'Locations & hours', 'Wine & beer advice', 'Gift cards', 'Groups & events'],
     speech_on: 'Enable speech',
     speech_off: 'Disable speech',
@@ -812,7 +838,35 @@ function Chip({ label, onClick, isDark }) {
 }
 
 // ─── Conversational Entry Popup ───────────────────────────────────────────────
-function EntryPopup({ isDark, s, lang, weather, onChipClick, onSkip, visitorMemory }) {
+function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
+  const isPrimary = variant === 'primary';
+  const isGhost = variant === 'ghost';
+  let style;
+  if (isPrimary) {
+    style = { background: isDark ? 'rgba(231,205,112,0.18)' : 'rgba(107,122,63,0.14)', border: '1px solid rgba(231,205,112,0.45)' };
+  } else if (isGhost) {
+    style = { background: 'transparent', border: '1px dashed ' + (isDark ? 'rgba(255,255,255,0.16)' : 'rgba(74,83,32,0.25)') };
+  } else {
+    style = { background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(74,83,32,0.16)') };
+  }
+  return (
+    <button onClick={onClick}
+      className="group w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:scale-[1.02] cursor-pointer text-left"
+      style={style}>
+      <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+        style={{ background: isPrimary ? 'rgba(231,205,112,0.22)' : isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.04)' }}>
+        <Icon className="w-4 h-4 text-primary" />
+      </span>
+      <span className="flex-1 min-w-0">
+        <span className="block font-body text-sm font-semibold text-foreground leading-tight">{label}</span>
+        <span className="block font-body text-[11px] text-muted-foreground mt-0.5">{sub}</span>
+      </span>
+      <ChevronRight className="w-4 h-4 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+    </button>
+  );
+}
+
+function EntryPopup({ isDark, s, lang, onChat, onLiveConversation, onSkip, visitorMemory }) {
   const greeting = getTimeGreeting(s);
   const meal = getMealCtx();
   const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
@@ -820,82 +874,71 @@ function EntryPopup({ isDark, s, lang, weather, onChipClick, onSkip, visitorMemo
 
   let fullIntro;
   if (isReturning) {
-    // Returning visitor — short warm recognition
     fullIntro = `${greeting}! ${pickRandom(v.returning)}`;
   } else {
-    // First-time — full intro
     const line1 = pickRandom(v.line1);
     const line2 = meal === 'lunch' ? pickRandom(v.line2_lunch) : meal === 'diner' ? pickRandom(v.line2_diner) : pickRandom(v.line2_default);
-    let line3 = null;
-    if (weather) {
-      const forecastSimple = weather.forecast && weather.forecast.length > 0 ? weather.forecast[0].split(':')[1]?.trim() : 'mooi';
-      if (weather.isWarm && weather.isSunny) line3 = s.intro_line3_warm_sunny.replace('{temp}', weather.temp);
-      else if (weather.isRainy) line3 = s.intro_line3_rainy.replace('{temp}', weather.temp);
-      else line3 = s.intro_line3_weather.replace('{temp}', weather.temp).replace('{desc}', weather.desc).replace('{forecast}', forecastSimple);
-    }
     const question = pickRandom(v.question);
-    fullIntro = `${greeting}! ${[line1, line2, line3].filter(Boolean).join(' ')}\n\n${question}`;
+    fullIntro = `${greeting}! ${[line1, line2].filter(Boolean).join(' ')}\n${question}`;
   }
 
   const panelStyle = isDark
     ? { background: 'rgba(8,8,8,0.95)', backdropFilter: 'blur(48px)', WebkitBackdropFilter: 'blur(48px)', border: '1px solid rgba(255,255,255,0.11)' }
     : { background: 'rgba(254,252,248,0.97)', backdropFilter: 'blur(48px)', WebkitBackdropFilter: 'blur(48px)', border: '1px solid rgba(74,83,32,0.26)' };
 
-  const chips = [s.chip_location, s.chip_reserve, s.chip_menu];
-
   return (
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={onSkip} />
-      <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }}         exit={{ opacity: 0, scale: 0.92, y: 24 }}
+      <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
-        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden p-6 sm:p-8 relative"
+        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative"
           style={{ maxWidth: 420, ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
 
-          {/* Header — avatar + name */}
-          <div className="flex items-center gap-3 mb-5">
-            <LogoAvatar size="lg" online isDark={isDark} />
-            <div>
-              <p className="font-heading text-lg font-bold text-foreground leading-tight">{greeting}!</p>
-              <p className="font-body text-[10px] text-primary tracking-[0.2em] uppercase mt-0.5">{s.title}</p>
-            </div>
-            <button onClick={onSkip}
-              className="ml-auto w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors flex-shrink-0"
-              style={{ background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.05)' }}>
-              <X className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Conversational bubble — typewriter */}
-          <div className="flex items-start gap-3 mb-5">
-            <div className="flex-1 px-4 py-3.5 rounded-2xl rounded-tl-sm"
-              style={{ background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(74,83,32,0.07)' }}>
-              <p className="font-body text-sm text-foreground leading-relaxed whitespace-pre-line">
-                {fullIntro}
-              </p>
-            </div>
-          </div>
-
-          {/* Capabilities */}
-          <div className="flex flex-wrap gap-x-4 gap-y-2 mb-5">
-            {s.capabilities?.map((cap, i) => (
-              <div key={i} className="flex items-center gap-1.5">
-                <span className="w-1 h-1 rounded-full bg-primary" />
-                <span className="font-body text-[11px] text-muted-foreground">{cap}</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Quick reply chips */}
-          <div className="flex flex-wrap gap-2 mb-4">
-            {chips.map((c, i) => <Chip key={i} label={c} onClick={onChipClick} isDark={isDark} />)}
-          </div>
-
-          {/* Skip link */}
-          <button onClick={onSkip} className="w-full text-center font-body text-xs text-muted-foreground/60 hover:text-muted-foreground transition-colors pt-1">
-            {s.close_skip} →
+          {/* Close */}
+          <button onClick={onSkip}
+            className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+            style={{ background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)' }}>
+            <X className="w-3.5 h-3.5" />
           </button>
+
+          {/* Welcome video */}
+          <div className="relative w-full" style={{ height: 176 }}>
+            <video
+              src={WELCOME_VIDEO_URL}
+              autoPlay muted loop playsInline
+              className="w-full h-full object-cover"
+              style={{ filter: isDark ? 'brightness(0.92)' : 'none' }}
+            />
+            <div className="absolute inset-0" style={{ background: isDark ? 'linear-gradient(180deg, rgba(8,8,8,0) 35%, rgba(8,8,8,0.92) 100%)' : 'linear-gradient(180deg, rgba(254,252,248,0) 35%, rgba(254,252,248,0.94) 100%)' }} />
+            {/* Online badge */}
+            <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+              style={{ background: 'rgba(8,8,8,0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+              <span className="w-2 h-2 rounded-full bg-primary" style={{ boxShadow: '0 0 6px rgba(231,205,112,0.8)' }} />
+              <span className="font-body text-[9px] tracking-[0.18em] uppercase" style={{ color: 'rgba(255,235,160,0.92)' }}>{s.assistant}</span>
+            </div>
+          </div>
+
+          {/* Body */}
+          <div className="px-6 pb-6 -mt-7 relative z-10">
+            <div className="flex items-center gap-3 mb-4">
+              <LogoAvatar size="lg" online isDark={isDark} />
+              <div>
+                <p className="font-heading text-xl font-bold text-foreground leading-tight">{s.entry_headline}</p>
+                <p className="font-body text-xs text-muted-foreground mt-0.5">{s.entry_sub}</p>
+              </div>
+            </div>
+
+            <p className="font-body text-sm text-foreground/85 leading-relaxed mb-5 whitespace-pre-line">{fullIntro}</p>
+
+            {/* Action buttons */}
+            <div className="space-y-2.5">
+              <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={onChat} variant="primary" />
+              <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={onLiveConversation} />
+              <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={onSkip} variant="ghost" />
+            </div>
+          </div>
         </div>
       </motion.div>
     </>
@@ -1158,6 +1201,12 @@ export default function DigitalHost() {
 
   const handleSkip = () => { sessionStorage.setItem('bogest-host-seen', '1'); setPhase('minimized'); };
 
+  const handleLiveConversation = () => {
+    sessionStorage.setItem('bogest-host-seen', '1');
+    try { startElevenLabsConversation(); } catch {}
+    setPhase('minimized');
+  };
+
   // Yellow glass — more transparent with stronger blur
   const glassStyle = {
     background: isDark ? 'rgba(100, 70, 0, 0.32)' : 'rgba(107,122,63,0.14)',
@@ -1171,7 +1220,8 @@ export default function DigitalHost() {
       {/* ENTRY */}
       <AnimatePresence>
         {phase === 'entry' && (
-          <EntryPopup isDark={isDark} s={s} lang={lang} weather={weather} onChipClick={handleEntryChip} onSkip={handleSkip} visitorMemory={visitorMemory} />
+          <EntryPopup isDark={isDark} s={s} lang={lang}
+            onChat={() => openChat()} onLiveConversation={handleLiveConversation} onSkip={handleSkip} visitorMemory={visitorMemory} />
         )}
       </AnimatePresence>
 
