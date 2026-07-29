@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
+import AccentToggle from '@/components/AccentToggle';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import { LANGUAGES } from '@/lib/i18n';
@@ -151,6 +152,9 @@ export default function Navbar() {
               </AnimatePresence>
             </div>
 
+            {/* Accent toggle — yellow ↔ green */}
+            <AccentToggle className="hidden md:flex" />
+
             {/* Reserve CTA */}
             <Link
               to="/reserve"
@@ -226,6 +230,7 @@ export default function Navbar() {
         </div>
 
         <div className="px-6 pb-6 flex items-center gap-3 border-t pt-4" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)' }}>
+          <AccentToggle />
           {LANGUAGES.map(l => (
             <button
               key={l.code}
