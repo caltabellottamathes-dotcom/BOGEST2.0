@@ -1280,10 +1280,10 @@ export default function DigitalHost() {
 
   // Yellow glass — more transparent with stronger blur
   const glassStyle = {
-    background: isDark ? 'rgba(100, 70, 0, 0.32)' : 'rgba(107,122,63,0.14)',
-    backdropFilter: 'blur(120px) saturate(280%)',
-    WebkitBackdropFilter: 'blur(120px) saturate(280%)',
-    border: isDark ? '1px solid rgba(231,205,112,0.22)' : '1px solid rgba(107,122,63,0.40)',
+    background: 'rgba(255,255,255,0.08)',
+    backdropFilter: 'blur(40px) saturate(160%)',
+    WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+    border: '1px solid rgba(255,255,255,0.16)',
   };
 
   return (
@@ -1347,11 +1347,11 @@ export default function DigitalHost() {
                   >
                     <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
                       style={{
-                        background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
-                        backdropFilter: 'blur(60px) saturate(220%)',
-                        WebkitBackdropFilter: 'blur(60px) saturate(220%)',
-                        border: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                        boxShadow: isDark ? '0 12px 40px rgba(120,90,10,0.40), 0 0 0 1px rgba(231,205,112,0.18)' : '0 12px 40px rgba(74,83,32,0.25), 0 0 0 1px rgba(107,122,63,0.15)',
+                        background: 'rgba(255,255,255,0.07)',
+                        backdropFilter: 'blur(28px) saturate(140%)',
+                        WebkitBackdropFilter: 'blur(28px) saturate(140%)',
+                        border: '1px solid rgba(255,255,255,0.16)',
+                        boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
                       }}>
                       <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
                         className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center transition-colors"
@@ -1369,10 +1369,10 @@ export default function DigitalHost() {
                     </div>
                     <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45"
                       style={{
-                        background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
-                        backdropFilter: 'blur(60px)', WebkitBackdropFilter: 'blur(60px)',
-                        borderTop: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                        borderRight: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
+                        background: 'rgba(255,255,255,0.07)',
+                        backdropFilter: 'blur(28px)', WebkitBackdropFilter: 'blur(28px)',
+                        borderTop: '1px solid rgba(255,255,255,0.16)',
+                        borderRight: '1px solid rgba(255,255,255,0.16)',
                       }} />
                   </motion.div>
                 )
@@ -1467,7 +1467,7 @@ export default function DigitalHost() {
 
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 relative z-10"
-                style={{ background: isDark ? 'rgba(180,140,10,0.22)' : 'rgba(107,122,63,0.08)', borderBottom: isDark ? '1px solid rgba(200,160,10,0.30)' : '1px solid rgba(107,122,63,0.15)' }}>
+                style={{ background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
                 {/* Mobile drag handle */}
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-foreground/15 sm:hidden" />
                 <div className="flex items-center gap-2.5 mt-1 sm:mt-0">
@@ -1513,9 +1513,9 @@ export default function DigitalHost() {
 
               {/* Input — sticky at bottom, safe area aware */}
               <div className="flex-shrink-0 px-3 pb-safe pt-2.5 pb-3 relative z-10"
-                style={{ borderTop: isDark ? '1px solid rgba(200,160,10,0.30)' : '1px solid rgba(107,122,63,0.15)' }}>
+                style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
                 <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl"
-                  style={{ background: isDark ? 'rgba(20,14,0,0.72)' : 'rgba(107,122,63,0.12)', border: isDark ? '1px solid rgba(231,205,112,0.25)' : '1px solid rgba(107,122,63,0.25)' }}>
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.16)' }}>
                   <input
                     ref={inputRef}
                     value={input}
