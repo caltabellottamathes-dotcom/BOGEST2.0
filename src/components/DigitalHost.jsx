@@ -1158,13 +1158,12 @@ export default function DigitalHost() {
 
   const handleSkip = () => { sessionStorage.setItem('bogest-host-seen', '1'); setPhase('minimized'); };
 
-  // Glass — dark neutral with a thin gold rim, matching the floating video
-  // and the ElevenLabs orb so the chat window reads as part of the same family.
+  // Yellow glass — more transparent with stronger blur
   const glassStyle = {
-    background: isDark ? 'rgba(12,12,12,0.86)' : 'rgba(254,252,248,0.92)',
-    backdropFilter: 'blur(40px) saturate(150%)',
-    WebkitBackdropFilter: 'blur(40px) saturate(150%)',
-    border: isDark ? '1px solid rgba(231,205,112,0.28)' : '1px solid rgba(74,83,32,0.30)',
+    background: isDark ? 'rgba(100, 70, 0, 0.32)' : 'rgba(107,122,63,0.14)',
+    backdropFilter: 'blur(120px) saturate(280%)',
+    WebkitBackdropFilter: 'blur(120px) saturate(280%)',
+    border: isDark ? '1px solid rgba(231,205,112,0.22)' : '1px solid rgba(107,122,63,0.40)',
   };
 
   return (
@@ -1304,14 +1303,14 @@ export default function DigitalHost() {
                 height: kbOffset > 0 ? `${Math.min((typeof window !== 'undefined' && window.visualViewport?.height || 520) * 0.85, 500)}px` : 'min(72dvh, 520px)',
                 /* Tablet+ override */
                 ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '24px' } : {}),
-                boxShadow: isDark ? '0 28px 72px rgba(0,0,0,0.60), 0 0 0 1px rgba(231,205,112,0.18)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
+                boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >
               {/* Background watermark removed */}
 
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 relative z-10"
-                style={{ background: isDark ? 'rgba(20,16,8,0.55)' : 'rgba(107,122,63,0.06)', borderBottom: isDark ? '1px solid rgba(231,205,112,0.22)' : '1px solid rgba(107,122,63,0.15)' }}>
+                style={{ background: isDark ? 'rgba(180,140,10,0.22)' : 'rgba(107,122,63,0.08)', borderBottom: isDark ? '1px solid rgba(200,160,10,0.30)' : '1px solid rgba(107,122,63,0.15)' }}>
                 {/* Mobile drag handle */}
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-foreground/15 sm:hidden" />
                 <div className="flex items-center gap-2.5 mt-1 sm:mt-0">
@@ -1357,7 +1356,7 @@ export default function DigitalHost() {
 
               {/* Input — sticky at bottom, safe area aware */}
               <div className="flex-shrink-0 px-3 pb-safe pt-2.5 pb-3 relative z-10"
-                style={{ borderTop: isDark ? '1px solid rgba(231,205,112,0.22)' : '1px solid rgba(107,122,63,0.15)' }}>
+                style={{ borderTop: isDark ? '1px solid rgba(200,160,10,0.30)' : '1px solid rgba(107,122,63,0.15)' }}>
                 <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl"
                   style={{ background: isDark ? 'rgba(20,14,0,0.72)' : 'rgba(107,122,63,0.12)', border: isDark ? '1px solid rgba(231,205,112,0.25)' : '1px solid rgba(107,122,63,0.25)' }}>
                   <input
