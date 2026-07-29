@@ -818,6 +818,26 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
       }, 250 + i * 400);
     });
   }, [uiActions]);
+
+  // Proactive auto-action fallback: when the host didn't emit a [UIACTION:] tag
+  // but its reply is a short directive with a single internal action button (no
+  // rich media), perform that action automatically so the visitor is taken
+  // there without having to click.
+  useEffect(() => {
+    if (uiActions && uiActions.length > 0) return;
+    if (cards?.length || photos?.length || instagrams?.length) return;
+    if (!actions || actions.length === 0) return;
+    const internal = actions.filter((a) => a.url && String(a.url).startsWith('/'));
+    if (internal.length !== 1) return;
+    if ((content || '').length > 200) return;
+    const target = internal[0].url;
+    const t = setTimeout(() => {
+      dispatchUIAction({ type: 'openPage', args: [target] });
+      onLinkClick?.();
+    }, 600);
+    return () => clearTimeout(t);
+  }, [uiActions, actions, cards, photos, instagrams, content]);
+
   return (
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
