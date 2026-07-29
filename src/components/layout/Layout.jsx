@@ -69,22 +69,6 @@ export default function Layout() {
 
       {!isPanel && <Footer />}
 
-      {/* Walking man video — bottom-left, behind all widgets */}
-      <div
-        className="fixed bottom-0 left-0 pointer-events-none z-[70]"
-        style={{ width: '180px', height: '320px' }}
-      >
-        <video
-          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/a5f84557e_salvobogest.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="w-full h-full object-cover"
-          style={{ filter: 'drop-shadow(0 0 24px rgba(0,0,0,0.3))' }}
-        />
-      </div>
-
       {/* Digital Host — visible on all pages */}
       <DigitalHost />
 
