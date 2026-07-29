@@ -12,7 +12,7 @@ import { motion } from 'framer-motion';
  * desktop); when it finishes it resets to the first frame and shrinks back.
  */
 const VIDEO_SRC =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ada51c1e1_VideoProject4.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/53f5d005a_Host_Salvo_VideoCard.mp4';
 
 export default function FloatingVideo() {
   const videoRef = useRef(null);

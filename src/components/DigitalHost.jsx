@@ -13,7 +13,7 @@ import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
-const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ada51c1e1_VideoProject4.mp4';
+const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/2a5fb09fc_POP-UPVIDEO.mp4';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -866,7 +866,7 @@ function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
   );
 }
 
-function EntryPopup({ isDark, s, lang, onChat, onLiveConversation, onSkip, visitorMemory }) {
+function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSkip, visitorMemory }) {
   const greeting = getTimeGreeting(s);
   const meal = getMealCtx();
   const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
@@ -878,8 +878,15 @@ function EntryPopup({ isDark, s, lang, onChat, onLiveConversation, onSkip, visit
   } else {
     const line1 = pickRandom(v.line1);
     const line2 = meal === 'lunch' ? pickRandom(v.line2_lunch) : meal === 'diner' ? pickRandom(v.line2_diner) : pickRandom(v.line2_default);
+    let line3 = null;
+    if (weather) {
+      const forecastSimple = weather.forecast && weather.forecast.length > 0 ? weather.forecast[0].split(':')[1]?.trim() : 'mooi';
+      if (weather.isWarm && weather.isSunny) line3 = s.intro_line3_warm_sunny.replace('{temp}', weather.temp);
+      else if (weather.isRainy) line3 = s.intro_line3_rainy.replace('{temp}', weather.temp);
+      else line3 = s.intro_line3_weather.replace('{temp}', weather.temp).replace('{desc}', weather.desc).replace('{forecast}', forecastSimple);
+    }
     const question = pickRandom(v.question);
-    fullIntro = `${greeting}! ${[line1, line2].filter(Boolean).join(' ')}\n${question}`;
+    fullIntro = `${greeting}! ${[line1, line2, line3].filter(Boolean).join(' ')}\n\n${question}`;
   }
 
   const panelStyle = isDark
@@ -909,9 +916,7 @@ function EntryPopup({ isDark, s, lang, onChat, onLiveConversation, onSkip, visit
               src={WELCOME_VIDEO_URL}
               autoPlay muted loop playsInline
               className="w-full h-full object-cover"
-              style={{ filter: isDark ? 'brightness(0.92)' : 'none' }}
             />
-            <div className="absolute inset-0" style={{ background: isDark ? 'linear-gradient(180deg, rgba(8,8,8,0) 35%, rgba(8,8,8,0.92) 100%)' : 'linear-gradient(180deg, rgba(254,252,248,0) 35%, rgba(254,252,248,0.94) 100%)' }} />
             {/* Online badge */}
             <div className="absolute top-3 left-3 flex items-center gap-1.5 px-2.5 py-1 rounded-full"
               style={{ background: 'rgba(8,8,8,0.55)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
@@ -921,7 +926,7 @@ function EntryPopup({ isDark, s, lang, onChat, onLiveConversation, onSkip, visit
           </div>
 
           {/* Body */}
-          <div className="px-6 pb-6 -mt-7 relative z-10">
+          <div className="px-6 pt-5 pb-6">
             <div className="flex items-center gap-3 mb-4">
               <LogoAvatar size="lg" online isDark={isDark} />
               <div>
@@ -1220,7 +1225,7 @@ export default function DigitalHost() {
       {/* ENTRY */}
       <AnimatePresence>
         {phase === 'entry' && (
-          <EntryPopup isDark={isDark} s={s} lang={lang}
+          <EntryPopup isDark={isDark} s={s} lang={lang} weather={weather}
             onChat={() => openChat()} onLiveConversation={handleLiveConversation} onSkip={handleSkip} visitorMemory={visitorMemory} />
         )}
       </AnimatePresence>
