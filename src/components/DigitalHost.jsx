@@ -1020,7 +1020,7 @@ export default function DigitalHost() {
   const [fabExpanded, setFabExpanded] = useState(false);
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   const [visitorMemory] = useState(() => touchVisitorMemory());
-  const { profile: visitorProfile, updateProfile, incrementConversation } = useVisitorProfile();
+  const { profile: visitorProfile, updateProfile, incrementConversation, visitorId } = useVisitorProfile();
   const { menuContext, popularItems } = useMenuKnowledge(lang);
   const prevLangRef = useRef(lang);
   const blinkTimerRef = useRef(null);
@@ -1194,7 +1194,7 @@ export default function DigitalHost() {
     conversationRef.current = conv;
     subscriptionRef.current = base44.agents.subscribeToConversation(conv.id, (data) => {
       const agentMessages = (data.messages || []).map(m => {
-        if (m.role === 'user') return { role: 'user', content: m.content || '' };
+        if (m.role === 'user') return { role: 'user', content: (m.content || '').replace(/^\[ctx:[^\]]*\]\s*/i, '') };
         const parsed = parseActions(m.content || '');
         return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards, instagrams: parsed.instagrams, uiActions: parsed.uiActions };
       });
@@ -1225,7 +1225,11 @@ export default function DigitalHost() {
 
     try {
       const conv = await ensureConversation();
-      await base44.agents.addMessage(conv, { role: 'user', content: userText });
+      const profileStr = visitorProfile
+        ? `name=${visitorProfile.name || '-'},loc=${visitorProfile.preferred_location || '-'},fav=${visitorProfile.favorite_dish || '-'},diet=${visitorProfile.allergies || '-'}`
+        : 'new';
+      const ctx = `[ctx: visitor_id=${visitorId || 'anon'}; page=${location.pathname}; weather=${weather ? `${weather.desc} ${weather.temp}C` : 'n/a'}; profile=${profileStr}]`;
+      await base44.agents.addMessage(conv, { role: 'user', content: `${ctx} ${userText}` });
       incrementConversation();
       extractProfileInfo(userText, updateProfile);
     } catch {
