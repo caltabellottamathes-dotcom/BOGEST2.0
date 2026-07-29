@@ -14,6 +14,7 @@ import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
 const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/f33cb896e_popuphost.mp4';
+const MOBILE_WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/18575a0ff_MobilePOP-UP.mp4';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -881,6 +882,14 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
   }, []);
 
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    const update = () => setIsMobile(mq.matches);
+    try { mq.addEventListener('change', update); } catch { mq.addListener(update); }
+    return () => { try { mq.removeEventListener('change', update); } catch { mq.removeListener(update); } };
+  }, []);
+
   let fullIntro;
   if (isReturning) {
     fullIntro = `${greeting}! ${pickRandom(v.returning)}`;
@@ -916,7 +925,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
           <div className="relative flex-shrink-0 w-full h-40 sm:w-[42%] sm:h-auto sm:min-h-[300px]">
             <video
               ref={videoRef}
-              src={WELCOME_VIDEO_URL}
+              src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline
               className="absolute inset-0 w-full h-full object-cover"
             />

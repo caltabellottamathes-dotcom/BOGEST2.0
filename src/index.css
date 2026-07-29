@@ -153,6 +153,9 @@ did-agent,
   z-index: 99999 !important;
 }
 
+/* Hide the Chrome cast overlay button on videos (floating video card) */
+video::-internal-media-controls-overlay-cast-button { display: none !important; }
+
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }

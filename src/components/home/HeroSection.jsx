@@ -129,13 +129,13 @@ export default function HeroSection() {
           >
             <Link
               to="/reserve"
-              className="group inline-flex items-center gap-3 px-7 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500"
+              className="group inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 bg-primary text-primary-foreground font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500"
             >
               {t('hero_cta_reserve')}
             </Link>
             <Link
               to="/menu"
-              className="inline-flex items-center gap-3 px-7 py-3.5 border border-white/25 text-white font-body text-xs tracking-widest uppercase rounded-full hover:border-white/50 hover:bg-white/5 transition-all duration-500"
+              className="inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 border border-white/25 text-white font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:border-white/50 hover:bg-white/5 transition-all duration-500"
             >
               {t('hero_cta_menu')}
             </Link>
