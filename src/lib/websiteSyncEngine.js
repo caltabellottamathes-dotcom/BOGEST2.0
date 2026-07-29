@@ -1,4 +1,5 @@
 import { routeTopic } from '@/lib/websiteSyncRouter';
+import { CONTENT_INDEX } from '@/lib/websiteContentIndex';
 
 /**
  * Conversational Sync Engine.
@@ -96,8 +97,32 @@ async function routeAndExecute(topic) {
   }
 }
 
+// Keyword fast path — instant, no LLM round-trip, for the most common
+// navigation topics so the page opens the moment the visitor mentions one.
+const KEYWORD_FAST_PATH = [
+  { re: /\bmenu\b|\bkaart\b|\bgerechten?\b/i, id: 'menu' },
+  { re: /\b(reserveer|reserveren|reservatie|reservaties|tafel|boeking|boeken)\b/i, id: 'reserve' },
+  { re: /\bvestiging(en)?\b|\blocatie(s)?\b|\bwaar zitten\b/i, id: 'locations' },
+  { re: /\bhasselt\b/i, id: 'loc-hasselt' },
+  { re: /\bborgloon\b/i, id: 'loc-borgloon' },
+  { re: /\b(heusden|zolder)\b/i, id: 'loc-heusden-zolder' },
+  { re: /\b(cadeaubon|cadeaubonnen|cadeau|giftcard|giftcards|voucher)\b/i, id: 'gift-cards' },
+  { re: /\bcontact\b|\bcontactformulier\b|\bbericht\b/i, id: 'contact' },
+  { re: /\b(groep|groepen|event|events|feestje|privé)\b/i, id: 'groups' },
+  { re: /\b(afhalen|takeaway|take-away|pickup)\b/i, id: 'takeaway' },
+  { re: /\b(verhaal|filosofie|over ons|ons verhaal)\b/i, id: 'about' },
+  { re: /\b(instagram|social|foto'?s?)\b/i, id: 'instagram' },
+];
+
 /** Proactively sync the website to a topic (used by the text host). Fire-and-forget. */
-export function syncToTopic(topic) {
+export async function syncToTopic(topic) {
+  const text = String(topic || '');
+  for (const k of KEYWORD_FAST_PATH) {
+    if (k.re.test(text)) {
+      const entry = CONTENT_INDEX.find((e) => e.id === k.id);
+      if (entry) return executeEntry(entry);
+    }
+  }
   return routeAndExecute(topic);
 }
 

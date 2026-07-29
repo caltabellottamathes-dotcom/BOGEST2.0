@@ -35,10 +35,10 @@ const HOST_STRINGS = {
     greeting_evening: 'Goedenavond',
     greeting_night: 'Goedenacht',
     intro_line1: 'Ik ben de gastheer van Bogèst.',
-    intro_line2_lunch: 'Hebt ge zin in een lekkere lunch vandaag?',
+    intro_line2_lunch: 'Hebt u zin in een lekkere lunch vandaag?',
     intro_line2_diner: 'Plannen voor vanavond? Ik help u graag verder.',
     intro_line2_default: 'Ik ken ons menu en onze vestigingen van binnen en van buiten.',
-    intro_line3_warm_sunny: 'Het is trouwens prachtig weer vandaag — {temp}°C en zonnig. Ge zit vast graag buiten? Perfect op ons terras.',
+    intro_line3_warm_sunny: 'Het is trouwens prachtig weer vandaag — {temp}°C en zonnig. U zit vast graag buiten? Perfect op ons terras.',
     intro_line3_rainy: 'Het is wat regenachtig buiten ({temp}°C), maar binnen bij ons is het altijd gezellig en warm.',
     intro_line3_weather: 'Buiten is het momenteel {desc} en {temp}°C. Het weekend ziet er {forecast} uit.',
     intro_question: 'Waarmee kan ik u helpen?',
@@ -64,48 +64,48 @@ const HOST_STRINGS = {
       '/about': ['Het verhaal van Bogèst', 'Onze vleesfilosofie'],
     },
     page_greetings: {
-      '/menu': 'Twijfelt ge nog tussen een paar gerechten? Zeg het maar — ik help u graag kiezen.',
-      '/locations': 'Zijt ge op zoek naar de juiste vestiging? Ik vertel u graag het verschil.',
+      '/menu': 'Twijfelt u nog tussen een paar gerechten? Zeg het maar — ik help u graag kiezen.',
+      '/locations': 'Bent u op zoek naar de juiste vestiging? Ik vertel u graag het verschil.',
       '/reserve': 'Nog vragen voor uw reservering? Geen probleem, ik help u alvast verder.',
       '/about': 'Nieuwsgierig naar het verhaal achter Bogèst? Ik vertel het u graag.',
       default: 'Waarmee kan ik u helpen? Ik ken alles over ons menu, onze vestigingen en wat Bogèst zo bijzonder maakt.',
     },
     proactive_facts: [
-      { msg: 'Wist ge al dat bij elk hoofdgerecht bij ons een voorgerecht én een dessert inbegrepen zijn? Ge betaalt alleen de prijs van het hoofdgerecht.', actions: [{ label: 'Bekijk het menu', url: '/menu' }] },
-      { msg: 'Onze Côte à l\'os voor twee is zo populair dat gasten er speciaal voor terugkomen. Zou ge dat ook graag eens ontdekken?', actions: [{ label: 'Reserveer een tafel', url: '/reserve' }] },
+      { msg: 'Wist u al dat bij elk hoofdgerecht bij ons een voorgerecht én een dessert inbegrepen zijn? U betaalt alleen de prijs van het hoofdgerecht.', actions: [{ label: 'Bekijk het menu', url: '/menu' }] },
+      { msg: 'Onze Côte à l\'os voor twee is zo populair dat gasten er speciaal voor terugkomen. Zou u dat ook graag eens ontdekken?', actions: [{ label: 'Reserveer een tafel', url: '/reserve' }] },
       { msg: 'Bogèst heeft drie gezellige vestigingen in Limburg — in Hasselt, Borgloon en Heusden-Zolder. Elke plek heeft zijn eigen sfeer.', actions: [{ label: 'Ontdek de locaties', url: '/locations' }] },
       { msg: 'Onze spare ribs worden urenlang langzaam gegaard. Het vlees valt letterlijk van het bot — met ons eigen geheim sausje erbij. Echte Bogèst-klassieker.', actions: [{ label: 'Zie het menu', url: '/menu' }] },
       { msg: 'Volg ons op Instagram voor sfeerbeelden en weekspecials — per vestiging zelfs!', actions: [{ label: 'Hasselt', url: 'https://www.instagram.com/bogesthasselt' }, { label: 'Borgloon', url: 'https://www.instagram.com/bogestborgloon' }] },
-      { msg: 'Voor een romantisch diner voor twee is Borgloon echt de moeite — landelijk, charmant en intiem. Ge zult er geen spijt van hebben.', actions: [{ label: 'Borgloon', url: '/locations/borgloon' }, { label: 'Reserveer', url: '/reserve' }] },
+      { msg: 'Voor een romantisch diner voor twee is Borgloon echt de moeite — landelijk, charmant en intiem. U zult er geen spijt van hebben.', actions: [{ label: 'Borgloon', url: '/locations/borgloon' }, { label: 'Reserveer', url: '/reserve' }] },
       { msg: 'Onze Masters of Meat — Angus Ribeye en Hereford Ribeye — zijn premium stukken met superieure marmering. Iets voor de echte vleesliefhebber.', actions: [{ label: 'Meer over het menu', url: '/menu' }] },
-      { msg: 'Komt ge met het gezin? Heusden-Zolder is echt gezinsvriendelijk en ruim. De kinderen kunnen er zelfs hun eigen ijsje versieren!', actions: [{ label: 'Ontdek Heusden-Zolder', url: '/locations/heusden-zolder' }] },
+      { msg: 'Komt u met het gezin? Heusden-Zolder is echt gezinsvriendelijk en ruim. De kinderen kunnen er zelfs hun eigen ijsje versieren!', actions: [{ label: 'Ontdek Heusden-Zolder', url: '/locations/heusden-zolder' }] },
       { msg: 'De naam "Bogèst" komt van "Beau Geste" — een mooi gebaar. Want bij ons genieten, dat is meer dan alleen eten. Het is een ervaring.' },
       { msg: 'Onze trots: het Belgisch Witblauw. Een streekras dat van nature uitzonderlijk mals en fijn vlees levert. Echte Limburgse kwaliteit.', actions: [{ label: 'Zie het menu', url: '/menu' }] },
-      { msg: 'Wist ge dat we al onze sauzen vers kloppen? Béarnaise, roquefort, peperroom — niets komt uit een potje. Dat proeft ge.' },
+      { msg: 'Wist u dat we al onze sauzen vers kloppen? Béarnaise, roquefort, peperroom — niets komt uit een potje. Dat proeft u.' },
       { msg: 'Een goede filet pur hoort rosé te zijn aan de binnenkant. Vraag gerust aan onze grilleurs hoe zij het perfect bereiden.' },
       { msg: 'De Maillard-reactie — dat is de scheikunde achter dat heerlijke korstje op gegrild vlees. Hoe heter de grill, hoe lekkerder de korst.' },
       { msg: 'Onze stoofvlees wordt traag gesudderd op grootmoeders wijze. Geen haast, alleen geduld en goede ingrediënten. Dat is het geheim.' },
-      { msg: 'Wist ge dat marmering — die witte vette adertjes in vlees — zorgt voor smaak en malsheid? Hoe meer marmering, hoe sappiger.' },
+      { msg: 'Wist u dat marmering — die witte vette adertjes in vlees — zorgt voor smaak en malsheid? Hoe meer marmering, hoe sappiger.' },
       { msg: 'Onze huiswijnen zijn persoonlijk geselecteerd door Ardan zelf. Geen toeval — elke fles is een bewuste keuze die bij ons vlees past.' },
       { msg: 'Orange wines zijn een van onze specialiteiten. Geen gewone witte wijn — een natuurlijke wijn met een oranjekleurige tint en verrassende smaak.' },
       { msg: 'Het vlees na het grillen laten rusten? Dat is geen luxe — het laat de sappen herverdelen zodat elke hap mals blijft. Onze grilleurs weten precies hoe lang.' },
       { msg: 'Onze luikse saus is huisbereid — geen gewone saus uit de winkel. Echte Luikse stroop, mosterd en kruiden. Dat maakt het verschil bij onze bouletten.' },
-      { msg: 'De Entremisu Bogèst is onze eigen creatie — een kruising tussen tiramisu en entremet. Ge vindt nergens anders zoiets.' },
+      { msg: 'De Entremisu Bogèst is onze eigen creatie — een kruising tussen tiramisu en entremet. U vindt nergens anders zoiets.' },
       { msg: 'Onze grilleurs kennen elk stuk vlees persoonlijk. Zij weten precies welke snede hoe op de grill thuishoort. Dat is ambacht, geen toeval.' },
       { msg: 'Na een goede maaltijd hoort een goed glas. Onze Godina-wijn? Die hebben we zelf laten maken — een volle rode die perfect past bij onze grillgerechten.' },
     ],
     proactive_invites: [
-      { msg: 'Ik zit hier klaar om u te helpen. Hebt ge een vraag, of gewoon zin om even te kletsen?', actions: [] },
-      { msg: 'Zit ge te twijfelen tussen een paar gerechten? Vraag het me gerust — ik ken het menu van buiten.', actions: [] },
-      { msg: 'Nog even en ge hebt honger, zeker? Ik kan u alvast een tafel zoeken als ge wilt.', actions: [{ label: 'Reserveer', url: '/reserve' }] },
-      { msg: 'Hebt ge iets bijzonders gepland? Een verjaardag, een date? Ik help u het perfect te maken.', actions: [] },
-      { msg: 'Twijfelt ge over welke vestiging het beste past? Vraag het me — ik ken ze alle drie.', actions: [{ label: 'Vergelijk locaties', url: '/locations' }] },
-      { msg: 'Ge kunt me alles vragen, hè. Van wijnadvies tot parkeerinformatie. Ik ben er voor u.', actions: [] },
+      { msg: 'Ik zit hier klaar om u te helpen. Hebt u een vraag, of gewoon zin om even te kletsen?', actions: [] },
+      { msg: 'Zit u te twijfelen tussen een paar gerechten? Vraag het me gerust — ik ken het menu van buiten.', actions: [] },
+      { msg: 'Nog even en u hebt honger, zeker? Ik kan u alvast een tafel zoeken als u wilt.', actions: [{ label: 'Reserveer', url: '/reserve' }] },
+      { msg: 'Hebt u iets bijzonders gepland? Een verjaardag, een date? Ik help u het perfect te maken.', actions: [] },
+      { msg: 'Twijfelt u over welke vestiging het beste past? Vraag het me — ik ken ze alle drie.', actions: [{ label: 'Vergelijk locaties', url: '/locations' }] },
+      { msg: 'U kunt me alles vragen, hè. Van wijnadvies tot parkeerinformatie. Ik ben er voor u.', actions: [] },
     ],
     proactive_weather: {
       warm_sunny: [
-        { msg: 'Pfft, {temp}°C vandaag — hoe houdt ge het vol in deze hitte? Een koud drankje op ons terras kan verkoeling brengen.', actions: [{ label: 'Terrasplek reserveren', url: '/reserve' }] },
-        { msg: '{temp}°C en zonnig! Perfect terrasweer bij ons. Komt ge vandaag nog even langs?', actions: [{ label: 'Reserveer', url: '/reserve' }] },
+        { msg: 'Pfft, {temp}°C vandaag — hoe houdt u het vol in deze hitte? Een koud drankje op ons terras kan verkoeling brengen.', actions: [{ label: 'Terrasplek reserveren', url: '/reserve' }] },
+        { msg: '{temp}°C en zonnig! Perfect terrasweer bij ons. Komt u vandaag nog even langs?', actions: [{ label: 'Reserveer', url: '/reserve' }] },
         { msg: 'Wat een heerlijke dag — {temp}°C en stralend zonnetje. Ik zeg: bel iemand en kom genieten. Zal ik een tafel zoeken?', actions: [{ label: 'Reserveer', url: '/reserve' }] },
       ],
       rainy: [
@@ -113,12 +113,12 @@ const HOST_STRINGS = {
         { msg: 'Sombere dag buiten ({temp}°C). Maar bij ons brandt de grill en staat de wijn klaar. Zin om binnen te zitten?', actions: [{ label: 'Zie het menu', url: '/menu' }] },
       ],
       cold: [
-        { msg: 'Brr, {temp}°C vandaag. Een warme maaltijd bij Bogèst is precies wat ge nu nodig hebt, niet? Onze stoofvlees is dan een aanrader.', actions: [{ label: 'Zie het menu', url: '/menu' }] },
+        { msg: 'Brr, {temp}°C vandaag. Een warme maaltijd bij Bogèst is precies wat u nu nodig hebt, niet? Onze stoofvlees is dan een aanrader.', actions: [{ label: 'Zie het menu', url: '/menu' }] },
         { msg: 'Koud buiten ({temp}°C). Tijd voor stevig comfortfood. Onze spare ribs zijn urenlang gegaard — ideaal om op te warmen.', actions: [{ label: 'Reserveer', url: '/reserve' }] },
       ],
       default: [
         { msg: '{temp}°C en {desc} vandaag. Geen slecht weer om binnen te zitten met een goed stuk vlees. Zin in een tafel?', actions: [{ label: 'Reserveer', url: '/reserve' }] },
-        { msg: 'Het is {temp}°C buiten. Weet ge wat leuk is? Een bezoekje aan Bogèst. Ik help u graag verder.', actions: [] },
+        { msg: 'Het is {temp}°C buiten. Weet u wat leuk is? Een bezoekje aan Bogèst. Ik help u graag verder.', actions: [] },
       ],
     },
   },
@@ -386,23 +386,23 @@ const INTRO_VARIANTS = {
     line1: [
       'Ik ben de digitale gastheer van Bogèst.',
       'Welkom! Ik ben de gastheer van Bogèst, altijd paraat.',
-      'Fijn dat ge er zijt — ik ben de digitale gastheer van Bogèst.',
+      'Fijn dat u er bent — ik ben de digitale gastheer van Bogèst.',
       'Dag! Ik hou u graag wegwijs bij Bogèst.',
     ],
     line2_lunch: [
-      'Hebt ge zin in een lekkere lunch vandaag?',
+      'Hebt u zin in een lekkere lunch vandaag?',
       'Perfect moment voor een goed stuk vlees — zin in een lunch?',
       'Lunchplannen? Ik help u graag verder.',
     ],
     line2_diner: [
       'Plannen voor vanavond? Ik help u graag verder.',
-      'Nog geen dinerplannen? Ge bent hier aan het juiste adres.',
+      'Nog geen dinerplannen? U bent hier aan het juiste adres.',
       'Vanavond iets lekkers doen? Ik vertel u graag meer.',
     ],
     line2_default: [
       'Ik ken ons menu en onze vestigingen van binnen en van buiten.',
       'Van menu tot locatie — ik weet alles van Bogèst.',
-      'Ge kunt mij alles vragen over ons menu, onze vestigingen of reservaties.',
+      'U kunt mij alles vragen over ons menu, onze vestigingen of reservaties.',
     ],
     question: [
       'Waarmee kan ik u helpen?',
@@ -413,7 +413,7 @@ const INTRO_VARIANTS = {
     returning: [
       'Fijn u weer te zien! Wat kan ik voor u doen?',
       'Welkom terug bij Bogèst. Waarmee mag ik u helpen?',
-      'Ah, een vertrouwd gezicht — fijn dat ge er weer zijt. Wat zoekt ge vandaag?',
+      'Ah, een vertrouwd gezicht — fijn dat u er weer bent. Wat zoekt u vandaag?',
     ],
   },
   fr: {
@@ -835,7 +835,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
     const t = setTimeout(() => {
       dispatchUIAction({ type: 'openPage', args: [target] });
       onLinkClick?.();
-    }, 600);
+    }, 200);
     return () => clearTimeout(t);
   }, [uiActions, actions, cards, photos, instagrams, content]);
 
@@ -1089,7 +1089,7 @@ export default function DigitalHost() {
         ? "Bien sûr ! Je suis là pour vous aider. Vous pouvez aussi toujours me retrouver en bas à droite. Qu'est-ce que je peux faire pour vous ?"
         : lang === 'en'
         ? "Of course! I'm here to help. You can always find me in the bottom-right corner too. What can I do for you?"
-        : "Natuurlijk! Ik ben er graag voor u. Ge kunt me trouwens altijd terugvinden rechtsonder op de pagina. Waar kan ik u mee helpen?";
+        : "Natuurlijk! Ik ben er graag voor u. U kunt me trouwens altijd terugvinden rechtsonder op de pagina. Waar kan ik u mee helpen?";
       greetingRef.current = heroGreeting;
       setMessages([{ role: 'assistant', content: heroGreeting, actions: [] }]);
       sounds.open();

@@ -25,7 +25,7 @@ export const translations = {
     hero_tagline: 'VUUR.',
     hero_tagline2: 'SMAAK.',
     hero_tagline3: 'GEZEL.',
-    hero_sub: 'Moderne brasserie gevormd door vakmanschap, sfeer en smaak.',
+    hero_sub: 'Een moderne grillbrasserie waar vakmanschap, sfeer en smaak elkaar aan tafel ontmoeten.',
     hero_cta_reserve: 'Reserveer Tafel →',
     hero_cta_menu: 'Bekijk Menu →',
     hero_eyebrow: 'Grill Restaurant — Limburg',
@@ -80,7 +80,7 @@ export const translations = {
     menu_formula: 'Bij elk hoofdgerecht: voorgerecht + dessert van het huis',
     menu_included: 'Inbegrepen',
     menu_monthly_suggestions: 'Maandelijkse Suggesties',
-    menu_monthly_subtitle: 'Ontdek onze seizoensgebonden gerechten en speciale aanbiedingen deze maand.',
+    menu_monthly_subtitle: 'Deze maand op de kaart: seizoensgerechten en specials die we met plezier voor u klaarmaken.',
 
     // Menu categories
     cat_starters: 'Voorgerechten',
@@ -121,8 +121,8 @@ export const translations = {
 
     // Takeaway
     ta_title: 'Traiteur',
-    ta_subtitle: 'Geniet thuis van Bogèst',
-    ta_home_tagline: 'Breng Bogèst op tafel thuis!',
+    ta_subtitle: 'De smaak van Bogèst, bij u thuis',
+    ta_home_tagline: 'De Bogèst-keuken, nu ook bij u thuis',
     ta_home_p1: 'Wij bereiden alles, u moet alleen opwarmen conform de instructies.',
     ta_home_p2: 'De gerechten zijn niet inclusief voorgerecht en dessert. Onze formule geldt dus niet voor thuis.',
     ta_home_p3: 'Bogèst Traiteur wordt al sinds jaar en dag perfect verzorgd door onze neef Patrick. Hij zorgt ervoor dat u de Bogèst beleving echt op uw bord brengt.',
@@ -142,7 +142,7 @@ export const translations = {
     // Gift cards
     gc_title: 'Cadeaubon',
     gc_panel_subtitle: 'Kopen of saldo controleren',
-    gc_subtitle: 'Geef een culinaire beleving cadeau',
+    gc_subtitle: 'Een cadeau dat smaakt naar meer',
     gc_amount: 'Kies een bedrag',
     gc_type: 'Type',
     gc_digital: 'Digitaal',
@@ -173,7 +173,7 @@ export const translations = {
     gc_panel_label: 'Cadeaubonnen',
     gc_panel_title: 'Geef een',
     gc_panel_accent: 'beleving',
-    gc_panel_subtitle: 'Verras iemand met de Bogèst-ervaring. Een cadeaubon — het mooiste gebaar dat ge kunt maken.',
+    gc_panel_subtitle: 'Verras iemand met de Bogèst-ervaring. Een cadeaubon — het mooiste gebaar dat u kunt maken.',
     gc_h1_title: 'Het perfecte cadeau',
     gc_h1_body: 'Een Bogèst cadeaubon is meer dan een geschenk — het is een belofte van een onvergetelijk etentje. Ideaal voor elke gelegenheid.',
     gc_h2_title: 'Digitaal of fysiek',
@@ -291,7 +291,7 @@ export const translations = {
     about_hero_title: 'Vier muren, oneindig veel momenten',
     about_title_main: 'Het verhaal van',
     about_quote: '"De mooiste momenten in het leven beleef je samen, aan een tafel, in goed gezelschap, met een goed glas wijn en lekker eten."',
-    about_quote_body: 'Bij Bogèst draait alles om die warme, ontspannen sfeer. Onze sfeervolle hoeves in Hasselt, Borgloon, Heusden-Zolder en binnenkort Lommel stralen een authentieke charme uit — dankzij de combinatie van natuurlijke materialen, antieke elementen en een rijke geschiedenis waant u zich in een andere wereld.',
+    about_quote_body: 'Bij Bogèst draait het om warmte, rust en een tafel die uitnodigt om te blijven. Onze sfeervolle hoeves in Hasselt, Borgloon, Heusden-Zolder en binnenkort Lommel stralen een authentieke charme uit — natuurlijke materialen, antieke elementen en een rijke geschiedenis die u even meenemen naar een andere wereld.',
     about_story_label: 'Ons Verhaal',
     about_story_title: 'Van visie tot werkelijkheid',
     about_philosophy_label: 'Onze Filosofie',
@@ -314,7 +314,7 @@ export const translations = {
 
     // About pillars
     about_p1_title: 'Onze formule',
-    about_p1_text: 'Bij elk hoofdgerecht bieden wij u een ambachtelijk voorgerecht en een verfijnd dessert aan van het huis. Dit zorgt voor een complete beleving aan een uitstekende prijs-kwaliteitverhouding.',
+    about_p1_text: 'Bij elk hoofdgerecht bieden wij u een ambachtelijk voorgerecht en een verfijnd dessert aan van het huis. Zo zit u aan een volledig menu, zonder dat het u extra kost — eerlijk vakmanschap, voor iedereen toegankelijk.',
     about_p2_title: 'Kwaliteitsvlees',
     about_p2_text: 'Bij Bogèst serveren we een uitgebreid assortiment aan kwaliteitsvlees, met als trots ons botermalse Belgische Wit Blauw runds. Elk stuk wordt zorgvuldig geselecteerd op structuur, sappigheid en volle smaak.',
     about_p3_title: 'Eigen wijnlabel',
@@ -354,7 +354,7 @@ export const translations = {
 
     // Home sections - hardcoded text
     home_story_title: 'De mooiste momenten beleef je samen',
-    home_story_body1: 'Bij Bogèst draait alles om die warme, ontspannen sfeer. Onze sfeervolle hoeves stralen een authentieke charme uit — dankzij de combinatie van natuurlijke materialen, antieke elementen en een rijke geschiedenis waant u zich in een andere wereld.',
+    home_story_body1: 'Bij Bogèst draait het om warmte, rust en een tafel die uitnodigt om te blijven. Onze sfeervolle hoeves stralen een authentieke charme uit — natuurlijke materialen, antieke elementen en een rijke geschiedenis die u even meenemen naar een andere wereld.',
     home_story_body2: 'Bij elk hoofdgerecht bieden wij u een ambachtelijk voorgerecht en een verfijnd dessert aan van het huis.',
     home_formula_label: 'Onze formule',
     home_formula_included: 'Alles inbegrepen bij elk hoofdgerecht',
@@ -364,9 +364,9 @@ export const translations = {
 
     home_cta_label: 'Reserveer & Bestel',
     home_cta_title: 'Wat kan Bogèst voor u doen?',
-    home_cta_reserve_desc: 'Verzeker uw tafel online. Snel, eenvoudig en zonder wachtrij.',
-    home_cta_takeaway_desc: 'Bogèst thuis genieten. Kies uw gerechten, wij bereiden ze voor.',
-    home_cta_giftcard_desc: 'Geef een onvergetelijke culinaire beleving als geschenk.',
+    home_cta_reserve_desc: 'Leg uw tafel vast in een paar tikken — geen wachtrij, wel een tafel die op u wacht.',
+    home_cta_takeaway_desc: 'De smaak van Bogèst, aan uw eigen tafel. Kies uw gerechten — wij staan al klaar in de keuken.',
+    home_cta_giftcard_desc: 'Een cadeaubon die meer belooft dan een etentje — een avond om nog lang na te vertellen.',
     home_cta_giftpackage_desc: 'Premium gin & wijnpakketten met geschenkbonnen — de ideale verrassing.',
 
     home_reviews_label: 'Wat onze gasten zeggen',
@@ -378,7 +378,7 @@ export const translations = {
 
     intro_tagline: 'Een Beau Geste — vakmanschap in smaak',
     intro_welcome: 'Welkom bij Bogèst',
-    intro_desc: 'Kies uw locatie en ga direct naar de juiste vestiging, of ontdek onze volledige website.',
+    intro_desc: 'Kies uw locatie en ga meteen naar de juiste vestiging, of verken de rest van de site.',
     intro_coming_soon: 'Binnenkort',
     intro_cta: 'Bekijk de volledige website →',
 
@@ -394,11 +394,11 @@ export const translations = {
     ta_h2_title: 'Drie vestigingen',
     ta_h2_body: 'Bestellen kan bij Bogèst Hasselt, Borgloon en Heusden-Zolder. Kies uw vestiging en uw afhaalmoment online.',
     ta_h3_title: 'Afhaal van 17u30 tot 21u30',
-    ta_h3_body: 'Beschikbaar van woensdag tot zondag. Kies uw tijdslot bij het bestellen en alles staat klaar wanneer ge toekomt.',
+    ta_h3_body: 'Beschikbaar van woensdag tot zondag. Kies uw tijdslot bij het bestellen en alles staat klaar wanneer u toekomt.',
     ta_cta_eyebrow: 'Online bestellen',
     ta_cta_title: 'Bestel via',
     ta_cta_accent: 'bogest-online.be',
-    ta_cta_desc: 'Via ons online platform kiest ge uw vestiging, uw producten en uw afhaalmoment — snel, eenvoudig en zonder wachten.',
+    ta_cta_desc: 'Via ons online platform kiest u uw vestiging, uw producten en uw afhaalmoment — snel, eenvoudig en zonder wachten.',
     ta_cta_btn: 'Bestel nu',
 
     ta_gift_title: 'Cadeaupakketten',
