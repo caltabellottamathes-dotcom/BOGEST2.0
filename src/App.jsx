@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/lib/ThemeContext';
 import { LangProvider } from '@/lib/LangContext';
 import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
+import BogestLogo from '@/components/BogestLogo';
 
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
@@ -37,9 +38,7 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">
-          <span className="font-heading text-3xl font-bold tracking-wider text-foreground">
-            BOG<span className="text-primary italic">È</span>ST
-          </span>
+          <BogestLogo className="text-3xl tracking-wide" />
           <div className="w-5 h-5 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
         </div>
       </div>

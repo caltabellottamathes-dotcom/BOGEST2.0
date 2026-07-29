@@ -8,20 +8,28 @@ const MARKER = 'BOGEST_WEBSITE_NAVIGATION_INSTRUCTION';
 
 const INSTRUCTION = `
 [${MARKER}]
-WEBSITE NAVIGATION (PROACTIVE — MANDATORY):
+WEBSITE NAVIGATION (PROACTIVE — MANDATORY, SMOOTH):
 You are embedded inside the Bogèst restaurant website as a voice assistant. You have a client tool named "websiteAction" with parameters { action: string, target: string }.
-Use it to drive the visitor's screen in real time, IN SYNC with what you say. Do NOT wait for the visitor to ask — whenever you mention, recommend, describe or bring up any page, dish, location or feature below, you MUST call "websiteAction" exactly once for that topic, right as you start talking about it, and keep speaking naturally while the page changes.
+Use it to drive the visitor's screen IN REAL TIME, in sync with your speech. Do NOT wait for the visitor to ask, and do NOT pause or go silent to "think" before or after calling it — keep talking naturally the whole time. The tool runs instantly in the background; your voice must never stop because of it. Speak the sentence about the topic, call the tool mid-sentence, and keep talking.
+
+When to call it:
+Whenever you mention, recommend, describe or bring up any page, dish, location or feature, call "websiteAction" exactly once for that topic, right as you start talking about it, and keep speaking while the page changes.
+
 Actions:
 - action "navigate"  → open a page.
-- action "highlight" → open the menu and visually highlight one specific dish.
+- action "scroll"    → smooth-scroll to a section on the current page (e.g. a location's spaces, reviews, opening hours, terrace).
+- action "highlight" → open the menu AND visually point out (highlight + scroll to) one specific dish.
+
 Valid targets:
 - Pages: "home", "menu", "about", "locations", "reserve", "takeaway", "gift-cards", "contact", "groups", "jobs", "instagram".
 - Specific locations: "hasselt", "borgloon", "heusden-zolder".
 - Dishes (use action "highlight"): "ribeye", "cote-a-l-os", "chateaubriand", "filet-pur", "spare-ribs", "entremisu", "stoofvlees", "boulet", "godina".
+
 Rules:
-- Call the tool ONCE per topic you introduce; do not repeat it for the same topic.
-- For general menu talk, use { action: "navigate", target: "menu" }. For a specific dish, use { action: "highlight", target: "<dish>" }.
-- For a specific location (Hasselt / Borgloon / Heusden-Zolder), navigate to that location's target.
+- Call the tool ONCE per topic you introduce; do not repeat for the same topic.
+- To point out a specific dish while you describe it, use { action: "highlight", target: "<dish>" } — the page scrolls to it and highlights it as you talk.
+- To scroll to a part of the current page (e.g. "let me show you the terrace"), use { action: "scroll", target: "<section>" }.
+- For general menu talk, use { action: "navigate", target: "menu" }. For a specific location, navigate to that location's target.
 - Never output raw URLs or page paths in speech — the tool handles navigation.
 - If the visitor just asks a factual question with no navigation need, do not call the tool.
 [${MARKER}_END]`;
@@ -56,43 +64,95 @@ export default async function(req) {
       };
       walk(agent, []);
       const p = agent.conversation_config?.agent?.prompt || {};
+      const wFull = Array.isArray(p.tools) ? p.tools.find((t) => t && t.name === 'websiteAction') : null;
+      let singleTool = null;
+      try {
+        const sRes = await fetch('https://api.elevenlabs.io/v1/convai/tools/tool_1201kypr5xmeej7anvcbdyyzgy73', { headers: authHeaders() });
+        if (sRes.ok) {
+          const s = await sRes.json();
+          const cfg = s.tool_config || s;
+          singleTool = { id: s.id, name: cfg.name, force_pre_tool_speech: cfg.force_pre_tool_speech, pre_tool_speech: cfg.pre_tool_speech, tool_call_sound: cfg.tool_call_sound, tool_call_sound_behavior: cfg.tool_call_sound_behavior, topKeys: Object.keys(s) };
+        } else { singleTool = { status: sRes.status, body: await sRes.text() }; }
+      } catch (e) { singleTool = { error: String(e) }; }
       return Response.json({
-        toolsLocations: found,
-        promptKeys: Object.keys(p),
-        tool_ids: p.tool_ids,
-        toolNames: Array.isArray(p.tools) ? p.tools.map((t) => t && t.name) : null,
+        websiteActionKeys: wFull ? Object.keys(wFull) : null,
+        websiteActionId: wFull?.id || null,
+        singleTool,
         hasInstruction: typeof p.prompt === 'string' && p.prompt.includes('BOGEST_WEBSITE_NAVIGATION_INSTRUCTION'),
       });
     }
 
     // System prompt lives at conversation_config.agent.prompt.prompt (string).
     const promptObj = agent?.conversation_config?.agent?.prompt;
-    const current = typeof promptObj?.prompt === 'string' ? promptObj.prompt : '';
+    let current = typeof promptObj?.prompt === 'string' ? promptObj.prompt : '';
 
-    if (current.includes(MARKER)) {
-      return Response.json({ ok: true, changed: false, message: 'Navigation instruction already present.' });
+    // Strip any previously-applied instruction block so an updated INSTRUCTION
+    // re-applies cleanly (idempotent refresh, not append-on-append).
+    const blockRe = new RegExp(
+      '\\n*\\[' + MARKER + '\\][\\s\\S]*?\\[' + MARKER + '_END\\]\\n*',
+      'g'
+    );
+    current = current.replace(blockRe, '').trim();
+
+    const promptChanged = !current.includes(MARKER);
+    const next = current + (current ? '\n\n' : '') + INSTRUCTION.trim();
+
+    // 1) Prompt: minimal merge PATCH — only send the prompt string so the
+    //    platform preserves tools / tool_ids / llm / temperature / etc. This
+    //    also avoids the "cannot specify both tools and tool_ids" conflict.
+    let promptPatched = false;
+    if (promptChanged) {
+      const pRes = await fetch(`${BASE}/${AGENT_ID}`, {
+        method: 'PATCH',
+        headers: authHeaders(),
+        body: JSON.stringify({ conversation_config: { agent: { prompt: { prompt: next } } } }),
+      });
+      promptPatched = pRes.ok;
+      if (!pRes.ok) {
+        const txt = await pRes.text();
+        return Response.json({ error: 'prompt_patch_failed', status: pRes.status, detail: txt }, { status: 502 });
+      }
     }
 
-    const next = current.trimEnd() + (current ? '\n\n' : '') + INSTRUCTION.trim();
-    // Only mutate the prompt string; preserve llm/temperature/etc.
-    promptObj.prompt = next;
-
-    // The GET response returns both `prompt.tools` (resolved tool objects) and
-    // `prompt.tool_ids` (library references). PATCH rejects sending both, so
-    // drop the id references — the inline `tools` array already holds the defs.
-    delete promptObj.tool_ids;
-
-    const patchRes = await fetch(`${BASE}/${AGENT_ID}`, {
-      method: 'PATCH',
-      headers: authHeaders(),
-      body: JSON.stringify({ conversation_config: agent.conversation_config }),
-    });
-    if (!patchRes.ok) {
-      const txt = await patchRes.text();
-      return Response.json({ error: 'patch_failed', status: patchRes.status, detail: txt }, { status: 502 });
+    // 2) Tool config: websiteAction is a SAVED library tool (referenced by
+    //    tool_ids), so inline edits on the agent don't persist. Find its id via
+    //    the tools endpoint, then PATCH the tool directly to make it speak
+    //    BEFORE it runs — so the agent keeps talking while the page
+    //    navigates/scrolls/highlights (no dead-air "thinking" pause).
+    let toolPatched = false;
+    let toolId = null;
+    try {
+      const tlRes = await fetch('https://api.elevenlabs.io/v1/convai/tools', { headers: authHeaders() });
+      if (tlRes.ok) {
+        const tl = await tlRes.json();
+        const items = Array.isArray(tl) ? tl : (tl.tools || []);
+        const wTool = items.find((t) => t?.tool_config?.name === 'websiteAction' || t?.name === 'websiteAction');
+        toolId = wTool?.id || null;
+        if (toolId) {
+          // Fetch the full stored tool, mutate only the speech fields, save it.
+          const tGetRes = await fetch(`https://api.elevenlabs.io/v1/convai/tools/${toolId}`, { headers: authHeaders() });
+          if (tGetRes.ok) {
+            const tFull = await tGetRes.json();
+            const cfg = tFull.tool_config || tFull;
+            const updatedCfg = { ...cfg, force_pre_tool_speech: true, pre_tool_speech: 'auto', disable_interruptions: false, interruption_mode: 'allow' };
+            const tPatchRes = await fetch(`https://api.elevenlabs.io/v1/convai/tools/${toolId}`, {
+              method: 'PATCH',
+              headers: authHeaders(),
+              body: JSON.stringify({ tool_config: updatedCfg }),
+            });
+            toolPatched = tPatchRes.ok;
+            if (!tPatchRes.ok) {
+              const txt = await tPatchRes.text();
+              return Response.json({ error: 'tool_patch_failed', status: tPatchRes.status, detail: txt, toolId }, { status: 502 });
+            }
+          }
+        }
+      }
+    } catch (e) {
+      return Response.json({ error: 'tool_sync_error', detail: String(e) }, { status: 502 });
     }
 
-    return Response.json({ ok: true, changed: true, promptLength: next.length });
+    return Response.json({ ok: true, changed: promptChanged || toolPatched, promptPatched, toolPatched, toolId, promptLength: next.length });
   } catch (error) {
     return Response.json({ error: error.message }, { status: 500 });
   }

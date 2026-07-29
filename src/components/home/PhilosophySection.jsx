@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import BogestLogo from '@/components/BogestLogo';
 
 const PILLARS_DATA = {
   nl: [
@@ -222,9 +223,7 @@ export default function PhilosophySection() {
 
                         {/* Top corner — brand mark fills empty upper corner */}
                         <div className={`absolute top-0 hidden md:block ${imageLeft ? 'right-0 text-right' : 'left-0'}`}>
-                          <span className="font-body text-[11px] tracking-[0.35em] uppercase block text-foreground">
-                            Bog                          <span className="italic text-primary">è</span>st
-                          </span>
+                          <BogestLogo className="text-lg leading-none block" />
                           <span className="font-body text-[11px] tracking-[0.3em] uppercase block mt-1 text-foreground">
                             {labels.label}
                           </span>

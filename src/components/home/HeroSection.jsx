@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
+import BogestLogo from '@/components/BogestLogo';
 
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
-const LOGO_WHITE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/ae58b619b_logo_bogest.png';
 
 export default function HeroSection() {
   const [offsetY, setOffsetY] = useState(0);
@@ -62,7 +62,7 @@ export default function HeroSection() {
         >
           {/* Logo — large, above text */}
           <div className="mb-6">
-            <img src={LOGO_WHITE} alt="Bogèst logo" className="h-20 md:h-32 lg:h-40 w-auto opacity-90" style={{ filter: 'brightness(0) invert(1)' }} />
+            <BogestLogo className="text-6xl md:text-8xl lg:text-9xl tracking-wide opacity-90" />
           </div>
 
           {/* Eyebrow */}
