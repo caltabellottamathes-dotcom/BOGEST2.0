@@ -24,7 +24,7 @@ let lastTargetAt = 0;
 let debounceTimer = null;
 const DEDUP_MS = 4000;
 const DEBOUNCE_MS = 200;
-const NAV_RENDER_MS = 400;
+const NAV_RENDER_MS = 650;
 
 function resetDedupIfStale() {
   if (lastTargetId && Date.now() - lastTargetAt > DEDUP_MS) {

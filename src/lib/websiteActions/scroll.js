@@ -18,7 +18,26 @@ registerAction('scroll', async ({ target, options = {}, data = {} }) => {
   if (!el) return { error: 'not_found', target };
   const offset = Number.isFinite(options?.offset) ? options.offset
     : Number.isFinite(data?.offset) ? data.offset : 88;
-  const top = el.getBoundingClientRect().top + window.scrollY - offset;
-  window.scrollTo({ top: Math.max(0, top), behavior: options?.behavior || 'smooth' });
+  const behavior = options?.behavior || 'smooth';
+
+  // Scroll the nearest scrollable ancestor (e.g. an open glass panel's
+  // content area) when the element lives inside one, otherwise the window.
+  let node = el.parentElement;
+  let scroller = null;
+  while (node) {
+    const cs = getComputedStyle(node);
+    if ((cs.overflowY === 'auto' || cs.overflowY === 'scroll') && node.scrollHeight > node.clientHeight) {
+      scroller = node;
+      break;
+    }
+    node = node.parentElement;
+  }
+  if (scroller) {
+    const top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop - offset;
+    scroller.scrollTo({ top: Math.max(0, top), behavior });
+  } else {
+    const top = el.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top: Math.max(0, top), behavior });
+  }
   return { message: `Scrolled to ${target}`, section: target };
 });

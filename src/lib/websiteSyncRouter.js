@@ -1,5 +1,5 @@
 import { base44 } from '@/api/base44Client';
-import { matchLocal, compactIndex, CONTENT_INDEX } from '@/lib/websiteContentIndex';
+import { matchLocal, matchFuzzy, compactIndex, CONTENT_INDEX } from '@/lib/websiteContentIndex';
 
 /**
  * Two-stage topic router — the "brain" that keeps the website in sync with the
@@ -48,6 +48,12 @@ export async function routeTopic(topic) {
   // Stage A — local exact match (instant, free)
   const local = matchLocal(text);
   if (local) return local;
+
+  // Stage A.5 — local fuzzy match (instant, free): if a specific dish /
+  // category / location / section alias is mentioned inside the topic, route
+  // to it without an LLM round-trip so scroll & highlight react instantly.
+  const fuzzy = matchFuzzy(text);
+  if (fuzzy) return fuzzy;
 
   // Stage B — LLM router. Debounce identical consecutive calls.
   if (lastInput === text && routePromise) return routePromise;

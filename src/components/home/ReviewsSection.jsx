@@ -113,6 +113,8 @@ export default function ReviewsSection() {
     <section id="ervaringen" className="w-full pt-14 md:pt-20 pb-[480px] md:pb-[520px] relative overflow-hidden">
       {/* Glass bg accent */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-primary/2 pointer-events-none" />
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80" alt=""
+        className="absolute inset-0 w-full h-full object-cover opacity-[0.05] pointer-events-none" />
 
       <div className="w-full px-6 md:px-10 lg:px-16">
         {/* Header */}

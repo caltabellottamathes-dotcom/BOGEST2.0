@@ -168,3 +168,33 @@ export function matchLocal(text) {
   }
   return null;
 }
+
+/**
+ * Stage A.5 — instant local FUZZY match (free, zero latency).
+ *
+ * If a specific dish / menu category / location / section alias appears inside
+ * the (often long) agent transcript, route to it immediately — no LLM
+ * round-trip — so the website scrolls to and highlights what the host is
+ * talking about the instant the words are spoken. Only specific entry types
+ * are considered (pages are left to the keyword fast-path / agent tool call)
+ * and the longest alias match wins, so "spare ribs" beats "ribs" and a dish
+ * beats its category.
+ */
+export function matchFuzzy(text) {
+  const t = norm(text);
+  if (!t || t.length < 2) return null;
+  let best = null;
+  let bestLen = 0;
+  for (const e of CONTENT_INDEX) {
+    if (!['dish', 'menu-category', 'location', 'section'].includes(e.type)) continue;
+    for (const a of e.aliases) {
+      const an = norm(a);
+      if (an.length < 4) continue;
+      if (t.includes(an) && an.length > bestLen) {
+        best = e;
+        bestLen = an.length;
+      }
+    }
+  }
+  return best;
+}

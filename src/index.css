@@ -176,7 +176,9 @@ body.bogest-panel-open div[class*="convai"] {
   body.bogest-panel-open div[class*="elevenlabs"],
   body.bogest-panel-open div[id*="convai"],
   body.bogest-panel-open div[class*="convai"] {
-    transform: translateX(-100vw) !important;
+    /* Mobile panels are full-screen — keep the widget orb visible above the
+       panel so the visitor can keep talking / navigating. */
+    transform: none !important;
   }
 }
 

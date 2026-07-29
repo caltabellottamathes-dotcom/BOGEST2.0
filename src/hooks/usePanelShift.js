@@ -17,8 +17,11 @@ export function usePanelShift() {
   useEffect(() => {
     const compute = () => {
       const w = window.innerWidth;
-      const isMobile = w < 640;
-      const panelWidth = isMobile ? w : Math.min(w * 0.82, 1200);
+      // On mobile the panel is full-screen — keep the floating UI in place
+      // (visible above the panel) instead of sliding it off-screen, so the
+      // host button stays reachable and the chat can reopen over the panel.
+      if (w < 640) return 0;
+      const panelWidth = Math.min(w * 0.82, 1200);
       return -panelWidth;
     };
     const handler = (e) => setShift(e.detail?.open ? compute() : 0);

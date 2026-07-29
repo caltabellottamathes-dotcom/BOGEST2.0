@@ -1076,6 +1076,16 @@ export default function DigitalHost() {
     return () => window.removeEventListener('bogest:hero-scroll', handler);
   }, []);
 
+  // On mobile, minimize the chat when a website panel opens so the panel is
+  // visible and the host button stays reachable (it doesn't slide off-screen).
+  useEffect(() => {
+    const handler = (e) => {
+      if (e.detail?.open && isMobile && phase === 'chat') setPhase('minimized');
+    };
+    window.addEventListener('bogest:panel-visibility', handler);
+    return () => window.removeEventListener('bogest:panel-visibility', handler);
+  }, [isMobile, phase]);
+
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
     const update = () => setIsMobile(mq.matches);

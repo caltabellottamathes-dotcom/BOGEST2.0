@@ -41,7 +41,7 @@ export default function WineSection() {
           <SectionReveal direction="right" delay={0.15}>
             <div className="overflow-hidden rounded-xl aspect-[4/5]">
               <img
-                src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg"
+                src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=900&q=80"
                 alt="Wine"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 style={{ filter: 'saturate(0.82) brightness(0.95)' }}

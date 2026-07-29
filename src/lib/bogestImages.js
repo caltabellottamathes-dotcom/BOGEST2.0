@@ -72,6 +72,15 @@ export const bogestImages = {
     `${CDN}/1756906793871-KBDPOQZVPFE4ORKRLGFS/402597853_796945305777335_8211882432551808857_n.jpg`,
     `${CDN}/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg`,
   ],
+
+  // Curated stock photography (Unsplash) for subjects Bogèst doesn't shoot
+  // itself — wine pours, grill flames, dining atmosphere. Only known URLs.
+  external: {
+    wine: 'https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=900&q=80',
+    interior: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80',
+    beef: 'https://images.unsplash.com/photo-1558030006-450675393492?w=900&q=80',
+    dessert: 'https://images.unsplash.com/photo-1567206563064-6f60f5cc5857?w=900&q=80',
+  },
 };
 
 // Flat pool of every image, useful for galleries and fallbacks.
