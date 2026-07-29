@@ -98,20 +98,6 @@
     --sidebar-border: 25 6% 16%;
     --sidebar-ring: 47 73% 67%;
   }
-
-  /* Dark mode — olive green accent (alternate theme).
-     Same cinematic charcoal background as the yellow theme; only the
-     accent / primary colour switches to olive green. */
-  .dark.theme-green {
-    --primary: 82 42% 56%;
-    --primary-foreground: 25 6% 10%;
-    --accent: 82 42% 56%;
-    --accent-foreground: 25 6% 10%;
-    --ring: 82 42% 56%;
-    --sidebar-primary: 82 42% 56%;
-    --sidebar-ring: 82 42% 56%;
-    --chart-1: 82 42% 56%;
-  }
 }
 
 @layer base {
