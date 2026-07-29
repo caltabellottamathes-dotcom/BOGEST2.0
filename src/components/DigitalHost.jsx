@@ -843,25 +843,25 @@ function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
   const isGhost = variant === 'ghost';
   let style;
   if (isPrimary) {
-    style = { background: isDark ? 'rgba(231,205,112,0.18)' : 'rgba(107,122,63,0.14)', border: '1px solid rgba(231,205,112,0.45)' };
+    style = { background: isDark ? 'rgba(231,205,112,0.14)' : 'rgba(107,122,63,0.10)', border: '1px solid rgba(231,205,112,0.50)' };
   } else if (isGhost) {
-    style = { background: 'transparent', border: '1px dashed ' + (isDark ? 'rgba(255,255,255,0.16)' : 'rgba(74,83,32,0.25)') };
+    style = { background: 'transparent', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(74,83,32,0.18)') };
   } else {
-    style = { background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.03)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(74,83,32,0.16)') };
+    style = { background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.025)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(74,83,32,0.14)') };
   }
   return (
     <button onClick={onClick}
-      className="group w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-200 hover:scale-[1.02] cursor-pointer text-left"
+      className="group w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer text-left"
       style={style}>
-      <span className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
-        style={{ background: isPrimary ? 'rgba(231,205,112,0.22)' : isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.04)' }}>
-        <Icon className="w-4 h-4 text-primary" />
+      <span className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
+        style={{ background: isPrimary ? 'rgba(231,205,112,0.20)' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.035)', border: isPrimary ? '1px solid rgba(231,205,112,0.35)' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(74,83,32,0.14)' }}>
+        <Icon className="w-4 h-4 text-primary" strokeWidth={1.75} />
       </span>
       <span className="flex-1 min-w-0">
-        <span className="block font-body text-sm font-semibold text-foreground leading-tight">{label}</span>
+        <span className="block font-body text-sm font-medium text-foreground leading-tight tracking-tight">{label}</span>
         <span className="block font-body text-[11px] text-muted-foreground mt-0.5">{sub}</span>
       </span>
-      <ChevronRight className="w-4 h-4 text-muted-foreground/60 group-hover:translate-x-0.5 transition-transform flex-shrink-0" />
+      <ChevronRight className="w-4 h-4 text-muted-foreground/50 group-hover:translate-x-1 group-hover:text-primary/70 transition-all flex-shrink-0" />
     </button>
   );
 }
@@ -920,29 +920,31 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
           </button>
 
           {/* Welcome video — left, vertical, pure (no overlays), plays with sound, stops at end */}
-          <div className="relative flex-shrink-0 w-[36%] sm:w-[42%] min-h-[280px]">
+          <div className="relative flex-shrink-0 w-[36%] sm:w-[42%] min-h-[300px]">
             <video
               ref={videoRef}
               src={WELCOME_VIDEO_URL}
               autoPlay playsInline
               className="absolute inset-0 w-full h-full object-cover"
             />
+            {/* Subtle gradient blending the video into the content panel */}
+            <div className="absolute top-0 right-0 h-full w-16 pointer-events-none"
+              style={{ background: isDark ? 'linear-gradient(to right, transparent, rgba(8,8,8,0.92))' : 'linear-gradient(to right, transparent, rgba(254,252,248,0.95))' }} />
           </div>
 
           {/* Content — right */}
-          <div className="flex-1 flex flex-col px-5 sm:px-6 py-5 overflow-y-auto">
-            <div className="flex items-center gap-3 mb-4 pr-8">
-              <LogoAvatar size="lg" online isDark={isDark} />
-              <div>
-                <p className="font-heading text-xl font-bold text-foreground leading-tight">{s.entry_headline}</p>
-                <p className="font-body text-xs text-muted-foreground mt-0.5">{s.entry_sub}</p>
-              </div>
+          <div className="flex-1 flex flex-col px-6 sm:px-8 py-6 overflow-y-auto">
+            <div className="mb-5 pr-8">
+              <p className="font-body text-[10px] tracking-[0.32em] uppercase text-primary/80 mb-2">Bogèst</p>
+              <h2 className="font-heading text-2xl font-bold text-foreground leading-tight">{s.entry_headline}</h2>
+              <p className="font-body text-sm text-muted-foreground mt-1.5">{s.entry_sub}</p>
             </div>
+            <div className="h-px w-10 mb-5" style={{ background: isDark ? 'rgba(231,205,112,0.45)' : 'rgba(107,122,63,0.40)' }} />
 
-            <p className="font-body text-sm text-foreground/85 leading-relaxed mb-5 whitespace-pre-line">{fullIntro}</p>
+            <p className="font-body text-sm text-foreground/80 leading-relaxed mb-6 whitespace-pre-line">{fullIntro}</p>
 
             {/* Action buttons */}
-            <div className="space-y-2.5 mt-auto">
+            <div className="space-y-3 mt-auto">
               <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={onChat} variant="primary" />
               <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={onLiveConversation} />
               <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={onSkip} variant="ghost" />
@@ -1244,8 +1246,8 @@ export default function DigitalHost() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed bottom-4 right-[84px] sm:right-[92px] z-[60] cursor-pointer"
-                  style={{ maxWidth: 'min(calc(100vw - 104px), 300px)' }}
+                  className="fixed bottom-[78px] right-[140px] sm:right-[180px] z-[60] cursor-pointer"
+                  style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
                   <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
