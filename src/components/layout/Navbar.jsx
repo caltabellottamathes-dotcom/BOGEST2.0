@@ -14,7 +14,7 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const { theme } = useTheme();
+  const { theme, accent, toggleAccent } = useTheme();
   const { lang, t, changeLang } = useLang();
   const location = useLocation();
   const langRef = useRef(null);
@@ -115,6 +115,16 @@ export default function Navbar() {
 
           {/* Right controls */}
           <div className="flex items-center gap-1 md:gap-2">
+            {/* Accent toggle — gold ↔ avocado green */}
+            <button
+              onClick={toggleAccent}
+              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${isTransparent ? 'hover:bg-white/10' : 'hover:bg-secondary'}`}
+              aria-label="Thema kleur aanpassen"
+              title={accent === 'gold' ? 'Thema: goud — klik voor avocado-groen' : 'Thema: avocado-groen — klik voor goud'}
+            >
+              <span className="w-4 h-4 rounded-full border border-white/25 transition-colors duration-300" style={{ background: 'hsl(var(--primary))' }} />
+            </button>
+
             {/* Language switcher */}
             <div className="relative" ref={langRef}>
               <button
@@ -225,17 +235,30 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <div className="px-6 pb-6 flex items-center gap-3 border-t pt-4" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)' }}>
-          {LANGUAGES.map(l => (
+        <div className="px-6 pb-6 border-t pt-4 space-y-4" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)' }}>
+          <div className="flex items-center justify-between">
+            <span className="font-body text-[10px] tracking-widest uppercase text-muted-foreground/70">Thema</span>
             <button
-              key={l.code}
-              onClick={() => { changeLang(l.code); }}
-              className="font-body text-xs tracking-widest uppercase transition-colors duration-300 py-1.5 px-2.5 min-h-[36px]"
-              style={{ color: lang === l.code ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'hsl(var(--muted-foreground))'), fontWeight: lang === l.code ? 600 : 400 }}
+              onClick={toggleAccent}
+              className="flex items-center gap-2 font-body text-xs text-foreground/80 hover:text-primary transition-colors duration-300"
+              aria-label="Thema kleur aanpassen"
             >
-              {l.code}
+              <span className="w-3.5 h-3.5 rounded-full border border-white/25" style={{ background: 'hsl(var(--primary))' }} />
+              {accent === 'gold' ? 'Goud' : 'Avocado-groen'}
             </button>
-          ))}
+          </div>
+          <div className="flex items-center gap-3">
+            {LANGUAGES.map(l => (
+              <button
+                key={l.code}
+                onClick={() => { changeLang(l.code); }}
+                className="font-body text-xs tracking-widest uppercase transition-colors duration-300 py-1.5 px-2.5 min-h-[36px]"
+                style={{ color: lang === l.code ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'hsl(var(--muted-foreground))'), fontWeight: lang === l.code ? 600 : 400 }}
+              >
+                {l.code}
+              </button>
+            ))}
+          </div>
         </div>
       </motion.div>
       </>

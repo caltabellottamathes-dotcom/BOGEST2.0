@@ -98,6 +98,16 @@
     --sidebar-border: 25 6% 16%;
     --sidebar-ring: 47 73% 67%;
   }
+
+  /* Avocado / olive-green accent — same dark canvas, green accent */
+  .dark.accent-olive {
+    --primary: 80 42% 55%;
+    --accent: 80 42% 55%;
+    --ring: 80 42% 55%;
+    --chart-1: 80 42% 55%;
+    --sidebar-primary: 80 42% 55%;
+    --sidebar-ring: 80 42% 55%;
+  }
 }
 
 @layer base {
