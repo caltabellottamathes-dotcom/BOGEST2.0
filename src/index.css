@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,6 +8,7 @@
   :root {
     --font-heading: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
+    --font-logo: 'Cormorant Garamond', serif;
 
     /* Light mode — warm editorial */
     --background: 40 18% 97%;
@@ -150,15 +151,6 @@ div[class*="d-id"],
 did-agent,
 #did-agent {
   z-index: 99999 !important;
-}
-
-/* Periodic subtle wiggle for the floating welcome video */
-@keyframes bogest-wiggle {
-  0%, 86%, 100% { transform: rotate(0deg); }
-  89% { transform: rotate(-3deg); }
-  92% { transform: rotate(3deg); }
-  95% { transform: rotate(-2deg); }
-  97% { transform: rotate(0deg); }
 }
 
 /* Hide all scrollbars site-wide while keeping scroll functionality */

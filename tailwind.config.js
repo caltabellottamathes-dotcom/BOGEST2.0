@@ -7,6 +7,7 @@ module.exports = {
       fontFamily: {
         heading: ['var(--font-heading)'],
         body: ['var(--font-body)'],
+        logo: ['var(--font-logo)'],
       },
   		borderRadius: {
   			lg: 'var(--radius)',

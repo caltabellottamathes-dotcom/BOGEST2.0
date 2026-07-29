@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Eye, EyeOff, Lock, User } from 'lucide-react';
+import BogestLogo from '@/components/BogestLogo';
 import { useNavigate } from 'react-router-dom';
 
 const ADMIN_USER = 'BOGEST2.0';
@@ -38,9 +39,7 @@ export default function AdminLogin() {
         className="w-full max-w-sm"
       >
         <div className="text-center mb-8">
-          <span className="font-heading text-3xl font-bold tracking-wider text-foreground">
-            BOG<span className="text-primary italic">È</span>ST
-          </span>
+          <BogestLogo className="text-3xl tracking-wide" />
           <p className="font-body text-xs tracking-[0.3em] uppercase text-muted-foreground mt-2">Admin Toegang</p>
         </div>
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, ChevronRight, ExternalLink, Volume2, VolumeX } from 'lucide-react';
+import { X, Send, ChevronRight, ExternalLink } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/lib/ThemeContext';
@@ -11,7 +11,7 @@ import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 
-const LOGO_URL = 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/f31bdbe69_Bogest_Logo_Host.png';
+const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -593,14 +593,21 @@ function parseActions(text) {
     photos.push({ desc: desc.trim(), location: loc.trim() });
     return '';
   });
+  // Extract INSTAGRAM tags — [IG:media_url|caption|permalink]
+  const instagrams = [];
+  const textNoIg = textNoPhotos.replace(/\[IG:\s*(.+?)\|(.+?)(?:\|(.+?))?\]/g, (_, url, cap, link) => {
+    instagrams.push({ media_url: url.trim(), caption: cap.trim(), permalink: (link || '').trim() });
+    return '';
+  });
+
   // Extract ACTIONS tags
-  const match = textNoPhotos.match(/\[ACTIONS:\s*(.+?)\]/s);
-  if (!match) return { clean: textNoPhotos.trim(), actions: [], photos, cards };
+  const match = textNoIg.match(/\[ACTIONS:\s*(.+?)\]/s);
+  if (!match) return { clean: textNoIg.trim(), actions: [], photos, cards, instagrams };
   const actions = match[1].split(',').map(s => {
     const parts = s.split('|').map(x => x.trim());
     return { label: parts[0], url: parts[1] };
   }).filter(a => a.label && a.url);
-  return { clean: textNoPhotos.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards };
+  return { clean: textNoIg.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards, instagrams };
 }
 
 async function fetchWeather(lang = 'nl') {
@@ -652,24 +659,21 @@ function playTone(freq, type, duration, vol, delay = 0) {
     osc.start(ctx.currentTime + delay); osc.stop(ctx.currentTime + delay + duration + 0.05);
   } catch {}
 }
-const sounds = {
-  open: () => { playTone(523.25, 'sine', 0.35, 0.18); playTone(659.25, 'sine', 0.35, 0.18, 0.12); playTone(783.99, 'sine', 0.45, 0.14, 0.24); },
-  send: () => { playTone(880, 'sine', 0.22, 0.12); playTone(1046, 'sine', 0.18, 0.10, 0.10); },
-  receive: () => { playTone(659.25, 'sine', 0.28, 0.14); playTone(783.99, 'sine', 0.28, 0.12, 0.12); },
-};
+// The digital host runs silently — no sound effects.
+const sounds = { open: () => {}, send: () => {}, receive: () => {} };
 
 // ─── Logo avatar ─────────────────────────────────────────────────────────────
-function LogoAvatar({ size = 'sm', online = true, isDark }) {
+function LogoAvatar({ size = 'sm', online = true }) {
   const px = size === 'lg' ? 64 : size === 'md' ? 40 : 32;
   return (
     <div className="relative flex-shrink-0" style={{ width: px, height: px }}>
-      <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center"
-        style={{ background: isDark ? 'rgba(20,14,0,0.72)' : 'rgba(254,252,248,0.95)', border: isDark ? '1.5px solid rgba(231,205,112,0.35)' : '1.5px solid rgba(107,122,63,0.35)' }}>
-        <img src={LOGO_URL} alt="Bogèst" className="w-[75%] h-[75%] object-contain" style={{ filter: isDark ? 'invert(1) brightness(0.9)' : 'brightness(0.15)' }} />
+      <div className="w-full h-full rounded-full overflow-hidden"
+        style={{ border: '1.5px solid rgba(231,205,112,0.45)' }}>
+        <img src={HOST_PHOTO_URL} alt="Bogèst gastheer" className="w-full h-full object-cover" />
       </div>
       {online && (
         <div className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-primary border-2"
-          style={{ borderColor: isDark ? 'rgba(8,8,8,0.92)' : 'rgba(254,252,248,0.97)' }} />
+          style={{ borderColor: 'rgba(8,8,8,0.92)' }} />
       )}
     </div>
   );
@@ -749,7 +753,23 @@ function PhotoCard({ desc, location, isDark }) {
   );
 }
 
-function AssistantBubble({ content, actions, photos, cards, isDark, onLinkClick }) {
+function InstagramCard({ post }) {
+  return (
+    <a href={post.permalink || '#'} target="_blank" rel="noopener noreferrer"
+      className="block rounded-xl overflow-hidden mt-2 transition-transform duration-200 hover:scale-[1.02]"
+      style={{ border: '1px solid rgba(231,205,112,0.30)' }}>
+      <img src={post.media_url} alt={post.caption || 'Instagram'} className="w-full h-40 object-cover" />
+      {post.caption && (
+        <div className="px-3 py-2" style={{ background: 'rgba(20,14,0,0.55)' }}>
+          <p className="font-body text-xs leading-relaxed line-clamp-2" style={{ color: 'rgba(255,240,200,0.92)' }}>{post.caption}</p>
+          <p className="font-body text-[10px] text-primary/80 mt-0.5 tracking-wide uppercase">Bekijk op Instagram →</p>
+        </div>
+      )}
+    </a>
+  );
+}
+
+function AssistantBubble({ content, actions, photos, cards, instagrams, isDark, onLinkClick }) {
   return (
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
@@ -760,6 +780,7 @@ function AssistantBubble({ content, actions, photos, cards, isDark, onLinkClick 
           </p>
           {cards?.map((c, i) => <RecommendationCard key={i} item={c} isDark={isDark} />)}
           {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} />)}
+          {instagrams?.map((p, i) => <InstagramCard key={i} post={p} />)}
         </div>
         {actions?.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
@@ -895,22 +916,13 @@ export default function DigitalHost() {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [speechEnabled, setSpeechEnabled] = useState(false);
+  // The host runs silently — no speech/sound.
   const audioRef = useRef(null);
 
   // Conversation history for InvokeLLM (array of {role, content})
   const historyRef = useRef([]);
 
-  const speakText = async (text) => {
-    if (!speechEnabled) return;
-    const clean = text.replace(/\[ACTIONS:.*?\]/gs, '').replace(/\[PHOTO:.*?\]/gs, '').trim();
-    if (!clean) return;
-    try {
-      if (window.DID_AGENTS_API?.functions?.speak) {
-        window.DID_AGENTS_API.functions.speak({ type: 'text', input: clean.slice(0, 500) });
-      }
-    } catch {}
-  };
+  // speakText removed — the host runs silently.
 
 
 
@@ -1086,7 +1098,7 @@ export default function DigitalHost() {
       const agentMessages = (data.messages || []).map(m => {
         if (m.role === 'user') return { role: 'user', content: m.content || '' };
         const parsed = parseActions(m.content || '');
-        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards };
+        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards, instagrams: parsed.instagrams };
       });
       const greeting = greetingRef.current ? [{ role: 'assistant', content: greetingRef.current, actions: [] }] : [];
       setMessages([...greeting, ...agentMessages]);
@@ -1095,7 +1107,6 @@ export default function DigitalHost() {
         responsePendingRef.current = false;
         setIsLoading(false);
         sounds.receive();
-        speakText(last.content);
       }
     });
     return conv;
@@ -1295,24 +1306,7 @@ export default function DigitalHost() {
                 boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >
-              {/* Background watermark — host illustration */}
-              <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[24px]" style={{ zIndex: 0 }}>
-                <img
-                  src={LOGO_URL}
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute"
-                  style={{
-                    width: '72%',
-                    bottom: '-8%',
-                    right: '-12%',
-                    opacity: isDark ? 0.055 : 0.07,
-                    filter: isDark ? 'invert(1) brightness(1.4)' : 'brightness(0.1)',
-                    objectFit: 'contain',
-                    transform: 'rotate(3deg)',
-                  }}
-                />
-              </div>
+              {/* Background watermark removed */}
 
               {/* Header */}
               <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 relative z-10"
@@ -1329,18 +1323,6 @@ export default function DigitalHost() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <button
-                    onClick={() => {
-                      if (speechEnabled && window.DID_AGENTS_API?.functions?.interrupt) {
-                        window.DID_AGENTS_API.functions.interrupt();
-                      }
-                      setSpeechEnabled(v => !v);
-                    }}
-                    title={speechEnabled ? s.speech_off : s.speech_on}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0"
-                    style={{ background: speechEnabled ? (isDark ? 'rgba(231,205,112,0.25)' : 'rgba(107,122,63,0.15)') : (isDark ? 'rgba(100,70,0,0.18)' : 'rgba(107,122,63,0.06)'), color: speechEnabled ? (isDark ? 'rgba(231,205,112,0.95)' : 'rgba(74,83,32,0.95)') : (isDark ? 'rgba(255,235,150,0.55)' : 'rgba(40,50,15,0.50)') }}>
-                    {speechEnabled ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                  </button>
                   <button onClick={() => setPhase('minimized')}
                     className="w-8 h-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0"
                     style={{ background: isDark ? 'rgba(100,70,0,0.18)' : 'rgba(107,122,63,0.06)', color: isDark ? 'rgba(255,235,150,0.90)' : 'rgba(40,50,15,0.70)' }}>
@@ -1354,7 +1336,7 @@ export default function DigitalHost() {
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
-                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} isDark={isDark} onLinkClick={() => setPhase('minimized')} />
+                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} isDark={isDark} onLinkClick={() => setPhase('minimized')} />
                 ))}
                 {messages.length === 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">

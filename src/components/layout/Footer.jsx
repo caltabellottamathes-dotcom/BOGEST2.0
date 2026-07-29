@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, Phone, ArrowUpRight, X } from 'lucide-react';
+import BogestLogo from '@/components/BogestLogo';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
 import { getLocations } from '@/lib/data';
 
-const LOGO = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/ae58b619b_logo_bogest.png';
+// Brand logo is now the BogestLogo text wordmark
 
 export default function Footer() {
   const { t, lang } = useLang();
@@ -82,16 +83,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-12 gap-4 lg:gap-6 mb-6">
           {/* Brand — full width on mobile, 3 cols on lg */}
           <div className="col-span-2 md:col-span-2 lg:col-span-3">
-            <Link to="/" className="flex flex-col items-start gap-1 mb-1">
-              <img
-                src={LOGO}
-                alt="Bogèst"
-                className="h-12 w-auto"
-                style={{ filter: theme === 'dark' ? 'brightness(0) invert(1)' : 'brightness(0)' }}
-              />
-              <span className="font-heading text-2xl font-bold tracking-wider text-foreground">
-                BOG<span className="text-primary italic">È</span>ST
-              </span>
+            <Link to="/" className="mb-1">
+              <BogestLogo className="text-3xl tracking-wide" />
             </Link>
             <p className="font-body text-[10px] tracking-[0.25em] uppercase text-primary mt-3 max-w-xs">
               {t('footer_tagline')}

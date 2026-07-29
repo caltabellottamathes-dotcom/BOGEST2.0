@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Sun, Moon, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import BogestLogo from '@/components/BogestLogo';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import { LANGUAGES } from '@/lib/i18n';
@@ -13,7 +14,7 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
   const { lang, t, changeLang } = useLang();
   const location = useLocation();
   const langRef = useRef(null);
@@ -92,11 +93,7 @@ export default function Navbar() {
         <nav className="w-full px-6 md:px-10 lg:px-16 h-16 md:h-20 flex items-center justify-between gap-6">
           {/* Logo — wordmark only, hide when mobile menu is open to avoid overlap */}
           <Link to="/" className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
-            <span className={`font-heading text-xl font-bold tracking-wider transition-colors duration-300 ${
-              isTransparent ? 'text-white' : 'text-foreground'
-            }`}>
-              BOG<span className="text-primary italic">È</span>ST
-            </span>
+            <BogestLogo className="text-xl tracking-wide" />
           </Link>
 
           {/* Desktop Nav */}
@@ -153,17 +150,6 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
-
-            {/* Theme toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2.5 rounded-full transition-colors duration-300 min-w-[40px] min-h-[40px] flex items-center justify-center ${
-                isTransparent ? 'text-white/60 hover:text-white' : 'text-primary/70 hover:text-primary'
-              }`}
-              aria-label="Toggle theme"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
 
             {/* Reserve CTA */}
             <Link
@@ -250,13 +236,6 @@ export default function Navbar() {
               {l.code}
             </button>
           ))}
-          <button
-            onClick={toggleTheme}
-            className="ml-auto p-2 min-w-[36px] min-h-[36px] flex items-center justify-center rounded-full transition-colors"
-            style={{ color: theme === 'light' ? 'rgba(255,255,255,0.7)' : 'hsl(var(--muted-foreground))' }}
-          >
-            {theme === 'dark' ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-          </button>
         </div>
       </motion.div>
       </>
