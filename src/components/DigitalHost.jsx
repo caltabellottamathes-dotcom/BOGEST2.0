@@ -13,7 +13,7 @@ import RecommendationCard from '@/components/digital-host/RecommendationCard';
 
 
 const HOST_PHOTO_URL = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/00206836e_salvoelev.jpg';
-const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/2a5fb09fc_POP-UPVIDEO.mp4';
+const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/f33cb896e_popuphost.mp4';
 
 // ─── Multilingual content ────────────────────────────────────────────────────
 const HOST_STRINGS = {
@@ -1047,7 +1047,7 @@ export default function DigitalHost() {
     clearTimeout(inactivityRef.current);
     if (phase === 'chat') return;
     // First trigger after 12s, subsequent after 20s
-    const delay = proactiveIndexRef.current === 0 ? 6000 : 30000;
+    const delay = proactiveIndexRef.current === 0 ? 3500 : 30000;
     inactivityRef.current = setTimeout(() => {
       // Build a varied pool: fun facts + conversational invites + weather-aware messages
       const pool = [...(s.proactive_facts || []), ...(s.proactive_invites || [])];
@@ -1246,8 +1246,8 @@ export default function DigitalHost() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed bottom-[100px] right-[160px] sm:right-[200px] z-[60] cursor-pointer"
-                  style={{ maxWidth: 'min(calc(100vw - 176px), 300px)' }}
+                  className="fixed bottom-[120px] right-[144px] sm:right-[184px] z-[60] cursor-pointer"
+                  style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
                   <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
