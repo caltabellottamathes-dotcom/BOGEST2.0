@@ -128,13 +128,30 @@ body.modal-open {
 /* Hide scrollbar inside digital host chat */
 .chat-messages-hide-scrollbar::-webkit-scrollbar { display: none; }
 
-/* ElevenLabs Conversational AI Widget — ensure it renders above all app content */
+/* ElevenLabs Conversational AI Widget — fixed position, rendered above all app content */
 elevenlabs-convai,
 div[id*="elevenlabs"],
 div[class*="elevenlabs"],
 div[id*="convai"],
 div[class*="convai"] {
   z-index: 99999 !important;
+}
+
+/* Pin the ElevenLabs widget to the bottom-left corner so it never blocks the
+   digital host (top-right) or the content the AI reveals after an action. */
+elevenlabs-convai {
+  position: fixed !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: 20px !important;
+  left: 20px !important;
+  margin: 0 !important;
+}
+@media (max-width: 768px) {
+  elevenlabs-convai {
+    bottom: 12px !important;
+    left: 12px !important;
+  }
 }
 
 /* D-ID Visual Agent — ensure it renders above all app content */

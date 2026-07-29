@@ -1,6 +1,13 @@
 import { useEffect, useRef } from 'react';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
+import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
+
+// Actions that visibly change what's on screen. After a successful one, the
+// widget auto-minimizes so the visitor can immediately see the result. Actions
+// like `close` / `search` (and any failed action) keep the widget open so the
+// agent can continue the conversation.
+const MUTATING_ACTIONS = new Set(['navigate', 'scroll', 'highlight', 'open']);
 
 /**
  * ElevenLabs Conversational AI Widget.
@@ -41,7 +48,17 @@ export default function ElevenLabsAgent() {
           if (typeof window.websiteAction !== 'function') {
             return { ok: false, error: 'dispatcher_not_ready' };
           }
-          return await window.websiteAction(params);
+          const result = await window.websiteAction(params);
+          // After a successful action that changes the page, collapse the widget
+          // so the visitor can see the content the AI just opened. The agent's
+          // spoken confirmation keeps playing while minimized. Failed actions
+          // or non-mutating actions (close/search) leave the widget open so the
+          // agent can gather more info from the visitor.
+          const action = String(params.action || result?.action || '').toLowerCase();
+          if (result?.success && MUTATING_ACTIONS.has(action)) {
+            setTimeout(() => { minimizeElevenLabsWidget(); }, 800);
+          }
+          return result;
         },
       };
     };
@@ -56,6 +73,7 @@ export default function ElevenLabsAgent() {
     <elevenlabs-convai
       ref={widgetRef}
       agent-id="agent_6601kyn1xnn8ebm9m9ahk52ghmr5"
+      dismissible="true"
     ></elevenlabs-convai>
   );
 }

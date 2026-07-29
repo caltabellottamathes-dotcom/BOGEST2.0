@@ -1,6 +1,6 @@
 /**
- * Makes third-party floating widgets (D-ID avatar, ElevenLabs convai) draggable
- * so they never permanently block the "Vraag het aan Bogèst" digital host.
+ * Makes the D-ID avatar widget draggable so it never permanently blocks the
+ * "Vraag het aan Bogèst" digital host. (The ElevenLabs widget is fixed.)
  *
  * Strategy: a small drag threshold means quick clicks/taps still reach the
  * widget's own handlers. Only when the pointer moves beyond the threshold do
@@ -11,15 +11,13 @@
 
 const DRAG_THRESHOLD = 5;
 
+// Only the D-ID agent stays draggable. The ElevenLabs widget is pinned to a
+// fixed position (see index.css) and auto-minimizes after website actions, so
+// dragging it would fight that behaviour.
 const WIDGET_SELECTORS = [
   '[data-name="did-agent"]',
-  'elevenlabs-convai',
   'div[id*="did-agent"]',
   'div[class*="did-agent"]',
-  'div[id*="elevenlabs"]',
-  'div[class*="elevenlabs"]',
-  'div[id*="convai"]',
-  'div[class*="convai"]',
 ];
 
 function makeDraggable(el) {
