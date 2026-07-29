@@ -1287,11 +1287,11 @@ export default function DigitalHost() {
                   >
                     <div className="flex items-start gap-3 px-4 py-3 rounded-2xl"
                       style={{
-                        background: 'rgba(12,10,6,0.55)',
-                        backdropFilter: 'blur(20px) saturate(160%)',
-                        WebkitBackdropFilter: 'blur(20px) saturate(160%)',
-                        border: '1px solid rgba(231,205,112,0.22)',
-                        boxShadow: '0 8px 28px rgba(0,0,0,0.45)',
+                        background: 'rgba(255,255,255,0.07)',
+                        backdropFilter: 'blur(28px) saturate(140%)',
+                        WebkitBackdropFilter: 'blur(28px) saturate(140%)',
+                        border: '1px solid rgba(255,255,255,0.16)',
+                        boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
                       }}>
                       <span className="flex-shrink-0 mt-1.5 w-2 h-2 rounded-full bg-primary" />
                       <div className="flex-1 min-w-0">
