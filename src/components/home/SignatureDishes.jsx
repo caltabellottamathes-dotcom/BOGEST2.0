@@ -6,7 +6,7 @@ import { useLang } from '@/lib/LangContext';
 
 const dishes = [
   {
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798020-1RKR6N8VGHSE1Z88BXP4/378389609_756558059816060_7208800625589654574_n.jpg',
     tag: 'Ons paradepaardje',
     name: 'Belgisch Wit Blauw',
     range: '€32.90 – €56',
@@ -18,7 +18,7 @@ const dishes = [
     range: '€28.90',
   },
   {
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/426ec0ed-f1b6-4eb0-90d5-ad7cea634e7c/7B0C379C-A65C-400B-83D7-C140E27E6ABF_1_201_a.jpeg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg',
     tag: 'Eigen label',
     name: 'Wijnselectie',
     range: '',

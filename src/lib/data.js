@@ -220,7 +220,7 @@ export const MENU_DATA = [
   {
     id: 'runds',
     key: 'cat_beef',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg',
     items: [
       { id: 'r1', name: { nl: 'Steak Lady', fr: "Steak Lady", en: "Steak Lady" }, price: 32.90 },
       { id: 'r2', name: { nl: 'Steak Normaal', fr: "Steak Normal", en: "Steak Regular" }, price: 39.90 },
@@ -237,7 +237,7 @@ export const MENU_DATA = [
   {
     id: 'masters',
     key: 'cat_masters',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798052-P24QWA3M58JWMGOWHVBD/399841843_793829846088881_1062638734165438461_n.jpg',
     items: [
       { id: 'm1', name: { nl: 'Angus Ribeye', fr: "Angus Ribeye", en: "Angus Ribeye" }, desc: { nl: 'Aberdeen Angus, superieure vetmarmering, boterzacht en sappig', fr: "Aberdeen Angus, persillage supérieur, fondant et juteux", en: "Aberdeen Angus, superior marbling, tender and juicy" }, price: 56.00 },
       { id: 'm2', name: { nl: 'Hereford Ribeye', fr: "Hereford Ribeye", en: "Hereford Ribeye" }, desc: { nl: 'Zacht van beet, rijk van smaak met subtiele marmering', fr: "Texture tendre, saveur riche avec persillage subtil", en: "Tender bite, rich flavour with subtle marbling" }, price: 53.00 },
@@ -256,7 +256,7 @@ export const MENU_DATA = [
   {
     id: 'vis',
     key: 'cat_fish',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/426ec0ed-f1b6-4eb0-90d5-ad7cea634e7c/7B0C379C-A65C-400B-83D7-C140E27E6ABF_1_201_a.jpeg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/73cc2b2a-9419-4222-80ee-be10bc8bff62/69FCF8C3-2BD9-4D7C-9871-8E00EDE111A5.jpeg',
     items: [
       { id: 'f1', name: { nl: 'Zeetong Meunière', fr: "Sole Meunière", en: "Dover sole Meunière" }, price: 47.50 },
       { id: 'f2', name: { nl: 'Zalmfilet', fr: "Filet de saumon", en: "Salmon fillet" }, price: 37.50 },
@@ -268,7 +268,7 @@ export const MENU_DATA = [
   {
     id: 'varken',
     key: 'cat_pork',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798068-Y30B7VANC5RKS6HTHGE9/tomapork.jpeg',
     items: [
       { id: 'p1', name: { nl: 'Tomapork van Gaasterlander', fr: "Tomapork de Gaasterlander", en: "Tomapork from Gaasterlander" }, desc: { nl: "Botermals 'kotelet' met been", fr: "Côtelette fondante avec os", en: "Melt-in-your-mouth chop on the bone" }, price: 42.00 },
       { id: 'p2', name: { nl: 'Spare Ribs', fr: "Spare Ribs", en: "Spare Ribs" }, desc: { nl: 'Secret dipsausje, vlees valt van het bot', fr: "Sauce dip secrète, la viande se détache de l'os", en: "Secret dipping sauce, meat falls off the bone" }, price: 28.90 },
@@ -279,7 +279,7 @@ export const MENU_DATA = [
   {
     id: 'klassiekers',
     key: 'cat_classics',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793828-46U4HY2BWRCMXLZ9G2VW/313432687_792246775522672_788010508288086563_n.jpg',
     items: [
       { id: 'cl1', name: { nl: 'Steak Tartaar', fr: "Steak tartare", en: "Steak tartare" }, desc: { nl: 'Handgesneden', fr: "Coupé au couteau", en: "Hand-cut" }, price: 35.90 },
       { id: 'cl2', name: { nl: 'Bouletten in Luikse Saus', fr: "Boulets sauce liégeoise", en: "Meatballs in Liège sauce" }, price: 26.90 },
@@ -314,7 +314,7 @@ export const MENU_DATA = [
   {
     id: 'nagerechten',
     key: 'cat_desserts',
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1b9991fd-fc43-405b-acb6-a86317aaf9f1/5757bb8f-abdc-43e6-9219-e4e103f1a2e0.jpeg',
     items: [
       { id: 'd1', name: { nl: 'Crème Brûlée', fr: "Crème Brûlée", en: "Crème Brûlée" }, price: null },
       { id: 'd2', name: { nl: 'Dame Blanche', fr: "Dame Blanche", en: "Dame Blanche" }, price: null },

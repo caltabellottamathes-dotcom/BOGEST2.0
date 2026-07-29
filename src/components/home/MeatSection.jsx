@@ -48,7 +48,7 @@ export default function MeatSection() {
           >
             <div className="relative overflow-hidden rounded-2xl aspect-[4/5]">
               <img
-                src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg"
+                src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798035-Y0LQXMVFSBJWWVXQG7ZI/filet+pur+.jpeg"
                 alt="Premium beef at Bogèst"
                 className="w-full h-full object-cover"
                 style={{ filter: 'saturate(0.82) brightness(0.95)' }}

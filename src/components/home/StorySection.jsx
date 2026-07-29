@@ -15,7 +15,7 @@ export default function StorySection() {
               {/* Reduced height image */}
               <div className="group overflow-hidden rounded-xl aspect-[16/10]">
                 <img
-                  src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799922-SLXI4OSI7W3KWGKE3UFY/5a7c094c-9679-410a-bbc5-5f8c663d8a14.JPG"
+                  src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798133-O44CER8WRTZ0YVM5E8TK/living.jpeg"
                   alt="Bogèst"
                   className="w-full h-full object-cover hover:scale-105 transition-all duration-700"
                   style={{ filter: 'saturate(0.82) brightness(0.95)' }}

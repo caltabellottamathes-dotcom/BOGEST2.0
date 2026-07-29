@@ -13,6 +13,7 @@ export default function CTACards() {
       desc: t('home_cta_reserve_desc'),
       path: '/reserve',
       icon: CalendarDays,
+      image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798149-17KHS8RDD2FJIZI179ZQ/EF6D9D08-F3ED-41E2-9392-96AB73DEF2E6.jpeg',
     },
     {
       num: '02',
@@ -20,6 +21,7 @@ export default function CTACards() {
       desc: t('home_cta_takeaway_desc'),
       path: '/takeaway',
       icon: ShoppingBag,
+      image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798084-QF5DJWQ3TUKX4AZR1JXU/278560265_1007469039884087_903507914175074104_n.jpg',
     },
     {
       num: '03',
@@ -27,6 +29,7 @@ export default function CTACards() {
       desc: t('home_cta_giftcard_desc'),
       path: '/gift-cards',
       icon: Gift,
+      image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798104-DAH7YUC0MQMSXKX8D257/437846437_908368301301701_1295494183982636809_n.jpg',
     },
   ];
 
@@ -38,29 +41,36 @@ export default function CTACards() {
           <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{t('home_cta_title')}</h2>
         </SectionReveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-             {cards.map((card, i) => {
-                return (
-                <SectionReveal key={card.num} delay={i * 0.1}>
-               <Link to={card.path}
-                 className="group flex flex-col p-7 rounded-2xl border border-border bg-card/60 backdrop-blur-sm hover:border-primary/40 hover:bg-card hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 h-full">
-                 <div className="flex items-start justify-between mb-7">
-                   <span className="font-heading text-4xl font-bold text-primary/12">{card.num}</span>
-                   <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300">
-                     <card.icon className="w-4.5 h-4.5 text-primary group-hover:text-primary-foreground transition-colors duration-300" style={{ width: '18px', height: '18px' }} />
-                   </div>
-                 </div>
-                 <h3 className="font-heading text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
-                   {card.title}
-                 </h3>
-                 <p className="font-body text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">{card.desc}</p>
-                 <span className="inline-flex items-center gap-1.5 font-body text-xs tracking-widest uppercase text-primary">
-                    {t('btn_more')} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
-                 </span>
+          {cards.map((card, i) => {
+            const Icon = card.icon;
+            return (
+              <SectionReveal key={card.num} delay={i * 0.1}>
+                <Link to={card.path}
+                  className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-sm hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 h-full">
+                  <div className="relative h-32 overflow-hidden">
+                    <img src={card.image} alt={card.title}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      style={{ filter: 'saturate(0.85) brightness(0.9)' }} />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                    <span className="absolute top-3 left-4 font-heading text-3xl font-bold text-white/25">{card.num}</span>
+                    <div className="absolute top-3 right-3 w-9 h-9 rounded-xl bg-black/30 backdrop-blur-md border border-white/15 flex items-center justify-center group-hover:bg-primary group-hover:border-primary transition-all duration-300">
+                      <Icon className="text-primary group-hover:text-primary-foreground transition-colors duration-300" style={{ width: '16px', height: '16px' }} />
+                    </div>
+                  </div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+                      {card.title}
+                    </h3>
+                    <p className="font-body text-sm text-muted-foreground mb-6 flex-1 leading-relaxed">{card.desc}</p>
+                    <span className="inline-flex items-center gap-1.5 font-body text-xs tracking-widest uppercase text-primary">
+                      {t('btn_more')} <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform duration-300" />
+                    </span>
+                  </div>
                 </Link>
-                </SectionReveal>
-                );
-                })}
-                </div>
+              </SectionReveal>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
