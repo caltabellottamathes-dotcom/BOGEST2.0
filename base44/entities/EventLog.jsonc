@@ -1,0 +1,63 @@
+{
+  "name": "EventLog",
+  "type": "object",
+  "properties": {
+    "event_type": {
+      "type": "string",
+      "description": "Event type, e.g. navigation.pageOpened, reservation.created, tool.invoked, system.integrationDown"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "navigation",
+        "media",
+        "reservation",
+        "knowledge",
+        "recommendation",
+        "context",
+        "memory",
+        "communication",
+        "business",
+        "analytics",
+        "website",
+        "user",
+        "system"
+      ],
+      "description": "Tool/event domain (Section 2 / 3.1)"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Structured, type-specific event payload",
+      "additionalProperties": true
+    },
+    "visitor_id": {
+      "type": "string",
+      "description": "Anonymous browser-local visitor ID for correlation"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Session ID for correlation"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "user",
+        "website",
+        "business",
+        "system",
+        "tool",
+        "automation"
+      ],
+      "description": "Event origin (Section 3.1 categories)"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the event occurred (immutable)"
+    }
+  },
+  "required": [
+    "event_type",
+    "domain"
+  ]
+}

@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { logEvent } from '../../shared/eventBus.ts';
 
 Deno.serve(async (req) => {
   try {
@@ -11,6 +12,15 @@ Deno.serve(async (req) => {
     if (!visitor_id) {
       return Response.json({ error: 'visitor_id is required' }, { status: 400 });
     }
+
+    // Event Bus (Section 3): log this tool invocation as a structured event
+    logEvent(base44, {
+      type: 'memory.profileAccessed',
+      domain: 'memory',
+      payload: { action: action || 'get' },
+      visitorId: visitor_id,
+      source: 'tool',
+    });
 
     // Use service role so visitor profiles persist even for unauthenticated browsers
     // (these are anonymous profiles tied to a browser-local ID, not user accounts)

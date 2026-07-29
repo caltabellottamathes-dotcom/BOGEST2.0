@@ -1,0 +1,47 @@
+{
+  "name": "VisitorPreference",
+  "type": "object",
+  "properties": {
+    "visitor_id": {
+      "type": "string",
+      "description": "Visitor this preference belongs to"
+    },
+    "key": {
+      "type": "string",
+      "description": "Preference key, e.g. favorite_dish, preferred_location, dietary, allergens"
+    },
+    "value": {
+      "type": "string",
+      "description": "Preference value"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "dietary",
+        "personalization",
+        "marketing",
+        "reservations"
+      ],
+      "description": "Consent category governing storage of this field (Section 9.3)"
+    },
+    "consent_granted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the visitor opted in to storing this preference category"
+    },
+    "retention_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Per-field retention expiry; purged after this by system.retentionSweep"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where the preference was captured (chat, popup, settings)"
+    }
+  },
+  "required": [
+    "visitor_id",
+    "key",
+    "value"
+  ]
+}

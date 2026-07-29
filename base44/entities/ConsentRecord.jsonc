@@ -1,0 +1,45 @@
+{
+  "name": "ConsentRecord",
+  "type": "object",
+  "properties": {
+    "visitor_id": {
+      "type": "string",
+      "description": "Visitor the consent belongs to"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "dietary",
+        "personalization",
+        "marketing",
+        "reservations",
+        "analytics"
+      ],
+      "description": "Preference category the consent covers (Section 9.3)"
+    },
+    "granted": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether consent was granted (explicit opt-in required before storing preference-category fields)"
+    },
+    "granted_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When consent was captured"
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Retention expiry; purged after this by system.retentionSweep"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where consent was captured (chat, popup, settings)"
+    }
+  },
+  "required": [
+    "visitor_id",
+    "category",
+    "granted"
+  ]
+}
