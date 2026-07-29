@@ -19,11 +19,11 @@ const WELCOME_VIDEO_URL = 'https://media.base44.com/videos/public/6a62118af65a96
 const HOST_STRINGS = {
   nl: {
     title: 'Vraag het aan Bogèst',
-    assistant: 'Digitale assistent',
+    assistant: 'Vraag het aan Bogèst',
     placeholder: 'Stel gerust uw vraag...',
     footer_text: 'Vraag het aan Bogèst · Reservaties via',
     footer_link: 'de website',
-    fab_label: 'Digitale gastheer',
+    fab_label: 'Bogèst',
     fab_cta: 'Vraag het aan Bogèst',
     chat_to: 'Klik om te chatten →',
     close_skip: 'Ik kijk gewoon even rond',
@@ -31,7 +31,7 @@ const HOST_STRINGS = {
     greeting_afternoon: 'Goedemiddag',
     greeting_evening: 'Goedenavond',
     greeting_night: 'Goedenacht',
-    intro_line1: 'Ik ben de digitale gastheer van Bogèst.',
+    intro_line1: 'Ik ben de gastheer van Bogèst.',
     intro_line2_lunch: 'Hebt ge zin in een lekkere lunch vandaag?',
     intro_line2_diner: 'Plannen voor vanavond? Ik help u graag verder.',
     intro_line2_default: 'Ik ken ons menu en onze vestigingen van binnen en van buiten.',
@@ -121,11 +121,11 @@ const HOST_STRINGS = {
   },
   fr: {
     title: 'Vraag het aan Bogèst',
-    assistant: 'Assistant numérique',
+    assistant: 'Vraag het aan Bogèst',
     placeholder: 'Posez votre question...',
     footer_text: 'Vraag het aan Bogèst · Réservations via',
     footer_link: 'le site',
-    fab_label: 'Hôte numérique',
+    fab_label: 'Bogèst',
     fab_cta: 'Vraag het aan Bogèst',
     chat_to: 'Cliquer pour chatter →',
     close_skip: 'Juste regarder',
@@ -219,11 +219,11 @@ const HOST_STRINGS = {
   },
   en: {
     title: 'Vraag het aan Bogèst',
-    assistant: 'Digital assistant',
+    assistant: 'Vraag het aan Bogèst',
     placeholder: 'Ask your question...',
     footer_text: 'Vraag het aan Bogèst · Reservations via',
     footer_link: 'the website',
-    fab_label: 'Digital host',
+    fab_label: 'Bogèst',
     fab_cta: 'Vraag het aan Bogèst',
     chat_to: 'Click to chat →',
     close_skip: 'Just browsing',
@@ -872,6 +872,15 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
   const isReturning = visitorMemory && visitorMemory.visits > 1;
 
+  const videoRef = useRef(null);
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!el) return;
+    el.muted = false;
+    const p = el.play();
+    if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
+  }, []);
+
   let fullIntro;
   if (isReturning) {
     fullIntro = `${greeting}! ${pickRandom(v.returning)}`;
@@ -900,8 +909,8 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
-        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative"
-          style={{ maxWidth: 420, ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
+        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col"
+          style={{ maxWidth: 420, maxHeight: '92vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
 
           {/* Close */}
           <button onClick={onSkip}
@@ -910,11 +919,12 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <X className="w-3.5 h-3.5" />
           </button>
 
-          {/* Welcome video */}
-          <div className="relative w-full" style={{ height: 176 }}>
+          {/* Welcome video — vertical (portrait), plays with sound, stops at end */}
+          <div className="relative w-full flex-shrink-0" style={{ aspectRatio: '9 / 16', maxHeight: '56vh' }}>
             <video
+              ref={videoRef}
               src={WELCOME_VIDEO_URL}
-              autoPlay muted loop playsInline
+              autoPlay playsInline
               className="w-full h-full object-cover"
             />
             {/* Online badge */}
@@ -926,7 +936,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
           </div>
 
           {/* Body */}
-          <div className="px-6 pt-5 pb-6">
+          <div className="px-6 pt-5 pb-6 overflow-y-auto flex-1">
             <div className="flex items-center gap-3 mb-4">
               <LogoAvatar size="lg" online isDark={isDark} />
               <div>
@@ -1240,11 +1250,11 @@ export default function DigitalHost() {
                 <motion.div
                   initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="fixed top-[72px] right-4 sm:top-[80px] sm:right-6 z-[79] cursor-pointer"
-                  style={{ maxWidth: 'min(calc(100vw - 32px), 300px)' }}
+                  className="fixed bottom-4 left-4 sm:bottom-6 sm:left-6 z-[60] cursor-pointer"
+                  style={{ maxWidth: 'min(calc(100vw - 32px), 320px)' }}
                   onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                 >
-                  <div className="px-5 py-4 rounded-2xl rounded-tr-sm relative"
+                  <div className="px-5 py-4 rounded-2xl rounded-r-sm relative"
                     style={{
                       background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
                       backdropFilter: 'blur(60px) saturate(220%)',
@@ -1266,12 +1276,12 @@ export default function DigitalHost() {
                       </div>
                     )}
                   </div>
-                  <div className="absolute top-[-5px] right-5 w-2.5 h-2.5 -rotate-45"
+                  <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45"
                     style={{
                       background: isDark ? 'rgba(180, 140, 20, 0.72)' : 'rgba(74,83,32,0.92)',
                       backdropFilter: 'blur(60px)', WebkitBackdropFilter: 'blur(60px)',
+                      borderTop: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
                       borderRight: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
-                      borderBottom: isDark ? '1px solid rgba(231, 205, 112, 0.60)' : '1px solid rgba(107,122,63,0.60)',
                     }} />
                 </motion.div>
               )}

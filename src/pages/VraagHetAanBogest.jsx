@@ -157,7 +157,7 @@ export default function VraagHetAanBogest() {
           </div>
           <div>
             <h1 className="font-heading text-lg font-bold text-foreground">Vraag het aan Bogèst</h1>
-            <p className="font-body text-xs text-muted-foreground">Uw digitale gastheer</p>
+            <p className="font-body text-xs text-muted-foreground">Borgloon · Hasselt · Heusden-Zolder</p>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
