@@ -19,7 +19,7 @@
     --popover-foreground: 25 8% 12%;
 
     /* Avocado olive green — light mode */
-    --primary: 80 14% 32%;
+    --primary: 80 32% 36%;
     --primary-foreground: 40 18% 97%;
 
     --secondary: 80 18% 90%;
@@ -97,16 +97,6 @@
     --sidebar-accent-foreground: 38 12% 90%;
     --sidebar-border: 25 6% 16%;
     --sidebar-ring: 47 73% 67%;
-  }
-
-  /* Avocado / olive-green accent — same dark canvas, green accent */
-  .dark.accent-olive {
-    --primary: 80 42% 55%;
-    --accent: 80 42% 55%;
-    --ring: 80 42% 55%;
-    --chart-1: 80 42% 55%;
-    --sidebar-primary: 80 42% 55%;
-    --sidebar-ring: 80 42% 55%;
   }
 }
 
