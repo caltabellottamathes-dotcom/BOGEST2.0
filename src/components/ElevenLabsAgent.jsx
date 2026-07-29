@@ -74,6 +74,7 @@ export default function ElevenLabsAgent() {
       ref={widgetRef}
       agent-id="agent_6601kyn1xnn8ebm9m9ahk52ghmr5"
       dismissible="true"
+      placement="bottom-left"
     ></elevenlabs-convai>
   );
 }

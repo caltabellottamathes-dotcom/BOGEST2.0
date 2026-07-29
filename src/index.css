@@ -137,22 +137,9 @@ div[class*="convai"] {
   z-index: 99999 !important;
 }
 
-/* Pin the ElevenLabs widget to the bottom-left corner so it never blocks the
-   digital host (top-right) or the content the AI reveals after an action. */
-elevenlabs-convai {
-  position: fixed !important;
-  top: auto !important;
-  right: auto !important;
-  bottom: 20px !important;
-  left: 20px !important;
-  margin: 0 !important;
-}
-@media (max-width: 768px) {
-  elevenlabs-convai {
-    bottom: 12px !important;
-    left: 12px !important;
-  }
-}
+/* The ElevenLabs widget is positioned via its `placement` attribute on the
+   <elevenlabs-convai> element (see ElevenLabsAgent.jsx). Do NOT force
+   position/bottom/left here — that detaches the orb from the host and hides it. */
 
 /* D-ID Visual Agent — ensure it renders above all app content */
 [data-name="did-agent"],

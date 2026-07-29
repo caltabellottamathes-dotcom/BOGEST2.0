@@ -6,7 +6,7 @@ import GlassPanelWrapper, { isPanelPath } from '@/components/GlassPanel';
 import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
-import DIdAgent from '@/components/DIdAgent';
+import FloatingVideo from '@/components/FloatingVideo';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
@@ -76,11 +76,11 @@ export default function Layout() {
       {/* Digital Host — visible on all pages */}
       <DigitalHost />
 
-      {/* ElevenLabs Conversational AI Widget — floating on the left */}
+      {/* ElevenLabs Conversational AI Widget — floating on the bottom-left */}
       <ElevenLabsAgent />
 
-      {/* D-ID Visual AI Agent — floating widget on the right */}
-      <DIdAgent />
+      {/* Floating welcome video — replaces the D-ID widget, bottom-right */}
+      <FloatingVideo />
     </div>
   );
 }
