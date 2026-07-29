@@ -96,6 +96,11 @@ async function routeAndExecute(topic) {
   }
 }
 
+/** Proactively sync the website to a topic (used by the text host). Fire-and-forget. */
+export function syncToTopic(topic) {
+  return routeAndExecute(topic);
+}
+
 /** Called for each new agent/user transcript message from the widget. */
 export function onTranscriptMessage(msg) {
   if (!msg) return;

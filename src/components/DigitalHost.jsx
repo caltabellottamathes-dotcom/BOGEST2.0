@@ -9,6 +9,7 @@ import { getSystemPrompt } from '@/lib/digitalHostKnowledge';
 import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
+import { syncToTopic } from '@/lib/websiteSyncEngine';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 
@@ -1240,6 +1241,10 @@ export default function DigitalHost() {
     setInput(''); setPhase('chat'); sounds.send();
     setIsLoading(true);
     responsePendingRef.current = true;
+
+    // Proactively sync the website to the user's topic — open the relevant
+    // page/panel the moment they mention it, without waiting for the reply.
+    syncToTopic(userText).catch(() => {});
 
     // Show greeting locally if no conversation yet and no messages
     if (!conversationRef.current && messages.length === 0) {
