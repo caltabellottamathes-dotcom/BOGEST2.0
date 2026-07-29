@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-export default function SectionReveal({ children, className = '', delay = 0, direction = 'up' }) {
+export default function SectionReveal({ children, className = '', delay = 0, direction = 'up', ...rest }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
@@ -23,6 +23,7 @@ export default function SectionReveal({ children, className = '', delay = 0, dir
       className={className}
       whileHover={{ scale: 1.02 }}
       style={{ transformOrigin: 'center' }}
+      {...rest}
     >
       {children}
     </motion.div>

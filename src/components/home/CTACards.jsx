@@ -31,7 +31,7 @@ export default function CTACards() {
   ];
 
   return (
-    <section className="w-full py-14 md:py-20">
+    <section id="acties" className="w-full py-14 md:py-20">
       <div className="w-full px-6 md:px-10 lg:px-16">
         <SectionReveal className="mb-12">
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('home_cta_label')}</span>

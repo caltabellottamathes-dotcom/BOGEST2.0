@@ -9,7 +9,7 @@ export default function LocationsPreview() {
   const { t, lang } = useLang();
   const LOCATIONS_DATA = getLocations(lang);
   return (
-    <section className="w-full py-10 md:py-20">
+    <section id="vestigingen" className="w-full py-10 md:py-20">
       <div className="w-full px-6 md:px-10 lg:px-16">
         <SectionReveal className="mb-8 md:mb-14">
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">

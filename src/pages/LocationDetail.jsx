@@ -151,13 +151,13 @@ export default function LocationDetail() {
             </SectionReveal>
 
             {loc.parking && (
-              <SectionReveal delay={0.1} className="mt-8">
+              <SectionReveal id="parking" delay={0.1} className="mt-8">
                 <h3 className="font-heading text-lg font-semibold text-foreground mb-3">{t('loc_parking')}</h3>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed">{loc.parking}</p>
               </SectionReveal>
             )}
 
-            <SectionReveal delay={0.15} className="mt-8">
+            <SectionReveal id="openingsuren" delay={0.15} className="mt-8">
               <h3 className="font-heading text-lg font-semibold text-foreground mb-4">{t('loc_hours')}</h3>
               <div className="space-y-2">
                 {loc.hours.map(h => (
@@ -187,7 +187,7 @@ export default function LocationDetail() {
             </SectionReveal>
           </div>
 
-          <SectionReveal direction="right" delay={0.1} className="h-fit">
+          <SectionReveal id="contact" direction="right" delay={0.1} className="h-fit">
             <div className="bg-card border border-border rounded-xl p-7 space-y-5">
               <h3 className="font-heading text-lg font-semibold text-foreground">Contact</h3>
               <div className="space-y-4">
@@ -212,7 +212,7 @@ export default function LocationDetail() {
           </SectionReveal>
         </div>
 
-        <div className="mt-20 pt-12 border-t border-border">
+        <div id="spaces" className="mt-20 pt-12 border-t border-border">
            <button onClick={() => setShowRestaurantPanel(true)} className="group w-full flex items-center justify-between hover:opacity-70 transition-opacity">
              <div className="text-left">
                <span className="font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground">{t('loc_spaces')}</span>

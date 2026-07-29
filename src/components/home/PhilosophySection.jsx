@@ -104,7 +104,7 @@ export default function PhilosophySection() {
   const totalHeight = pillars.length * 80; // vh units
 
   return (
-    <section className="w-full bg-background">
+    <section id="filosofie" className="w-full bg-background">
 
       {/*
                Outer div: tall enough to scroll through all panels.

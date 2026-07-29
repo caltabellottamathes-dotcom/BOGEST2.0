@@ -127,7 +127,7 @@ export default function SeasonalSection() {
   };
 
   return (
-    <section className="w-full py-14 md:py-20">
+    <section id="suggesties" className="w-full py-14 md:py-20">
       <div className="w-full px-6 md:px-10 lg:px-16">
         {/* Header */}
         <motion.div

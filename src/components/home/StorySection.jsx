@@ -7,7 +7,7 @@ import { useLang } from '@/lib/LangContext';
 export default function StorySection() {
   const { t } = useLang();
   return (
-    <section className="w-full py-14 md:py-20">
+    <section id="verhaal" className="w-full py-14 md:py-20">
       <div className="w-full px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <SectionReveal direction="left">
