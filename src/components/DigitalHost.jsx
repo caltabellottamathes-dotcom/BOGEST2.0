@@ -909,31 +909,34 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
-        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex"
+        <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
           style={{ maxWidth: 680, maxHeight: '88vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
 
-          {/* Close */}
-          <button onClick={onSkip}
-            className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
-            style={{ background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)' }}>
-            <X className="w-3.5 h-3.5" />
-          </button>
-
-          {/* Welcome video — left, vertical, pure (no overlays), plays with sound, stops at end */}
-          <div className="relative flex-shrink-0 w-[36%] sm:w-[42%] min-h-[300px]">
+          {/* Welcome video — top on mobile, left on sm+ (pure, no overlays) */}
+          <div className="relative flex-shrink-0 w-full h-40 sm:w-[42%] sm:h-auto sm:min-h-[300px]">
             <video
               ref={videoRef}
               src={WELCOME_VIDEO_URL}
               autoPlay playsInline
               className="absolute inset-0 w-full h-full object-cover"
             />
-            {/* Subtle gradient blending the video into the content panel */}
-            <div className="absolute top-0 right-0 h-full w-16 pointer-events-none"
+            {/* Gradient blend — mobile: bottom */}
+            <div className="sm:hidden absolute left-0 right-0 bottom-0 h-16 pointer-events-none"
+              style={{ background: isDark ? 'linear-gradient(to bottom, transparent, rgba(8,8,8,0.92))' : 'linear-gradient(to bottom, transparent, rgba(254,252,248,0.95))' }} />
+            {/* Gradient blend — sm+: right */}
+            <div className="hidden sm:block absolute top-0 right-0 h-full w-16 pointer-events-none"
               style={{ background: isDark ? 'linear-gradient(to right, transparent, rgba(8,8,8,0.92))' : 'linear-gradient(to right, transparent, rgba(254,252,248,0.95))' }} />
           </div>
 
-          {/* Content — right */}
-          <div className="flex-1 flex flex-col px-6 sm:px-8 py-6 overflow-y-auto">
+          {/* Content — bottom on mobile, right on sm+ */}
+          <div className="relative flex-1 flex flex-col px-6 sm:px-8 py-6 overflow-y-auto">
+            {/* Close */}
+            <button onClick={onSkip}
+              className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
+              style={{ background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)' }}>
+              <X className="w-3.5 h-3.5" />
+            </button>
+
             <div className="mb-5 pr-8">
               <p className="font-body text-[10px] tracking-[0.32em] uppercase text-primary/80 mb-2">Bogèst</p>
               <h2 className="font-heading text-2xl font-bold text-foreground leading-tight">{s.entry_headline}</h2>
@@ -1041,6 +1044,11 @@ export default function DigitalHost() {
     const t = setTimeout(() => { entryShownRef.current = true; setPhase('entry'); sounds.open(); }, 1200);
     return () => clearTimeout(t);
   }, []);
+
+  // Hide the floating video card + ElevenLabs widget while the entry popup is open
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: phase === 'entry' } }));
+  }, [phase]);
 
   // Proactive inactivity messages
   const scheduleProactive = () => {

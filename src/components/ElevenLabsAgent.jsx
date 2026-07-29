@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
 import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
@@ -21,6 +21,13 @@ import {
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const handler = (e) => setHidden(e.detail?.open === true);
+    window.addEventListener('bogest:popup-visibility', handler);
+    return () => window.removeEventListener('bogest:popup-visibility', handler);
+  }, []);
 
   useEffect(() => {
     // Inject the widget embed script once.
@@ -93,6 +100,7 @@ export default function ElevenLabsAgent() {
       agent-id="agent_6601kyn1xnn8ebm9m9ahk52ghmr5"
       dismissible="true"
       placement="bottom-right"
+      style={{ display: hidden ? 'none' : undefined }}
     ></elevenlabs-convai>
   );
 }

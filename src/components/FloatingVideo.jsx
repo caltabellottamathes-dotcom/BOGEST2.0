@@ -14,6 +14,7 @@ export default function FloatingVideo() {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia('(min-width: 640px)');
@@ -26,6 +27,14 @@ export default function FloatingVideo() {
       catch { mq.removeListener(update); }
     };
   }, []);
+
+  useEffect(() => {
+    const handler = (e) => setHidden(e.detail?.open === true);
+    window.addEventListener('bogest:popup-visibility', handler);
+    return () => window.removeEventListener('bogest:popup-visibility', handler);
+  }, []);
+
+  if (hidden) return null;
 
   const handleClick = () => {
     const v = videoRef.current;

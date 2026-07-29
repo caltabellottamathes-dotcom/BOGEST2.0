@@ -53,7 +53,7 @@ export default function HeroSection() {
       <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-r from-black/40 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/50 via-black/10 to-transparent'}`} />
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-6 md:pb-10">
+      <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-28 sm:pb-6 md:pb-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
