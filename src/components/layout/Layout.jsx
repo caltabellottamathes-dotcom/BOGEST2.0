@@ -7,6 +7,7 @@ import Home from '@/pages/Home';
 import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import DIdAgent from '@/components/DIdAgent';
+import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
 export default function Layout() {
@@ -68,6 +69,9 @@ export default function Layout() {
       )}
 
       {!isPanel && <Footer />}
+
+      {/* Central website-action dispatcher bridge (wires router → actions) */}
+      <WebsiteDispatcherBridge />
 
       {/* Digital Host — visible on all pages */}
       <DigitalHost />
