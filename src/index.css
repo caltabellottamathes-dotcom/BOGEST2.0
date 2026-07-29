@@ -152,11 +152,13 @@ did-agent,
   z-index: 99999 !important;
 }
 
-/* Periodic single blink for the floating welcome video */
-@keyframes bogest-blink {
-  0%, 88%, 100% { opacity: 1; }
-  90% { opacity: 0.3; }
-  92% { opacity: 1; }
+/* Periodic subtle wiggle for the floating welcome video */
+@keyframes bogest-wiggle {
+  0%, 86%, 100% { transform: rotate(0deg); }
+  89% { transform: rotate(-3deg); }
+  92% { transform: rotate(3deg); }
+  95% { transform: rotate(-2deg); }
+  97% { transform: rotate(0deg); }
 }
 
 /* Hide all scrollbars site-wide while keeping scroll functionality */
