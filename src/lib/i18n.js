@@ -61,7 +61,8 @@ export const translations = {
     // Sections
     section_our_story: 'Ons Verhaal',
     section_signature: 'Signatuurgerichten',
-    section_locations: 'Altijd een Bogèst dichtbij',
+    section_locations: 'Altijd een Bogèst dichtbij.',
+    section_locations_accent: 'dichtbij',
     section_wine: 'Onze wijnen',
     section_reserve: 'Reserveer uw tafel',
     section_takeaway: 'Traiteur bestellen',
@@ -353,7 +354,8 @@ export const translations = {
     footer_info_soon: 'Informatie volgt binnenkort',
 
     // Home sections - hardcoded text
-    home_story_title: 'De naam veranderde. Onze belofte niet',
+    home_story_title: 'De naam veranderde.',
+    home_story_title_accent: 'Onze belofte niet.',
     home_story_body1: "Bogèst is de nieuwe naam van d'Entrecôte. Verder is er niets veranderd. De eigenaren, het team, het menu en onze formule zijn nog altijd precies zoals u ze kent.",
     home_story_body2: 'De naam is geïnspireerd op het Franse Beau Geste, oftewel "een mooi gebaar". Een naam die past bij hoe wij onze gasten willen ontvangen: met aandacht, vakmanschap en oprechte gastvrijheid.',
     home_story_body3: 'Kwaliteit en kwantiteit voor een eerlijke prijs. Dat was altijd al onze belofte en dat blijft het.',
@@ -365,13 +367,15 @@ export const translations = {
 
     home_cta_label: 'Reserveren & bestellen',
     home_cta_title: 'Alles binnen handbereik.',
+    home_cta_title_accent: 'handbereik',
     home_cta_reserve_desc: 'Leg uw tafel vast in een paar tikken — geen wachtrij, wel een tafel die op u wacht.',
     home_cta_takeaway_desc: 'De smaak van Bogèst, aan uw eigen tafel. Kies uw gerechten — wij staan al klaar in de keuken.',
     home_cta_giftcard_desc: 'Een cadeaubon die meer belooft dan een etentje — een avond om nog lang na te vertellen.',
     home_cta_giftpackage_desc: 'Premium gin- en wijnpakketten met cadeaubon — de ideale verrassing.',
 
     home_reviews_label: 'Wat onze gasten zeggen',
-    home_reviews_title: 'Ervaringen',
+    home_reviews_title: 'Ervaringen.',
+    home_reviews_title_accent: 'Ervaringen',
     home_reviews_rating: '4.9 gemiddeld · 400+ beoordelingen',
 
     home_locations_count: '{n} vestigingen',
@@ -475,7 +479,8 @@ export const translations = {
 
     section_our_story: 'Notre Histoire',
     section_signature: 'Plats signatures',
-    section_locations: 'Toujours un Bogèst tout près',
+    section_locations: 'Toujours un Bogèst tout près.',
+    section_locations_accent: 'tout près',
     section_wine: 'Nos vins',
     section_reserve: 'Réserver votre table',
     section_takeaway: 'Commander à emporter',
@@ -749,7 +754,8 @@ export const translations = {
     footer_legal: 'Juridique',
     footer_info_soon: 'Informations à venir',
 
-    home_story_title: 'Le nom a changé. Pas notre promesse',
+    home_story_title: 'Le nom a changé.',
+    home_story_title_accent: 'Pas notre promesse.',
     home_story_body1: "Bogèst est le nouveau nom de d'Entrecôte. Pour le reste, rien n'a changé. Les propriétaires, l'équipe, la carte et notre formule restent exactement comme vous les connaissez.",
     home_story_body2: "Le nom s'inspire du français Beau Geste, c'est-à-dire « un beau geste ». Un nom qui correspond à la façon dont nous voulons recevoir nos invités : avec attention, savoir-faire et hospitalité sincère.",
     home_story_body3: "Qualité et quantité à un prix juste. C'était toujours notre promesse, et ça l'est encore.",
@@ -761,13 +767,15 @@ export const translations = {
 
     home_cta_label: 'Réserver & commander',
     home_cta_title: 'Tout à portée de main.',
+    home_cta_title_accent: 'main',
     home_cta_reserve_desc: "Réservez votre table en quelques clics — pas de file d'attente, juste une table qui vous attend.",
     home_cta_takeaway_desc: "Le goût de Bogèst, à votre propre table. Choisissez vos plats — nous sommes déjà aux fourneaux.",
     home_cta_giftcard_desc: "Un bon cadeau qui promet plus qu'un dîner — une soirée dont on parlera encore longtemps.",
     home_cta_giftpackage_desc: "Coffrets premium gin et vin avec bon cadeau — la surprise idéale.",
 
     home_reviews_label: 'Ce que disent nos invités',
-    home_reviews_title: 'Avis',
+    home_reviews_title: 'Avis.',
+    home_reviews_title_accent: 'Avis',
     home_reviews_rating: '4,9 en moyenne · 400+ avis',
 
     home_locations_count: '{n} établissements',
@@ -868,7 +876,8 @@ export const translations = {
 
     section_our_story: 'Our Story',
     section_signature: 'Signature Dishes',
-    section_locations: 'Always a Bogèst nearby',
+    section_locations: 'Always a Bogèst nearby.',
+    section_locations_accent: 'nearby',
     section_wine: 'Our wines',
     section_reserve: 'Reserve your table',
     section_takeaway: 'Order takeaway',
@@ -1142,7 +1151,8 @@ export const translations = {
     footer_legal: 'Legal',
     footer_info_soon: 'Information coming soon',
 
-    home_story_title: 'The name changed. Our promise did not',
+    home_story_title: 'The name changed.',
+    home_story_title_accent: 'Our promise did not.',
     home_story_body1: "Bogèst is the new name of d'Entrecôte. Nothing else has changed. The owners, the team, the menu and our formula remain exactly as you know them.",
     home_story_body2: 'The name is inspired by the French Beau Geste, meaning "a beautiful gesture". A name that fits how we want to receive our guests: with attention, craftsmanship and sincere hospitality.',
     home_story_body3: 'Quality and quantity at an honest price. That was always our promise, and it still is.',
@@ -1154,13 +1164,15 @@ export const translations = {
 
     home_cta_label: 'Reserve & order',
     home_cta_title: 'Everything within reach.',
+    home_cta_title_accent: 'reach',
     home_cta_reserve_desc: 'Book your table in a few taps — no queue, just a table waiting for you.',
     home_cta_takeaway_desc: 'The taste of Bogèst, at your own table. Choose your dishes — we are already in the kitchen.',
     home_cta_giftcard_desc: 'A gift card that promises more than dinner — an evening they will still talk about.',
     home_cta_giftpackage_desc: 'Premium gin and wine packages with a gift card — the perfect surprise.',
 
     home_reviews_label: 'What our guests say',
-    home_reviews_title: 'Reviews',
+    home_reviews_title: 'Reviews.',
+    home_reviews_title_accent: 'Reviews',
     home_reviews_rating: '4.9 average · 400+ reviews',
 
     home_locations_count: '{n} locations',

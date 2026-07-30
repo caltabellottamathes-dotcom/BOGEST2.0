@@ -5,6 +5,7 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HomeTitle from '@/components/home/HomeTitle';
 
 export default function LocationsPreview() {
   const { t, lang } = useLang();
@@ -17,9 +18,7 @@ export default function LocationsPreview() {
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
             {t('home_locations_count').replace('{n}', LOCATIONS_DATA.length)}
           </span>
-          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-            {t('section_locations')}.
-          </h2>
+          <HomeTitle title={t('section_locations')} accent={t('section_locations_accent')} />
         </SectionReveal>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-5">

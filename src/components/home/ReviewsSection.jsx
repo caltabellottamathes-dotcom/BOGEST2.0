@@ -4,6 +4,7 @@ import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { base44 } from '@/api/base44Client';
+import HomeTitle from '@/components/home/HomeTitle';
 
 // Fallback reviews used when no Zenchef reviews are in the database yet
 const FALLBACK_REVIEWS = [
@@ -139,9 +140,7 @@ export default function ReviewsSection() {
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
               {t('home_reviews_label')}
             </span>
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              {t('home_reviews_title')}.
-            </h2>
+            <HomeTitle title={t('home_reviews_title')} accent={t('home_reviews_title_accent')} />
             <div className="flex items-center gap-3 mt-4">
               <Stars count={5} />
               <span className="font-body text-sm text-muted-foreground">{t('home_reviews_rating')}</span>

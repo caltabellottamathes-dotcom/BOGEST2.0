@@ -4,6 +4,7 @@ import { useLang } from '@/lib/LangContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import BogestLogo from '@/components/BogestLogo';
+import HomeTitle from '@/components/home/HomeTitle';
 
 const PILLARS_DATA = {
   nl: [
@@ -30,9 +31,9 @@ const PILLARS_DATA = {
 };
 
 const LABELS = {
-  nl: { label: 'Onze belofte en filosofie', title: 'Het gebaar achter Bogèst' },
-  fr: { label: 'Notre promesse et philosophie', title: 'Le geste derrière Bogèst' },
-  en: { label: 'Our promise and philosophy', title: 'The gesture behind Bogèst' }
+  nl: { label: 'Onze belofte en filosofie', title: 'Het gebaar achter Bogèst.', accent: 'Bogèst' },
+  fr: { label: 'Notre promesse et philosophie', title: 'Le geste derrière Bogèst.', accent: 'Bogèst' },
+  en: { label: 'Our promise and philosophy', title: 'The gesture behind Bogèst.', accent: 'Bogèst' }
 };
 
 export default function PhilosophySection() {
@@ -143,9 +144,7 @@ export default function PhilosophySection() {
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
                 {labels.label}
               </span>
-              <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-                {labels.title}.
-              </h2>
+              <HomeTitle title={labels.title} accent={labels.accent} />
             </div>
 
             {/* Panels — all stacked at the same position, scroll-driven translateY */}

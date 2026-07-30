@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair, Upload } from 'lucide-react';
+import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair, Upload, Images } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import WebsiteImagesPanel from './WebsiteImagesPanel';
 
 const SOURCES = [
   'bogest.be — alle pagina\'s (via sitemap)',
@@ -53,6 +54,8 @@ export default function AdminPanel({ onClose, onChanged }) {
   const [topicState, setTopicState] = useState({ running: false, result: null, error: null });
   const [dedupe, setDedupe] = useState({ running: false, result: null, error: null });
   const [bulk, setBulk] = useState({ running: false, total: 0, done: 0, errors: 0, results: [] });
+  const [showWebsite, setShowWebsite] = useState(false);
+  const [analyzeAll, setAnalyzeAll] = useState({ running: false, total: 0, done: 0, errors: 0 });
 
   const runDiscover = async () => {
     setDiscover({ running: true, result: null, error: null });
@@ -86,6 +89,27 @@ export default function AdminPanel({ onClose, onChanged }) {
     } catch (e) {
       setDedupe({ running: false, error: e?.response?.data?.error || e?.message || 'Ontdubbeling mislukt' });
     }
+  };
+
+  const runAnalyzeAll = async () => {
+    setAnalyzeAll({ running: true, total: 0, done: 0, errors: 0 });
+    let items = [];
+    try {
+      const res = await base44.functions.invoke('assetsApi', { limit: 500 });
+      items = (res.data?.items || []).filter((a) => a.ai_analyzed !== true);
+    } catch {
+      setAnalyzeAll({ running: false, total: 0, done: 0, errors: 0 });
+      return;
+    }
+    setAnalyzeAll({ running: true, total: items.length, done: 0, errors: 0 });
+    let done = 0, errors = 0;
+    for (const a of items) {
+      try { await base44.functions.invoke('analyzeAsset', { asset_id: a.id }); done++; }
+      catch { errors++; }
+      setAnalyzeAll({ running: true, total: items.length, done, errors });
+    }
+    setAnalyzeAll({ running: false, total: items.length, done, errors });
+    onChanged?.();
   };
 
   const onUploadFiles = async (e) => {
@@ -155,6 +179,47 @@ export default function AdminPanel({ onClose, onChanged }) {
             {!bulk.running && bulk.done > 0 && (
               <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
                 <p className="font-body text-[11px] text-primary mb-1 flex items-center gap-1.5"><Check className="w-3 h-3" /> {bulk.done} foto's toegevoegd{bulk.errors ? `, ${bulk.errors} mislukt` : ''}</p>
+              </div>
+            )}
+          </Card>
+
+          {/* Website beelden */}
+          <Card
+            icon={Images}
+            title="Website beelden"
+            desc="Bekijk alle pagina's van de website met hun huidige foto's. Klik een foto om deze te vervangen door een afbeelding uit de beeldbank."
+          >
+            <button
+              onClick={() => setShowWebsite(true)}
+              className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary text-sm py-2.5 rounded-lg hover:bg-primary/10 transition-colors"
+            >
+              <Images className="w-4 h-4" /> Open website beelden
+            </button>
+          </Card>
+
+          {/* Alle foto's analyseren */}
+          <Card
+            icon={Sparkles}
+            title="Alle foto's analyseren"
+            desc="Voer de AI-analyse uit voor alle beelden die nog niet geanalyseerd zijn — beschrijving, categorieën, tags, sfeer en kwaliteit."
+          >
+            <button
+              onClick={runAnalyzeAll}
+              disabled={analyzeAll.running}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
+            >
+              {analyzeAll.running
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> {analyzeAll.done}/{analyzeAll.total} geanalyseerd…</>
+                : <><Sparkles className="w-4 h-4" /> Analyseer alle niet-geanalyseerde foto's</>}
+            </button>
+            {analyzeAll.running && (
+              <div className="mt-3 h-1.5 rounded-full bg-border overflow-hidden">
+                <div className="h-full bg-primary transition-all" style={{ width: `${analyzeAll.total ? (analyzeAll.done / analyzeAll.total) * 100 : 0}%` }} />
+              </div>
+            )}
+            {!analyzeAll.running && analyzeAll.total > 0 && (
+              <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
+                <p className="font-body text-[11px] text-primary flex items-center gap-1.5"><Check className="w-3 h-3" /> {analyzeAll.done} geanalyseerd{analyzeAll.errors ? `, ${analyzeAll.errors} mislukt` : ''}</p>
               </div>
             )}
           </Card>
@@ -286,6 +351,7 @@ export default function AdminPanel({ onClose, onChanged }) {
           </p>
         </div>
       </div>
+      {showWebsite && <WebsiteImagesPanel onClose={() => setShowWebsite(false)} onChanged={onChanged} />}
     </>
   );
 }

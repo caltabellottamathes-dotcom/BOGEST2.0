@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion';
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HomeTitle from '@/components/home/HomeTitle';
 
 const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
@@ -12,9 +13,9 @@ const MONTH_NAMES = {
 };
 
 const SECTION_LABELS = {
-  nl: 'Deze maand bij Bogèst',
-  fr: 'Ce mois-ci chez Bogèst',
-  en: 'This month at Bogèst',
+  nl: { title: 'Deze maand bij Bogèst.', accent: 'Bogèst' },
+  fr: { title: 'Ce mois-ci chez Bogèst.', accent: 'Bogèst' },
+  en: { title: 'This month at Bogèst.', accent: 'Bogèst' },
 };
 
 const MENU_LABELS = {
@@ -144,9 +145,10 @@ export default function SeasonalSection() {
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
               {monthLabel} {yearLabel}
             </span>
-            <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              {SECTION_LABELS[lang] || SECTION_LABELS.nl}.
-            </h2>
+            <HomeTitle
+              title={(SECTION_LABELS[lang] || SECTION_LABELS.nl).title}
+              accent={(SECTION_LABELS[lang] || SECTION_LABELS.nl).accent}
+            />
           </div>
           <div className="flex items-center gap-3 mt-6 md:mt-0">
             <button

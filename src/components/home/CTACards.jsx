@@ -4,6 +4,7 @@ import { ArrowRight, CalendarDays, ShoppingBag, Gift } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HomeTitle from '@/components/home/HomeTitle';
 
 export default function CTACards() {
   const { t } = useLang();
@@ -40,7 +41,7 @@ export default function CTACards() {
       <div className="w-full px-6 md:px-10 lg:px-16">
         <SectionReveal className="mb-12">
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('home_cta_label')}</span>
-          <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">{t('home_cta_title')}</h2>
+          <HomeTitle title={t('home_cta_title')} accent={t('home_cta_title_accent')} />
         </SectionReveal>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {cards.map((card, i) => {
