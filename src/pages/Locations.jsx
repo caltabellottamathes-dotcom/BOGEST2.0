@@ -14,7 +14,7 @@ export default function Locations() {
     <div className="w-full">
       <PanelHero label={t('loc_four_locations')} title={t('loc_title_main')} titleAccent={t('loc_title_accent')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/04917c77-6ebc-4470-83fb-a2abc637268b/zolder+veranda.jpeg" />
 
-      <div className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <div className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         {LOCATIONS_DATA.map((loc, i) => (
           <SectionReveal key={loc.slug} delay={i * 0.08}>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 py-14 border-b border-border">

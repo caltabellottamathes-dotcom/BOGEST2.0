@@ -41,7 +41,7 @@ export default function Contact() {
     <div className="w-full">
       <PanelHero label={t('con_label')} title={t('con_title')} titleAccent={t('con_title_accent')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/b7c2edca-9db5-43c2-b109-4cc33197dfbe/veranda+hasselt.jpeg" />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20">
           <SectionReveal direction="left">
             {success ?

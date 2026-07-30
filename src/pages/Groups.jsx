@@ -261,7 +261,7 @@ export default function Groups() {
     <div className="w-full">
       <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg" />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-16">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-16">
         <SectionReveal className="mb-6">
           <h2 className="font-heading text-2xl font-bold text-foreground mb-2">{t('grp_choose_location')}.</h2>
           <p className="font-body text-sm text-muted-foreground">{t('grp_choose_desc')}</p>

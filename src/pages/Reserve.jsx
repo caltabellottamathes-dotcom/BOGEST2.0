@@ -36,7 +36,7 @@ export default function Reserve() {
       <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802728-7LJYOC6YHA2PJVKIDKGG/bar+foto.jpeg" />
 
       {/* Location picker */}
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         <div className="max-w-4xl">
           <div>
             <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-5 flex items-center gap-2">
