@@ -34,6 +34,13 @@
       "default": false,
       "description": "Whether the image was copied into Base44 CDN storage"
     },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Multi-category assignment as 'group/Sub' paths (e.g. 'food/Main Courses', 'atmosphere/Evening', 'locations/Hasselt'). An image may belong to several categories \u2014 it is never restricted to one."
+    },
     "primary_category": {
       "type": "string",
       "enum": [
@@ -43,11 +50,26 @@
         "architecture",
         "branding"
       ],
-      "description": "AI-assigned experience bucket"
+      "description": "Legacy single bucket \u2014 derived from categories for backward compatibility. Optional."
     },
     "subcategory": {
       "type": "string",
-      "description": "Fine-grained AI label (interior, exterior, terrace, kitchen, bar, starters, main_courses, desserts, wine, cocktails, coffee, day, evening, romantic, luxury, cosy, guests, staff, signage, menu, event, press)"
+      "description": "Legacy fine-grained AI label (kept for backward compatibility)"
+    },
+    "orientation": {
+      "type": "string",
+      "enum": [
+        "landscape",
+        "portrait",
+        "square",
+        "unknown"
+      ],
+      "default": "unknown",
+      "description": "Auto-derived from width/height"
+    },
+    "source_platform": {
+      "type": "string",
+      "description": "Where the image was discovered (Official Website, Google Maps, Tripadvisor, Instagram, Facebook, TikTok, Pinterest, Blog, News, Review Website)"
     },
     "location": {
       "type": "string",
@@ -69,7 +91,7 @@
       "items": {
         "type": "string"
       },
-      "description": "Searchability tags"
+      "description": "Unlimited AI-generated descriptive tags for natural-language search"
     },
     "mood": {
       "type": "string",
@@ -131,7 +153,6 @@
     }
   },
   "required": [
-    "image_url",
-    "primary_category"
+    "image_url"
   ]
 }

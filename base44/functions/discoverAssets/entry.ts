@@ -131,18 +131,36 @@ const AUTO_SITES = [
 ];
 
 const CURATOR_PROMPT = `You are an expert brand curator for Bogèst, a premium Belgian grillhouse chain with locations in Hasselt, Borgloon and Heusden-Zolder. Analyze the attached image and:
-1. Categorize it into exactly one primary bucket: interiors, gastronomy, atmosphere, architecture, branding.
-2. Assign a fine subcategory when applicable, choosing from: interior, exterior, terrace, kitchen, bar, starters, main_courses, desserts, wine, cocktails, coffee, day, evening, romantic, luxury, cosy, guests, staff, signage, menu, event, press. Use "" if none fits.
-3. Infer the Bogèst location if recognizable (hasselt, borgloon, heusden-zolder), else "unknown".
-4. Extract a detailed description (1-2 sentences), mood, dominant colors, and up to 6 lowercase tags.
-5. If the image is not relevant to Bogèst (generic stock, unrelated subject, low quality, screenshot/text), set is_relevant to false.
+
+1. Assign ONE OR MORE categories from this taxonomy, returning each as a "group/Sub" path (use the EXACT group and sub labels below). An image may belong to several categories — pick all that genuinely apply:
+   Restaurant: Exterior, Building, Entrance, Terrace, Garden, Parking, Signage, Surroundings, Aerial Views
+   Interior: Dining Room, Private Dining, Bar, Wine Cellar / Wine Display, Kitchen, Fireplace, Hallway, Waiting Area, Restrooms, Decoration, Furniture, Lighting, Flooring, Ceiling
+   Food: Starters, Main Courses, Desserts, Cheese, Children's Dishes, Seasonal Specials, Tasting Menu
+   Ingredients: Belgian Blue Beef, Beef, Pork, Chicken, Fish, Shellfish, Vegetarian, Vegan
+   Drinks: Red Wine, White Wine, Rosé, Champagne, Cocktails, Beer, Coffee, Tea, Soft Drinks, Spirits
+   Food Presentation: Close-up, Table Setting, Plating, Overhead View, Served at Table, Detail Shot
+   People: Guests, Couples, Families, Groups, Children, Staff, Chef, Service Team, Owners, Team Photos
+   Guest Experience: Hospitality, Dining, Celebration, Birthday, Anniversary, Romantic Dinner, Business Dinner, Toasting
+   Atmosphere: Daytime, Sunset, Evening, Night, Candlelight, Cozy, Luxury, Rustic, Modern, Busy, Quiet
+   Seasons: Spring, Summer, Autumn, Winter, Christmas, Easter, Valentine's Day, Mother's Day
+   Events: Wine Tasting, Live Music, Corporate Event, Private Event, Press Event, Restaurant Opening
+   Marketing: Professional Photography, Website, Social Media, Advertisement, Flyer, Press Photography
+   Locations: Hasselt, Borgloon, Heusden-Zolder
+   Source: Official Website, Google Maps, Tripadvisor, Instagram, Facebook, TikTok, Pinterest, Blog, News, Review Website
+   Technical: Landscape, Portrait, Square, High Resolution, Watermarked, Smartphone, Professional Camera
+   Quality: Hero Image, Website Ready, Print Ready, Social Media Ready, High Brand Consistency, Excellent Composition, Excellent Lighting, High Visual Quality
+   Only add a Locations entry when the specific location is recognizable.
+2. Infer the Bogèst location if recognizable (hasselt, borgloon, heusden-zolder), else "unknown".
+3. Write a detailed description (1-2 sentences).
+4. Generate UNLIMITED descriptive lowercase tags — as many meaningful tags as needed to accurately describe the image (e.g. belgian blue, steak, dessert, grilled, candlelight, elegant plating, fine dining, warm lighting, hospitality, wooden table, linen napkins, wine glass, outdoor dining, rustic, luxury, seasonal decoration). Do NOT limit the number.
+5. Extract mood and dominant colors.
+6. If the image is not relevant to Bogèst (generic stock, unrelated subject, low quality, screenshot/text), set is_relevant to false.
 Return strict JSON.`;
 
 const ANALYSIS_SCHEMA = {
   type: 'object',
   properties: {
-    primary_category: { type: 'string', enum: ['interiors', 'gastronomy', 'atmosphere', 'architecture', 'branding'] },
-    subcategory: { type: 'string' },
+    categories: { type: 'array', items: { type: 'string' }, description: 'Category paths "group/Sub" from the taxonomy' },
     location: { type: 'string', enum: ['hasselt', 'borgloon', 'heusden-zolder', 'unknown'] },
     description: { type: 'string' },
     tags: { type: 'array', items: { type: 'string' } },
@@ -151,7 +169,7 @@ const ANALYSIS_SCHEMA = {
     is_relevant: { type: 'boolean' },
     quality_score: { type: 'number' },
   },
-  required: ['primary_category', 'description', 'is_relevant', 'quality_score'],
+  required: ['categories', 'description', 'is_relevant', 'quality_score'],
 };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -318,7 +336,7 @@ async function buildCandidates(base44, themeKey, webSearch = false) {
   const t = THEMES[themeKey];
   if (!t) return [];
   const seen = new Set();
-  const push = (u, sourceType, query) => { if (u && !seen.has(u)) { seen.add(u); candidates.push({ url: u, sourceType, query: query || '' }); } };
+  const push = (u, sourceType, query) => { if (u && !seen.has(u)) { seen.add(u); candidates.push({ url: u, sourceType, query: query || '', sourcePlatform: sourceType === 'instagram' ? 'Instagram' : 'Official Website' }); } };
   const candidates = [];
 
   // 1. Known Bogèst CDN seeds
@@ -422,14 +440,26 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
       if (analysis && analysis.is_relevant === false) { stats.rejected++; continue; }
 
       const loc = String(analysis?.location || 'unknown').toLowerCase();
+      const cats = Array.isArray(analysis?.categories) ? analysis.categories.map((c) => String(c)).filter(Boolean) : [];
+      const legacyCat = (() => {
+        const has = (g) => cats.some((c) => c.startsWith(g + '/'));
+        if (has('food') || has('ingredients') || has('drinks') || has('presentation')) return 'gastronomy';
+        if (has('restaurant') || has('interior') || has('locations')) return 'interiors';
+        if (has('atmosphere') || has('experience') || has('people') || has('seasons')) return 'atmosphere';
+        return 'branding';
+      })();
+      const orientation = dims ? (dims.w / dims.h > 1.15 ? 'landscape' : dims.w / dims.h < 0.87 ? 'portrait' : 'square') : 'unknown';
       await base44.asServiceRole.entities.AssetArchive.create({
         content_hash: hash,
         source_url: cand.url,
         source_urls: [cand.url],
         image_url: imageUrl,
         mirrored,
-        primary_category: analysis?.primary_category || (THEMES[themeLabel] ? themeLabel : 'branding'),
-        subcategory: String(analysis?.subcategory || '').toLowerCase(),
+        categories: cats,
+        primary_category: legacyCat,
+        subcategory: '',
+        orientation,
+        source_platform: cand.sourcePlatform || '',
         location: VALID_LOCS.has(loc) ? loc : 'unknown',
         description: analysis?.description || '',
         tags: analysis?.tags || [],
@@ -495,7 +525,7 @@ export default async function (req) {
     if (body.kickstart) {
       const seen = new Set();
       const cands = [];
-      const push = (url, sourceType) => { if (url && !seen.has(url)) { seen.add(url); cands.push({ url, sourceType }); } };
+      const push = (url, sourceType) => { if (url && !seen.has(url)) { seen.add(url); cands.push({ url, sourceType, sourcePlatform: sourceType === 'instagram' ? 'Instagram' : 'Official Website' }); } };
       for (const u of WEBSITE_IMAGES) push(u, 'seed');
       for (const k of Object.keys(THEMES)) for (const u of THEMES[k].seed) push(u, 'seed');
       try {
@@ -568,7 +598,7 @@ export default async function (req) {
             if (!/\.(jpg|jpeg|png)(\?|$)/i.test(link)) continue;
             if (seen.has(link)) continue;
             seen.add(link);
-            cands.push({ url: link, sourceType: 'web', query: s.label || s.domain });
+            cands.push({ url: link, sourceType: 'web', query: s.label || s.domain, sourcePlatform: s.label });
             if (cands.length >= cap) break;
           }
         } catch {}

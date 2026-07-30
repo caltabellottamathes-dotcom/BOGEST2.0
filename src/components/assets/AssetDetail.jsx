@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import {
+  ASSET_TAXONOMY,
+  TAXONOMY_GROUPS,
+  groupLabel,
+  categoryLabel,
+  deriveOrientation,
+} from '@/lib/assetTaxonomy';
 
-const CATEGORIES = ['interiors', 'gastronomy', 'atmosphere', 'architecture', 'branding'];
-const CAT_LABELS = { interiors: 'Interieur', gastronomy: 'Gastronomie', atmosphere: 'Sfeer', architecture: 'Architectuur', branding: 'Branding' };
 const LOCATIONS = ['unknown', 'hasselt', 'borgloon', 'heusden-zolder'];
 const LOC_LABELS = { unknown: 'Onbekend', hasselt: 'Hasselt', borgloon: 'Borgloon', 'heusden-zolder': 'Heusden-Zolder' };
 const STATUSES = ['active', 'pending', 'rejected'];
+const SOURCE_PLATFORMS = ASSET_TAXONOMY.source.items;
 
-// "Acties" — assign this photo to a collection for reuse across the site.
 const COLLECTIONS = [
   { key: 'seasonal_dishes', label: 'Seizoensgerechten' },
   { key: 'signature', label: 'Signature dishes' },
@@ -36,13 +41,16 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   const [deleting, setDeleting] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activeGroup, setActiveGroup] = useState('food');
 
   useEffect(() => {
     if (!asset) return;
+    const cats = Array.isArray(asset.categories) && asset.categories.length
+      ? asset.categories
+      : (asset.primary_category ? [asset.primary_category] : []);
     setForm({
       description: asset.description || '',
-      primary_category: asset.primary_category || 'branding',
-      subcategory: asset.subcategory || '',
+      categories: cats,
       location: asset.location || 'unknown',
       tags: (asset.tags || []).join(', '),
       mood: asset.mood || '',
@@ -51,6 +59,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
       is_relevant: asset.is_relevant !== false,
       status: asset.status || 'active',
       source_url: asset.source_url || '',
+      source_platform: asset.source_platform || '',
       collections: asset.collections || [],
     });
     setConfirming(false);
@@ -59,6 +68,13 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   if (!asset) return null;
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const toggleCategory = (path) => {
+    setForm((f) => {
+      const has = (f.categories || []).includes(path);
+      return { ...f, categories: has ? f.categories.filter((c) => c !== path) : [...(f.categories || []), path] };
+    });
+  };
 
   const toggleCollection = (key) => {
     setForm((f) => {
@@ -73,23 +89,29 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const orientation = deriveOrientation(asset.width, asset.height);
+
   const save = async () => {
     setSaving(true);
     try {
       const data = {
         description: form.description,
-        primary_category: form.primary_category,
-        subcategory: form.subcategory,
+        categories: form.categories || [],
         location: form.location,
-        tags: form.tags.split(',').map((t) => t.trim()).filter(Boolean),
+        tags: (form.tags || '').split(',').map((t) => t.trim()).filter(Boolean),
         mood: form.mood,
-        colors: form.colors.split(',').map((t) => t.trim()).filter(Boolean),
-        quality_score: form.quality_score === '' ? null : Number(form.quality_score),
+        colors: (form.colors || '').split(',').map((t) => t.trim()).filter(Boolean),
         is_relevant: form.is_relevant,
         status: form.status,
         source_url: form.source_url,
+        source_platform: form.source_platform,
         collections: form.collections,
       };
+      // Only send quality_score when it's a real number — sending null on a
+      // number field was what made saves fail.
+      if (form.quality_score !== '' && form.quality_score != null && !Number.isNaN(Number(form.quality_score))) {
+        data.quality_score = Number(form.quality_score);
+      }
       const res = await base44.functions.invoke('assetsApi', { action: 'update', id: asset.id, data });
       onSaved?.(res.data?.item);
     } catch {
@@ -120,7 +142,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
 
         <div className="flex-1 p-5">
           <div className="rounded-xl overflow-hidden border border-border mb-3 bg-muted">
-            <img src={asset.image_url} alt={form.description || asset.primary_category} className="w-full h-auto object-contain max-h-[36vh]" />
+            <img src={asset.image_url} alt={form.description || 'Bogèst'} className="w-full h-auto object-contain max-h-[36vh]" />
           </div>
           <div className="flex gap-2 mb-6">
             <a href={asset.image_url} download className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 transition-opacity">
@@ -158,16 +180,42 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
             <Field label="Beschrijving">
               <textarea value={form.description} onChange={(e) => set('description', e.target.value)} rows={2} className={inputCls} />
             </Field>
-            <div className="grid grid-cols-2 gap-3">
-              <Field label="Categorie">
-                <select value={form.primary_category} onChange={(e) => set('primary_category', e.target.value)} className={inputCls}>
-                  {CATEGORIES.map((c) => <option key={c} value={c}>{CAT_LABELS[c]}</option>)}
-                </select>
-              </Field>
-              <Field label="Subcategorie">
-                <input value={form.subcategory} onChange={(e) => set('subcategory', e.target.value)} className={inputCls} />
-              </Field>
-            </div>
+
+            {/* Multi-category assignment */}
+            <Field label={`Categorieën (${(form.categories || []).length})`}>
+              <div className="flex flex-wrap gap-1.5 mb-2 min-h-[28px]">
+                {(form.categories || []).map((c) => (
+                  <span key={c} className="inline-flex items-center gap-1 text-xs py-1 px-2.5 rounded-full bg-primary/15 text-primary border border-primary/30">
+                    {categoryLabel(c)}
+                    <button type="button" onClick={() => toggleCategory(c)} className="opacity-60 hover:opacity-100">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                ))}
+                {(form.categories || []).length === 0 && <span className="text-xs text-muted-foreground">Nog geen categorieën</span>}
+              </div>
+              <div className="flex flex-wrap gap-1 mb-2">
+                {TAXONOMY_GROUPS.map((g) => (
+                  <button key={g} type="button" onClick={() => setActiveGroup(g)}
+                    className={`text-[10px] py-1 px-2.5 rounded-full border transition-colors ${activeGroup === g ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:bg-muted'}`}>
+                    {groupLabel(g)}
+                  </button>
+                ))}
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {ASSET_TAXONOMY[activeGroup].items.map((it) => {
+                  const path = `${activeGroup}/${it}`;
+                  const active = (form.categories || []).includes(path);
+                  return (
+                    <button key={it} type="button" onClick={() => toggleCategory(path)}
+                      className={`text-xs py-1 px-2.5 rounded-full border transition-all ${active ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:bg-muted'}`}>
+                      {active && '✓ '}{it}
+                    </button>
+                  );
+                })}
+              </div>
+            </Field>
+
             <div className="grid grid-cols-2 gap-3">
               <Field label="Locatie">
                 <select value={form.location} onChange={(e) => set('location', e.target.value)} className={inputCls}>
@@ -180,9 +228,11 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
                 </select>
               </Field>
             </div>
-            <Field label="Tags (komma-gescheiden)">
-              <input value={form.tags} onChange={(e) => set('tags', e.target.value)} className={inputCls} placeholder="terras, zomer, witte wijn" />
+
+            <Field label="Tags (komma-gescheiden · onbeperkt)">
+              <input value={form.tags} onChange={(e) => set('tags', e.target.value)} className={inputCls} placeholder="terras, zomer, witte wijn, belgian blue, fine dining" />
             </Field>
+
             <div className="grid grid-cols-2 gap-3">
               <Field label="Sfeer / mood">
                 <input value={form.mood} onChange={(e) => set('mood', e.target.value)} className={inputCls} />
@@ -191,17 +241,31 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
                 <input value={form.colors} onChange={(e) => set('colors', e.target.value)} className={inputCls} placeholder="groen, crème" />
               </Field>
             </div>
+
             <div className="grid grid-cols-2 gap-3">
               <Field label="Kwaliteitsscore (0-100)">
                 <input type="number" min={0} max={100} value={form.quality_score} onChange={(e) => set('quality_score', e.target.value)} className={inputCls} />
               </Field>
+              <Field label="Oriëntatie (auto)">
+                <div className="px-3 py-2.5 rounded-lg border border-border text-sm text-muted-foreground capitalize">{orientation}</div>
+              </Field>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Relevant">
                 <label className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg border border-border cursor-pointer">
                   <input type="checkbox" checked={form.is_relevant} onChange={(e) => set('is_relevant', e.target.checked)} className="w-4 h-4 accent-primary" />
                   <span className="font-body text-sm">Toont Bogèst</span>
                 </label>
               </Field>
+              <Field label="Bron-platform">
+                <input list="source-platforms" value={form.source_platform} onChange={(e) => set('source_platform', e.target.value)} className={inputCls} placeholder="Tripadvisor" />
+                <datalist id="source-platforms">
+                  {SOURCE_PLATFORMS.map((s) => <option key={s} value={s} />)}
+                </datalist>
+              </Field>
             </div>
+
             <Field label="Bron-URL">
               <input value={form.source_url} onChange={(e) => set('source_url', e.target.value)} className={inputCls} />
             </Field>

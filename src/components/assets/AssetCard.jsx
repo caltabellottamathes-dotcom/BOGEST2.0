@@ -1,12 +1,5 @@
 import React from 'react';
-
-const CATEGORY_COLORS = {
-  interiors: 'bg-sky-500/15 text-sky-300 border-sky-500/20',
-  gastronomy: 'bg-amber-500/15 text-amber-300 border-amber-500/20',
-  atmosphere: 'bg-pink-500/15 text-pink-300 border-pink-500/20',
-  architecture: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/20',
-  branding: 'bg-violet-500/15 text-violet-300 border-violet-500/20',
-};
+import { categoryLabel, colorClassForBadge, groupKeyOf } from '@/lib/assetTaxonomy';
 
 const LOC_LABELS = {
   hasselt: 'Hasselt',
@@ -15,6 +8,14 @@ const LOC_LABELS = {
 };
 
 export default function AssetCard({ asset, onClick }) {
+  const cats = Array.isArray(asset.categories) && asset.categories.length
+    ? asset.categories
+    : (asset.primary_category ? [asset.primary_category] : []);
+  const firstPath = cats[0] || asset.primary_category || '';
+  const groupOrLegacy = groupKeyOf(firstPath) || asset.primary_category || '';
+  const badgeLabel = cats[0] ? categoryLabel(cats[0]) : (asset.primary_category || '');
+  const colorCls = colorClassForBadge(groupOrLegacy) || 'bg-primary/15 text-primary border-primary/20';
+
   return (
     <button
       type="button"
@@ -24,12 +25,12 @@ export default function AssetCard({ asset, onClick }) {
       <div className="relative overflow-hidden">
         <img
           src={asset.image_url}
-          alt={asset.description || asset.primary_category}
+          alt={asset.description || badgeLabel}
           loading="lazy"
           className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
-        <span className={`absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full capitalize border ${CATEGORY_COLORS[asset.primary_category] || 'bg-primary/15 text-primary border-primary/20'}`}>
-          {asset.primary_category}
+        <span className={`absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full border ${colorCls}`}>
+          {badgeLabel}
         </span>
         <div className="absolute top-2 right-2 flex items-center gap-1.5">
           {asset.quality_score != null && (
@@ -46,6 +47,11 @@ export default function AssetCard({ asset, onClick }) {
         {asset.collections?.length > 0 && (
           <span className="absolute bottom-2 left-2 text-[9px] px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground backdrop-blur-sm flex items-center gap-1">
             ★ {asset.collections.length}
+          </span>
+        )}
+        {cats.length > 1 && (
+          <span className="absolute bottom-2 right-2 text-[9px] px-1.5 py-0.5 rounded-full bg-black/50 text-foreground backdrop-blur-sm">
+            +{cats.length - 1}
           </span>
         )}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
