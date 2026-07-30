@@ -140,6 +140,19 @@ export function onTranscriptMessage(msg) {
  */
 export async function handleWebsiteActionToolCall(params = {}) {
   const action = String(params.action || '').toLowerCase();
+  // Beeldbank photo handoff — the voice agent can't render images, so it asks
+  // the digital host (chat panel) to fetch real archive photos and show them.
+  if (action === 'showbeeldbankphoto' || action === 'showphoto') {
+    const data = params.data || {};
+    window.dispatchEvent(new CustomEvent('bogest:show-beeldbank', {
+      detail: {
+        query: String(params.target || params.topic || ''),
+        category: String(data.category || params.category || ''),
+        location: String(data.location || params.location || ''),
+      },
+    }));
+    return { success: true, message: 'De digitale gastheer toont de foto\'s.' };
+  }
   if (action === 'close') return await window.websiteAction({ action: 'close', target: params.target });
   if (action === 'search') return await window.websiteAction({ action: 'search', target: params.target, data: params.data });
 

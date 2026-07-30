@@ -79,7 +79,7 @@ export default function ElevenLabsAgent() {
           // agent keeps speaking while minimized.
           if (result?.success) {
             const a = String(params.action || 'go').toLowerCase();
-            if (a !== 'close' && a !== 'search') {
+            if (a !== 'close' && a !== 'search' && a !== 'showbeeldbankphoto' && a !== 'showphoto') {
               setTimeout(() => {
                 try {
                   minimizeElevenLabsWidget();

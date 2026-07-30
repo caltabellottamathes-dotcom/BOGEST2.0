@@ -779,11 +779,11 @@ const SOCIAL_IMAGES = {
   default: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
 };
 
-function PhotoCard({ desc, location, isDark }) {
-  const img = SOCIAL_IMAGES[location] || SOCIAL_IMAGES.default;
+function PhotoCard({ desc, location, isDark, url }) {
+  const img = url || SOCIAL_IMAGES[location] || SOCIAL_IMAGES.default;
   return (
     <div className="rounded-xl overflow-hidden mt-2" style={{ border: isDark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(74,83,32,0.18)' }}>
-      <img src={img} alt={desc} className="w-full h-36 object-cover" />
+      <img src={img} alt={desc} className="w-full h-36 object-cover" loading="lazy" />
       <div className="px-3 py-2" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(74,83,32,0.05)' }}>
         <p className="font-body text-xs text-muted-foreground">{desc}</p>
         <p className="font-body text-[10px] text-primary/70 mt-0.5 tracking-wide uppercase">Bogèst {location}</p>
@@ -856,7 +856,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
             {content}
           </p>
           {cards?.map((c, i) => <RecommendationCard key={i} item={c} isDark={isDark} />)}
-          {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} />)}
+          {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} url={p.url} />)}
           {instagrams?.map((p, i) => <InstagramCard key={i} post={p} />)}
         </div>
         {actions?.length > 0 && (
@@ -1127,6 +1127,37 @@ export default function DigitalHost() {
     window.addEventListener('bogest:open-host', handler);
     return () => window.removeEventListener('bogest:open-host', handler);
   }, [phase, lang]);
+
+  // ─── Beeldbank photo handoff (from the ElevenLabs voice agent) ───────────────
+  // The voice widget can't render images, so when a visitor asks it to show a
+  // photo it calls websiteAction({ action: 'showBeeldbankPhoto', ... }); the
+  // sync engine dispatches 'bogest:show-beeldbank'. Here we fetch real archive
+  // photos via the assetSearch function and display them in this chat panel.
+  useEffect(() => {
+    const handler = async (e) => {
+      const { query, category, location } = e.detail || {};
+      try {
+        const res = await base44.functions.invoke('assetSearch', {
+          query: query || '', category: category || 'all', location: location || 'all', limit: 3,
+        });
+        const images = (res.data?.images || []).slice(0, 3);
+        if (!images.length) return;
+        const intro = lang === 'fr' ? 'Voici quelques photos de notre beeldbank :'
+          : lang === 'en' ? 'Here are a few photos from our archive:'
+          : "Hier zijn een paar foto's uit onze beeldbank:";
+        const photos = images.map((im) => ({
+          url: im.url,
+          desc: im.description || query || 'Bogèst',
+          location: im.location || location || '',
+        }));
+        sessionStorage.setItem('bogest-host-seen', '1');
+        setMessages([{ role: 'assistant', content: intro, actions: [], photos }]);
+        setPhase('chat');
+      } catch { /* ignore — the voice agent keeps the conversation going */ }
+    };
+    window.addEventListener('bogest:show-beeldbank', handler);
+    return () => window.removeEventListener('bogest:show-beeldbank', handler);
+  }, [lang]);
 
   // Entry flow
   useEffect(() => {
