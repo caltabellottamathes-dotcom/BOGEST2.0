@@ -4,6 +4,7 @@ import { base44 } from '@/api/base44Client';
 import AssetCard from '@/components/assets/AssetCard';
 import AssetDetail from '@/components/assets/AssetDetail';
 import AdminPanel from '@/components/assets/AdminPanel';
+import AssetIntro from '@/components/assets/AssetIntro';
 
 const CATEGORIES = ['interiors', 'gastronomy', 'atmosphere', 'architecture', 'branding'];
 const CATEGORY_LABELS = {
@@ -15,8 +16,9 @@ const CATEGORY_LABELS = {
 };
 
 export default function Assets() {
+  const [view, setView] = useState('intro');
   const [assets, setAssets] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedCats, setSelectedCats] = useState(new Set());
   const [sort, setSort] = useState('quality');
@@ -34,7 +36,10 @@ export default function Assets() {
     setLoading(false);
   }, []);
 
-  useEffect(() => { load(); }, [load]);
+  const enterGallery = useCallback(() => {
+    setView('gallery');
+    if (assets.length === 0 && !loading) load();
+  }, [assets.length, loading, load]);
 
   const toggleCat = (c) => {
     setSelectedCats((prev) => {
@@ -71,6 +76,19 @@ export default function Assets() {
     setDetailAsset(null);
   };
 
+  if (view === 'intro') {
+    return (
+      <>
+        <AssetIntro
+          count={assets.length}
+          onView={enterGallery}
+          onAdmin={() => setShowAdmin(true)}
+        />
+        {showAdmin && <AdminPanel onClose={() => setShowAdmin(false)} onChanged={load} />}
+      </>
+    );
+  }
+
   return (
     <div className="min-h-screen pt-24 pb-16 px-4 md:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
@@ -86,12 +104,20 @@ export default function Assets() {
               {assets.length} beelden · interieur, gastronomie, sfeer, architectuur en branding. Klik een beeld om alle info te bekijken en aan te passen.
             </p>
           </div>
-          <button
-            onClick={() => setShowAdmin(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm flex-shrink-0"
-          >
-            <SlidersHorizontal className="w-4 h-4 text-primary" /> Beheer
-          </button>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => setView('intro')}
+              className="px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm text-muted-foreground"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => setShowAdmin(true)}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm"
+            >
+              <SlidersHorizontal className="w-4 h-4 text-primary" /> Beheer
+            </button>
+          </div>
         </div>
 
         {/* Toolbar — search + sort */}
