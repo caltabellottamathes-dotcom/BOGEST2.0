@@ -9,6 +9,7 @@ import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import FloatingVideo from '@/components/FloatingVideo';
 import UIActionOverlay from '@/components/UIActionOverlay';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
+import { SiteImagesProvider } from '@/lib/SiteImageContext';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
 export default function Layout() {
@@ -64,6 +65,7 @@ export default function Layout() {
   }, []);
 
   return (
+    <SiteImagesProvider>
     <div className="min-h-screen flex flex-col bg-background" style={{ overflow: 'visible' }}>
       <Navbar />
 
@@ -103,5 +105,6 @@ export default function Layout() {
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />
     </div>
+    </SiteImagesProvider>
   );
 }

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
@@ -13,6 +14,7 @@ export default function HeroSection() {
   const [pastHero, setPastHero] = useState(false);
   const { t } = useLang();
   const { theme } = useTheme();
+  const { siteImg } = useSiteImages();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -36,7 +38,7 @@ export default function HeroSection() {
         style={{ transform: `translateY(${Math.min(offsetY * 0.25, window.innerHeight * 0.15)}px)` }}
       >
         <img
-          src={HERO_IMAGE}
+          src={siteImg('hero')}
           alt="Bogèst"
           className="w-full h-full object-cover"
           fetchpriority="high"

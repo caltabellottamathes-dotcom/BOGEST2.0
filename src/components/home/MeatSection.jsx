@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 export default function MeatSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const { siteImg } = useSiteImages();
 
   return (
     <section ref={ref} className="w-full py-24 md:py-32">
@@ -48,7 +50,7 @@ export default function MeatSection() {
           >
             <div className="relative overflow-hidden rounded-2xl aspect-[4/5]">
               <img
-                src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798035-Y0LQXMVFSBJWWVXQG7ZI/filet+pur+.jpeg"
+                src={siteImg('meat')}
                 alt="Premium beef at Bogèst"
                 className="w-full h-full object-cover"
                 style={{ filter: 'saturate(0.82) brightness(0.95)' }}

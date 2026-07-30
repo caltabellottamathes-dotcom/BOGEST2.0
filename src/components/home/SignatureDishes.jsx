@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 const dishes = [
   {
@@ -27,6 +28,7 @@ const dishes = [
 
 export default function SignatureDishes() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
   return (
     <section className="w-full py-24 md:py-32 bg-card">
       <div className="w-full px-6 md:px-10 lg:px-16">
@@ -51,7 +53,7 @@ export default function SignatureDishes() {
             <SectionReveal key={dish.name} delay={i * 0.12}>
               <Link to="/menu" className="group block">
                 <div className="relative overflow-hidden rounded-xl aspect-[3/4] mb-5">
-                  <img src={dish.image} alt={dish.name}
+                  <img src={siteImg('signature.' + i)} alt={dish.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     style={{ filter: 'saturate(0.82) brightness(0.95)' }} />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

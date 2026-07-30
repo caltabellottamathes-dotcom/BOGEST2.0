@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
 import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
@@ -52,6 +53,8 @@ const SUGGESTIONS = {
 function SuggestionCard({ item }) {
   const [expanded, setExpanded] = useState(false);
   const { lang } = useLang();
+  const { siteImg } = useSiteImages();
+  const seasonalIdx = Number(String(item.id).replace('s', '')) - 1;
   const readMore = lang === 'nl' ? 'Lees meer' : lang === 'fr' ? 'Lire plus' : 'Read more';
   const readLess = lang === 'nl' ? 'Lees minder' : lang === 'fr' ? 'Lire moins' : 'Read less';
 
@@ -59,7 +62,7 @@ function SuggestionCard({ item }) {
     <div className="flex-shrink-0 w-[320px] md:w-[360px] group">
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
-          src={item.image}
+          src={siteImg('seasonal.' + seasonalIdx)}
           alt={item.name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           style={{ filter: 'saturate(0.82) brightness(0.95)' }}

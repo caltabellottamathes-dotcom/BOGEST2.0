@@ -1,0 +1,40 @@
+{
+  "name": "SiteImageOverride",
+  "type": "object",
+  "properties": {
+    "position_key": {
+      "type": "string",
+      "description": "Stable key matching a SITE_IMAGE_POSITIONS entry (e.g. 'hero', 'signature.0', 'location.hasselt')"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Override image URL \u2014 the Beeldbank asset's image_url"
+    },
+    "asset_id": {
+      "type": "string",
+      "description": "AssetArchive id of the chosen Beeldbank photo"
+    }
+  },
+  "required": [
+    "position_key",
+    "image_url"
+  ],
+  "rls": {
+    "read": {},
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

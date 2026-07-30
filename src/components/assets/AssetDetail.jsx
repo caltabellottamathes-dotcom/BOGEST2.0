@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2 } from 'lucide-react';
+import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2, Globe } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import ReplaceOnWebsitePanel from '@/components/assets/ReplaceOnWebsitePanel';
 import {
   ASSET_TAXONOMY,
   TAXONOMY_GROUPS,
@@ -42,6 +43,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   const [confirming, setConfirming] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activeGroup, setActiveGroup] = useState('food');
+  const [showReplace, setShowReplace] = useState(false);
 
   useEffect(() => {
     if (!asset) return;
@@ -155,6 +157,10 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>
+
+          <button onClick={() => setShowReplace(true)} className="w-full flex items-center justify-center gap-2 bg-primary/10 border border-primary/40 text-primary text-sm py-2.5 rounded-lg hover:bg-primary/15 transition-colors mb-6">
+            <Globe className="w-4 h-4" /> Vervang op website
+          </button>
 
           {/* Acties — add this photo to a collection */}
           <div className="mb-6">
@@ -292,6 +298,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
           </button>
         </div>
       </div>
+      {showReplace && <ReplaceOnWebsitePanel asset={asset} onClose={() => setShowReplace(false)} />}
     </>
   );
 }

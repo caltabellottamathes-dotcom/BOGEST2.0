@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useSiteImages } from '@/lib/SiteImageContext';
 import BogestLogo from '@/components/BogestLogo';
 
 const PILLARS_DATA = {
@@ -41,6 +42,7 @@ export default function PhilosophySection() {
   const pillars = PILLARS_DATA[lang] || PILLARS_DATA.nl;
   const labels = LABELS[lang] || LABELS.nl;
   const isLight = theme === 'light';
+  const { siteImg } = useSiteImages();
   const NAV = isMobile ? 64 : 80;
 
   const sectionRef = useRef(null);
@@ -206,7 +208,7 @@ export default function PhilosophySection() {
                           }}>
                           
                           <img
-                            src={pillar.image}
+                            src={siteImg('philosophy.' + i)}
                             alt={pillar.title}
                             className="w-full h-full object-cover"
                             style={{ filter: 'saturate(0.85) brightness(0.92)' }} />

@@ -52,7 +52,7 @@ export default function AdminPanel({ onClose, onChanged }) {
   const [topicMax, setTopicMax] = useState(15);
   const [topicState, setTopicState] = useState({ running: false, result: null, error: null });
   const [dedupe, setDedupe] = useState({ running: false, result: null, error: null });
-  const [upload, setUpload] = useState({ running: false, result: null, error: null });
+  const [bulk, setBulk] = useState({ running: false, total: 0, done: 0, errors: 0, results: [] });
 
   const runDiscover = async () => {
     setDiscover({ running: true, result: null, error: null });
@@ -88,20 +88,26 @@ export default function AdminPanel({ onClose, onChanged }) {
     }
   };
 
-  const onUploadFile = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUpload({ running: true, result: null, error: null });
-    try {
-      const up = await base44.integrations.Core.UploadFile({ file });
-      const file_url = up?.file_url || up?.data?.file_url;
-      if (!file_url) throw new Error('Upload mislukt');
-      const res = await base44.functions.invoke('importUploadedAsset', { file_url });
-      setUpload({ running: false, result: res.data, error: null });
-      onChanged?.();
-    } catch (err) {
-      setUpload({ running: false, error: err?.response?.data?.error || err?.message || 'Upload mislukt' });
+  const onUploadFiles = async (e) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    setBulk({ running: true, total: files.length, done: 0, errors: 0, results: [] });
+    const results = [];
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      try {
+        const up = await base44.integrations.Core.UploadFile({ file });
+        const file_url = up?.file_url || up?.data?.file_url;
+        if (!file_url) throw new Error('Upload mislukt');
+        const res = await base44.functions.invoke('importUploadedAsset', { file_url });
+        results.push({ name: file.name, ok: true, cat: res.data?.asset?.primary_category });
+      } catch (err) {
+        results.push({ name: file.name, ok: false });
+      }
+      setBulk({ running: true, total: files.length, done: i + 1, errors: results.filter((r) => !r.ok).length, results });
     }
+    setBulk((b) => ({ ...b, running: false }));
+    onChanged?.();
     if (e.target) e.target.value = '';
   };
 
@@ -124,23 +130,33 @@ export default function AdminPanel({ onClose, onChanged }) {
           <Card
             icon={Upload}
             title="Foto's uploaden & automatisch analyseren"
-            desc="Upload zelf foto's naar de beeldbank. Elke foto wordt door AI geanalyseerd, in het Nederlands beschreven, gecategoriseerd en gelabeld — en meteen toegevoegd aan het archief."
+            desc="Upload één of meerdere foto's tegelijk. Elke foto wordt door AI geanalyseerd, in het Nederlands beschreven, gecategoriseerd en gelabeld — en meteen toegevoegd aan het archief."
           >
-            <label className={`w-full flex items-center justify-center gap-2 border border-dashed rounded-lg py-3 px-3 text-sm cursor-pointer transition-colors ${upload.running ? 'border-primary/40 opacity-60' : 'border-primary/40 text-primary hover:bg-primary/10'}`}>
-              {upload.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met uploaden en analyseren…</> : <><Upload className="w-4 h-4" /> Kies een foto om te uploaden</>}
-              <input type="file" accept="image/*" className="hidden" onChange={onUploadFile} disabled={upload.running} />
+            <label className={`w-full flex items-center justify-center gap-2 border border-dashed rounded-lg py-4 px-3 text-sm cursor-pointer transition-colors ${bulk.running ? 'border-primary/40 opacity-60' : 'border-primary/40 text-primary hover:bg-primary/10'}`}>
+              {bulk.running ? <><Loader2 className="w-4 h-4 animate-spin" /> {bulk.done}/{bulk.total} geanalyseerd…</> : <><Upload className="w-4 h-4" /> Kies foto's om te uploaden (meerdere toegestaan)</>}
+              <input type="file" accept="image/*" multiple className="hidden" onChange={onUploadFiles} disabled={bulk.running} />
             </label>
-            <ResultBlock
-              result={upload.result}
-              error={upload.error}
-              statRows={[
-                { label: 'Status', value: upload.result?.status === 'success' ? 'Geanalyseerd & toegevoegd' : '—' },
-                { label: 'Categorie', value: upload.result?.asset?.primary_category || '—' },
-                { label: 'Locatie', value: upload.result?.asset?.location || '—' },
-                { label: 'Kwaliteit', value: upload.result?.asset?.quality_score ?? '—' },
-              ]}
-            />
-            {upload.result?.asset?.description && <p className="font-body text-[11px] text-primary mt-1.5 leading-relaxed">{upload.result.asset.description}</p>}
+            {bulk.running && (
+              <div className="mt-3">
+                <div className="h-1.5 rounded-full bg-border overflow-hidden">
+                  <div className="h-full bg-primary transition-all" style={{ width: `${bulk.total ? (bulk.done / bulk.total) * 100 : 0}%` }} />
+                </div>
+                <div className="mt-2 space-y-1 max-h-32 overflow-y-auto">
+                  {bulk.results.map((r, i) => (
+                    <div key={i} className="flex items-center gap-2 font-body text-[11px]">
+                      {r.ok ? <Check className="w-3 h-3 text-primary flex-shrink-0" /> : <AlertCircle className="w-3 h-3 text-destructive flex-shrink-0" />}
+                      <span className="truncate text-muted-foreground">{r.name}</span>
+                      {r.ok && r.cat && <span className="text-primary/70">· {r.cat}</span>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!bulk.running && bulk.done > 0 && (
+              <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
+                <p className="font-body text-[11px] text-primary mb-1 flex items-center gap-1.5"><Check className="w-3 h-3" /> {bulk.done} foto's toegevoegd{bulk.errors ? `, ${bulk.errors} mislukt` : ''}</p>
+              </div>
+            )}
           </Card>
 
           {/* Alles ontdekken */}

@@ -4,9 +4,11 @@ import { ArrowUpRight, MapPin } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 export default function LocationsPreview() {
   const { t, lang } = useLang();
+  const { siteImg } = useSiteImages();
   const LOCATIONS_DATA = getLocations(lang);
   return (
     <section id="vestigingen" className="w-full py-12 md:py-20">
@@ -28,7 +30,7 @@ export default function LocationsPreview() {
                 {inactive ? (
                   <div className="relative block overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/5] border border-dashed border-border/70 bg-card/30 select-none">
                     <img
-                      src={loc.image}
+                      src={siteImg('location.' + loc.slug) || loc.image}
                       alt={loc.name}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ filter: 'grayscale(1) brightness(0.55) opacity(0.45)' }}
@@ -61,7 +63,7 @@ export default function LocationsPreview() {
                     className="group relative block overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/5] border border-border/50 hover:border-primary/40 transition-colors duration-500"
                   >
                     <img
-                      src={loc.image}
+                      src={siteImg('location.' + loc.slug) || loc.image}
                       alt={loc.name}
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       style={{ filter: 'saturate(0.85) brightness(0.9)' }}

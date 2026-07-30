@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarDays, ShoppingBag, Gift } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 export default function CTACards() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
   const cards = [
     {
       num: '01',
@@ -48,7 +50,7 @@ export default function CTACards() {
                 <Link to={card.path}
                   className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card/60 backdrop-blur-sm hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-500 h-full">
                   <div className="relative h-32 overflow-hidden">
-                    <img src={card.image} alt={card.title}
+                    <img src={siteImg('cta.' + i)} alt={card.title}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       style={{ filter: 'saturate(0.85) brightness(0.9)' }} />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />

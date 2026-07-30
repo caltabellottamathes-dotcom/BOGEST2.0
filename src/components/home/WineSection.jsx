@@ -1,9 +1,11 @@
 import React from 'react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 export default function WineSection() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
   const wines = [
     { name: 'Malbec', origin: 'Argentinië', note: 'Rijk, fruitig, volle body' },
     { name: 'Primitivo', origin: 'Italië', note: 'Droog, krachtig, diep rood' },
@@ -41,7 +43,7 @@ export default function WineSection() {
           <SectionReveal direction="right" delay={0.15}>
             <div className="overflow-hidden rounded-xl aspect-[4/5]">
               <img
-                src="https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=900&q=80"
+                src={siteImg('wine')}
                 alt="Wine"
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 style={{ filter: 'saturate(0.82) brightness(0.95)' }}

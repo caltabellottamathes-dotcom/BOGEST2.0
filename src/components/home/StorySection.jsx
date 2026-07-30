@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ChefHat } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 export default function StorySection() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
   return (
     <section id="verhaal" className="w-full py-14 md:py-20">
       <div className="w-full px-6 md:px-10 lg:px-16">
@@ -15,7 +17,7 @@ export default function StorySection() {
               {/* Reduced height image */}
               <div className="group overflow-hidden rounded-xl aspect-[16/10]">
                 <img
-                  src="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798133-O44CER8WRTZ0YVM5E8TK/living.jpeg"
+                  src={siteImg('story')}
                   alt="Bogèst"
                   className="w-full h-full object-cover hover:scale-105 transition-all duration-700"
                   style={{ filter: 'saturate(0.82) brightness(0.95)' }}
