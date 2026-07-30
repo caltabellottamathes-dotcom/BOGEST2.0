@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
 import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
+import { base44 } from '@/api/base44Client';
 import {
   startWebsiteSyncEngine,
   stopWebsiteSyncEngine,
@@ -65,6 +66,22 @@ export default function ElevenLabsAgent() {
       };
 
       cfg.clientTools = {
+        // Query the Bogèst asset archive (beeldbank) for real photos by category /
+        // location / free text. The agent can speak about them and reference
+        // their URLs. Returns { success, count, images: [{url, description, ...}] }.
+        searchAssets: async (params = {}) => {
+          try {
+            const res = await base44.functions.invoke('assetSearch', {
+              query: params.query || '',
+              category: params.category || 'all',
+              location: params.location || 'all',
+              limit: Number(params.limit) || 6,
+            });
+            return { success: true, count: res.data?.count || 0, images: res.data?.images || [] };
+          } catch (e) {
+            return { success: false, error: String(e?.message || e) };
+          }
+        },
         websiteAction: async (params = {}) => {
           const result = await handleWebsiteActionToolCall(params);
           // After a successful action that changes the page, collapse the

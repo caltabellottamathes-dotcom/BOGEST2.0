@@ -1,5 +1,5 @@
 {
-  "description": "Daily growth of the Bog\u00e8st Universal Asset Archive: refresh known sources (website seeds + Instagram), then search the public web for new Bog\u00e8st photos across review sites, blogs, news, travel & social.",
+  "description": "Daily growth of the Bog\u00e8st Universal Asset Archive: refresh known sources (website seeds + Instagram), then run automatic site-scoped SerpApi discovery across TripAdvisor, Instagram, Facebook, bogest.be and d-entrecote.be \u2014 dedup (content + perceptual hash) + vision filter + auto-import only new, unique, relevant photos.",
   "trigger": {
     "condition": null,
     "config": {
@@ -21,7 +21,7 @@
     "document": {
       "dsl": "1.0.0",
       "name": "daily_asset_discovery",
-      "version": "1.1",
+      "version": "1.2",
       "namespace": "base44"
     },
     "do": [
@@ -35,7 +35,7 @@
               "limit": 2
             }
           },
-          "then": "broad_web_search",
+          "then": "auto_site_discovery",
           "x-base44": {
             "title": "Known sources refresh",
             "description": "Refresh website seeds + Instagram posts"
@@ -43,19 +43,19 @@
         }
       },
       {
-        "broad_web_search": {
+        "auto_site_discovery": {
           "call": "invoke_backend_function",
           "with": {
             "function_name": "discoverAssets",
             "args": {
-              "web": true,
-              "limit": 6
+              "auto": true,
+              "limit": 12
             }
           },
           "then": "end",
           "x-base44": {
-            "title": "Broad public-web discovery",
-            "description": "Search the open web for new Bog\u00e8st photos (rotating queries)"
+            "title": "Automatic site-scoped discovery",
+            "description": "SerpApi google_images per site (TripAdvisor, Instagram, Facebook, bogest.be, d-entrecote.be) \u2192 dedup + vision filter \u2192 auto-import only new unique relevant photos"
           }
         }
       }

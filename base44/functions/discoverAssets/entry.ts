@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { secrets } from 'base44:runtime';
 
 // ─── Bogèst Universal Asset Archive — discovery pipeline ───────────────────
 // Multi-pass discovery: known Bogèst CDN seeds + bogest.be page scraping +
@@ -113,6 +114,20 @@ const BROAD_QUERIES = [
   'Bogèst Hasselt Borgloon Heusden-Zolder opening event photos Limburg',
   'Bogèst restaurant staff guests dining atmosphere photos',
   'bogest.be restaurant photos news magazine Limburg Belgium',
+];
+
+// Public sources where most Bogèst photos live — site-scoped SerpApi
+// google_images discovery. The auto pipeline runs these, dedups against the
+// existing archive (content_hash + phash) and auto-imports ONLY new, unique,
+// relevant photos — no manual review needed.
+const AUTO_SITES = [
+  { domain: 'tripadvisor.com', query: 'Bogèst', label: 'TripAdvisor' },
+  { domain: 'instagram.com', query: 'bogest', label: 'Instagram' },
+  { domain: 'facebook.com', query: 'bogesthasselt', label: 'Facebook Hasselt' },
+  { domain: 'facebook.com', query: 'dentrecote', label: "Facebook d'Entrecote" },
+  { domain: 'facebook.com', query: 'dentrecotezolder', label: 'Facebook Zolder' },
+  { domain: 'bogest.be', query: '', label: 'bogest.be' },
+  { domain: 'd-entrecote.be', query: '', label: 'd-entrecote.be' },
 ];
 
 const CURATOR_PROMPT = `You are an expert brand curator for Bogèst, a premium Belgian grillhouse chain with locations in Hasselt, Borgloon and Heusden-Zolder. Analyze the attached image and:
@@ -520,6 +535,47 @@ export default async function (req) {
       const limit = Math.max(1, Math.min(15, Number(body.limit) || 8));
       const stats = await processCandidates(base44, cands, limit, 'web');
       return Response.json({ ok: true, web: true, queries, ...stats });
+    }
+
+    // Automatic site-scoped discovery (SerpApi google_images) across the public
+    // sources where most Bogèst photos live (TripAdvisor, Instagram, Facebook
+    // per page, bogest.be, d-entrecote.be). Dedup (content_hash + phash) + vision
+    // filter + auto-import ONLY new, unique, relevant photos — fully automatic,
+    // no manual selection. Reuses processCandidates so dedup/merge is identical
+    // to the rest of the archive.
+    if (body.auto) {
+      const apiKey = secrets.get('SERPAPI_API_KEY');
+      if (!apiKey) return Response.json({ error: 'SERPAPI_API_KEY not configured' }, { status: 500 });
+      const seen = new Set();
+      const cands = [];
+      const perSite = Math.max(1, Math.min(20, Number(body.limit) || 8));
+      const cap = perSite * AUTO_SITES.length;
+      for (const s of AUTO_SITES) {
+        try {
+          const q = s.query ? `site:${s.domain} ${s.query}` : `site:${s.domain}`;
+          const endpoint = 'https://serpapi.com/search'
+            + '?engine=google_images'
+            + '&q=' + encodeURIComponent(q)
+            + '&api_key=' + encodeURIComponent(apiKey)
+            + '&ijn=0';
+          const res = await fetch(endpoint, { signal: AbortSignal.timeout(20000) });
+          if (!res.ok) continue;
+          const data = await res.json();
+          if (data.error) continue;
+          for (const item of data.images_results || []) {
+            const link = item.original;
+            if (!link) continue;
+            if (!/\.(jpg|jpeg|png)(\?|$)/i.test(link)) continue;
+            if (seen.has(link)) continue;
+            seen.add(link);
+            cands.push({ url: link, sourceType: 'web', query: s.label || s.domain });
+            if (cands.length >= cap) break;
+          }
+        } catch {}
+      }
+      const limit = Math.max(1, Math.min(30, Number(body.limit) || 10));
+      const stats = await processCandidates(base44, cands, limit, 'web');
+      return Response.json({ ok: true, auto: true, sites: AUTO_SITES.length, candidates: cands.length, ...stats });
     }
 
     // Import a specific list of image URLs (e.g. from Google Custom Search) →
