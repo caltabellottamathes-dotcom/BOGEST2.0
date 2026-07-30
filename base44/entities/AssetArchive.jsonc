@@ -1,0 +1,100 @@
+{
+  "name": "AssetArchive",
+  "type": "object",
+  "properties": {
+    "content_hash": {
+      "type": "string",
+      "description": "SHA-256 of the image bytes \u2014 used as the dedup key"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "Original URL where the image was discovered"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "CDN URL used to display the image (mirrored to Base44 storage, or the source CDN)"
+    },
+    "mirrored": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the image was copied into Base44 CDN storage"
+    },
+    "primary_category": {
+      "type": "string",
+      "enum": [
+        "interiors",
+        "gastronomy",
+        "atmosphere",
+        "architecture",
+        "branding"
+      ],
+      "description": "AI-assigned experience bucket"
+    },
+    "description": {
+      "type": "string",
+      "description": "AI-generated detailed description"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Searchability tags"
+    },
+    "mood": {
+      "type": "string",
+      "description": "Detected mood"
+    },
+    "colors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Dominant colors"
+    },
+    "is_relevant": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the image is relevant to Bog\u00e8st"
+    },
+    "quality_score": {
+      "type": "number",
+      "description": "AI quality score 0-100"
+    },
+    "width": {
+      "type": "number",
+      "description": "Image width in px"
+    },
+    "height": {
+      "type": "number",
+      "description": "Image height in px"
+    },
+    "theme": {
+      "type": "string",
+      "description": "Discovery theme that found this asset"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "web",
+        "instagram",
+        "seed"
+      ],
+      "default": "web",
+      "description": "Where the asset was discovered"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "pending",
+        "rejected"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "image_url",
+    "primary_category"
+  ]
+}

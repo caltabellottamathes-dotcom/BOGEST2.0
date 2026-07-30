@@ -45,6 +45,7 @@ export default function Footer() {
     { label: t('nav_giftcards'), path: '/gift-cards' },
     { label: t('nav_groups'), path: '/groups' },
     { label: t('nav_contact'), path: '/contact' },
+    { label: 'Asset Archive', path: '/assets' },
   ];
 
   const legalLinks = [
