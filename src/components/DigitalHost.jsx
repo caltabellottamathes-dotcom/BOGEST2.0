@@ -410,13 +410,14 @@ const INTRO_VARIANTS = {
     question: [
       'Waarmee kan ik u helpen?',
       'Waar kan ik u mee van dienst zijn?',
-      'Hebt ge een vraag? Zeg het maar.',
-      'Hoe kan ik u vandaag helpen?',
+      'Zegt u het maar — ik luister.',
+      'Waar heb ik u vandaag blij mee te maken?',
+      'Hebt u iets in gedachten?',
     ],
     returning: [
-      'Fijn u weer te zien! Wat kan ik voor u doen?',
-      'Welkom terug bij Bogèst. Waarmee mag ik u helpen?',
-      'Ah, een vertrouwd gezicht — fijn dat u er weer bent. Wat zoekt u vandaag?',
+      'Fijn u weer te zien!',
+      'Welkom terug bij Bogèst.',
+      'Ah, een vertrouwd gezicht — fijn dat u er weer bent.',
     ],
   },
   fr: {
@@ -448,9 +449,9 @@ const INTRO_VARIANTS = {
       'Que puis-je faire pour vous ?',
     ],
     returning: [
-      'Ravi de vous revoir ! Comment puis-je vous aider ?',
-      'Bienvenue à nouveau chez Bogèst. Que puis-je faire pour vous ?',
-      'Ah, une connaissance — bienvenue ! Que cherchez-vous aujourd\'hui ?',
+      'Ravi de vous revoir !',
+      'Bienvenue à nouveau chez Bogèst.',
+      'Ah, une connaissance — bienvenue !',
     ],
   },
   en: {
@@ -482,9 +483,9 @@ const INTRO_VARIANTS = {
       'How can I assist you today?',
     ],
     returning: [
-      'Great to see you again! What can I help you with?',
-      'Welcome back to Bogèst. What are you looking for today?',
-      'A familiar face — welcome back! How can I help?',
+      'Great to see you again!',
+      'Welcome back to Bogèst.',
+      'A familiar face — welcome back!',
     ],
   },
 };
@@ -716,7 +717,7 @@ async function fetchInlineImages(requests) {
         const location = (r.args && r.args[1]) || 'all';
         const res = await base44.functions.invoke('assetSearch', { category, location, limit: 3 });
         for (const im of (res.data?.images || []).slice(0, 3)) {
-          photos.push({ url: im.url, desc: im.description || '', location: im.location || '' });
+          photos.push({ url: im.url, desc: DUTCH_CAT_LABEL[im.category] || 'Bogèst', location: im.location || '' });
         }
       } else if (r.type === 'displaySocialPosts') {
         const rawLoc = (r.args && r.args[1]) || '';
@@ -732,7 +733,7 @@ async function fetchInlineImages(requests) {
           for (const p of posts) instagrams.push({ media_url: p.media_url, caption: p.caption || '', permalink: p.permalink || '' });
         } else {
           const res = await base44.functions.invoke('assetSearch', { location: loc || 'all', limit: 3 });
-          for (const im of (res.data?.images || []).slice(0, 3)) photos.push({ url: im.url, desc: im.description || '', location: im.location || '' });
+          for (const im of (res.data?.images || []).slice(0, 3)) photos.push({ url: im.url, desc: DUTCH_CAT_LABEL[im.category] || 'Bogèst', location: im.location || '' });
         }
       }
     } catch {}
@@ -750,7 +751,7 @@ async function resolveEmptyPhotos(photos) {
       let res = await base44.functions.invoke('assetSearch', { query: p.desc || '', limit: 1 });
       let im = (res.data?.images || [])[0];
       if (!im) { res = await base44.functions.invoke('assetSearch', { limit: 1 }); im = (res.data?.images || [])[0]; }
-      if (im) out.push({ url: im.url, desc: p.desc || im.description || '', location: p.location || im.location || '' });
+      if (im) out.push({ url: im.url, desc: p.desc || DUTCH_CAT_LABEL[im.category] || 'Bogèst', location: p.location || im.location || '' });
     } catch {}
   }
   return out;
@@ -843,15 +844,23 @@ function ActionButton({ label, url, isDark, onClick }) {
   return null;
 }
 
+const DUTCH_LOC_LABEL = { hasselt: 'Hasselt', borgloon: 'Borgloon', 'heusden-zolder': 'Heusden-Zolder', unknown: '' };
+const DUTCH_CAT_LABEL = { gastronomy: 'Gerecht', interiors: 'Interieur', atmosphere: 'Sfeer', architecture: 'Architectuur', branding: 'Branding' };
+
 // Real archive photo card — the url comes from assetSearch (never a stock photo).
+// Image loads eagerly with a placeholder frame so it's always visible, and the
+// caption is shown in Dutch.
 function PhotoCard({ desc, location, isDark, url }) {
   if (!url) return null;
+  const locLabel = DUTCH_LOC_LABEL[location] || location;
   return (
     <div className="rounded-xl overflow-hidden mt-2" style={{ border: isDark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(74,83,32,0.18)' }}>
-      <img src={url} alt={desc} className="w-full h-40 object-cover" loading="lazy" />
+      <div className="w-full h-40" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <img src={url} alt={desc} className="w-full h-40 object-cover" loading="eager" decoding="async" fetchpriority="high" />
+      </div>
       <div className="px-3 py-2" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(74,83,32,0.05)' }}>
-        {desc && <p className="font-body text-xs text-muted-foreground">{desc}</p>}
-        {location && <p className="font-body text-[10px] text-primary/70 mt-0.5 tracking-wide uppercase">Bogèst {location}</p>}
+        {desc && <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.9)' }}>{desc}</p>}
+        {locLabel && <p className="font-body text-[10px] text-primary/80 mt-0.5 tracking-wide uppercase">Bogèst {locLabel}</p>}
       </div>
     </div>
   );
@@ -862,10 +871,12 @@ function InstagramCard({ post }) {
     <a href={post.permalink || '#'} target="_blank" rel="noopener noreferrer"
       className="block rounded-xl overflow-hidden mt-2 transition-transform duration-200 hover:scale-[1.02]"
       style={{ border: '1px solid rgba(231,205,112,0.30)' }}>
-      <img src={post.media_url} alt={post.caption || 'Instagram'} className="w-full h-40 object-cover" />
+      <div className="w-full h-40" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        <img src={post.media_url} alt={post.caption || 'Instagram'} className="w-full h-40 object-cover" loading="eager" decoding="async" fetchpriority="high" />
+      </div>
       {post.caption && (
         <div className="px-3 py-2" style={{ background: 'rgba(20,14,0,0.55)' }}>
-          <p className="font-body text-xs leading-relaxed line-clamp-2" style={{ color: 'rgba(255,240,200,0.92)' }}>{post.caption}</p>
+          <p className="font-body text-xs leading-relaxed line-clamp-2" style={{ color: 'rgba(255,255,255,0.92)' }}>{post.caption}</p>
           <p className="font-body text-[10px] text-primary/80 mt-0.5 tracking-wide uppercase">Bekijk op Instagram →</p>
         </div>
       )}
@@ -918,7 +929,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
       <div className="flex-1 min-w-0">
         <div className="px-3.5 py-3 rounded-2xl rounded-tl-sm" style={{ background: isDark ? 'rgba(20,14,0,0.78)' : 'rgba(107,122,63,0.06)' }}>
           {content && (
-            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: isDark ? 'rgba(255,240,200,0.95)' : 'hsl(var(--foreground))' }}>
+            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.95)' }}>
               {content}
             </p>
           )}
@@ -950,7 +961,7 @@ function UserBubble({ content, isDark }) {
   return (
     <div className="flex justify-end">
       <div className="max-w-[78%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm" style={{ background: isDark ? 'rgba(20,14,0,0.72)' : 'rgba(107,122,63,0.12)', border: isDark ? '1px solid rgba(231,205,112,0.25)' : '1px solid rgba(107,122,63,0.25)' }}>
-        <p className="font-body text-sm leading-relaxed" style={{ color: isDark ? 'rgba(255,240,200,0.95)' : 'hsl(var(--foreground))' }}>{content}</p>
+        <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.95)' }}>{content}</p>
       </div>
     </div>
   );
@@ -1160,7 +1171,6 @@ export default function DigitalHost() {
     const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
     const greeting = getTimeGreeting(s);
     const isReturning = visitorMemory && visitorMemory.visits > 1;
-    const meal = getMealCtx();
     const name = visitorProfile?.name;
     let line;
     if (isReturning) {
@@ -1170,12 +1180,8 @@ export default function DigitalHost() {
       line = pickRandom(v.line1);
     }
     const parts = [`${greeting}! ${line}`];
-    if (!isReturning) {
-      const line2 = meal === 'lunch' ? pickRandom(v.line2_lunch) : meal === 'diner' ? pickRandom(v.line2_diner) : pickRandom(v.line2_default);
-      parts.push(line2);
-    }
     const w = weatherRef.current;
-    if (w && Math.random() > 0.5) {
+    if (w && Math.random() > 0.6) {
       if (w.isWarm && w.isSunny) parts.push(s.intro_line3_warm_sunny.replace('{temp}', w.temp));
       else if (w.isRainy) parts.push(s.intro_line3_rainy.replace('{temp}', w.temp));
     }
@@ -1243,7 +1249,7 @@ export default function DigitalHost() {
           : "Hier zijn een paar foto's uit onze beeldbank:";
         const photos = images.map((im) => ({
           url: im.url,
-          desc: im.description || query || 'Bogèst',
+          desc: DUTCH_CAT_LABEL[im.category] || query || 'Bogèst',
           location: im.location || location || '',
         }));
         sessionStorage.setItem('bogest-host-seen', '1');
@@ -1711,7 +1717,7 @@ export default function DigitalHost() {
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
-                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => setPhase('minimized')} />
+                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => {}} />
                 ))}
                 {messages.length === 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">
@@ -1743,7 +1749,7 @@ export default function DigitalHost() {
                     disabled={isLoading}
                     enterKeyHint="send"
                     className={`flex-1 bg-transparent font-body text-sm outline-none min-w-0 disabled:opacity-40 ${isDark ? 'placeholder:text-amber-200/40' : 'placeholder:text-muted-foreground/40'}`}
-                    style={{ color: isDark ? 'rgba(255,240,200,0.92)' : 'hsl(var(--foreground))', caretColor: isDark ? 'rgba(231,205,112,0.9)' : 'rgba(107,122,63,0.9)', fontSize: '16px' }}
+                    style={{ color: 'rgba(255,255,255,0.95)', caretColor: 'rgba(231,205,112,0.9)', fontSize: '16px' }}
                   />
                   <button onClick={() => sendMessage()} disabled={!input.trim() || isLoading}
                     className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:opacity-90 disabled:opacity-25 disabled:cursor-not-allowed">

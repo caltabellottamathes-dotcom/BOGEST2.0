@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair } from 'lucide-react';
+import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair, Upload } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const SOURCES = [
@@ -52,6 +52,7 @@ export default function AdminPanel({ onClose, onChanged }) {
   const [topicMax, setTopicMax] = useState(15);
   const [topicState, setTopicState] = useState({ running: false, result: null, error: null });
   const [dedupe, setDedupe] = useState({ running: false, result: null, error: null });
+  const [upload, setUpload] = useState({ running: false, result: null, error: null });
 
   const runDiscover = async () => {
     setDiscover({ running: true, result: null, error: null });
@@ -87,6 +88,23 @@ export default function AdminPanel({ onClose, onChanged }) {
     }
   };
 
+  const onUploadFile = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUpload({ running: true, result: null, error: null });
+    try {
+      const up = await base44.integrations.Core.UploadFile({ file });
+      const file_url = up?.file_url || up?.data?.file_url;
+      if (!file_url) throw new Error('Upload mislukt');
+      const res = await base44.functions.invoke('importUploadedAsset', { file_url });
+      setUpload({ running: false, result: res.data, error: null });
+      onChanged?.();
+    } catch (err) {
+      setUpload({ running: false, error: err?.response?.data?.error || err?.message || 'Upload mislukt' });
+    }
+    if (e.target) e.target.value = '';
+  };
+
   return (
     <>
       <div className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm" onClick={onClose} />
@@ -102,6 +120,29 @@ export default function AdminPanel({ onClose, onChanged }) {
         </div>
 
         <div className="flex-1 p-5 space-y-4">
+          {/* Foto's uploaden */}
+          <Card
+            icon={Upload}
+            title="Foto's uploaden & automatisch analyseren"
+            desc="Upload zelf foto's naar de beeldbank. Elke foto wordt door AI geanalyseerd, in het Nederlands beschreven, gecategoriseerd en gelabeld — en meteen toegevoegd aan het archief."
+          >
+            <label className={`w-full flex items-center justify-center gap-2 border border-dashed rounded-lg py-3 px-3 text-sm cursor-pointer transition-colors ${upload.running ? 'border-primary/40 opacity-60' : 'border-primary/40 text-primary hover:bg-primary/10'}`}>
+              {upload.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met uploaden en analyseren…</> : <><Upload className="w-4 h-4" /> Kies een foto om te uploaden</>}
+              <input type="file" accept="image/*" className="hidden" onChange={onUploadFile} disabled={upload.running} />
+            </label>
+            <ResultBlock
+              result={upload.result}
+              error={upload.error}
+              statRows={[
+                { label: 'Status', value: upload.result?.status === 'success' ? 'Geanalyseerd & toegevoegd' : '—' },
+                { label: 'Categorie', value: upload.result?.asset?.primary_category || '—' },
+                { label: 'Locatie', value: upload.result?.asset?.location || '—' },
+                { label: 'Kwaliteit', value: upload.result?.asset?.quality_score ?? '—' },
+              ]}
+            />
+            {upload.result?.asset?.description && <p className="font-body text-[11px] text-primary mt-1.5 leading-relaxed">{upload.result.asset.description}</p>}
+          </Card>
+
           {/* Alles ontdekken */}
           <Card
             icon={Globe}
