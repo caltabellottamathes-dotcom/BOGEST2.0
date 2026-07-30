@@ -621,6 +621,54 @@ export default async function (req) {
       return Response.json({ ok: true, kickstart: true, ...stats });
     }
 
+    // ─── Squarespace-only sweep ─────────────────────────────────────────────
+    // Crawls bogest.be (sitemap + key pages) for every squarespace-cdn image
+    // and imports the new ones. Skips Tripadvisor / SerpApi so it stays fast
+    // and reliable for a synchronous run.
+    if (body.squarespaceOnly) {
+      const seen = new Set();
+      const cands = [];
+      const push = (url, sourceType, platform) => { if (url && !seen.has(url)) { seen.add(url); cands.push({ url, sourceType, sourcePlatform: platform || '', query: '' }); } };
+
+      // Known website images + theme seeds (trusted — skip relevance gate)
+      for (const u of WEBSITE_IMAGES) push(u, 'seed', 'Official Website');
+      for (const k of Object.keys(THEMES)) for (const u of THEMES[k].seed) push(u, 'seed', 'Official Website');
+
+      // bogest.be sitemap → scrape each page for squarespace-cdn images
+      try {
+        const smRes = await fetch('https://www.bogest.be/sitemap.xml', { signal: AbortSignal.timeout(15000), redirect: 'follow' });
+        if (smRes.ok) {
+          const xml = await smRes.text();
+          const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((m) => m[1]).filter((u) => u.includes('bogest.be') && !/\.(jpg|jpeg|png|webp|pdf)$/i.test(u));
+          for (const page of locs.slice(0, 25)) {
+            try {
+              const res = await fetch(page, { headers: { 'User-Agent': 'BogestAssetArchive/1.0' }, signal: AbortSignal.timeout(10000), redirect: 'follow' });
+              if (!res.ok) continue;
+              const html = await res.text();
+              for (const u of extractImgUrls(html, page)) {
+                if (u.includes('squarespace-cdn') || u.includes('images.squarespace-cdn')) push(u, 'seed', 'Official Website');
+              }
+            } catch {}
+          }
+        }
+      } catch {}
+      // Key pages directly, in case the sitemap is unavailable
+      for (const page of ['https://www.bogest.be', 'https://www.bogest.be/menu', 'https://www.bogest.be/ons-verhaal', 'https://www.bogest.be/vestigingen']) {
+        try {
+          const res = await fetch(page, { headers: { 'User-Agent': 'BogestAssetArchive/1.0' }, signal: AbortSignal.timeout(10000), redirect: 'follow' });
+          if (!res.ok) continue;
+          const html = await res.text();
+          for (const u of extractImgUrls(html, page)) {
+            if (u.includes('squarespace-cdn') || u.includes('images.squarespace-cdn')) push(u, 'seed', 'Official Website');
+          }
+        } catch {}
+      }
+
+      const limit = Math.max(1, Math.min(40, Number(body.limit) || 25));
+      const stats = await processCandidates(base44, cands, limit, 'squarespace');
+      return Response.json({ ok: true, squarespaceOnly: true, candidates: cands.length, ...stats });
+    }
+
     // ─── One comprehensive discovery pass ───────────────────────────────────
     // Crawls every bogest.be page (via the sitemap), scrapes the three Bogèst
     // Tripadvisor review pages, pulls Facebook / d-entrecote / Tripadvisor images
