@@ -619,10 +619,15 @@ function parseActions(text) {
     return '';
   });
 
-  // Extract PHOTO tags
+  // Extract PHOTO tags — [PHOTO:url|description|location] (real url from assetSearch).
+  // Also accepts the legacy 2-part [PHOTO:description|location] form (no url).
   const photos = [];
-  const textNoPhotos = textNoCards.replace(/\[PHOTO:\s*(.+?)\|(.+?)\]/g, (_, desc, loc) => {
-    photos.push({ desc: desc.trim(), location: loc.trim() });
+  const textNoPhotos = textNoCards.replace(/\[PHOTO:\s*([^|\]]+)(?:\|([^|\]]+))?(?:\|([^|\]]+))?\]/g, (_, p1, p2, p3) => {
+    let url = '', desc = '', loc = '';
+    if (p3 !== undefined) { url = p1.trim(); desc = p2.trim(); loc = p3.trim(); }
+    else if (p2 !== undefined) { desc = p1.trim(); loc = p2.trim(); }
+    else { desc = p1.trim(); }
+    photos.push({ url, desc, location: loc });
     return '';
   });
   // Extract INSTAGRAM tags — [IG:media_url|caption|permalink]
@@ -632,21 +637,31 @@ function parseActions(text) {
     return '';
   });
 
-  // Extract UIACTION tags — [UIACTION:type|arg1|arg2] (Section 5 UI Action vocabulary)
+  // Extract UIACTION tags. Gallery & social requests (openGallery /
+  // displaySocialPosts) are separated out so the chat can fetch real images and
+  // show them INLINE — they never open the pop-up overlay. Everything else stays
+  // a tappable action button.
   const uiActions = [];
+  const galleryRequests = [];
   const textNoUi = textNoIg.replace(/\[UIACTION:\s*([^|\]]+)(?:\|([^\]]*))?\]/g, (_, t, rest) => {
-    uiActions.push({ type: t.trim(), args: rest ? rest.split('|').map(s => s.trim()) : [] });
+    const type = t.trim();
+    const args = rest ? rest.split('|').map(s => s.trim()) : [];
+    if (type === 'openGallery' || type === 'displaySocialPosts') {
+      galleryRequests.push({ type, args });
+    } else {
+      uiActions.push({ type, args });
+    }
     return '';
   });
 
   // Extract ACTIONS tags
   const match = textNoUi.match(/\[ACTIONS:\s*(.+?)\]/s);
-  if (!match) return { clean: textNoUi.trim(), actions: [], photos, cards, instagrams, uiActions };
+  if (!match) return { clean: textNoUi.trim(), actions: [], photos, cards, instagrams, uiActions, galleryRequests };
   const actions = match[1].split(',').map(s => {
     const parts = s.split('|').map(x => x.trim());
     return { label: parts[0], url: parts[1] };
   }).filter(a => a.label && a.url);
-  return { clean: textNoUi.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards, instagrams, uiActions };
+  return { clean: textNoUi.replace(/\[ACTIONS:.*?\]/s, '').trim(), actions, photos, cards, instagrams, uiActions, galleryRequests };
 }
 
 async function fetchWeather(lang = 'nl') {
@@ -682,6 +697,63 @@ async function fetchWeather(lang = 'nl') {
     }
     return { temp: Math.round(c.temperature_2m), desc, isWarm: c.temperature_2m >= 20, isCold: c.temperature_2m < 10, isRainy: wc >= 51, isSunny: wc <= 1, forecast };
   } catch { return null; }
+}
+
+// ─── Inline image fetch for gallery/social requests ──────────────────────────
+// When the agent emits [UIACTION:openGallery|category|location] or
+// [UIACTION:displaySocialPosts|...|location], the chat fetches REAL images and
+// shows them inline — never in a pop-up. Gallery pulls from the Bogèst asset
+// archive (assetSearch); social posts pull Instagram first, falling back to the
+// archive when no Instagram posts are synced.
+async function fetchInlineImages(requests) {
+  const photos = [];
+  const instagrams = [];
+  const VALID_LOCS = new Set(['hasselt', 'borgloon', 'heusden-zolder']);
+  for (const r of requests) {
+    try {
+      if (r.type === 'openGallery') {
+        const category = (r.args && r.args[0]) || 'all';
+        const location = (r.args && r.args[1]) || 'all';
+        const res = await base44.functions.invoke('assetSearch', { category, location, limit: 3 });
+        for (const im of (res.data?.images || []).slice(0, 3)) {
+          photos.push({ url: im.url, desc: im.description || '', location: im.location || '' });
+        }
+      } else if (r.type === 'displaySocialPosts') {
+        const rawLoc = (r.args && r.args[1]) || '';
+        const loc = VALID_LOCS.has(rawLoc) ? rawLoc : null;
+        let posts = [];
+        try {
+          posts = loc
+            ? await base44.entities.InstagramPost.filter({ location_name: loc }, '-posted_at', 6)
+            : await base44.entities.InstagramPost.list('-posted_at', 6);
+          posts = (posts || []).filter((p) => p.media_type !== 'VIDEO' && p.media_url).slice(0, 3);
+        } catch { posts = []; }
+        if (posts.length) {
+          for (const p of posts) instagrams.push({ media_url: p.media_url, caption: p.caption || '', permalink: p.permalink || '' });
+        } else {
+          const res = await base44.functions.invoke('assetSearch', { location: loc || 'all', limit: 3 });
+          for (const im of (res.data?.images || []).slice(0, 3)) photos.push({ url: im.url, desc: im.description || '', location: im.location || '' });
+        }
+      }
+    } catch {}
+  }
+  return { photos, instagrams };
+}
+
+// Resolve [PHOTO:description|location] tags that have no real url by fetching a
+// matching archive image from assetSearch (falls back to the top-quality image).
+async function resolveEmptyPhotos(photos) {
+  const out = [];
+  for (const p of photos) {
+    if (p.url) { out.push(p); continue; }
+    try {
+      let res = await base44.functions.invoke('assetSearch', { query: p.desc || '', limit: 1 });
+      let im = (res.data?.images || [])[0];
+      if (!im) { res = await base44.functions.invoke('assetSearch', { limit: 1 }); im = (res.data?.images || [])[0]; }
+      if (im) out.push({ url: im.url, desc: p.desc || im.description || '', location: p.location || im.location || '' });
+    } catch {}
+  }
+  return out;
 }
 
 // ─── Sound engine ────────────────────────────────────────────────────────────
@@ -771,22 +843,15 @@ function ActionButton({ label, url, isDark, onClick }) {
   return null;
 }
 
-// Social photo preview card
-const SOCIAL_IMAGES = {
-  Hasselt: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=80',
-  Borgloon: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=400&q=80',
-  'Heusden-Zolder': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&q=80',
-  default: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80',
-};
-
+// Real archive photo card — the url comes from assetSearch (never a stock photo).
 function PhotoCard({ desc, location, isDark, url }) {
-  const img = url || SOCIAL_IMAGES[location] || SOCIAL_IMAGES.default;
+  if (!url) return null;
   return (
     <div className="rounded-xl overflow-hidden mt-2" style={{ border: isDark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(74,83,32,0.18)' }}>
-      <img src={img} alt={desc} className="w-full h-36 object-cover" loading="lazy" />
+      <img src={url} alt={desc} className="w-full h-40 object-cover" loading="lazy" />
       <div className="px-3 py-2" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(74,83,32,0.05)' }}>
-        <p className="font-body text-xs text-muted-foreground">{desc}</p>
-        <p className="font-body text-[10px] text-primary/70 mt-0.5 tracking-wide uppercase">Bogèst {location}</p>
+        {desc && <p className="font-body text-xs text-muted-foreground">{desc}</p>}
+        {location && <p className="font-body text-[10px] text-primary/70 mt-0.5 tracking-wide uppercase">Bogèst {location}</p>}
       </div>
     </div>
   );
@@ -852,9 +917,11 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
       <LogoAvatar size="sm" online={false} isDark={isDark} />
       <div className="flex-1 min-w-0">
         <div className="px-3.5 py-3 rounded-2xl rounded-tl-sm" style={{ background: isDark ? 'rgba(20,14,0,0.78)' : 'rgba(107,122,63,0.06)' }}>
-          <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: isDark ? 'rgba(255,240,200,0.95)' : 'hsl(var(--foreground))' }}>
-            {content}
-          </p>
+          {content && (
+            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: isDark ? 'rgba(255,240,200,0.95)' : 'hsl(var(--foreground))' }}>
+              {content}
+            </p>
+          )}
           {cards?.map((c, i) => <RecommendationCard key={i} item={c} isDark={isDark} />)}
           {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} url={p.url} />)}
           {instagrams?.map((p, i) => <InstagramCard key={i} post={p} />)}
@@ -1080,9 +1147,42 @@ export default function DigitalHost() {
   const subscriptionRef = useRef(null);
   const greetingRef = useRef(null);
   const responsePendingRef = useRef(false);
+  const makeGreetingRef = useRef(() => '');
+  const inlineMediaRef = useRef({});
 
   const pageGreeting = s.page_greetings[location.pathname] || s.page_greetings.default;
   const pageChips = s.page_chips[location.pathname] || [s.chip_location, s.chip_reserve, s.chip_menu];
+
+  // Personalised, always-different opening greeting (no standard text).
+  // Combines time of day, meal moment, random intro variants, weather and the
+  // returning-visitor profile so every conversation starts uniquely.
+  const buildPersonalGreeting = () => {
+    const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
+    const greeting = getTimeGreeting(s);
+    const isReturning = visitorMemory && visitorMemory.visits > 1;
+    const meal = getMealCtx();
+    const name = visitorProfile?.name;
+    let line;
+    if (isReturning) {
+      line = pickRandom(v.returning);
+      if (name) line = line.replace(/!$/, `, ${name}!`);
+    } else {
+      line = pickRandom(v.line1);
+    }
+    const parts = [`${greeting}! ${line}`];
+    if (!isReturning) {
+      const line2 = meal === 'lunch' ? pickRandom(v.line2_lunch) : meal === 'diner' ? pickRandom(v.line2_diner) : pickRandom(v.line2_default);
+      parts.push(line2);
+    }
+    const w = weatherRef.current;
+    if (w && Math.random() > 0.5) {
+      if (w.isWarm && w.isSunny) parts.push(s.intro_line3_warm_sunny.replace('{temp}', w.temp));
+      else if (w.isRainy) parts.push(s.intro_line3_rainy.replace('{temp}', w.temp));
+    }
+    parts.push(pickRandom(v.question));
+    return parts.filter(Boolean).join(' ');
+  };
+  makeGreetingRef.current = buildPersonalGreeting;
 
   useEffect(() => { fetchWeather(lang).then(w => { setWeather(w); weatherRef.current = w; }); }, [lang]);
 
@@ -1114,11 +1214,7 @@ export default function DigitalHost() {
   useEffect(() => {
     const handler = () => {
       sessionStorage.setItem('bogest-host-seen', '1');
-      const heroGreeting = lang === 'fr'
-        ? "Bien sûr ! Je suis là pour vous aider. Vous pouvez aussi toujours me retrouver en bas à droite. Qu'est-ce que je peux faire pour vous ?"
-        : lang === 'en'
-        ? "Of course! I'm here to help. You can always find me in the bottom-right corner too. What can I do for you?"
-        : "Natuurlijk! Ik ben er graag voor u. U kunt me trouwens altijd terugvinden rechtsonder op de pagina. Waar kan ik u mee helpen?";
+      const heroGreeting = makeGreetingRef.current();
       greetingRef.current = heroGreeting;
       setMessages([{ role: 'assistant', content: heroGreeting, actions: [] }]);
       sounds.open();
@@ -1278,10 +1374,22 @@ export default function DigitalHost() {
     });
     conversationRef.current = conv;
     subscriptionRef.current = base44.agents.subscribeToConversation(conv.id, (data) => {
-      const agentMessages = (data.messages || []).map(m => {
+      const agentMessages = (data.messages || []).map((m) => {
         if (m.role === 'user') return { role: 'user', content: (m.content || '').replace(/^\[ctx:[^\]]*\]\s*/i, '') };
         const parsed = parseActions(m.content || '');
-        return { role: 'assistant', content: parsed.clean, actions: parsed.actions, photos: parsed.photos, cards: parsed.cards, instagrams: parsed.instagrams, uiActions: parsed.uiActions };
+        const key = m.id || m.content || '';
+        const stored = key ? inlineMediaRef.current[key] : null;
+        return {
+          role: 'assistant',
+          content: parsed.clean,
+          actions: parsed.actions,
+          photos: stored?.photos || parsed.photos,
+          cards: parsed.cards,
+          instagrams: stored?.instagrams || parsed.instagrams,
+          uiActions: parsed.uiActions,
+          galleryRequests: stored ? [] : parsed.galleryRequests,
+          _key: key,
+        };
       });
       const greeting = greetingRef.current ? [{ role: 'assistant', content: greetingRef.current, actions: [] }] : [];
       setMessages([...greeting, ...agentMessages]);
@@ -1290,6 +1398,25 @@ export default function DigitalHost() {
         responsePendingRef.current = false;
         setIsLoading(false);
         sounds.receive();
+      }
+      // Auto-fetch real archive/Instagram images for openGallery/displaySocialPosts
+      // and resolve any [PHOTO:desc|loc] tags without a real url — all shown
+      // inline, attached to the agent message and persisted by message key.
+      if (last?.role === 'assistant' && (last?.galleryRequests?.length || (last?.photos || []).some((p) => !p.url))) {
+        const key = last._key;
+        Promise.all([
+          last.galleryRequests?.length ? fetchInlineImages(last.galleryRequests) : Promise.resolve({ photos: [], instagrams: [] }),
+          resolveEmptyPhotos(last.photos || []),
+        ]).then(([media, resolved]) => {
+          const newPhotos = [...media.photos, ...resolved];
+          const newIgs = media.instagrams;
+          if (!newPhotos.length && !newIgs.length) return;
+          if (key) inlineMediaRef.current[key] = { photos: newPhotos, instagrams: newIgs };
+          setMessages((prev) => prev.map((msg) => {
+            if (msg._key !== key) return msg;
+            return { ...msg, photos: [...(msg.photos || []), ...newPhotos], instagrams: [...(msg.instagrams || []), ...newIgs], galleryRequests: [] };
+          }));
+        }).catch(() => {});
       }
     });
     return conv;
@@ -1308,8 +1435,9 @@ export default function DigitalHost() {
 
     // Show greeting locally if no conversation yet and no messages
     if (!conversationRef.current && messages.length === 0) {
-      greetingRef.current = pageGreeting;
-      setMessages([{ role: 'assistant', content: pageGreeting, actions: [] }]);
+      const g = buildPersonalGreeting();
+      greetingRef.current = g;
+      setMessages([{ role: 'assistant', content: g, actions: [] }]);
     }
 
     try {
@@ -1332,8 +1460,9 @@ export default function DigitalHost() {
     sessionStorage.setItem('bogest-host-seen', '1');
     if (messages.length === 0) {
       historyRef.current = [];
-      greetingRef.current = pageGreeting;
-      setMessages([{ role: 'assistant', content: pageGreeting, actions: [] }]);
+      const g = buildPersonalGreeting();
+      greetingRef.current = g;
+      setMessages([{ role: 'assistant', content: g, actions: [] }]);
     }
     sounds.open(); setPhase('chat');
     if (preload) setTimeout(() => sendMessage(preload), 80);

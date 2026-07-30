@@ -51,7 +51,7 @@ export default async function (req) {
       const stop = new Set(['show', 'me', 'find', 'a', 'an', 'the', 'of', 'with', 'and', 'or', 'for', 'to', 'in', 'at', 'on', 'by', 'photos', 'photo', 'pictures', 'picture', 'image', 'images', 'served', 'that', 'are', 'is', 'was', 'van', 'een', 'de', 'het', 'met', 'en', 'fotos', 'foto', 'afbeelding', 'toon', 'laat', 'zien', 'vind', 'zoek', 'montre', 'moi', 'une', 'des', 'un', 'le', 'la', 'les', 'avec', 'pour', 'de']);
       const tokens = q.split(/\s+/).filter((t) => t.length > 1 && !stop.has(t));
       if (tokens.length) {
-        items = items
+        const scored = items
           .map((a) => {
             const hay = [
               ...(a.categories || []),
@@ -69,6 +69,9 @@ export default async function (req) {
           .filter((x) => x.score > 0)
           .sort((x, y) => y.score - x.score || (y.a.quality_score || 0) - (x.a.quality_score || 0))
           .map((x) => x.a);
+        // If the (often Dutch) query doesn't match the English tags/descriptions,
+        // fall back to the top-quality images so the caller always gets results.
+        if (scored.length) items = scored;
       }
     }
 
