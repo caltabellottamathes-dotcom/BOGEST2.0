@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { Copy, Check, ExternalLink, Trash2 } from 'lucide-react';
+import React from 'react';
 
 const CATEGORY_COLORS = {
   interiors: 'bg-sky-500/15 text-sky-300 border-sky-500/20',
@@ -15,30 +14,19 @@ const LOC_LABELS = {
   'heusden-zolder': 'Heusden-Zolder',
 };
 
-export default function AssetCard({ asset, showExport, onDelete }) {
-  const [copied, setCopied] = useState(false);
-  const [confirming, setConfirming] = useState(false);
-  const copy = (e) => {
-    e.stopPropagation();
-    navigator.clipboard.writeText(asset.image_url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
-  const handleDelete = (e) => {
-    e.stopPropagation();
-    if (confirming) { onDelete?.(asset.id); setConfirming(false); return; }
-    setConfirming(true);
-    setTimeout(() => setConfirming(false), 3000);
-  };
-
+export default function AssetCard({ asset, onClick }) {
   return (
-    <div className="break-inside-avoid mb-4 rounded-2xl overflow-hidden border border-border bg-card/60 backdrop-blur-sm group">
-      <div className="relative">
+    <button
+      type="button"
+      onClick={() => onClick?.(asset)}
+      className="block text-left w-full break-inside-avoid mb-4 rounded-2xl overflow-hidden border border-border bg-card/60 backdrop-blur-sm group relative focus:outline-none"
+    >
+      <div className="relative overflow-hidden">
         <img
           src={asset.image_url}
           alt={asset.description || asset.primary_category}
           loading="lazy"
-          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+          className="w-full h-auto object-cover transition-transform duration-500 group-hover:scale-[1.04]"
         />
         <span className={`absolute top-2 left-2 text-[10px] px-2 py-0.5 rounded-full capitalize border ${CATEGORY_COLORS[asset.primary_category] || 'bg-primary/15 text-primary border-primary/20'}`}>
           {asset.primary_category}
@@ -55,57 +43,18 @@ export default function AssetCard({ asset, showExport, onDelete }) {
             </span>
           )}
         </div>
-        {asset.subcategory && (
-          <span className="absolute bottom-2 left-2 text-[9px] px-1.5 py-0.5 rounded bg-black/50 text-foreground/80 backdrop-blur-sm capitalize">
-            {asset.subcategory.replace(/_/g, ' ')}
+        {asset.collections?.length > 0 && (
+          <span className="absolute bottom-2 left-2 text-[9px] px-1.5 py-0.5 rounded-full bg-primary text-primary-foreground backdrop-blur-sm flex items-center gap-1">
+            ★ {asset.collections.length}
           </span>
         )}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
       </div>
-      <div className="p-3">
-        {asset.description && (
-          <p className="font-body text-xs text-muted-foreground line-clamp-2 mb-2">{asset.description}</p>
-        )}
-        {asset.tags?.length > 0 && (
-          <div className="flex flex-wrap gap-1 mb-2">
-            {asset.tags.slice(0, 4).map((t, i) => (
-              <span key={i} className="text-[9px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{t}</span>
-            ))}
-          </div>
-        )}
-        {asset.source_urls?.length > 1 && (
-          <p className="font-body text-[9px] text-muted-foreground/60 mb-2">{asset.source_urls.length} bronnen</p>
-        )}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={handleDelete}
-            className={`flex items-center justify-center gap-1.5 text-[10px] py-1.5 px-2 rounded-lg border transition-colors ${
-              confirming
-                ? 'border-destructive/40 bg-destructive/10 text-destructive'
-                : 'border-border text-muted-foreground hover:bg-muted hover:text-destructive'
-            }`}
-          >
-            <Trash2 className="w-3 h-3" /> {confirming ? 'Bevestig' : 'Verwijder'}
-          </button>
-          {showExport && (
-            <>
-              <button
-                onClick={copy}
-                className="flex-1 flex items-center justify-center gap-1.5 text-[10px] py-1.5 rounded-lg border border-border hover:bg-muted transition-colors"
-              >
-                {copied ? <><Check className="w-3 h-3 text-primary" /> Gekopieerd</> : <><Copy className="w-3 h-3" /> CDN link</>}
-              </button>
-              <a
-                href={asset.image_url}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-center w-8 h-8 rounded-lg border border-border hover:bg-muted transition-colors"
-              >
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            </>
-          )}
+      {asset.description && (
+        <div className="p-3">
+          <p className="font-body text-xs text-muted-foreground line-clamp-2">{asset.description}</p>
         </div>
-      </div>
-    </div>
+      )}
+    </button>
   );
 }

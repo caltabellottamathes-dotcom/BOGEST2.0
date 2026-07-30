@@ -121,6 +121,13 @@
         "rejected"
       ],
       "default": "active"
+    },
+    "collections": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "User-assigned collections for use in site content (e.g. seasonal_dishes, signature, terrace, events, hero)"
     }
   },
   "required": [

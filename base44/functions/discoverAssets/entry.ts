@@ -522,6 +522,15 @@ export default async function (req) {
       return Response.json({ ok: true, web: true, queries, ...stats });
     }
 
+    // Import a specific list of image URLs (e.g. from Google Custom Search) →
+    // mirror + classify + dedup via the same pipeline as discovery.
+    if (Array.isArray(body.importUrls) && body.importUrls.length) {
+      const cands = body.importUrls.map((u) => ({ url: String(u), sourceType: 'web', query: 'google-cse' }));
+      const limit = Math.max(1, Math.min(20, body.importUrls.length));
+      const stats = await processCandidates(base44, cands, limit, 'google');
+      return Response.json({ ok: true, import: true, ...stats });
+    }
+
     // The scheduled "all" pass skips the slow web search — seeds + page scrape +
     // Instagram already yield plenty of candidates and keep the run fast.
     if (isAll) {

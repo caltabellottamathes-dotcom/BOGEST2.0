@@ -35,6 +35,24 @@ export default async function (req) {
       return Response.json({ ok: true });
     }
 
+    // Update fields — admin only
+    if (params.action === 'update') {
+      try {
+        const user = await base44.auth.me();
+        if (!user || user.role !== 'admin') return Response.json({ error: 'Admin only' }, { status: 403 });
+      } catch {
+        return Response.json({ error: 'Admin only' }, { status: 403 });
+      }
+      const id = params.id;
+      if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });
+      const allowed = ['description', 'primary_category', 'subcategory', 'location', 'tags', 'mood', 'colors', 'quality_score', 'is_relevant', 'status', 'source_url', 'collections'];
+      const update = {};
+      for (const k of allowed) if (k in (params.data || {})) update[k] = params.data[k];
+      if (Object.keys(update).length === 0) return Response.json({ error: 'Nothing to update' }, { status: 400 });
+      const updated = await base44.asServiceRole.entities.AssetArchive.update(id, update);
+      return Response.json({ ok: true, item: updated });
+    }
+
     const limit = Math.min(Math.max(1, Number(params.limit) || 20), 200);
     // sort: "quality_score" → highest first; "date" → newest first (default)
     let sort = '-created_date';
