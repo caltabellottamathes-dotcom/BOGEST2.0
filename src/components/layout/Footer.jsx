@@ -45,7 +45,6 @@ export default function Footer() {
     { label: t('nav_giftcards'), path: '/gift-cards' },
     { label: t('nav_groups'), path: '/groups' },
     { label: t('nav_contact'), path: '/contact' },
-    { label: 'Asset Archive', path: '/assets' },
   ];
 
   const legalLinks = [
@@ -185,6 +184,12 @@ export default function Footer() {
             </Link>
             <Link to="/terms" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_terms')}
+            </Link>
+            <Link
+              to="/assets"
+              className="font-body text-[10px] tracking-widest uppercase text-foreground/20 hover:text-foreground/40 transition-colors duration-300"
+            >
+              Beeldbank
             </Link>
             <Link
               to="/admin-login"

@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -9,6 +9,7 @@ import { ThemeProvider } from '@/lib/ThemeContext';
 import { LangProvider } from '@/lib/LangContext';
 import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import BogestLogo from '@/components/BogestLogo';
 
 import Home from '@/pages/Home';
@@ -73,7 +74,9 @@ const AuthenticatedApp = () => {
         <Route path="/powder-blue-preview" element={<PowderBluePreview />} />
         <Route path="/instagram" element={<Instagram />} />
         <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
-        <Route path="/assets" element={<Assets />} />
+        <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+          <Route path="/assets" element={<Assets />} />
+        </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
