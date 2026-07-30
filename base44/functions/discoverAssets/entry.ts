@@ -621,6 +621,112 @@ export default async function (req) {
       return Response.json({ ok: true, kickstart: true, ...stats });
     }
 
+    // ─── One comprehensive discovery pass ───────────────────────────────────
+    // Crawls every bogest.be page (via the sitemap), scrapes the three Bogèst
+    // Tripadvisor review pages, pulls Facebook / d-entrecote / Tripadvisor images
+    // via SerpApi site-scoped search, and imports all known seeds + Instagram —
+    // all through the shared dedup + relevance-gate pipeline. One button, all
+    // images that really belong to Bogèst.
+    if (body.discoverAll) {
+      const apiKey = secrets.get('SERPAPI_API_KEY');
+      const seen = new Set();
+      const cands = [];
+      const push = (url, sourceType, platform) => { if (url && !seen.has(url)) { seen.add(url); cands.push({ url, sourceType, sourcePlatform: platform || '', query: '' }); } };
+
+      // Known website images + theme seeds (trusted — skip relevance gate)
+      for (const u of WEBSITE_IMAGES) push(u, 'seed', 'Official Website');
+      for (const k of Object.keys(THEMES)) for (const u of THEMES[k].seed) push(u, 'seed', 'Official Website');
+
+      // Instagram posts already synced into the DB (trusted)
+      try {
+        const posts = await base44.asServiceRole.entities.InstagramPost.list('-posted_at', 50);
+        for (const p of posts || []) if (p.media_url) push(p.media_url, 'instagram', 'Instagram');
+      } catch {}
+
+      // bogest.be — crawl the sitemap, then scrape every page for its images
+      try {
+        const smRes = await fetch('https://www.bogest.be/sitemap.xml', { signal: AbortSignal.timeout(15000), redirect: 'follow' });
+        if (smRes.ok) {
+          const xml = await smRes.text();
+          const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((m) => m[1]).filter((u) => u.includes('bogest.be') && !/\.(jpg|jpeg|png|webp|pdf)$/i.test(u));
+          for (const page of locs.slice(0, 40)) {
+            try {
+              const res = await fetch(page, { headers: { 'User-Agent': 'BogestAssetArchive/1.0' }, signal: AbortSignal.timeout(12000), redirect: 'follow' });
+              if (!res.ok) continue;
+              const html = await res.text();
+              for (const u of extractImgUrls(html, page)) {
+                if (u.includes('squarespace-cdn') || /\.(jpg|jpeg|png|webp)(\?|$)/i.test(u)) push(u, 'seed', 'Official Website');
+              }
+            } catch {}
+          }
+        }
+      } catch {}
+      // Key pages directly, in case the sitemap is unavailable
+      for (const page of ['https://www.bogest.be', 'https://www.bogest.be/menu', 'https://www.bogest.be/ons-verhaal']) {
+        try {
+          const res = await fetch(page, { headers: { 'User-Agent': 'BogestAssetArchive/1.0' }, signal: AbortSignal.timeout(12000), redirect: 'follow' });
+          if (!res.ok) continue;
+          const html = await res.text();
+          for (const u of extractImgUrls(html, page)) {
+            if (u.includes('squarespace-cdn') || /\.(jpg|jpeg|png|webp)(\?|$)/i.test(u)) push(u, 'seed', 'Official Website');
+          }
+        } catch {}
+      }
+
+      // Tripadvisor review pages (Borgloon, Hasselt/Wimmertingen, Heusden-Zolder)
+      const TRIP_PAGES = [
+        'https://www.tripadvisor.be/Restaurant_Review-g644058-d8568810-Reviews-D_Entrecote_Borgloon-Borgloon_Limburg_Province.html',
+        'https://www.tripadvisor.be/Restaurant_Review-g15608563-d15605677-Reviews-D_Entrecote-Wimmertingen_Limburg_Province.html',
+        'https://www.tripadvisor.be/Restaurant_Review-g641787-d26730531-Reviews-Bogest_Heusden_zolder-Heusden_Zolder_Limburg_Province.html',
+      ];
+      for (const page of TRIP_PAGES) {
+        try {
+          const res = await fetch(page, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; BogestAssetArchive/1.0)' }, signal: AbortSignal.timeout(15000), redirect: 'follow' });
+          if (!res.ok) continue;
+          const html = await res.text();
+          for (const u of extractImgUrls(html, page)) {
+            if (u.includes('tripadvisor') || u.includes('media-cdn') || /\.(jpg|jpeg|png|webp)(\?|$)/i.test(u)) push(u, 'web', 'Tripadvisor');
+          }
+          const re = /https?:\/\/[a-z0-9.-]*tripadvisor[a-z0-9.\-/_]*\.(?:jpg|jpeg|png|webp)/gi;
+          let m;
+          while ((m = re.exec(html))) push(m[0], 'web', 'Tripadvisor');
+        } catch {}
+      }
+
+      // SerpApi site-scoped image search for the remaining Bogèst channels
+      if (apiKey) {
+        const SERP = [
+          { q: 'site:facebook.com bogesthasselt', label: 'Facebook Hasselt' },
+          { q: 'site:facebook.com bogestborgloon', label: 'Facebook Borgloon' },
+          { q: 'site:facebook.com bogest_heusdenzolder', label: 'Facebook Heusden-Zolder' },
+          { q: 'site:facebook.com dentrecote', label: "Facebook d'Entrecote" },
+          { q: 'site:d-entrecote.be', label: 'd-entrecote.be' },
+          { q: 'site:tripadvisor.be bogest', label: 'Tripadvisor Bogèst' },
+          { q: "site:tripadvisor.be d'entrecote", label: "Tripadvisor d'Entrecote" },
+          { q: 'site:bogest.be', label: 'bogest.be' },
+        ];
+        for (const s of SERP) {
+          try {
+            const endpoint = 'https://serpapi.com/search?engine=google_images&q=' + encodeURIComponent(s.q) + '&api_key=' + encodeURIComponent(apiKey) + '&ijn=0';
+            const res = await fetch(endpoint, { signal: AbortSignal.timeout(20000) });
+            if (!res.ok) continue;
+            const data = await res.json();
+            if (data.error) continue;
+            for (const item of data.images_results || []) {
+              const link = item.original;
+              if (!link) continue;
+              if (!/\.(jpg|jpeg|png|webp)(\?|$)/i.test(link)) continue;
+              push(link, 'web', s.label);
+            }
+          } catch {}
+        }
+      }
+
+      const limit = Math.max(1, Math.min(40, Number(body.limit) || 25));
+      const stats = await processCandidates(base44, cands, limit, 'discover-all');
+      return Response.json({ ok: true, discoverAll: true, candidates: cands.length, ...stats });
+    }
+
     // Broad public-web discovery — gemini web search across review sites, blogs,
     // news, travel & social. Rotates a few queries per run so each pass stays
     // fast while the archive keeps growing from new public sources over time.

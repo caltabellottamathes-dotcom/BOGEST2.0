@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Images, Search, Loader2, X } from 'lucide-react';
+import { Images, Search, Loader2, X, Layers } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import AssetCard from '@/components/assets/AssetCard';
 import AssetDetail from '@/components/assets/AssetDetail';
@@ -24,6 +24,8 @@ export default function Assets() {
   const [sort, setSort] = useState('quality');
   const [showAdmin, setShowAdmin] = useState(false);
   const [detailAsset, setDetailAsset] = useState(null);
+  const [deduping, setDeduping] = useState(false);
+  const [dedupMsg, setDedupMsg] = useState('');
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -109,6 +111,19 @@ export default function Assets() {
     );
   }
 
+  const runDedupe = async () => {
+    setDeduping(true);
+    try {
+      const res = await base44.functions.invoke('dedupeAssets', {});
+      setDedupMsg(`${res.data?.removed ?? 0} dubbele verwijderd`);
+      load();
+    } catch {
+      setDedupMsg('Ontdubbeling mislukt');
+    }
+    setDeduping(false);
+    setTimeout(() => setDedupMsg(''), 4500);
+  };
+
   const onSaved = (item) => {
     if (item) setAssets((prev) => prev.map((a) => (a.id === item.id ? item : a)));
     setDetailAsset(null);
@@ -143,7 +158,12 @@ export default function Assets() {
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button onClick={() => setView('intro')} className="px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm text-muted-foreground">←</button>
+            <button onClick={runDedupe} disabled={deduping} className="px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm flex items-center gap-1.5 disabled:opacity-50">
+              {deduping ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Layers className="w-3.5 h-3.5" />}
+              Ontdubbel
+            </button>
             <button onClick={() => setShowAdmin(true)} className="px-4 py-2.5 rounded-lg border border-border bg-card/50 hover:bg-muted transition-colors text-sm">Beheer</button>
+            {dedupMsg && <span className="font-body text-xs text-primary whitespace-nowrap">{dedupMsg}</span>}
           </div>
         </div>
 
