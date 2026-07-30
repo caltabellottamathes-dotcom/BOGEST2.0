@@ -25,8 +25,8 @@ const LLM_PROMPT = (text, list) => `You are the navigation brain of the Bogèst 
 Rules:
 - Match the visitor's INTENT, not just keywords.
 - "where are you / which cities / addresses / locations" → id "locations" (overview of ALL restaurants).
-- A specific city or restaurant name (Hasselt, Borgloon, Heusden-Zolder) → that specific location entry (loc-hasselt / loc-borgloon / loc-heusden-zolder) — which opens the location info page AND its restaurant-and-spaces panel.
-- Terrace / spaces / rooms / "restaurant en ruimtes" of a specific city → that location's spaces entry (loc-<city>-spaces).
+- A specific city or restaurant name (Hasselt, Borgloon, Heusden-Zolder) → that specific location entry (loc-hasselt / loc-borgloon / loc-heusden-zolder) — which opens the location info page.
+- Terrace / spaces / rooms / "restaurant en ruimtes" of a specific city → that location's spaces entry (loc-<city>-spaces) — scrolls to the spaces section on that location's page.
 - Opening hours / parking / contact / address of a specific city → that location's sub-section (loc-<city>-hours / -parking / -contact).
 - Prefer the MOST SPECIFIC match: an individual dish (id menu-dish-*) beats its category (menu-cat-*); a specific location beats the locations overview.
 - If the host is clearly describing a named dish on the menu, return that dish id (menu-dish-*).

@@ -71,9 +71,9 @@ getLocations('nl').forEach((l) => {
       l.name,
       [l.city, l.name, `bogèst ${l.city}`, `bogest ${l.city}`, `vestiging ${l.city}`, `restaurant ${l.city}`, `in ${l.city}`, `te ${l.city}`, `à ${l.city}`, `at ${l.city}`, `naar ${l.city}`],
       `/locations/${l.slug}`,
-      'openLocation',
+      'navigate',
       l.slug,
-      `Specific restaurant in ${l.city} — opens its info page and its restaurant-and-spaces panel`
+      `Specific restaurant in ${l.city} — opens its info page (spaces are shown on the page)`
     )
   );
 });
@@ -124,7 +124,7 @@ MENU_DATA.forEach((cat) => {
   INDEX.push(make(`loc-${slug}-parking`, 'section', `Parking ${slug}`, ['parking', 'parkeren', 'car park', 'parkeerplaats', 'waar parkeren', 'parkeergarage'], `/locations/${slug}`, 'scroll', 'parking', `Parking info for ${slug}`));
   INDEX.push(make(`loc-${slug}-contact`, 'section', `Contact ${slug}`, ['contact', 'adres', 'address', 'phone', 'telefoon', 'email', 'telefoonnummer', 'telefoon', 'how to reach'], `/locations/${slug}`, 'scroll', 'contact', `Contact / address of ${slug}`));
   // Terrace / spaces → open the restaurant-and-spaces panel (same as the location itself)
-  INDEX.push(make(`loc-${slug}-spaces`, 'section', `Spaces ${slug}`, ['spaces', 'ruimtes', 'restaurant spaces', 'terras', 'terrace', 'zaal', 'salles', 'rooms', 'restaurant en ruimtes', 'de ruimtes', 'zalen', 'terrassen'], `/locations/${slug}`, 'openLocation', slug, `Terrace / spaces / rooms of ${slug} — opens the spaces panel`));
+  INDEX.push(make(`loc-${slug}-spaces`, 'section', `Spaces ${slug}`, ['spaces', 'ruimtes', 'restaurant spaces', 'terras', 'terrace', 'zaal', 'salles', 'rooms', 'restaurant en ruimtes', 'de ruimtes', 'zalen', 'terrassen'], `/locations/${slug}`, 'scroll', 'spaces', `Terrace / spaces / rooms of ${slug} — scrolls to the spaces section on that location's page`));
 });
 
 // ── Close (dismiss an open panel) ──────────────────────────────────────────

@@ -36,9 +36,7 @@ async function executeEntry(entry) {
   if (!entry) return { success: false, message: 'no_entry' };
   resetDedupIfStale();
 
-  // openLocation dedupes by its page (opening Borgloon then "spaces of Borgloon"
-  // are the same outcome and shouldn't fire twice).
-  const dedupKey = entry.action === 'openLocation' ? 'open:' + entry.page : entry.id;
+  const dedupKey = entry.id;
   if (dedupKey === lastTargetId) {
     return { success: true, message: 'already_here', target: entry.id };
   }
@@ -54,16 +52,6 @@ async function executeEntry(entry) {
 
   if (action === 'close') {
     return await window.websiteAction({ action: 'close', target: target || 'panel' });
-  }
-
-  if (action === 'openLocation') {
-    if (page && here !== page) {
-      const navRes = await window.websiteAction({ action: 'navigate', target: page });
-      if (!navRes?.success) return navRes;
-      await new Promise((r) => setTimeout(r, NAV_RENDER_MS + 150));
-    }
-    window.dispatchEvent(new CustomEvent('bogest:open-spaces', { detail: { slug: target } }));
-    return { success: true, message: 'opened location + spaces panel', target, page };
   }
 
   // scroll / highlight — make sure we're on the right page first
