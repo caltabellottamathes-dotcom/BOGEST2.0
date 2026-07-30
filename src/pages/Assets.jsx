@@ -5,7 +5,7 @@ import AssetCard from '@/components/assets/AssetCard';
 import AssetDetail from '@/components/assets/AssetDetail';
 import AdminPanel from '@/components/assets/AdminPanel';
 import AssetIntro from '@/components/assets/AssetIntro';
-import { TAXONOMY_GROUPS, groupLabel, assetGroups } from '@/lib/assetTaxonomy';
+import { ASSET_TAXONOMY, TAXONOMY_GROUPS, groupLabel, assetGroups } from '@/lib/assetTaxonomy';
 
 const STOP_WORDS = new Set([
   'show', 'me', 'find', 'a', 'an', 'the', 'of', 'with', 'and', 'or', 'for', 'to', 'in', 'at', 'on', 'by',
@@ -20,6 +20,7 @@ export default function Assets() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [selectedGroups, setSelectedGroups] = useState(new Set());
+  const [selectedSubs, setSelectedSubs] = useState(new Set());
   const [sort, setSort] = useState('quality');
   const [showAdmin, setShowAdmin] = useState(false);
   const [detailAsset, setDetailAsset] = useState(null);
@@ -43,18 +44,41 @@ export default function Assets() {
   const toggleGroup = (g) => {
     setSelectedGroups((prev) => {
       const n = new Set(prev);
-      if (n.has(g)) n.delete(g); else n.add(g);
+      if (n.has(g)) {
+        n.delete(g);
+        setSelectedSubs((s) => {
+          const ns = new Set(s);
+          ASSET_TAXONOMY[g].items.forEach((it) => ns.delete(`${g}/${it}`));
+          return ns;
+        });
+      } else {
+        n.add(g);
+      }
+      return n;
+    });
+  };
+  const toggleSub = (path) => {
+    setSelectedSubs((prev) => {
+      const n = new Set(prev);
+      if (n.has(path)) n.delete(path); else n.add(path);
       return n;
     });
   };
 
-  // Group filter (multi-category aware, with legacy fallback)
-  const groupFiltered = assets.filter((a) => {
+  // Group + subcategory filter (multi-category aware, with legacy fallback)
+  let groupFiltered = assets.filter((a) => {
     if (selectedGroups.size === 0) return true;
     const groups = assetGroups(a);
     for (const g of selectedGroups) if (groups.has(g)) return true;
     return false;
   });
+  if (selectedSubs.size > 0) {
+    groupFiltered = groupFiltered.filter((a) => {
+      const cats = a.categories || [];
+      for (const sub of selectedSubs) if (cats.includes(sub)) return true;
+      return false;
+    });
+  }
 
   // Natural-language search across categories + tags + description + meta.
   const q = search.trim().toLowerCase();
@@ -170,6 +194,26 @@ export default function Assets() {
             );
           })}
         </div>
+
+        {selectedGroups.size > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-6">
+            {[...selectedGroups].flatMap((g) =>
+              ASSET_TAXONOMY[g].items.map((it) => {
+                const path = `${g}/${it}`;
+                const active = selectedSubs.has(path);
+                return (
+                  <button
+                    key={path}
+                    onClick={() => toggleSub(path)}
+                    className={`text-xs py-1 px-2.5 rounded-full border transition-colors ${active ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground hover:bg-muted'}`}
+                  >
+                    {active && '✓ '}{it}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        )}
 
         {/* Gallery */}
         {loading ? (

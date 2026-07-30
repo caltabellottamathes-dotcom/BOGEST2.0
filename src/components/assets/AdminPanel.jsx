@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { X, Rocket, Sparkles, Globe, Loader2, Wand2 } from 'lucide-react';
+import { X, Rocket, Sparkles, Globe, Loader2, Wand2, Search } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const CATEGORIES = ['interiors', 'gastronomy', 'atmosphere', 'architecture', 'branding'];
-const CAT_LABELS = { interiors: 'Interieur', gastronomy: 'Gastronomie', atmosphere: 'Sfeer', architecture: 'Architectuur', branding: 'Branding' };
-
 const SITES = ['TripAdvisor', 'Instagram', 'Facebook Hasselt', "Facebook d'Entrecote", 'Facebook Zolder', 'bogest.be', 'd-entrecote.be'];
+
+const SEARCH_SUGGESTIONS = [
+  'Bogèst restaurant Hasselt', 'Bogèst restaurant Borgloon', 'Bogèst restaurant Heusden-Zolder',
+  'Bogèst interieur veranda', 'Bogèst terras', 'Bogèst eetzaal',
+  'Bogèst steak beef grilled', 'Bogèst Belgian Blue', 'Bogèst spare ribs',
+  'Bogèst desserts', 'Bogèst wijn bar', 'Bogèst cocktails',
+  'Bogèst staff chef', 'Bogèst guests dining', 'Bogèst event group',
+  'Bogèst kerst decoratie', 'Bogèst valentijn diner',
+];
 
 function Section({ icon: Icon, title, children }) {
   return (
@@ -21,46 +27,36 @@ function Section({ icon: Icon, title, children }) {
 
 const inputCls = 'w-full bg-background border border-border rounded-lg px-3 py-2 text-sm';
 
+function ResultLine({ result, error }) {
+  if (error) return <p className="font-body text-[11px] text-destructive mt-2">{error}</p>;
+  if (!result) return null;
+  return (
+    <div className="font-body text-[11px] text-primary mt-2 space-y-0.5">
+      <p>{result.stored} nieuw toegevoegd · {result.candidates} kandidaten</p>
+      <p className="text-muted-foreground">{result.skippedDup} duplicaten · {result.skippedFilter} gefilterd · {result.rejected} afgewezen</p>
+    </div>
+  );
+}
+
 export default function AdminPanel({ onClose, onChanged }) {
-  const [kickstart, setKickstart] = useState({ limit: 15, running: false, result: null, error: null });
-  const [discovery, setDiscovery] = useState({ theme: 'gastronomy', limit: 3, useWebSearch: false, running: false, result: null, error: null });
   const [auto, setAuto] = useState({ limit: 10, running: false, result: null, error: null });
+  const [fill, setFill] = useState({ limit: 15, running: false, result: null, error: null });
+  const [targeted, setTargeted] = useState({ query: 'Bogèst restaurant', limit: 8, running: false, result: null, error: null });
 
-  const runKickstart = async () => {
-    setKickstart((k) => ({ ...k, running: true, result: null, error: null }));
+  const run = async (key, payload, state, setter) => {
+    setter((s) => ({ ...s, running: true, result: null, error: null }));
     try {
-      const res = await base44.functions.invoke('discoverAssets', { kickstart: true, limit: kickstart.limit });
-      setKickstart((k) => ({ ...k, result: res.data, running: false }));
+      const res = await base44.functions.invoke('discoverAssets', payload);
+      setter((s) => ({ ...s, result: res.data, running: false }));
       onChanged?.();
     } catch (e) {
-      setKickstart((k) => ({ ...k, error: e?.response?.data?.error || e?.message || 'Kickstart mislukt', running: false }));
+      setter((s) => ({ ...s, error: e?.response?.data?.error || e?.message || 'Actie mislukt', running: false }));
     }
   };
 
-  const runDiscovery = async () => {
-    setDiscovery((d) => ({ ...d, running: true, result: null, error: null }));
-    try {
-      const res = await base44.functions.invoke('discoverAssets', { theme: discovery.theme, limit: discovery.limit, useWebSearch: discovery.useWebSearch });
-      setDiscovery((d) => ({ ...d, result: res.data, running: false }));
-      onChanged?.();
-    } catch (e) {
-      setDiscovery((d) => ({ ...d, error: e?.response?.data?.error || e?.message || 'Zoekopdracht mislukt', running: false }));
-    }
-  };
-
-  // Automatic site-scoped discovery: SerpApi google_images per domain → dedup
-  // (content_hash + phash) → vision filter → auto-import ONLY new, unique,
-  // relevant photos. No manual selection needed.
-  const runAuto = async () => {
-    setAuto((a) => ({ ...a, running: true, result: null, error: null }));
-    try {
-      const res = await base44.functions.invoke('discoverAssets', { auto: true, limit: auto.limit });
-      setAuto((a) => ({ ...a, result: res.data, running: false }));
-      onChanged?.();
-    } catch (e) {
-      setAuto((a) => ({ ...a, error: e?.response?.data?.error || e?.message || 'Automatische ontdekking mislukt', running: false }));
-    }
-  };
+  const runAuto = () => run('auto', { auto: true, limit: auto.limit }, auto, setAuto);
+  const runFill = () => run('fill', { fill: true, limit: fill.limit }, fill, setFill);
+  const runTargeted = () => run('serp', { serpQuery: targeted.query, num: Math.min(30, targeted.limit * 3), limit: targeted.limit }, targeted, setTargeted);
 
   return (
     <>
@@ -74,9 +70,50 @@ export default function AdminPanel({ onClose, onChanged }) {
         </div>
 
         <div className="flex-1 p-5 space-y-4">
-          <Section icon={Wand2} title="Automatische ontdekking">
+          <Section icon={Search} title="Gericht zoeken (SerpApi)">
             <p className="font-body text-xs text-muted-foreground mb-3 leading-relaxed">
-              Doorzoekt automatisch TripAdvisor, Instagram, de Facebook-pagina's, bogest.be en d-entrecote.be via SerpApi. Vergelijkt elke foto met het archief (content + perceptuele hash) en importeert enkel nieuwe, unieke, relevante foto's — volledig automatisch.
+              Zoek gericht naar foto's met een eigen zoekterm — gebaseerd op categorieën en tags. Elke foto wordt gedupliceerd gecontroleerd en door de relevante-poort gehaald.
+            </p>
+            <label className="block font-body text-xs text-muted-foreground mb-1">Zoekterm</label>
+            <input value={targeted.query} onChange={(e) => setTargeted((t) => ({ ...t, query: e.target.value }))}
+              placeholder="bv. Bogèst Belgian Blue beef" className={inputCls + ' mb-2'} />
+            <div className="flex flex-wrap gap-1 mb-3 max-h-24 overflow-y-auto">
+              {SEARCH_SUGGESTIONS.map((s) => (
+                <button key={s} type="button" onClick={() => setTargeted((t) => ({ ...t, query: s }))}
+                  className="text-[10px] py-1 px-2 rounded-full border border-border text-muted-foreground hover:bg-muted transition-colors">
+                  {s}
+                </button>
+              ))}
+            </div>
+            <label className="block font-body text-xs text-muted-foreground mb-1">Max. nieuwe foto's</label>
+            <input type="number" min={1} max={20} value={targeted.limit}
+              onChange={(e) => setTargeted((t) => ({ ...t, limit: Math.max(1, Math.min(20, Number(e.target.value) || 1)) }))}
+              className={inputCls + ' mb-3'} />
+            <button onClick={runTargeted} disabled={targeted.running || !targeted.query.trim()}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50">
+              {targeted.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</> : <><Search className="w-4 h-4" /> Zoek & importeer</>}
+            </button>
+            <ResultLine result={targeted.result} error={targeted.error} />
+          </Section>
+
+          <Section icon={Rocket} title="Bibliotheek vullen (SerpApi)">
+            <p className="font-body text-xs text-muted-foreground mb-3 leading-relaxed">
+              Vult de beeldbank met een brede SerpApi-zoekset over alle vestigingen en onderwerpen — dezelfde engine als gericht zoeken.
+            </p>
+            <label className="block font-body text-xs text-muted-foreground mb-1">Aantal</label>
+            <input type="number" min={1} max={40} value={fill.limit}
+              onChange={(e) => setFill((f) => ({ ...f, limit: Math.max(1, Math.min(40, Number(e.target.value) || 1)) }))}
+              className={inputCls + ' mb-3'} />
+            <button onClick={runFill} disabled={fill.running}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50">
+              {fill.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Vullen…</> : <><Rocket className="w-4 h-4" /> Vullen</>}
+            </button>
+            <ResultLine result={fill.result} error={fill.error} />
+          </Section>
+
+          <Section icon={Wand2} title="Automatische ontdekking (SerpApi)">
+            <p className="font-body text-xs text-muted-foreground mb-3 leading-relaxed">
+              Doorzoekt automatisch TripAdvisor, Instagram, de Facebook-pagina's, bogest.be en d-entrecote.be via SerpApi. Importeert enkel nieuwe, unieke, relevante foto's.
             </p>
             <div className="flex flex-wrap gap-1.5 mb-3">
               {SITES.map((s) => (
@@ -91,56 +128,12 @@ export default function AdminPanel({ onClose, onChanged }) {
               className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50">
               {auto.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</> : <><Wand2 className="w-4 h-4" /> Ontdek & importeer</>}
             </button>
-            {auto.result && (
-              <div className="font-body text-[11px] text-primary mt-2 space-y-0.5">
-                <p>{auto.result.stored} nieuw toegevoegd · {auto.result.candidates} kandidaten</p>
-                <p className="text-muted-foreground">{auto.result.skippedDup} duplicaten · {auto.result.skippedFilter} gefilterd · {auto.result.rejected} afgewezen</p>
-              </div>
-            )}
-            {auto.error && <p className="font-body text-[11px] text-destructive mt-2">{auto.error}</p>}
-          </Section>
-
-          <Section icon={Rocket} title="Bibliotheek vullen">
-            <p className="font-body text-xs text-muted-foreground mb-3 leading-relaxed">
-              Importeert alle afbeeldingen van de website + gekende seeds en categoriseert ze.
-            </p>
-            <label className="block font-body text-xs text-muted-foreground mb-1">Aantal</label>
-            <input type="number" min={1} max={40} value={kickstart.limit}
-              onChange={(e) => setKickstart((k) => ({ ...k, limit: Math.max(1, Math.min(40, Number(e.target.value) || 1)) }))}
-              className={inputCls + ' mb-3'} />
-            <button onClick={runKickstart} disabled={kickstart.running}
-              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50">
-              {kickstart.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Vullen…</> : <><Rocket className="w-4 h-4" /> Vullen</>}
-            </button>
-            {kickstart.result && <p className="font-body text-[11px] text-primary mt-2">{kickstart.result.stored} toegevoegd · {kickstart.result.candidates} kandidaten</p>}
-            {kickstart.error && <p className="font-body text-[11px] text-destructive mt-2">{kickstart.error}</p>}
-          </Section>
-
-          <Section icon={Sparkles} title="Thematische discovery">
-            <p className="font-body text-xs text-muted-foreground mb-3">Lichte zoekopdracht per thema.</p>
-            <label className="block font-body text-xs text-muted-foreground mb-1">Thema</label>
-            <select value={discovery.theme} onChange={(e) => setDiscovery((d) => ({ ...d, theme: e.target.value }))} className={inputCls + ' mb-3'}>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{CAT_LABELS[c]}</option>)}
-            </select>
-            <label className="block font-body text-xs text-muted-foreground mb-1">Aantal</label>
-            <input type="number" min={1} max={10} value={discovery.limit}
-              onChange={(e) => setDiscovery((d) => ({ ...d, limit: Math.max(1, Math.min(10, Number(e.target.value) || 1)) }))}
-              className={inputCls + ' mb-3'} />
-            <label className="flex items-center gap-2.5 mb-3 cursor-pointer">
-              <input type="checkbox" checked={discovery.useWebSearch} onChange={(e) => setDiscovery((d) => ({ ...d, useWebSearch: e.target.checked }))} className="w-4 h-4 accent-primary" />
-              <span className="font-body text-xs text-foreground/70">Diep web-zoeken (trager)</span>
-            </label>
-            <button onClick={runDiscovery} disabled={discovery.running}
-              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50">
-              {discovery.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</> : <><Sparkles className="w-4 h-4" /> Uitvoeren</>}
-            </button>
-            {discovery.result && <p className="font-body text-[11px] text-primary mt-2">{discovery.result.stored} toegevoegd · {discovery.result.candidates} kandidaten</p>}
-            {discovery.error && <p className="font-body text-[11px] text-destructive mt-2">{discovery.error}</p>}
+            <ResultLine result={auto.result} error={auto.error} />
           </Section>
 
           <p className="font-body text-[10px] text-muted-foreground/70 leading-relaxed pt-1">
             <Globe className="w-3 h-3 inline mr-1 text-primary/70" />
-            De dagelijkse workflow draait de automatische ontdekking elke nacht om 03:00 — nieuwe foto's verschijnen automatisch in de beeldbank.
+            De dagelijkse workflow draait de automatische ontdekking elke nacht — nieuwe foto's verschijnen automatisch. Elke import wordt nu dubbel gecontroleerd (URL + content + perceptuele hash) en door een strenge relevante-poort gehaald.
           </p>
         </div>
       </div>

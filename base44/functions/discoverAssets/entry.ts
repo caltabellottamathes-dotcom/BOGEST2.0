@@ -154,7 +154,7 @@ const CURATOR_PROMPT = `You are an expert brand curator for Bogèst, a premium B
 3. Write a detailed description (1-2 sentences).
 4. Generate UNLIMITED descriptive lowercase tags — as many meaningful tags as needed to accurately describe the image (e.g. belgian blue, steak, dessert, grilled, candlelight, elegant plating, fine dining, warm lighting, hospitality, wooden table, linen napkins, wine glass, outdoor dining, rustic, luxury, seasonal decoration). Do NOT limit the number.
 5. Extract mood and dominant colors.
-6. If the image is not relevant to Bogèst (generic stock, unrelated subject, low quality, screenshot/text), set is_relevant to false.
+6. RELEVANCE — be strict and skeptical; do NOT assume the image is Bogèst just because it was searched. Set is_relevant=false for anything that is not clearly a real restaurant photograph: playgrounds, race tracks, amusement parks, sports, gyms, nature/landscapes, generic people, stock photos, other restaurants/brands, screenshots, text/logos, documents, or low-quality/blurry images. Set is_relevant=true only if the image clearly shows a restaurant interior, food/dishes/drinks/plating, or people dining/staff in a restaurant setting.
 Return strict JSON.`;
 
 const ANALYSIS_SCHEMA = {
@@ -171,6 +171,69 @@ const ANALYSIS_SCHEMA = {
   },
   required: ['categories', 'description', 'is_relevant', 'quality_score'],
 };
+
+const RELEVANCE_PROMPT = `You are a strict gatekeeper for the Bogèst restaurant photo archive. Bogèst is a Belgian grillhouse / steakhouse restaurant with locations in Hasselt, Borgloon and Heusden-Zolder. It serves grilled meats, steaks, spare ribs, Belgian classics, wine and beer. It is a RESTAURANT ONLY — it does NOT have playgrounds, race tracks, amusement parks, bowling, arcades, sports facilities, pools or outdoor activities.
+
+Look ONLY at the image (ignore any search context). Decide whether it could genuinely be a real photograph taken inside or of a Bogèst restaurant. Be conservative and skeptical — do NOT assume relevance.
+
+Set is_relevant = TRUE only if the image clearly shows:
+- A restaurant interior (dining room, bar, kitchen, terrace, veranda, tables, decoration)
+- Restaurant food, dishes, drinks, plating or a table setting
+- People dining, staff, chefs or guests socializing in a restaurant setting
+- The exterior / building / signage of a Bogèst restaurant
+
+Set is_relevant = FALSE for anything a restaurant would NOT have — playgrounds, indoor play structures, race tracks, go-karts, amusement parks, bowling, arcades, trampolines, sports, gyms, pools, nature/landscapes without the restaurant, generic people, models, stock photos, other restaurants/brands, screenshots, text/logo graphics, documents, or low-quality/blurry images.
+
+Give a confidence score 0-100. Return strict JSON.`;
+
+const RELEVANCE_SCHEMA = {
+  type: 'object',
+  properties: {
+    is_relevant: { type: 'boolean' },
+    confidence: { type: 'number' },
+    reason: { type: 'string' },
+  },
+  required: ['is_relevant', 'confidence'],
+};
+
+// Strict Bogèst relevance gate. Fails open on API errors so the curator still runs.
+async function verifyRelevance(base44, imageUrl) {
+  try {
+    const v = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      model: 'gemini_3_flash',
+      prompt: RELEVANCE_PROMPT,
+      file_urls: [imageUrl],
+      response_json_schema: RELEVANCE_SCHEMA,
+    });
+    if (!v) return { relevant: true };
+    const conf = Number(v.confidence);
+    return { relevant: v.is_relevant === true && Number.isFinite(conf) && conf >= 65 };
+  } catch {
+    return { relevant: true };
+  }
+}
+
+// SerpApi google_images helper — shared by targeted search and library fill.
+async function serpImageSearch(query, apiKey, num) {
+  try {
+    const endpoint = 'https://serpapi.com/search?engine=google_images&q=' + encodeURIComponent(query) + '&api_key=' + encodeURIComponent(apiKey) + '&ijn=0';
+    const res = await fetch(endpoint, { signal: AbortSignal.timeout(20000) });
+    if (!res.ok) return [];
+    const data = await res.json();
+    if (data.error) return [];
+    const out = [];
+    for (const item of data.images_results || []) {
+      const link = item.original;
+      if (!link) continue;
+      if (!/\.(jpg|jpeg|png|webp)(\?|$)/i.test(link)) continue;
+      out.push(link);
+      if (out.length >= num) break;
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 function imageDimensions(buf) {
@@ -384,10 +447,29 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
   const stats = { theme: themeLabel, candidates: candidates.length, fetched: 0, stored: 0, skippedDup: 0, skippedFilter: 0, rejected: 0, errors: 0 };
   const fetchCap = limit * 8;
   const VALID_LOCS = new Set(['hasselt', 'borgloon', 'heusden-zolder', 'unknown']);
+  const PHASH_THRESHOLD = 8;
+
+  // Load the archive ONCE for in-memory dedup — exact content hashes, perceptual
+  // hashes (compared against the full archive, not just recent records) and all
+  // known source URLs (so re-discovered links are skipped before even fetching).
+  const existing = await base44.asServiceRole.entities.AssetArchive.filter({}, '-created_date', 500);
+  const knownHashes = new Set();
+  const knownPhashes = [];
+  const knownUrls = new Set();
+  for (const r of existing || []) {
+    if (r.content_hash) knownHashes.add(r.content_hash);
+    if (r.phash) knownPhashes.push({ id: r.id, phash: r.phash });
+    if (r.source_url) knownUrls.add(r.source_url);
+    if (r.image_url) knownUrls.add(r.image_url);
+    for (const u of r.source_urls || []) knownUrls.add(u);
+  }
 
   for (const cand of candidates) {
     if (stats.stored >= limit) break;
     if (stats.fetched >= fetchCap) break;
+    // Skip URLs already in the archive — the biggest win against re-imports.
+    if (knownUrls.has(cand.url)) { stats.skippedDup++; continue; }
+    const trustedSource = cand.sourceType === 'seed' || cand.sourceType === 'instagram';
     try {
       const fetched = await fetchBytes(cand.url);
       stats.fetched++;
@@ -398,37 +480,36 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
       if (aspect < 0.8 || aspect > 2.0) { stats.skippedFilter++; continue; }
 
       const hash = await sha256Hex(fetched.buf);
+      if (knownHashes.has(hash)) { stats.skippedDup++; continue; }
 
-      // Exact duplicate → merge source reference into the master, keep best copy
-      const exact = await base44.asServiceRole.entities.AssetArchive.filter({ content_hash: hash }, '-created_date', 1);
-      if (exact && exact.length) {
-        await mergeSource(base44, exact[0], cand.url, dims, fetched, null);
-        stats.skippedDup++;
-        continue;
-      }
-
-      // Near-duplicate (perceptual hash) → merge source, prefer highest quality
+      // Near-duplicate (perceptual hash) against the full archive.
       const phash = await computePHash(fetched.buf, fetched.ct);
       if (phash) {
-        try {
-          const recent = await base44.asServiceRole.entities.AssetArchive.filter({}, '-created_date', 200);
-          let bestD = 99, bestRec = null;
-          for (const rec of recent || []) {
-            if (!rec.phash) continue;
-            const d = hamming(phash, rec.phash);
-            if (d < bestD) { bestD = d; bestRec = rec; }
-          }
-          if (bestRec && bestD <= 8) {
-            await mergeSource(base44, bestRec, cand.url, dims, fetched, phash);
-            stats.skippedDup++;
-            continue;
-          }
-        } catch {}
+        let bestD = 99, bestRec = null;
+        for (const rec of knownPhashes) {
+          const d = hamming(phash, rec.phash);
+          if (d < bestD) { bestD = d; bestRec = rec; }
+        }
+        if (bestRec && bestD <= PHASH_THRESHOLD) {
+          await mergeSource(base44, bestRec, cand.url, dims, fetched, phash);
+          knownUrls.add(cand.url);
+          if (!bestRec.phash) bestRec.phash = phash;
+          stats.skippedDup++;
+          continue;
+        }
       }
 
       const mirroredUrl = await mirrorImage(base44, fetched.buf, fetched.ct);
       const imageUrl = mirroredUrl || cand.url;
       const mirrored = !!mirroredUrl;
+
+      // Strict Bogèst relevance gate — the main defense against irrelevant
+      // imports (playgrounds, race tracks, stock photos). Trusted seeds/Instagram
+      // bypass it; discovered web images must pass.
+      if (!trustedSource) {
+        const gate = await verifyRelevance(base44, imageUrl);
+        if (!gate.relevant) { stats.rejected++; continue; }
+      }
 
       const analysis = await base44.asServiceRole.integrations.Core.InvokeLLM({
         model: 'gemini_3_flash',
@@ -449,7 +530,7 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
         return 'branding';
       })();
       const orientation = dims ? (dims.w / dims.h > 1.15 ? 'landscape' : dims.w / dims.h < 0.87 ? 'portrait' : 'square') : 'unknown';
-      await base44.asServiceRole.entities.AssetArchive.create({
+      const created = await base44.asServiceRole.entities.AssetArchive.create({
         content_hash: hash,
         source_url: cand.url,
         source_urls: [cand.url],
@@ -475,6 +556,9 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
         phash: phash || '',
         status: 'active',
       });
+      knownHashes.add(hash);
+      knownUrls.add(cand.url);
+      if (phash && created?.id) knownPhashes.push({ id: created.id, phash });
       stats.stored++;
     } catch {
       stats.errors++;
@@ -606,6 +690,41 @@ export default async function (req) {
       const limit = Math.max(1, Math.min(30, Number(body.limit) || 10));
       const stats = await processCandidates(base44, cands, limit, 'web');
       return Response.json({ ok: true, auto: true, sites: AUTO_SITES.length, candidates: cands.length, ...stats });
+    }
+
+    // Library fill via SerpApi — broad Bogèst queries, same engine as targeted
+    // search. Dedup + relevance gate + auto-import via the shared pipeline.
+    if (body.fill) {
+      const apiKey = secrets.get('SERPAPI_API_KEY');
+      if (!apiKey) return Response.json({ error: 'SERPAPI_API_KEY not configured' }, { status: 500 });
+      const FILL_QUERIES = [
+        'Bogèst restaurant Hasselt', 'Bogèst restaurant Borgloon', 'Bogèst restaurant Heusden-Zolder',
+        'Bogèst grillhouse interior', 'Bogèst steak dishes', 'Bogèst restaurant food',
+        'Bogèst terras veranda', 'Bogèst restaurant Belgium',
+      ];
+      const seen = new Set();
+      const cands = [];
+      for (const q of FILL_QUERIES) {
+        const links = await serpImageSearch(q, apiKey, 10);
+        for (const u of links) if (!seen.has(u)) { seen.add(u); cands.push({ url: u, sourceType: 'web', query: q, sourcePlatform: 'SerpApi' }); }
+      }
+      const limit = Math.max(1, Math.min(40, Number(body.limit) || 15));
+      const stats = await processCandidates(base44, cands, limit, 'fill');
+      return Response.json({ ok: true, fill: true, candidates: cands.length, ...stats });
+    }
+
+    // Targeted SerpApi search — a free-text query (category / tag based) → import.
+    if (body.serpQuery) {
+      const apiKey = secrets.get('SERPAPI_API_KEY');
+      if (!apiKey) return Response.json({ error: 'SERPAPI_API_KEY not configured' }, { status: 500 });
+      const q = String(body.serpQuery || '').trim();
+      if (!q) return Response.json({ error: 'Empty query' }, { status: 400 });
+      const num = Math.max(1, Math.min(30, Number(body.num) || 12));
+      const links = await serpImageSearch(q, apiKey, num);
+      const cands = links.map((u) => ({ url: u, sourceType: 'web', query: q, sourcePlatform: 'SerpApi' }));
+      const limit = Math.max(1, Math.min(20, Number(body.limit) || 8));
+      const stats = await processCandidates(base44, cands, limit, 'serp');
+      return Response.json({ ok: true, serpQuery: q, candidates: cands.length, ...stats });
     }
 
     // Import a specific list of image URLs (e.g. from Google Custom Search) →
