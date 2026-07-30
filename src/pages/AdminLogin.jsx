@@ -22,7 +22,8 @@ export default function AdminLogin() {
     setTimeout(() => {
       if (username === ADMIN_USER && password === ADMIN_PASS) {
         sessionStorage.setItem('bogest-admin-auth', '1');
-        navigate('/admin');
+        const redirect = new URLSearchParams(window.location.search).get('redirect');
+        navigate(redirect || '/admin');
       } else {
         setError('Ongeldige inloggegevens. Probeer opnieuw.');
       }

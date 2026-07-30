@@ -74,8 +74,17 @@ export default function AdminPanel({ onClose, onChanged }) {
     setImporting(true);
     setImportResult(null);
     try {
-      const res = await base44.functions.invoke('discoverAssets', { importUrls: urls });
-      setImportResult(res.data);
+      // 1) Vision-filter — alleen relevante Bogèst-foto's behouden
+      const filterRes = await base44.functions.invoke('visionFilterAssets', { urls });
+      const good = (filterRes.data?.goede_fotos || []).map((g) => g.url);
+      if (!good.length) {
+        setImportResult({ error: `Geen relevante Bogèst-foto's na vision-filter (${filterRes.data?.errors?.length || 0} fouten).`, filtered: 0, total: urls.length });
+        setImporting(false);
+        return;
+      }
+      // 2) Importeer de goedgekeurde foto's in de beeldbank
+      const res = await base44.functions.invoke('discoverAssets', { importUrls: good });
+      setImportResult({ ...res.data, filtered: good.length, total: urls.length, skippedFilter: urls.length - good.length });
       onChanged?.();
     } catch (e) {
       setImportResult({ error: e?.response?.data?.error || e?.message || 'Importeren mislukt' });
@@ -169,7 +178,9 @@ export default function AdminPanel({ onClose, onChanged }) {
                 </div>
                 {importResult && (
                   <p className="font-body text-[11px] mt-2 text-primary">
-                    {importResult.error ? importResult.error : `${importResult.stored} geïmporteerd · ${importResult.skippedDup} duplicaten`}
+                    {importResult.error
+                      ? importResult.error
+                      : `${importResult.stored} geïmporteerd · ${importResult.skippedDup || 0} duplicaten · ${importResult.filtered}/${importResult.total} door vision-filter`}
                   </p>
                 )}
               </div>

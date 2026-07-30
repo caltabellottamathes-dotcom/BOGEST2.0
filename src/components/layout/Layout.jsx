@@ -14,6 +14,7 @@ import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 export default function Layout() {
   const location = useLocation();
   const isPanel = isPanelPath(location.pathname);
+  const isAssets = location.pathname === '/assets';
   const frozenScrollRef = useRef(0);
 
   // When a panel opens: save scroll position and lock the page in place
@@ -80,14 +81,14 @@ export default function Layout() {
       {/* Central website-action dispatcher bridge (wires router → actions) */}
       <WebsiteDispatcherBridge />
 
-      {/* Digital Host — visible on all pages */}
-      <DigitalHost />
+      {/* Digital Host — hidden on the internal Beeldbank */}
+      {!isAssets && <DigitalHost />}
 
-      {/* ElevenLabs Conversational AI Widget — floating on the bottom-right */}
-      <ElevenLabsAgent />
+      {/* ElevenLabs Conversational AI Widget — hidden on the internal Beeldbank */}
+      {!isAssets && <ElevenLabsAgent />}
 
-      {/* Floating welcome video — replaces the D-ID widget, bottom-right */}
-      <FloatingVideo />
+      {/* Floating welcome video — hidden on the internal Beeldbank */}
+      {!isAssets && <FloatingVideo />}
 
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />

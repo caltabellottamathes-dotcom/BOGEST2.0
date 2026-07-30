@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -9,7 +9,7 @@ import { ThemeProvider } from '@/lib/ThemeContext';
 import { LangProvider } from '@/lib/LangContext';
 import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import AdminGate from '@/components/AdminGate';
 import BogestLogo from '@/components/BogestLogo';
 
 import Home from '@/pages/Home';
@@ -32,6 +32,7 @@ import PowderBluePreview from '@/pages/PowderBluePreview';
 import Instagram from '@/pages/Instagram';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import Assets from '@/pages/Assets';
+import AdminLogin from '@/pages/AdminLogin';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -54,6 +55,7 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
+      <Route path="/admin-login" element={<AdminLogin />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
@@ -74,7 +76,7 @@ const AuthenticatedApp = () => {
         <Route path="/powder-blue-preview" element={<PowderBluePreview />} />
         <Route path="/instagram" element={<Instagram />} />
         <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
-        <Route element={<ProtectedRoute unauthenticatedElement={<Navigate to="/login" replace />} />}>
+        <Route element={<AdminGate />}>
           <Route path="/assets" element={<Assets />} />
         </Route>
       </Route>
