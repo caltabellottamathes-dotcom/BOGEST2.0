@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Instagram as InstagramIcon } from 'lucide-react';
 import PanelHero from '@/components/PanelHero';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 import { bogestImages } from '@/lib/bogestImages';
 
 export default function About() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
 
   const cards = [
     {
@@ -14,7 +16,7 @@ export default function About() {
       num: '01',
       title: 'Ons verhaal',
       desc: 'Ontdek de mensen, de sfeer en de filosofie achter Bogèst.',
-      image: bogestImages.interiors[0],
+      image: siteImg('about.card1'),
       cta: 'Lees verder',
     },
     {
@@ -22,14 +24,14 @@ export default function About() {
       num: '02',
       title: 'Achter de schermen',
       desc: 'Sfeerbeelden en momenten vanuit onze vestigingen — live op Instagram.',
-      image: bogestImages.bar[1],
+      image: siteImg('about.card2'),
       cta: 'Bekijk',
     },
   ];
 
   return (
     <div className="w-full">
-      <PanelHero label={t('nav_about')} title={t('about_title_main')} titleAccent="Bogèst" bgImage={bogestImages.interiors[3]} />
+      <PanelHero label={t('nav_about')} title={t('about_title_main')} titleAccent="Bogèst" positionKey="about.hero" />
 
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">

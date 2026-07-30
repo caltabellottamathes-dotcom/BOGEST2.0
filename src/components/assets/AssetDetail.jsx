@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2, Globe } from 'lucide-react';
+import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2, Globe, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReplaceOnWebsitePanel from '@/components/assets/ReplaceOnWebsitePanel';
 import {
@@ -44,6 +44,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   const [copied, setCopied] = useState(false);
   const [activeGroup, setActiveGroup] = useState('food');
   const [showReplace, setShowReplace] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
 
   useEffect(() => {
     if (!asset) return;
@@ -70,6 +71,17 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   if (!asset) return null;
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const analyze = async () => {
+    setAnalyzing(true);
+    try {
+      const res = await base44.functions.invoke('analyzeAsset', { asset_id: asset.id });
+      onSaved?.(res.data?.asset);
+    } catch {
+      alert('Analyse mislukt');
+    }
+    setAnalyzing(false);
+  };
 
   const toggleCategory = (path) => {
     setForm((f) => {
@@ -157,6 +169,12 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
               <ExternalLink className="w-4 h-4" />
             </a>
           </div>
+
+          {asset.ai_analyzed !== true && (
+            <button onClick={analyze} disabled={analyzing} className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:bg-primary/90 transition-colors mb-3 disabled:opacity-50">
+              {analyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met analyseren…</> : <><Sparkles className="w-4 h-4" /> Analyseer nu</>}
+            </button>
+          )}
 
           <button onClick={() => setShowReplace(true)} className="w-full flex items-center justify-center gap-2 bg-primary/10 border border-primary/40 text-primary text-sm py-2.5 rounded-lg hover:bg-primary/15 transition-colors mb-6">
             <Globe className="w-4 h-4" /> Vervang op website

@@ -4,6 +4,7 @@ import { MapPin, Phone, Mail, Users, Clock, Car, ArrowUpRight, Sparkles } from '
 import RestaurantPanel from '@/components/RestaurantPanel';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
 
 // ── Restaurant & spaces per location (nl / fr / en) ──────────────────────────
@@ -133,6 +134,7 @@ function StatCard({ icon: Icon, label, value }) {
 export default function LocationDetail() {
   const { slug } = useParams();
   const { t, lang } = useLang();
+  const { siteImg } = useSiteImages();
   const locations = getLocations(lang);
   const loc = locations.find(l => l.slug === slug);
   const [showRestaurantPanel, setShowRestaurantPanel] = useState(false);
@@ -204,7 +206,7 @@ export default function LocationDetail() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative w-full overflow-hidden">
         <div className="relative h-[58vh] min-h-[380px] w-full">
-          <img src={loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
+          <img src={siteImg('location.' + slug) || loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 4%, hsl(var(--background) / 0.35) 42%, rgba(0,0,0,0.45) 100%)' }} />
           <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-10 md:pb-14">
             <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-3 block">{t('nav_locations')} · {loc.region}</span>
@@ -258,7 +260,7 @@ export default function LocationDetail() {
               <SectionReveal key={space.name} delay={i * 0.07}>
                 <div className="group rounded-2xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-300 bg-card h-full flex flex-col">
                   <div className="h-44 overflow-hidden">
-                    <img src={space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
                   </div>
                   <div className="p-5 flex-1 flex flex-col">
                     <div className="flex items-start justify-between gap-3 mb-1">

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Users } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 const SPACES_DATA = {
   nl: {
@@ -104,6 +105,7 @@ const SPACES_DATA = {
 export default function RestaurantSpaces() {
   const { location } = useParams();
   const { lang } = useLang();
+  const { siteImg } = useSiteImages();
   const data = SPACES_DATA[lang]?.[location];
 
   if (!data) return <div className="p-6 text-center">Restaurant not found</div>;
@@ -125,7 +127,7 @@ export default function RestaurantSpaces() {
               <div className="rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-colors"
                 style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <div className="h-48 overflow-hidden">
-                  <img src={space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                  <img src={siteImg('space.' + location + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="p-5 md:p-6">
                   <div className="flex items-center justify-between mb-2">

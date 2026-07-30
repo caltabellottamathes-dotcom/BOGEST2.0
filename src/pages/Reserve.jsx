@@ -33,7 +33,7 @@ export default function Reserve() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802728-7LJYOC6YHA2PJVKIDKGG/bar+foto.jpeg" />
+      <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} positionKey="reserve.hero" />
 
       {/* Location picker */}
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">

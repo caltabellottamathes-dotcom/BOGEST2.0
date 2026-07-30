@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 import PanelHero from '@/components/PanelHero';
 
 const LOCATIONS_I18N = {
@@ -136,6 +137,7 @@ const LOCATIONS_I18N = {
 function LocationPanel({ loc }) {
   const [open, setOpen] = useState(false);
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
 
   return (
     <div className="rounded-2xl border border-border overflow-hidden transition-all duration-300"
@@ -147,7 +149,7 @@ function LocationPanel({ loc }) {
       <button onClick={() => !loc.comingSoon && setOpen(o => !o)}
         className={`w-full text-left flex items-center gap-5 p-5 transition-all duration-300 ${loc.comingSoon ? 'cursor-default opacity-60' : 'hover:bg-white/[0.03]'}`}>
         <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
-          <img src={loc.image} alt={loc.name} className="w-full h-full object-cover" />
+          <img src={siteImg('location.' + loc.id) || loc.image} alt={loc.name} className="w-full h-full object-cover" />
           {loc.comingSoon && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
               <span className="font-body text-[8px] text-white tracking-widest uppercase text-center">{t('loc_coming_soon')}</span>
@@ -194,11 +196,11 @@ function LocationPanel({ loc }) {
                 <>
                   <h4 className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-4">{t('loc_spaces')}</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                    {loc.spaces.map(space => (
+                    {loc.spaces.map((space, i) => (
                       <div key={space.name} className="rounded-xl overflow-hidden"
                         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                         <div className="h-36 overflow-hidden">
-                          <img src={space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                          <img src={siteImg('space.' + loc.id + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                         </div>
                         <div className="p-4">
                           <div className="flex items-center justify-between mb-1.5">
@@ -238,6 +240,7 @@ function LocationPanel({ loc }) {
 
 export default function Groups() {
   const { t, lang } = useLang();
+  const { siteImg } = useSiteImages();
   const LOCATIONS = LOCATIONS_I18N[lang] || LOCATIONS_I18N.nl;
   const [form, setForm] = useState({ name: '', email: '', phone: '', guests: '', location: '', date: '', notes: '' });
   const [success, setSuccess] = useState(false);
@@ -259,7 +262,7 @@ export default function Groups() {
 
   return (
     <div className="w-full">
-      <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg" />
+      <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} positionKey="groups.hero" />
 
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-16">
         <SectionReveal className="mb-6">

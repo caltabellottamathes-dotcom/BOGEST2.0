@@ -21,7 +21,7 @@ export default function Takeaway() {
   return (
     <div className="w-full min-h-screen">
 
-      <PanelHero label={t('ta_panel_label')} title="Bogèst" titleAccent={t('ta_panel_accent')} subtitle={t('ta_panel_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg" />
+      <PanelHero label={t('ta_panel_label')} title="Bogèst" titleAccent={t('ta_panel_accent')} subtitle={t('ta_panel_subtitle')} positionKey="takeaway.hero" />
 
       {/* ── Highlights ───────────────────────────────────────── */}
       <section className="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24">

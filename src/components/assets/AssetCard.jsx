@@ -44,6 +44,11 @@ export default function AssetCard({ asset, onClick }) {
           ★ {asset.collections.length}
         </span>
       )}
+      {asset.ai_analyzed !== true && (
+        <span className="absolute bottom-2 left-2 text-[9px] px-1.5 py-0.5 rounded-full bg-amber-500 text-black backdrop-blur-sm font-medium">
+          Niet geanalyseerd
+        </span>
+      )}
     </button>
   );
 }

@@ -1,23 +1,40 @@
 import React, { useState, useMemo } from 'react';
 import { X, Globe, Check, RotateCcw, Loader2 } from 'lucide-react';
 import { useSiteImages } from '@/lib/SiteImageContext';
-import { SITE_IMAGE_GROUPS } from '@/lib/siteImages';
+import { SITE_PAGES } from '@/lib/siteImages';
 
 // "Vervang op website" — structured map of every replaceable image position
-// on the live site, grouped by section. The admin clicks a position to place
-// the currently selected Beeldbank photo there; the live site reflects it.
+// on the live site. A page selector at the top filters the positions to just
+// that page. The admin clicks a position to place the selected Beeldbank
+// photo there; the live site reflects it immediately.
 export default function ReplaceOnWebsitePanel({ asset, onClose }) {
   const { positions, setOverride, clearOverride } = useSiteImages();
-  const [busy, setBusy] = useState(null); // position_key being assigned
+  const [page, setPage] = useState('all');
+  const [busy, setBusy] = useState(null);
   const [justSet, setJustSet] = useState(null);
   const [resetting, setResetting] = useState(null);
 
+  const filtered = useMemo(
+    () => (page === 'all' ? positions : positions.filter((p) => p.pages.includes(page))),
+    [positions, page],
+  );
+
+  // Group by the page each position belongs to (first page, or the selected one).
   const grouped = useMemo(() => {
-    return SITE_IMAGE_GROUPS.map((group) => ({
-      group,
-      items: positions.filter((p) => p.group === group),
-    }));
-  }, [positions]);
+    if (page !== 'all') {
+      const pg = SITE_PAGES.find((p) => p.key === page);
+      return [{ page: pg?.label || page, items: filtered }];
+    }
+    const map = new Map();
+    for (const p of filtered) {
+      const pk = p.pages[0];
+      const pg = SITE_PAGES.find((s) => s.key === pk);
+      const label = pg?.label || pk;
+      if (!map.has(label)) map.set(label, []);
+      map.get(label).push(p);
+    }
+    return Array.from(map, ([page, items]) => ({ page, items }));
+  }, [filtered, page]);
 
   const assign = async (pos) => {
     setBusy(pos.key);
@@ -63,17 +80,47 @@ export default function ReplaceOnWebsitePanel({ asset, onClose }) {
             <div className="min-w-0 flex-1">
               <p className="font-body text-sm text-foreground line-clamp-2 leading-snug">{asset.description || 'Beeldbank-foto'}</p>
               <p className="font-body text-[11px] text-muted-foreground mt-1">
-                Klik op een positie hieronder om deze foto daar te plaatsen.
+                Kies eerst een pagina hieronder, en klik op de positie waar u deze foto wilt plaatsen.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Structured map — grouped by section */}
+        {/* Page selector */}
+        <div className="px-5 py-3 border-b border-border bg-background/60">
+          <p className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-2">Pagina</p>
+          <div className="flex gap-1.5 overflow-x-auto pb-1 -mx-1 px-1">
+            <button
+              onClick={() => setPage('all')}
+              className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs transition-colors ${page === 'all' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted border border-border'}`}
+            >
+              Alle pagina's
+            </button>
+            {SITE_PAGES.map((p) => {
+              const count = positions.filter((pos) => pos.pages.includes(p.key)).length;
+              if (!count) return null;
+              const active = page === p.key;
+              return (
+                <button
+                  key={p.key}
+                  onClick={() => setPage(p.key)}
+                  className={`whitespace-nowrap px-3 py-1.5 rounded-full text-xs transition-colors ${active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted border border-border'}`}
+                >
+                  {p.label} <span className={`ml-0.5 ${active ? 'opacity-70' : 'opacity-50'}`}>{count}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Structured map */}
         <div className="flex-1 px-5 py-4 space-y-6">
-          {grouped.map(({ group, items }) => (
-            <div key={group}>
-              <p className="font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2.5">{group}</p>
+          {grouped.length === 0 && (
+            <p className="font-body text-sm text-muted-foreground text-center py-12">Geen posities op deze pagina.</p>
+          )}
+          {grouped.map(({ page: pg, items }) => (
+            <div key={pg}>
+              <p className="font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground mb-2.5">{pg}</p>
               <div className="grid grid-cols-2 gap-2.5">
                 {items.map((pos) => {
                   const isBusy = busy === pos.key;

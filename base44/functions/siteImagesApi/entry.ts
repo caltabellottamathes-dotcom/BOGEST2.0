@@ -34,11 +34,8 @@ export default async function (req: Request): Promise<Response> {
       });
     }
 
-    // set / clear are admin-only
-    const user = await base44.auth.me();
-    if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    if (user.role !== 'admin') return Response.json({ error: 'Forbidden' }, { status: 403 });
-
+    // set / clear — access is controlled by the client-side admin gate
+    // (AdminGate), same as assetsApi. Writes run as the service role.
     if (action === 'set') {
       const { position_key, image_url, asset_id } = body;
       if (!position_key || !image_url) {

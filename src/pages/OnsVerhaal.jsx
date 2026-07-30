@@ -3,34 +3,36 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import PanelHero from '@/components/PanelHero';
 import { useLang } from '@/lib/LangContext';
+import { useSiteImages } from '@/lib/SiteImageContext';
 import { bogestImages } from '@/lib/bogestImages';
 
 export default function OnsVerhaal() {
   const { t } = useLang();
+  const { siteImg } = useSiteImages();
 
   const story = [
-    { num: '01', title: t('about_s1_title'), text: t('about_s1_text'), image: bogestImages.interiors[1] },
-    { num: '02', title: t('about_s2_title'), text: t('about_s2_text'), image: bogestImages.bar[1] },
-    { num: '03', title: t('about_s3_title'), text: t('about_s3_text'), image: bogestImages.interiors[0] },
-    { num: '04', title: t('about_s4_title'), text: t('about_s4_text'), image: bogestImages.interiors[2] },
+    { num: '01', title: t('about_s1_title'), text: t('about_s1_text'), image: siteImg('onsverhaal.story.0') },
+    { num: '02', title: t('about_s2_title'), text: t('about_s2_text'), image: siteImg('onsverhaal.story.1') },
+    { num: '03', title: t('about_s3_title'), text: t('about_s3_text'), image: siteImg('onsverhaal.story.2') },
+    { num: '04', title: t('about_s4_title'), text: t('about_s4_text'), image: siteImg('onsverhaal.story.3') },
   ];
 
   const pillars = [
-    { num: '01', title: t('about_p1_title'), text: t('about_p1_text'), image: bogestImages.chicken[0] },
-    { num: '02', title: t('about_p2_title'), text: t('about_p2_text'), image: bogestImages.beef[2] },
-    { num: '03', title: t('about_p3_title'), text: t('about_p3_text'), image: bogestImages.fish[0] },
+    { num: '01', title: t('about_p1_title'), text: t('about_p1_text'), image: siteImg('onsverhaal.pillar.0') },
+    { num: '02', title: t('about_p2_title'), text: t('about_p2_text'), image: siteImg('onsverhaal.pillar.1') },
+    { num: '03', title: t('about_p3_title'), text: t('about_p3_text'), image: siteImg('onsverhaal.pillar.2') },
   ];
 
   const locations = [
-    { city: 'Hasselt', sub: 'Wimmertingen', slug: 'hasselt', img: bogestImages.interiors[0] },
-    { city: 'Borgloon', sub: 'Graethempoort', slug: 'borgloon', img: bogestImages.interiors[1] },
-    { city: 'Heusden-Zolder', sub: 'Stationsstraat', slug: 'heusden-zolder', img: bogestImages.interiors[2] },
-    { city: 'Lommel', sub: t('about_coming_soon'), slug: null, img: bogestImages.interiors[2], soon: true },
+    { city: 'Hasselt', sub: 'Wimmertingen', slug: 'hasselt', img: siteImg('onsverhaal.loc.0') },
+    { city: 'Borgloon', sub: 'Graethempoort', slug: 'borgloon', img: siteImg('onsverhaal.loc.1') },
+    { city: 'Heusden-Zolder', sub: 'Stationsstraat', slug: 'heusden-zolder', img: siteImg('onsverhaal.loc.2') },
+    { city: 'Lommel', sub: t('about_coming_soon'), slug: null, img: siteImg('onsverhaal.loc.3'), soon: true },
   ];
 
   return (
     <div className="w-full">
-      <PanelHero label={t('about_story_label')} title="Ons verhaal" titleAccent="Bogèst" bgImage={bogestImages.interiors[3]} />
+      <PanelHero label={t('about_story_label')} title="Ons verhaal" titleAccent="Bogèst" positionKey="onsverhaal.hero" />
 
       {/* Back to Over ons */}
       <div className="w-full px-6 md:px-10 lg:px-16 pt-6">

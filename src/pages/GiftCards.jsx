@@ -30,7 +30,7 @@ export default function GiftCards() {
   return (
     <div className="w-full min-h-screen">
 
-      <PanelHero label={t('gc_panel_label')} title={t('gc_panel_title')} titleAccent={t('gc_panel_accent')} subtitle={t('gc_panel_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg" />
+      <PanelHero label={t('gc_panel_label')} title={t('gc_panel_title')} titleAccent={t('gc_panel_accent')} subtitle={t('gc_panel_subtitle')} positionKey="giftcards.hero" />
 
       {/* ── Highlights ───────────────────────────────────────── */}
       <section className="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24">

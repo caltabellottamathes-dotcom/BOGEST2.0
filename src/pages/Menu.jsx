@@ -10,7 +10,7 @@ import PanelHero from '@/components/PanelHero';
 function PageHero() {
   const { t } = useLang();
   return (
-    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg">
+    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} positionKey="menu.hero">
       <div className="inline-flex items-center gap-3 px-4 py-2.5 bg-primary/8 rounded-lg border border-primary/15 mt-5">
         <span className="font-body text-xs text-muted-foreground">{t('menu_formula_label')}</span>
         <span className="font-body text-sm text-foreground font-medium">{t('menu_formula')}</span>

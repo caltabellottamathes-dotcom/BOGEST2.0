@@ -1,13 +1,16 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
-export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage }) {
+export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage, positionKey }) {
+  const { siteImg } = useSiteImages();
+  const bg = positionKey ? siteImg(positionKey) : bgImage;
   return (
     <section className="relative w-full pt-20 md:pt-36 pb-16 md:pb-24 px-6 md:px-10 lg:px-16 border-b border-border/40 overflow-hidden">
       {/* Background photo */}
-      {bgImage && (
+      {bg && (
         <div className="absolute inset-0 z-0">
-          <img src={bgImage} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <img src={bg} alt="" className="w-full h-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-background/80 pointer-events-none" />
         </div>
       )}

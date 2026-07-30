@@ -221,7 +221,7 @@ export default function Jobs() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('job_label')} title={t('job_title')} titleAccent="kom erbij" subtitle={t('job_subtitle')} bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802744-PRS75L0LKF5TIBCFBON6/koelcel.jpg" />
+      <PanelHero label={t('job_label')} title={t('job_title')} titleAccent="kom erbij" subtitle={t('job_subtitle')} positionKey="jobs.hero" />
 
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">

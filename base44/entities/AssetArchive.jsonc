@@ -144,6 +144,11 @@
       ],
       "default": "active"
     },
+    "ai_analyzed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether AI analysis (description, categories, tags, mood, quality) has been run on this asset. Quick-uploaded assets start false until manually analysed."
+    },
     "collections": {
       "type": "array",
       "items": {
