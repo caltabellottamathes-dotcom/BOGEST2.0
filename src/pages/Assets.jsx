@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Images, Sparkles, Loader2, Filter, Link2, ArrowDownWideNarrow, Rocket } from 'lucide-react';
+import { Images, Sparkles, Loader2, Filter, Link2, ArrowDownWideNarrow, Rocket, Globe } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import AssetCard from '@/components/assets/AssetCard';
 
@@ -21,6 +21,7 @@ export default function Assets() {
   const [showExport, setShowExport] = useState(false);
   const [discovery, setDiscovery] = useState({ theme: 'gastronomy', limit: 3, useWebSearch: false, running: false, result: null, error: null });
   const [kickstart, setKickstart] = useState({ limit: 15, running: false, result: null, error: null });
+  const [webDiscovery, setWebDiscovery] = useState({ running: false, result: null, error: null });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -70,6 +71,27 @@ export default function Assets() {
     } catch (e) {
       const msg = e?.response?.data?.error || e?.message || 'Kickstart mislukt';
       setKickstart((k) => ({ ...k, error: msg, running: false }));
+    }
+  };
+
+  const runWebDiscovery = async () => {
+    setWebDiscovery((w) => ({ ...w, running: true, result: null, error: null }));
+    try {
+      const res = await base44.functions.invoke('discoverAssets', { web: true, limit: 8 });
+      setWebDiscovery((w) => ({ ...w, result: res.data, running: false }));
+      load();
+    } catch (e) {
+      const msg = e?.response?.data?.error || e?.message || 'Zoekopdracht mislukt';
+      setWebDiscovery((w) => ({ ...w, error: msg, running: false }));
+    }
+  };
+
+  const deleteAsset = async (id) => {
+    try {
+      await base44.functions.invoke('assetsApi', { action: 'delete', id });
+      setAssets((prev) => prev.filter((a) => a.id !== id));
+    } catch {
+      alert('Verwijderen mislukt');
     }
   };
 
@@ -215,6 +237,31 @@ export default function Assets() {
             )}
             {discovery.error && <p className="font-body text-[11px] text-destructive mt-2">{discovery.error}</p>}
           </div>
+
+          {/* Openbaar web doorzoeken */}
+          <div className="rounded-xl border border-border p-4 bg-card/40">
+            <div className="flex items-center gap-2 mb-2">
+              <Globe className="w-3.5 h-3.5 text-primary" />
+              <h3 className="font-body text-[10px] tracking-[0.25em] uppercase text-primary">Openbaar web doorzoeken</h3>
+            </div>
+            <p className="font-body text-[11px] text-muted-foreground mb-3">Zoekt op het openbare internet (reviews, blogs, nieuws, social) naar nieuwe Bogèst-foto's.</p>
+            <button
+              onClick={runWebDiscovery}
+              disabled={webDiscovery.running}
+              className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2 rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            >
+              {webDiscovery.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig…</> : <><Globe className="w-4 h-4" /> Doorzoeken</>}
+            </button>
+            {webDiscovery.running && <p className="font-body text-[11px] text-muted-foreground mt-2">Dit kan een minuut duren…</p>}
+            {webDiscovery.result && (
+              <p className="font-body text-[11px] text-primary mt-2">
+                {webDiscovery.result.stored != null
+                  ? `${webDiscovery.result.stored} toegevoegd · ${webDiscovery.result.candidates} kandidaten`
+                  : 'Klaar'}
+              </p>
+            )}
+            {webDiscovery.error && <p className="font-body text-[11px] text-destructive mt-2">{webDiscovery.error}</p>}
+          </div>
         </aside>
 
         {/* Gallery */}
@@ -231,7 +278,7 @@ export default function Assets() {
           ) : (
             <div className="columns-1 sm:columns-2 xl:columns-3 gap-4">
               {filtered.map((a) => (
-                <AssetCard key={a.id} asset={a} showExport={showExport} />
+                <AssetCard key={a.id} asset={a} showExport={showExport} onDelete={deleteAsset} />
               ))}
             </div>
           )}

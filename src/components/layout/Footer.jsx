@@ -178,7 +178,7 @@ export default function Footer() {
               </a>.
             </p>
           </div>
-          <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end">
+          <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end md:pr-32">
             <Link to="/privacy" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_privacy')}
             </Link>

@@ -4,11 +4,26 @@
   "properties": {
     "content_hash": {
       "type": "string",
-      "description": "SHA-256 of the image bytes \u2014 used as the dedup key"
+      "description": "SHA-256 of the image bytes \u2014 exact-duplicate key"
+    },
+    "phash": {
+      "type": "string",
+      "description": "64-bit perceptual (average) hash for near-duplicate detection"
     },
     "source_url": {
       "type": "string",
-      "description": "Original URL where the image was discovered"
+      "description": "Primary URL where the image was first discovered"
+    },
+    "source_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "All public URLs where this (near-)duplicate image was found"
+    },
+    "search_query": {
+      "type": "string",
+      "description": "Discovery query that surfaced this asset"
     },
     "image_url": {
       "type": "string",
@@ -29,6 +44,21 @@
         "branding"
       ],
       "description": "AI-assigned experience bucket"
+    },
+    "subcategory": {
+      "type": "string",
+      "description": "Fine-grained AI label (interior, exterior, terrace, kitchen, bar, starters, main_courses, desserts, wine, cocktails, coffee, day, evening, romantic, luxury, cosy, guests, staff, signage, menu, event, press)"
+    },
+    "location": {
+      "type": "string",
+      "enum": [
+        "hasselt",
+        "borgloon",
+        "heusden-zolder",
+        "unknown"
+      ],
+      "default": "unknown",
+      "description": "Inferred Bog\u00e8st location"
     },
     "description": {
       "type": "string",

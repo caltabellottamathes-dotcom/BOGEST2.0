@@ -101,12 +101,34 @@ const WEBSITE_IMAGES = [
   'https://images.unsplash.com/photo-1567206563064-6f60540aafc9?w=900&q=80',
 ];
 
-const CURATOR_PROMPT = `You are an expert brand curator for Bogèst, a premium Belgian grillhouse chain. Analyze the attached image and categorize it into exactly one of these 5 buckets: interiors, gastronomy, atmosphere, architecture, branding. Extract a detailed description (1-2 sentences), identify key objects, and define the mood. If the image is not relevant to Bogèst (generic stock, unrelated subject, low quality, screenshot/text), set is_relevant to false. Generate up to 6 lowercase tags for searchability. Return strict JSON.`;
+// Broad public-web discovery queries — rotate a few per run so the archive
+// keeps growing from review sites, blogs, news, travel & social without one
+// giant slow pass.
+const BROAD_QUERIES = [
+  'Bogèst Hasselt restaurant photos TripAdvisor Restaurant Guru Google Maps review',
+  'Bogèst Borgloon restaurant review blog photos food interior',
+  'Bogèst Heusden-Zolder grillhouse photos press blog review',
+  'Bogèst restaurant interior terrace veranda atmosphere images',
+  'Bogèst steak grill dishes menu photography food blog Belgium',
+  'Bogèst Hasselt Borgloon Heusden-Zolder opening event photos Limburg',
+  'Bogèst restaurant staff guests dining atmosphere photos',
+  'bogest.be restaurant photos news magazine Limburg Belgium',
+];
+
+const CURATOR_PROMPT = `You are an expert brand curator for Bogèst, a premium Belgian grillhouse chain with locations in Hasselt, Borgloon and Heusden-Zolder. Analyze the attached image and:
+1. Categorize it into exactly one primary bucket: interiors, gastronomy, atmosphere, architecture, branding.
+2. Assign a fine subcategory when applicable, choosing from: interior, exterior, terrace, kitchen, bar, starters, main_courses, desserts, wine, cocktails, coffee, day, evening, romantic, luxury, cosy, guests, staff, signage, menu, event, press. Use "" if none fits.
+3. Infer the Bogèst location if recognizable (hasselt, borgloon, heusden-zolder), else "unknown".
+4. Extract a detailed description (1-2 sentences), mood, dominant colors, and up to 6 lowercase tags.
+5. If the image is not relevant to Bogèst (generic stock, unrelated subject, low quality, screenshot/text), set is_relevant to false.
+Return strict JSON.`;
 
 const ANALYSIS_SCHEMA = {
   type: 'object',
   properties: {
     primary_category: { type: 'string', enum: ['interiors', 'gastronomy', 'atmosphere', 'architecture', 'branding'] },
+    subcategory: { type: 'string' },
+    location: { type: 'string', enum: ['hasselt', 'borgloon', 'heusden-zolder', 'unknown'] },
     description: { type: 'string' },
     tags: { type: 'array', items: { type: 'string' } },
     mood: { type: 'string' },
@@ -160,6 +182,76 @@ async function sha256Hex(buf) {
   return Array.from(new Uint8Array(digest)).map((x) => x.toString(16).padStart(2, '0')).join('');
 }
 
+function hamming(a, b) {
+  if (!a || !b || a.length !== b.length) return 99;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) d++;
+  return d;
+}
+
+// Best-effort perceptual hash (8×8 average hash). Decodes JPEG via jpeg-js and
+// PNG via upng-js when resolvable in the runtime; returns null otherwise (exact
+// + dimension dedup still run, so near-dup gracefully degrades to exact-dup).
+async function computePHash(buf, ct) {
+  let data = null, w = 0, h = 0;
+  try {
+    if ((ct || '').includes('png')) {
+      const mod = await import('npm:upng-js').catch(() => null);
+      if (!mod) return null;
+      const img = mod.decode(new Uint8Array(buf));
+      const frames = mod.toRGBA8 ? mod.toRGBA8(img) : null;
+      const bytes = frames ? frames[0] : (img.data || img);
+      w = img.width; h = img.height;
+      data = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes.buffer || bytes);
+    } else {
+      const mod = await import('npm:jpeg-js').catch(() => null);
+      if (!mod) return null;
+      const img = mod.decode(new Uint8Array(buf), { useTArray: true });
+      w = img.width; h = img.height; data = img.data;
+    }
+  } catch {
+    return null;
+  }
+  if (!data || !w || !h) return null;
+  const cell = new Float32Array(64);
+  const counts = new Float32Array(64);
+  const xstep = w / 8, ystep = h / 8;
+  for (let y = 0; y < h; y++) {
+    const cy = Math.min(7, Math.floor(y / ystep));
+    for (let x = 0; x < w; x++) {
+      const cx = Math.min(7, Math.floor(x / xstep));
+      const idx = (y * w + x) * 4;
+      const g = 0.299 * data[idx] + 0.587 * data[idx + 1] + 0.114 * data[idx + 2];
+      cell[cy * 8 + cx] += g;
+      counts[cy * 8 + cx]++;
+    }
+  }
+  let avg = 0;
+  for (let i = 0; i < 64; i++) { cell[i] = counts[i] ? cell[i] / counts[i] : 0; avg += cell[i]; }
+  avg /= 64;
+  let bits = '';
+  for (let i = 0; i < 64; i++) bits += cell[i] >= avg ? '1' : '0';
+  return bits;
+}
+
+// Merge a duplicate source into the master record, preferring the highest-
+// resolution version (re-mirror + update image_url when the new copy is larger).
+async function mergeSource(base44, master, newUrl, newDims, fetched, newPHash) {
+  try {
+    const srcs = Array.isArray(master.source_urls) ? [...master.source_urls] : [master.source_url].filter(Boolean);
+    if (newUrl && !srcs.includes(newUrl)) srcs.push(newUrl);
+    const update = { source_urls: srcs };
+    const newArea = (newDims.w || 0) * (newDims.h || 0);
+    const oldArea = (master.width || 0) * (master.height || 0);
+    if (fetched && newArea > oldArea) {
+      const mirroredUrl = await mirrorImage(base44, fetched.buf, fetched.ct);
+      if (mirroredUrl) { update.image_url = mirroredUrl; update.mirrored = true; update.width = newDims.w; update.height = newDims.h; }
+    }
+    if (newPHash && !master.phash) update.phash = newPHash;
+    await base44.asServiceRole.entities.AssetArchive.update(master.id, update);
+  } catch {}
+}
+
 function resolveUrl(u, base) {
   try { return new URL(u, base).href; } catch { return u; }
 }
@@ -211,7 +303,7 @@ async function buildCandidates(base44, themeKey, webSearch = false) {
   const t = THEMES[themeKey];
   if (!t) return [];
   const seen = new Set();
-  const push = (u, sourceType) => { if (u && !seen.has(u)) { seen.add(u); candidates.push({ url: u, sourceType }); } };
+  const push = (u, sourceType, query) => { if (u && !seen.has(u)) { seen.add(u); candidates.push({ url: u, sourceType, query: query || '' }); } };
   const candidates = [];
 
   // 1. Known Bogèst CDN seeds
@@ -246,7 +338,7 @@ async function buildCandidates(base44, themeKey, webSearch = false) {
         prompt,
         response_json_schema: { type: 'object', properties: { images: { type: 'array', items: { type: 'object', properties: { url: { type: 'string' }, source: { type: 'string' } } } } } },
       });
-      for (const img of res?.images || []) if (img.url) push(img.url, 'web');
+      for (const img of res?.images || []) if (img.url) push(img.url, 'web', t.queries.join(', '));
     } catch {}
   }
 
@@ -258,6 +350,7 @@ async function buildCandidates(base44, themeKey, webSearch = false) {
 async function processCandidates(base44, candidates, limit, themeLabel) {
   const stats = { theme: themeLabel, candidates: candidates.length, fetched: 0, stored: 0, skippedDup: 0, skippedFilter: 0, rejected: 0, errors: 0 };
   const fetchCap = limit * 8;
+  const VALID_LOCS = new Set(['hasselt', 'borgloon', 'heusden-zolder', 'unknown']);
 
   for (const cand of candidates) {
     if (stats.stored >= limit) break;
@@ -272,8 +365,33 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
       if (aspect < 0.8 || aspect > 2.0) { stats.skippedFilter++; continue; }
 
       const hash = await sha256Hex(fetched.buf);
-      const existing = await base44.asServiceRole.entities.AssetArchive.filter({ content_hash: hash }, '-created_date', 1);
-      if (existing && existing.length) { stats.skippedDup++; continue; }
+
+      // Exact duplicate → merge source reference into the master, keep best copy
+      const exact = await base44.asServiceRole.entities.AssetArchive.filter({ content_hash: hash }, '-created_date', 1);
+      if (exact && exact.length) {
+        await mergeSource(base44, exact[0], cand.url, dims, fetched, null);
+        stats.skippedDup++;
+        continue;
+      }
+
+      // Near-duplicate (perceptual hash) → merge source, prefer highest quality
+      const phash = await computePHash(fetched.buf, fetched.ct);
+      if (phash) {
+        try {
+          const recent = await base44.asServiceRole.entities.AssetArchive.filter({}, '-created_date', 200);
+          let bestD = 99, bestRec = null;
+          for (const rec of recent || []) {
+            if (!rec.phash) continue;
+            const d = hamming(phash, rec.phash);
+            if (d < bestD) { bestD = d; bestRec = rec; }
+          }
+          if (bestRec && bestD <= 8) {
+            await mergeSource(base44, bestRec, cand.url, dims, fetched, phash);
+            stats.skippedDup++;
+            continue;
+          }
+        } catch {}
+      }
 
       const mirroredUrl = await mirrorImage(base44, fetched.buf, fetched.ct);
       const imageUrl = mirroredUrl || cand.url;
@@ -288,12 +406,16 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
 
       if (analysis && analysis.is_relevant === false) { stats.rejected++; continue; }
 
+      const loc = String(analysis?.location || 'unknown').toLowerCase();
       await base44.asServiceRole.entities.AssetArchive.create({
         content_hash: hash,
         source_url: cand.url,
+        source_urls: [cand.url],
         image_url: imageUrl,
         mirrored,
         primary_category: analysis?.primary_category || (THEMES[themeLabel] ? themeLabel : 'branding'),
+        subcategory: String(analysis?.subcategory || '').toLowerCase(),
+        location: VALID_LOCS.has(loc) ? loc : 'unknown',
         description: analysis?.description || '',
         tags: analysis?.tags || [],
         mood: analysis?.mood || '',
@@ -304,6 +426,8 @@ async function processCandidates(base44, candidates, limit, themeLabel) {
         height: dims.h,
         theme: themeLabel,
         source_type: cand.sourceType,
+        search_query: cand.query || '',
+        phash: phash || '',
         status: 'active',
       });
       stats.stored++;
@@ -366,6 +490,36 @@ export default async function (req) {
       const limit = Math.max(1, Math.min(40, Number(body.limit) || 15));
       const stats = await processCandidates(base44, cands, limit, 'kickstart');
       return Response.json({ ok: true, kickstart: true, ...stats });
+    }
+
+    // Broad public-web discovery — gemini web search across review sites, blogs,
+    // news, travel & social. Rotates a few queries per run so each pass stays
+    // fast while the archive keeps growing from new public sources over time.
+    if (body.web) {
+      // One query per run keeps the pass fast & reliable; rotation cycles the full
+      // query set across days so the archive keeps growing from new sources.
+      const qCount = 1;
+      const dayIdx = Math.floor(Date.now() / 86400000) % BROAD_QUERIES.length;
+      const queries = [];
+      for (let i = 0; i < qCount; i++) queries.push(BROAD_QUERIES[(dayIdx + i) % BROAD_QUERIES.length]);
+      const seen = new Set();
+      const cands = [];
+      for (const q of queries) {
+        try {
+          const res = await base44.asServiceRole.integrations.Core.InvokeLLM({
+            model: 'gemini_3_flash',
+            add_context_from_internet: true,
+            prompt: `Search the public web for photographs of the Bogèst restaurant chain (bogest.be, Hasselt / Borgloon / Heusden-Zolder, Belgium). Query: "${q}". Return JSON { "images": [ { "url": "<direct, publicly accessible, high-resolution image URL ending in .jpg/.jpeg/.png/.webp or a CDN image link>", "source": "<page where found>" } ] } — up to 12 REAL image URLs only. Never invent URLs; if unsure, return fewer.`,
+            response_json_schema: { type: 'object', properties: { images: { type: 'array', items: { type: 'object', properties: { url: { type: 'string' }, source: { type: 'string' } } } } } },
+          });
+          for (const img of res?.images || []) {
+            if (img.url && !seen.has(img.url)) { seen.add(img.url); cands.push({ url: img.url, sourceType: 'web', query: q }); }
+          }
+        } catch {}
+      }
+      const limit = Math.max(1, Math.min(15, Number(body.limit) || 8));
+      const stats = await processCandidates(base44, cands, limit, 'web');
+      return Response.json({ ok: true, web: true, queries, ...stats });
     }
 
     // The scheduled "all" pass skips the slow web search — seeds + page scrape +
