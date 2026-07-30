@@ -1,15 +1,21 @@
-// Google Custom Search JSON API — image search (searchType=image) for Bogèst.
-// Returns a clean list of image URLs (.jpg / .png) found for the given terms.
+// Image search via SerpApi (engine=google_images) — vervanger voor de
+// Google Custom Search JSON API, die gesloten is voor nieuwe projecten.
+// Geen OAuth of Cloud Project-rechten nodig; alleen de SERPAPI_API_KEY secret.
 //
-// invoke('googleImageSearch', { query: 'Bogèst restaurant' })            // one term
-// invoke('googleImageSearch', { query: 'all' })                        // default set
+// Response-shape blijft identiek aan de vorige implementatie, zodat de
+// AdminPanel-consument niet wijzigt:
+//   { ok, query, count, images: [{url, source, title, query}], error }
+//
+// invoke('googleImageSearch', { query: 'Bogèst restaurant' })   // één term
+// invoke('googleImageSearch', { query: 'all' })                // standaardset
 // invoke('googleImageSearch', { query: 'Bogèst interieur', num: 8 })
+import { secrets } from 'base44:runtime';
+
 export default async function (req) {
   try {
-    const API_KEY = process.env.GOOGLE_CSE_API_KEY;
-    const CX = process.env.GOOGLE_CSE_CX;
-    if (!API_KEY || !CX) {
-      return Response.json({ error: 'Google Custom Search keys not configured (GOOGLE_CSE_API_KEY / GOOGLE_CSE_CX)' }, { status: 500 });
+    const API_KEY = secrets.get('SERPAPI_API_KEY');
+    if (!API_KEY) {
+      return Response.json({ error: 'SERPAPI_API_KEY not configured in secrets' }, { status: 500 });
     }
 
     let params = {};
@@ -28,36 +34,47 @@ export default async function (req) {
     const images = [];
     const seen = new Set();
     let apiError = null;
+
     for (const q of queries) {
       try {
-        const endpoint = 'https://www.googleapis.com/customsearch/v1'
-          + '?key=' + encodeURIComponent(API_KEY)
-          + '&cx=' + encodeURIComponent(CX)
-          + '&searchType=image'
-          + '&num=' + num
-          + '&q=' + encodeURIComponent(q);
+        const endpoint = 'https://serpapi.com/search'
+          + '?engine=google_images'
+          + '&q=' + encodeURIComponent(q)
+          + '&api_key=' + encodeURIComponent(API_KEY)
+          + '&ijn=0';
+
         const res = await fetch(endpoint, { signal: AbortSignal.timeout(20000) });
         if (!res.ok) {
           const body = await res.text().catch(() => '');
-          apiError = `Google API ${res.status}: ${body.slice(0, 300)}`;
+          apiError = `SerpApi ${res.status}: ${body.slice(0, 300)}`;
           continue;
         }
+
         const data = await res.json();
-        if (data.error) apiError = data.error.message || JSON.stringify(data.error);
-        for (const item of data.items || []) {
-          const link = item.link;
+        if (data.error) {
+          apiError = data.error;
+          continue;
+        }
+
+        // SerpApi google_images retourneert resultaten in 'images_results'.
+        for (const item of data.images_results || []) {
+          const link = item.original;
           if (!link) continue;
+          // Filter op afbeeldingsbestanden (.jpg / .jpeg / .png)
           if (!/\.(jpg|jpeg|png)(\?|$)/i.test(link)) continue;
           if (seen.has(link)) continue;
           seen.add(link);
           images.push({
             url: link,
-            source: item.image?.contextLink || item.displayLink || '',
+            source: item.source || item.link || '',
             title: item.title || '',
             query: q,
           });
+          if (images.length >= num) break;
         }
-      } catch {}
+      } catch (err) {
+        console.error('SerpApi fetch failed:', err);
+      }
     }
 
     if (images.length === 0 && apiError) {
