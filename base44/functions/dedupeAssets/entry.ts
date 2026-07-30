@@ -1,18 +1,16 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { fetchBytes, sha256Hex, computePHash, hamming } from '../../shared/imageUtils.ts';
 
 // Removes all duplicate images from the Bogèst visual archive in one pass.
-// Phase 1 — exact duplicates: identical content_hash (SHA-256 of the bytes).
-// Phase 2 — near duplicates: perceptual hash (phash) within Hamming distance 8.
-// In each group the record with the highest quality_score (then largest area) is
-// kept as the master; duplicates are deleted after merging their source_urls
-// into the master. Runs as the service role (admin-gated on the client side).
+// Recomputes BOTH the content hash and perceptual hash from the actual image
+// bytes (so it works even on records that were imported before phash existed),
+// then:
+//   Phase 1 — exact duplicates: identical content_hash (SHA-256 of the bytes).
+//   Phase 2 — near duplicates: perceptual hash within Hamming distance 10.
+// In each group the highest-quality (then largest) record is kept as master;
+// duplicates are deleted after merging their source_urls into the master.
 
-function hamming(a, b) {
-  if (!a || !b || a.length !== b.length) return 99;
-  let d = 0;
-  for (let i = 0; i < a.length; i++) if (a[i] !== b[i]) d++;
-  return d;
-}
+const PHASH_THRESHOLD = 10;
 
 function score(r) {
   return (Number(r.quality_score) || 0) + (Number(r.width) || 0) * (Number(r.height) || 0) / 100000;
@@ -41,48 +39,76 @@ export default async function (req) {
     } catch {}
 
     const all = await base44.asServiceRole.entities.AssetArchive.filter({}, '-created_date', 500);
+
+    // Recompute fresh content_hash + phash for every record by fetching its image
+    // (in parallel batches of 8 for speed). This is what makes perceptual dedup
+    // actually work — previously phash was never stored because the decode libs
+    // were missing, so visual duplicates were never caught.
+    const recs = [];
+    const BATCH = 8;
+    for (let i = 0; i < all.length; i += BATCH) {
+      const batch = all.slice(i, i + BATCH);
+      const results = await Promise.all(batch.map(async (r) => {
+        if (!r.image_url) return { r, hash: r.content_hash || '', phash: r.phash || '' };
+        try {
+          const fetched = await fetchBytes(r.image_url);
+          if (!fetched) return { r, hash: r.content_hash || '', phash: r.phash || '' };
+          const hash = await sha256Hex(fetched.buf);
+          const phash = await computePHash(fetched.buf, fetched.ct);
+          const update = {};
+          if (phash && !r.phash) update.phash = phash;
+          if (hash && !r.content_hash) update.content_hash = hash;
+          if (Object.keys(update).length) { try { await base44.asServiceRole.entities.AssetArchive.update(r.id, update); } catch {} }
+          return { r, hash, phash };
+        } catch {
+          return { r, hash: r.content_hash || '', phash: r.phash || '' };
+        }
+      }));
+      recs.push(...results);
+    }
+
     const deleted = new Set();
     let exactDupes = 0;
     let nearDupes = 0;
 
     // ── Phase 1: exact duplicates by content_hash ──────────────────────────
     const byHash = new Map();
-    for (const r of all) {
-      if (!r.content_hash) continue;
-      if (!byHash.has(r.content_hash)) byHash.set(r.content_hash, []);
-      byHash.get(r.content_hash).push(r);
+    for (const x of recs) {
+      if (!x.hash) continue;
+      if (!byHash.has(x.hash)) byHash.set(x.hash, []);
+      byHash.get(x.hash).push(x);
     }
     for (const group of byHash.values()) {
       if (group.length < 2) continue;
-      group.sort((a, b) => score(b) - score(a));
+      group.sort((a, b) => score(b.r) - score(a.r));
       const master = group[0];
       const dups = group.slice(1);
-      const srcs = mergeSources(master, ...dups);
+      const srcs = mergeSources(master.r, ...dups.map((d) => d.r));
       for (const d of dups) {
         try {
-          await base44.asServiceRole.entities.AssetArchive.delete(d.id);
-          deleted.add(d.id);
+          await base44.asServiceRole.entities.AssetArchive.delete(d.r.id);
+          deleted.add(d.r.id);
           exactDupes++;
         } catch {}
       }
-      try { await base44.asServiceRole.entities.AssetArchive.update(master.id, { source_urls: srcs }); } catch {}
+      try { await base44.asServiceRole.entities.AssetArchive.update(master.r.id, { source_urls: srcs }); } catch {}
     }
 
-    // ── Phase 2: near duplicates by perceptual hash ─────────────────────────
-    const phashRecs = all.filter((r) => r.phash && !deleted.has(r.id));
+    // ── Phase 2: near duplicates by perceptual hash ───────────────────────
+    const phashRecs = recs.filter((x) => x.phash && !deleted.has(x.r.id));
     for (let i = 0; i < phashRecs.length; i++) {
-      if (deleted.has(phashRecs[i].id)) continue;
+      if (deleted.has(phashRecs[i].r.id)) continue;
       for (let j = i + 1; j < phashRecs.length; j++) {
-        if (deleted.has(phashRecs[j].id)) continue;
-        if (hamming(phashRecs[i].phash, phashRecs[j].phash) > 8) continue;
+        if (deleted.has(phashRecs[j].r.id)) continue;
+        if (hamming(phashRecs[i].phash, phashRecs[j].phash) > PHASH_THRESHOLD) continue;
         const a = phashRecs[i];
         const b = phashRecs[j];
-        const loser = score(a) >= score(b) ? b : a;
+        const loser = score(a.r) >= score(b.r) ? b : a;
         const winner = loser === a ? b : a;
         try {
-          await base44.asServiceRole.entities.AssetArchive.update(winner.id, { source_urls: mergeSources(winner, loser) });
-          await base44.asServiceRole.entities.AssetArchive.delete(loser.id);
-          deleted.add(loser.id);
+          await base44.asServiceRole.entities.AssetArchive.update(winner.r.id, { source_urls: mergeSources(winner.r, loser.r) });
+          await base44.asServiceRole.entities.AssetArchive.delete(loser.r.id);
+          deleted.add(loser.r.id);
           nearDupes++;
         } catch {}
       }

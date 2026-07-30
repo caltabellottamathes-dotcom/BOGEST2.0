@@ -727,6 +727,36 @@ export default async function (req) {
       return Response.json({ ok: true, discoverAll: true, candidates: cands.length, ...stats });
     }
 
+    // ─── Targeted topic discovery ───────────────────────────────────────────
+    // One focused search on a subject (e.g. "wijn", "terras", "steak",
+    // " Borgloon interieur") across Bogèst's own site + the public review/social
+    // channels via SerpApi google_images. Same dedup + relevance pipeline.
+    if (body.topic) {
+      const apiKey = secrets.get('SERPAPI_API_KEY');
+      const topic = String(body.topic).trim();
+      if (!topic) return Response.json({ error: 'Empty topic' }, { status: 400 });
+      const queries = [
+        `bogest ${topic}`,
+        `site:bogest.be ${topic}`,
+        `site:tripadvisor.be bogest ${topic}`,
+        `site:facebook.com bogest ${topic}`,
+        `site:d-entrecote.be ${topic}`,
+      ];
+      const seen = new Set();
+      const cands = [];
+      for (const q of queries) {
+        const links = apiKey ? await serpImageSearch(q, apiKey, 12) : [];
+        for (const u of links) {
+          if (seen.has(u)) continue;
+          seen.add(u);
+          cands.push({ url: u, sourceType: 'web', query: q, sourcePlatform: 'Topic' });
+        }
+      }
+      const limit = Math.max(1, Math.min(40, Number(body.limit) || 15));
+      const stats = await processCandidates(base44, cands, limit, 'topic:' + topic);
+      return Response.json({ ok: true, topic, candidates: cands.length, ...stats });
+    }
+
     // Broad public-web discovery — gemini web search across review sites, blogs,
     // news, travel & social. Rotates a few queries per run so each pass stays
     // fast while the archive keeps growing from new public sources over time.

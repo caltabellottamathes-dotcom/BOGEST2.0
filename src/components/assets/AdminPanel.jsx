@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle } from 'lucide-react';
+import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
 const SOURCES = [
@@ -19,7 +19,7 @@ function Stat({ label, value }) {
   );
 }
 
-function ActionCard({ icon: Icon, title, desc, children }) {
+function Card({ icon: Icon, title, desc, children }) {
   return (
     <div className="rounded-xl border border-border p-4 bg-card/40">
       <div className="flex items-center gap-2 mb-2">
@@ -32,18 +32,47 @@ function ActionCard({ icon: Icon, title, desc, children }) {
   );
 }
 
+function ResultBlock({ result, error, statRows }) {
+  if (error) {
+    return <p className="font-body text-[11px] text-destructive mt-2 flex items-center gap-1.5"><AlertCircle className="w-3 h-3" /> {error}</p>;
+  }
+  if (!result) return null;
+  return (
+    <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
+      <p className="font-body text-[11px] text-primary mb-2 flex items-center gap-1.5"><Check className="w-3 h-3" /> Voltooid</p>
+      {statRows.map((r) => <Stat key={r.label} label={r.label} value={r.value} />)}
+    </div>
+  );
+}
+
 export default function AdminPanel({ onClose, onChanged }) {
+  const [discoverMax, setDiscoverMax] = useState(15);
   const [discover, setDiscover] = useState({ running: false, result: null, error: null });
+  const [topic, setTopic] = useState('');
+  const [topicMax, setTopicMax] = useState(15);
+  const [topicState, setTopicState] = useState({ running: false, result: null, error: null });
   const [dedupe, setDedupe] = useState({ running: false, result: null, error: null });
 
   const runDiscover = async () => {
     setDiscover({ running: true, result: null, error: null });
     try {
-      const res = await base44.functions.invoke('discoverAssets', { discoverAll: true, limit: 25 });
+      const res = await base44.functions.invoke('discoverAssets', { discoverAll: true, limit: discoverMax });
       setDiscover({ running: false, result: res.data, error: null });
       onChanged?.();
     } catch (e) {
       setDiscover({ running: false, error: e?.response?.data?.error || e?.message || 'Ontdekking mislukt' });
+    }
+  };
+
+  const runTopic = async () => {
+    if (!topic.trim()) return;
+    setTopicState({ running: true, result: null, error: null });
+    try {
+      const res = await base44.functions.invoke('discoverAssets', { topic: topic.trim(), limit: topicMax });
+      setTopicState({ running: false, result: res.data, error: null });
+      onChanged?.();
+    } catch (e) {
+      setTopicState({ running: false, error: e?.response?.data?.error || e?.message || 'Zoeken mislukt' });
     }
   };
 
@@ -73,90 +102,126 @@ export default function AdminPanel({ onClose, onChanged }) {
         </div>
 
         <div className="flex-1 p-5 space-y-4">
-          {/* One comprehensive discovery action */}
-          <ActionCard
+          {/* Alles ontdekken */}
+          <Card
             icon={Globe}
             title="Alles ontdekken & importeren"
-            desc="Eén doorlopende zoekopdracht die alle Bogèst-beelden verzamelt — van de eigen website, Tripadvisor, Facebook en Instagram — en automatisch ontdubbelt, filtert en indeelt."
+            desc="Eén doorlopende zoekopdracht die alle Bogèst-beelden verzamelt — eigen website, Tripadvisor, Facebook en Instagram — en automatisch ontdubbelt, filtert en indeelt."
           >
             <div className="rounded-lg border border-border/60 bg-background/50 p-3 mb-3">
               <p className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-2">Bronnen</p>
               <ul className="space-y-1.5">
                 {SOURCES.map((s) => (
                   <li key={s} className="flex items-center gap-2 font-body text-[11px] text-muted-foreground">
-                    <span className="w-1 h-1 rounded-full bg-primary/60" />
-                    {s}
+                    <span className="w-1 h-1 rounded-full bg-primary/60" /> {s}
                   </li>
                 ))}
               </ul>
+            </div>
+            <label className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground block mb-2">Max. foto's per run</label>
+            <div className="flex items-center gap-2 mb-3">
+              <input
+                type="number"
+                min="1"
+                max="40"
+                value={discoverMax}
+                onChange={(e) => setDiscoverMax(Math.max(1, Math.min(40, Number(e.target.value) || 1)))}
+                className="w-20 px-3 py-2 rounded-lg bg-card/60 border border-border focus:outline-none focus:border-primary text-sm"
+              />
+              <span className="font-body text-xs text-muted-foreground">beelden (1–40)</span>
             </div>
             <button
               onClick={runDiscover}
               disabled={discover.running}
               className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity"
             >
-              {discover.running ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met ontdekken…</>
-              ) : (
-                <><Globe className="w-4 h-4" /> Alles ontdekken & importeren</>
-              )}
+              {discover.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met ontdekken…</> : <><Globe className="w-4 h-4" /> Alles ontdekken & importeren</>}
             </button>
-            {discover.error && (
-              <p className="font-body text-[11px] text-destructive mt-2 flex items-center gap-1.5">
-                <AlertCircle className="w-3 h-3" /> {discover.error}
+            <ResultBlock
+              result={discover.result}
+              error={discover.error}
+              statRows={[
+                { label: 'Nieuw toegevoegd', value: discover.result?.stored ?? 0 },
+                { label: 'Kandidaten gevonden', value: discover.result?.candidates ?? 0 },
+                { label: 'Dubbelingen overgeslagen', value: discover.result?.skippedDup ?? 0 },
+                { label: 'Afgewezen (niet relevant)', value: discover.result?.rejected ?? 0 },
+              ]}
+            />
+            {discover.result && (
+              <p className="font-body text-[10px] text-muted-foreground/70 mt-2 leading-relaxed">
+                Voer opnieuw uit om meer beelden toe te voegen — elke run haalt alleen unieke, relevante foto's binnen.
               </p>
             )}
-            {discover.result && (
-              <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
-                <p className="font-body text-[11px] text-primary mb-2 flex items-center gap-1.5">
-                  <Check className="w-3 h-3" /> Import voltooid
-                </p>
-                <Stat label="Nieuw toegevoegd" value={discover.result.stored ?? 0} />
-                <Stat label="Kandidaten gevonden" value={discover.result.candidates ?? 0} />
-                <Stat label="Dubbelingen overgeslagen" value={discover.result.skippedDup ?? 0} />
-                <Stat label="Gefilterd" value={discover.result.skippedFilter ?? 0} />
-                <Stat label="Afgewezen (niet relevant)" value={discover.result.rejected ?? 0} />
-                <p className="font-body text-[10px] text-muted-foreground/70 mt-2 leading-relaxed">
-                  Voer opnieuw uit om meer beelden toe te voegen — elke run haalt alleen unieke, relevante foto's binnen.
-                </p>
-              </div>
-            )}
-          </ActionCard>
+          </Card>
 
-          {/* Deduplicate action */}
-          <ActionCard
+          {/* Gericht zoeken */}
+          <Card
+            icon={Crosshair}
+            title="Gericht zoeken op onderwerp"
+            desc="Zoek beelden rond een specifiek onderwerp — bv. wijn, terras, steak, interieur Borgloon. Doorzoekt de eigen site, Tripadvisor en Facebook."
+          >
+            <input
+              type="text"
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') runTopic(); }}
+              placeholder="bv. wijn, terras, steak…"
+              className="w-full px-3 py-2.5 rounded-lg bg-card/60 border border-border focus:outline-none focus:border-primary text-sm mb-2"
+            />
+            <div className="flex items-center gap-2 mb-3">
+              <label className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground">Max.</label>
+              <input
+                type="number"
+                min="1"
+                max="40"
+                value={topicMax}
+                onChange={(e) => setTopicMax(Math.max(1, Math.min(40, Number(e.target.value) || 1)))}
+                className="w-20 px-3 py-2 rounded-lg bg-card/60 border border-border focus:outline-none focus:border-primary text-sm"
+              />
+              <span className="font-body text-xs text-muted-foreground">beelden</span>
+            </div>
+            <button
+              onClick={runTopic}
+              disabled={topicState.running || !topic.trim()}
+              className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary text-sm py-2.5 rounded-lg hover:bg-primary/10 disabled:opacity-50 transition-colors"
+            >
+              {topicState.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met zoeken…</> : <><Crosshair className="w-4 h-4" /> Zoek op onderwerp</>}
+            </button>
+            <ResultBlock
+              result={topicState.result}
+              error={topicState.error}
+              statRows={[
+                { label: 'Nieuw toegevoegd', value: topicState.result?.stored ?? 0 },
+                { label: 'Kandidaten gevonden', value: topicState.result?.candidates ?? 0 },
+                { label: 'Onderwerp', value: topicState.result?.topic ?? topic.trim() },
+              ]}
+            />
+          </Card>
+
+          {/* Ontdubbelen */}
+          <Card
             icon={Layers}
             title="Dubbele verwijderen"
-            desc="Scan het volledige archief en verwijder in één keer alle dubbele beelden — exacte kopieën (identieke bestandshash) én visuele nabijheden (perceptuele hash). De beste versie blijft behouden; bronnen worden samengevoegd."
+            desc="Scan het volledige archief en verwijder in één keer alle dubbele beelden — exacte kopieën én visuele nabijheden (perceptuele hash). De beste versie blijft behouden; bronnen worden samengevoegd."
           >
             <button
               onClick={runDedupe}
               disabled={dedupe.running}
               className="w-full flex items-center justify-center gap-2 border border-primary/40 text-primary text-sm py-2.5 rounded-lg hover:bg-primary/10 disabled:opacity-50 transition-colors"
             >
-              {dedupe.running ? (
-                <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met ontdubbelen…</>
-              ) : (
-                <><Layers className="w-4 h-4" /> Alle dubbele verwijderen</>
-              )}
+              {dedupe.running ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met ontdubbelen…</> : <><Layers className="w-4 h-4" /> Alle dubbele verwijderen</>}
             </button>
-            {dedupe.error && (
-              <p className="font-body text-[11px] text-destructive mt-2 flex items-center gap-1.5">
-                <AlertCircle className="w-3 h-3" /> {dedupe.error}
-              </p>
-            )}
-            {dedupe.result && (
-              <div className="mt-3 rounded-lg border border-border/60 bg-background/50 p-3">
-                <p className="font-body text-[11px] text-primary mb-2 flex items-center gap-1.5">
-                  <Check className="w-3 h-3" /> Ontdubbeld
-                </p>
-                <Stat label="Verwijderd" value={dedupe.result.removed ?? 0} />
-                <Stat label="Exacte kopieën" value={dedupe.result.exactDuplicates ?? 0} />
-                <Stat label="Visuele dubbelingen" value={dedupe.result.nearDuplicates ?? 0} />
-                <Stat label="Blijft behouden" value={dedupe.result.remaining ?? 0} />
-              </div>
-            )}
-          </ActionCard>
+            <ResultBlock
+              result={dedupe.result}
+              error={dedupe.error}
+              statRows={[
+                { label: 'Verwijderd', value: dedupe.result?.removed ?? 0 },
+                { label: 'Exacte kopieën', value: dedupe.result?.exactDuplicates ?? 0 },
+                { label: 'Visuele dubbelingen', value: dedupe.result?.nearDuplicates ?? 0 },
+                { label: 'Blijft behouden', value: dedupe.result?.remaining ?? 0 },
+              ]}
+            />
+          </Card>
 
           <p className="font-body text-[10px] text-muted-foreground/70 leading-relaxed pt-1 flex items-start gap-1.5">
             <Sparkles className="w-3 h-3 text-primary/70 mt-0.5 flex-shrink-0" />
