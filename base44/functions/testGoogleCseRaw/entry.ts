@@ -26,11 +26,15 @@ export default async function (req) {
     let parsed = null;
     try { parsed = JSON.parse(body); } catch {}
 
+    const keyMask = key.length > 10 ? key.slice(0, 6) + '…' + key.slice(-4) + ' (len ' + key.length + ')' : '(too short)';
+    const cxMask = cx.length > 6 ? cx.slice(0, 4) + '…' + cx.slice(-4) + ' (len ' + cx.length + ')' : cx;
     return Response.json({
       httpStatus: gRes.status,
       hasKey: true,
       hasCx: true,
       endpoint: 'https://www.googleapis.com/customsearch/v1',
+      keyUsed: keyMask,
+      cxUsed: cxMask,
       raw: parsed || body
     });
   } catch (error) {
