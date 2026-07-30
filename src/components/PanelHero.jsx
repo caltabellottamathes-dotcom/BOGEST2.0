@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage }) {
   return (
-    <section className="relative w-full pt-20 md:pt-36 pb-12 md:pb-16 px-6 md:px-10 lg:px-16 border-b border-border/40 overflow-hidden">
+    <section className="relative w-full pt-20 md:pt-36 pb-16 md:pb-24 px-6 md:px-10 lg:px-16 border-b border-border/40 overflow-hidden">
       {/* Background photo */}
       {bgImage && (
         <div className="absolute inset-0 z-0">

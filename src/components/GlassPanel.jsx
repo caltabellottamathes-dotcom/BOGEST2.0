@@ -27,7 +27,7 @@ function GlassPanelSurface() {
 const PANEL_PATHS = [
   '/menu', '/about', '/locations', '/reserve', '/takeaway',
   '/gift-cards', '/checkout', '/contact', '/groups', '/jobs',
-  '/privacy', '/terms', '/admin', '/gift-package',
+  '/privacy', '/terms', '/admin', '/gift-package', '/instagram',
 ];
 
 export function isPanelPath(pathname) {

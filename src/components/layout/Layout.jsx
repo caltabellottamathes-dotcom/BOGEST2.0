@@ -69,8 +69,9 @@ export default function Layout() {
 
       {isPanel ? (
         <>
-          {/* Real homepage frozen in background — exactly where the user left it */}
-          <main className="flex-1 pointer-events-none select-none">
+          {/* Real homepage frozen in background — exactly where the user left it,
+              gently blurred so the panel reads as the focal layer. */}
+          <main className="flex-1 pointer-events-none select-none" style={{ filter: 'blur(6px)', transition: 'filter 0.5s ease' }}>
             <Home />
           </main>
 
