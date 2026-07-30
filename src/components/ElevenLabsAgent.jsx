@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
 import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
-import { base44 } from '@/api/base44Client';
 import {
   startWebsiteSyncEngine,
   stopWebsiteSyncEngine,
@@ -31,14 +30,21 @@ export default function ElevenLabsAgent() {
   }, []);
 
   useEffect(() => {
-    // Inject the widget embed script once.
-    if (!document.querySelector('script[data-elevenlabs-loaded="true"]')) {
+    // Inject the widget embed script once — deferred until the browser is idle
+    // so the external fetch never blocks the site's first paint.
+    const injectScript = () => {
+      if (document.querySelector('script[data-elevenlabs-loaded="true"]')) return;
       const script = document.createElement('script');
       script.src = 'https://unpkg.com/@elevenlabs/convai-widget-embed';
       script.async = true;
       script.type = 'text/javascript';
       script.setAttribute('data-elevenlabs-loaded', 'true');
       document.body.appendChild(script);
+    };
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(injectScript, { timeout: 1500 });
+    } else {
+      setTimeout(injectScript, 500);
     }
 
     startWebsiteSyncEngine();
@@ -66,22 +72,6 @@ export default function ElevenLabsAgent() {
       };
 
       cfg.clientTools = {
-        // Query the Bogèst asset archive (beeldbank) for real photos by category /
-        // location / free text. The agent can speak about them and reference
-        // their URLs. Returns { success, count, images: [{url, description, ...}] }.
-        searchAssets: async (params = {}) => {
-          try {
-            const res = await base44.functions.invoke('assetSearch', {
-              query: params.query || '',
-              category: params.category || 'all',
-              location: params.location || 'all',
-              limit: Number(params.limit) || 6,
-            });
-            return { success: true, count: res.data?.count || 0, images: res.data?.images || [] };
-          } catch (e) {
-            return { success: false, error: String(e?.message || e) };
-          }
-        },
         websiteAction: async (params = {}) => {
           const result = await handleWebsiteActionToolCall(params);
           // After a successful action that changes the page, collapse the

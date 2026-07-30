@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -16,6 +16,15 @@ export default function Layout() {
   const isPanel = isPanelPath(location.pathname);
   const isAssets = location.pathname === '/assets';
   const frozenScrollRef = useRef(0);
+  const [deferred, setDeferred] = useState(false);
+
+  // Defer heavy floating widgets (external ElevenLabs script + welcome video)
+  // until after the first paint so the page never stalls on initial load.
+  useEffect(() => {
+    const ric = window.requestIdleCallback || ((fn) => setTimeout(fn, 500));
+    const handle = ric(() => setDeferred(true), { timeout: 1200 });
+    return () => { if (window.cancelIdleCallback && handle) window.cancelIdleCallback(handle); };
+  }, []);
 
   // When a panel opens: save scroll position and lock the page in place
   // When panel closes: restore scroll position
@@ -84,11 +93,11 @@ export default function Layout() {
       {/* Digital Host — hidden on the internal Beeldbank */}
       {!isAssets && <DigitalHost />}
 
-      {/* ElevenLabs Conversational AI Widget — hidden on the internal Beeldbank */}
-      {!isAssets && <ElevenLabsAgent />}
+      {/* ElevenLabs Conversational AI Widget — deferred + hidden on Beeldbank */}
+      {!isAssets && deferred && <ElevenLabsAgent />}
 
-      {/* Floating welcome video — hidden on the internal Beeldbank */}
-      {!isAssets && <FloatingVideo />}
+      {/* Floating welcome video — deferred + hidden on Beeldbank */}
+      {!isAssets && deferred && <FloatingVideo />}
 
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />
