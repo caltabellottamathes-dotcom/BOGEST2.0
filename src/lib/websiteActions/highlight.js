@@ -1,9 +1,13 @@
 import { registerAction } from '../websiteDispatcher';
+import { waitForElement } from '@/lib/waitForElement';
 
 /**
  * Temporarily highlight an element (id / data-highlight / fuzzy id match),
  * scroll it into view, and pulse a ring around it for a few seconds.
  * Great for "show me the dry-aged ribeye".
+ *
+ * Waits for the element to appear after a navigation / panel animation so the
+ * highlight lands on the freshly-mounted target instead of failing instantly.
  */
 const HIGHLIGHT_CLASS = 'website-highlight';
 let styleInjected = false;
@@ -32,16 +36,21 @@ function ensureStyle() {
   document.head.appendChild(css);
 }
 
-registerAction('highlight', async ({ target, options = {}, data = {} }) => {
-  if (!target) return { error: 'missing_target' };
-  ensureStyle();
-  const key = String(target).toLowerCase().trim();
-  const el =
+function findTarget(target, key) {
+  return (
     document.getElementById(target) ||
     document.querySelector(`[data-highlight="${CSS.escape(key)}"]`) ||
     document.querySelector(`[data-highlight*="${CSS.escape(key)}" i]`) ||
     document.querySelector(`[data-item-id="${CSS.escape(key)}"]`) ||
-    document.querySelector(`[id*="${CSS.escape(key)}" i]`);
+    document.querySelector(`[id*="${CSS.escape(key)}" i]`)
+  );
+}
+
+registerAction('highlight', async ({ target, options = {}, data = {} }) => {
+  if (!target) return { error: 'missing_target' };
+  ensureStyle();
+  const key = String(target).toLowerCase().trim();
+  const el = await waitForElement(() => findTarget(target, key), { timeout: 1200 });
   if (!el) return { error: 'not_found', target };
   el.classList.remove(HIGHLIGHT_CLASS);
   void el.offsetWidth; // restart animation

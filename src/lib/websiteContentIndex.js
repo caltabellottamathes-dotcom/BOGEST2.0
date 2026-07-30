@@ -180,19 +180,28 @@ export function matchLocal(text) {
  * and the longest alias match wins, so "spare ribs" beats "ribs" and a dish
  * beats its category.
  */
+const TYPE_PRIORITY = { dish: 3, location: 2, section: 1, 'menu-category': 1 };
 export function matchFuzzy(text) {
   const t = norm(text);
   if (!t || t.length < 2) return null;
   let best = null;
   let bestLen = 0;
+  let bestPri = 0;
   for (const e of CONTENT_INDEX) {
     if (!['dish', 'menu-category', 'location', 'section'].includes(e.type)) continue;
+    const pri = TYPE_PRIORITY[e.type] || 0;
     for (const a of e.aliases) {
       const an = norm(a);
       if (an.length < 4) continue;
-      if (t.includes(an) && an.length > bestLen) {
+      if (!t.includes(an)) continue;
+      // Longest alias wins; on a tie, a dish beats its category, and a
+      // specific location beats a generic section — so "spare ribs" highlights
+      // the dish, not the pork category.
+      const better = an.length > bestLen || (an.length === bestLen && pri > bestPri);
+      if (better) {
         best = e;
         bestLen = an.length;
+        bestPri = pri;
       }
     }
   }
