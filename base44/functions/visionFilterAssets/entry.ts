@@ -32,12 +32,10 @@ export default async function (req) {
       'of een evenement van restaurant Bogèst?\n' +
       'Antwoord uitsluitend in JSON-formaat: {"is_relevant": true/false, "categorie": "Interieur/Food/Event/Overig", "reden": "kort waarom"}.';
 
-    const goede_fotos = [];
-    const errors = [];
-
-    for (const item of items) {
-      try {
-        const verdict = await base44.asServiceRole.integrations.Core.InvokeLLM({
+    // Parallel vision analysis — all images analysed concurrently for speed.
+    const results = await Promise.allSettled(
+      items.map((item) =>
+        base44.asServiceRole.integrations.Core.InvokeLLM({
           prompt: PROMPT,
           file_urls: [item.url],
           model: 'gemini_3_flash',
@@ -50,21 +48,25 @@ export default async function (req) {
             },
             required: ['is_relevant', 'categorie']
           }
-        });
+        }).then((verdict) => {
+          const v = verdict && typeof verdict === 'object' ? verdict : null;
+          if (v && v.is_relevant === true && v.categorie !== 'Overig') {
+            return { ...item, is_relevant: true, categorie: v.categorie, reden: v.reden || '' };
+          }
+          return null;
+        })
+      )
+    );
 
-        const v = verdict && typeof verdict === 'object' ? verdict : null;
-        if (v && v.is_relevant === true && v.categorie !== 'Overig') {
-          goede_fotos.push({
-            ...item,
-            is_relevant: true,
-            categorie: v.categorie,
-            reden: v.reden || ''
-          });
-        }
-      } catch (e) {
-        errors.push({ url: item.url, error: (e && e.message) || 'afbeelding kon niet geladen worden' });
+    const goede_fotos = [];
+    const errors = [];
+    results.forEach((r, i) => {
+      if (r.status === 'fulfilled') {
+        if (r.value) goede_fotos.push(r.value);
+      } else {
+        errors.push({ url: items[i].url, error: (r.reason && r.reason.message) || 'afbeelding kon niet geladen worden' });
       }
-    }
+    });
 
     return Response.json({
       ok: true,

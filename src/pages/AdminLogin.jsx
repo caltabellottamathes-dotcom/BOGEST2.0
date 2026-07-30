@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, User } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useNavigate } from 'react-router-dom';
 
-const ADMIN_USER = 'BOGEST2.0';
-const ADMIN_PASS = 'MADEBYSTDIO-STDIO';
+const ADMIN_USER = 'mail@salvatorecaltabellotta.com';
+const ADMIN_PASS = 'S@lvatore1';
 
 export default function AdminLogin() {
   const [username, setUsername] = useState('');
@@ -48,16 +48,16 @@ export default function AdminLogin() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-2 block">
-                Gebruikersnaam
+                E-mail
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <input
-                  type="text"
+                  type="email"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-background/60 font-body text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all duration-200"
-                  placeholder="Gebruikersnaam"
+                  placeholder="E-mail"
                   required
                 />
               </div>
