@@ -30,9 +30,9 @@ const PILLARS_DATA = {
 };
 
 const LABELS = {
-  nl: { label: 'Onze Filosofie', title: 'Wat ons uniek maakt' },
-  fr: { label: 'Notre Philosophie', title: 'Ce qui nous rend uniques' },
-  en: { label: 'Our Philosophy', title: 'What makes us unique' }
+  nl: { label: 'Onze belofte en filosofie', title: 'Het gebaar achter Bogèst' },
+  fr: { label: 'Notre promesse et philosophie', title: 'Le geste derrière Bogèst' },
+  en: { label: 'Our promise and philosophy', title: 'The gesture behind Bogèst' }
 };
 
 export default function PhilosophySection() {

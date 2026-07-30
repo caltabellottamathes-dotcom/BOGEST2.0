@@ -12,9 +12,9 @@ const MONTH_NAMES = {
 };
 
 const SECTION_LABELS = {
-  nl: 'Maandelijkse Suggesties',
-  fr: 'Suggestions du Mois',
-  en: 'Monthly Suggestions',
+  nl: 'Deze maand bij Bogèst',
+  fr: 'Ce mois-ci chez Bogèst',
+  en: 'This month at Bogèst',
 };
 
 const MENU_LABELS = {

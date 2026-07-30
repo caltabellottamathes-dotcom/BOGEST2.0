@@ -59,8 +59,11 @@ export default function StorySection() {
             <p className="font-body text-base text-muted-foreground leading-relaxed mb-5">
               {t('home_story_body1')}
             </p>
-            <p className="font-body text-base text-muted-foreground leading-relaxed mb-9">
+            <p className="font-body text-base text-muted-foreground leading-relaxed mb-5">
               {t('home_story_body2')}
+            </p>
+            <p className="font-body text-base text-muted-foreground leading-relaxed mb-9">
+              {t('home_story_body3')}
             </p>
             <Link to="/about"
               className="group inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">

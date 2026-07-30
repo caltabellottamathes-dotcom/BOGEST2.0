@@ -61,7 +61,7 @@ export const translations = {
     // Sections
     section_our_story: 'Ons Verhaal',
     section_signature: 'Signatuurgerichten',
-    section_locations: 'Onze Locaties',
+    section_locations: 'Altijd een Bogèst dichtbij',
     section_wine: 'Onze wijnen',
     section_reserve: 'Reserveer uw tafel',
     section_takeaway: 'Traiteur bestellen',
@@ -353,9 +353,10 @@ export const translations = {
     footer_info_soon: 'Informatie volgt binnenkort',
 
     // Home sections - hardcoded text
-    home_story_title: 'De mooiste momenten beleef je samen',
-    home_story_body1: 'Bij Bogèst draait het om warmte, rust en een tafel die uitnodigt om te blijven. Onze sfeervolle hoeves stralen een authentieke charme uit — natuurlijke materialen, antieke elementen en een rijke geschiedenis die u even meenemen naar een andere wereld.',
-    home_story_body2: 'Bij elk hoofdgerecht bieden wij u een ambachtelijk voorgerecht en een verfijnd dessert aan van het huis.',
+    home_story_title: 'De naam veranderde. Onze belofte niet',
+    home_story_body1: "Bogèst is de nieuwe naam van d'Entrecôte. Verder is er niets veranderd. De eigenaren, het team, het menu en onze formule zijn nog altijd precies zoals u ze kent.",
+    home_story_body2: 'De naam is geïnspireerd op het Franse Beau Geste, oftewel "een mooi gebaar". Een naam die past bij hoe wij onze gasten willen ontvangen: met aandacht, vakmanschap en oprechte gastvrijheid.',
+    home_story_body3: 'Kwaliteit en kwantiteit voor een eerlijke prijs. Dat was altijd al onze belofte en dat blijft het.',
     home_formula_label: 'Onze formule',
     home_formula_included: 'Bij elk hoofdgerecht zit alles inbegrepen',
     home_formula_starter: 'Voorgerecht',
@@ -363,7 +364,7 @@ export const translations = {
     home_formula_dessert: 'Dessert',
 
     home_cta_label: 'Reserveren & bestellen',
-    home_cta_title: 'Wat kan Bogèst voor u doen?',
+    home_cta_title: 'Alles binnen handbereik.',
     home_cta_reserve_desc: 'Leg uw tafel vast in een paar tikken — geen wachtrij, wel een tafel die op u wacht.',
     home_cta_takeaway_desc: 'De smaak van Bogèst, aan uw eigen tafel. Kies uw gerechten — wij staan al klaar in de keuken.',
     home_cta_giftcard_desc: 'Een cadeaubon die meer belooft dan een etentje — een avond om nog lang na te vertellen.',
@@ -474,7 +475,7 @@ export const translations = {
 
     section_our_story: 'Notre Histoire',
     section_signature: 'Plats signatures',
-    section_locations: 'Nos lieux',
+    section_locations: 'Toujours un Bogèst tout près',
     section_wine: 'Nos vins',
     section_reserve: 'Réserver votre table',
     section_takeaway: 'Commander à emporter',
@@ -748,9 +749,10 @@ export const translations = {
     footer_legal: 'Juridique',
     footer_info_soon: 'Informations à venir',
 
-    home_story_title: 'Les plus beaux moments se vivent ensemble',
-    home_story_body1: "Chez Bogèst, tout tourne autour de la chaleur, du calme et d'une table qui invite à rester. Nos fermes de charme dégagent un charme authentique — matériaux naturels, éléments anciens et une riche histoire qui vous transportent un instant ailleurs.",
-    home_story_body2: "Avec chaque plat principal, nous vous offrons une entrée artisanale et un dessert raffiné de la maison.",
+    home_story_title: 'Le nom a changé. Pas notre promesse',
+    home_story_body1: "Bogèst est le nouveau nom de d'Entrecôte. Pour le reste, rien n'a changé. Les propriétaires, l'équipe, la carte et notre formule restent exactement comme vous les connaissez.",
+    home_story_body2: "Le nom s'inspire du français Beau Geste, c'est-à-dire « un beau geste ». Un nom qui correspond à la façon dont nous voulons recevoir nos invités : avec attention, savoir-faire et hospitalité sincère.",
+    home_story_body3: "Qualité et quantité à un prix juste. C'était toujours notre promesse, et ça l'est encore.",
     home_formula_label: 'Notre formule',
     home_formula_included: 'Tout est inclus avec chaque plat principal',
     home_formula_starter: 'Entrée',
@@ -758,7 +760,7 @@ export const translations = {
     home_formula_dessert: 'Dessert',
 
     home_cta_label: 'Réserver & commander',
-    home_cta_title: 'Que peut faire Bogèst pour vous ?',
+    home_cta_title: 'Tout à portée de main.',
     home_cta_reserve_desc: "Réservez votre table en quelques clics — pas de file d'attente, juste une table qui vous attend.",
     home_cta_takeaway_desc: "Le goût de Bogèst, à votre propre table. Choisissez vos plats — nous sommes déjà aux fourneaux.",
     home_cta_giftcard_desc: "Un bon cadeau qui promet plus qu'un dîner — une soirée dont on parlera encore longtemps.",
@@ -866,7 +868,7 @@ export const translations = {
 
     section_our_story: 'Our Story',
     section_signature: 'Signature Dishes',
-    section_locations: 'Our locations',
+    section_locations: 'Always a Bogèst nearby',
     section_wine: 'Our wines',
     section_reserve: 'Reserve your table',
     section_takeaway: 'Order takeaway',
@@ -1140,9 +1142,10 @@ export const translations = {
     footer_legal: 'Legal',
     footer_info_soon: 'Information coming soon',
 
-    home_story_title: 'The finest moments are shared together',
-    home_story_body1: 'At Bogèst, it is all about warmth, calm and a table that invites you to stay. Our charming farmhouses radiate an authentic character — natural materials, antique elements and a rich history that carry you, for a moment, to another world.',
-    home_story_body2: 'With every main course we offer you a handcrafted starter and a refined dessert from the house.',
+    home_story_title: 'The name changed. Our promise did not',
+    home_story_body1: "Bogèst is the new name of d'Entrecôte. Nothing else has changed. The owners, the team, the menu and our formula remain exactly as you know them.",
+    home_story_body2: 'The name is inspired by the French Beau Geste, meaning "a beautiful gesture". A name that fits how we want to receive our guests: with attention, craftsmanship and sincere hospitality.',
+    home_story_body3: 'Quality and quantity at an honest price. That was always our promise, and it still is.',
     home_formula_label: 'Our formula',
     home_formula_included: 'Everything is included with every main course',
     home_formula_starter: 'Starter',
@@ -1150,7 +1153,7 @@ export const translations = {
     home_formula_dessert: 'Dessert',
 
     home_cta_label: 'Reserve & order',
-    home_cta_title: 'What can Bogèst do for you?',
+    home_cta_title: 'Everything within reach.',
     home_cta_reserve_desc: 'Book your table in a few taps — no queue, just a table waiting for you.',
     home_cta_takeaway_desc: 'The taste of Bogèst, at your own table. Choose your dishes — we are already in the kitchen.',
     home_cta_giftcard_desc: 'A gift card that promises more than dinner — an evening they will still talk about.',
