@@ -1,13 +1,15 @@
-// Google Image Search via SerpApi — vervanger voor de Google Custom Search API.
-// Deze functie haalt nu beelden op via SerpApi zonder dat je OAuth of Cloud Project rechten nodig hebt.
-
+// Google Custom Search JSON API — image search (searchType=image) for Bogèst.
+// Returns a clean list of image URLs (.jpg / .png) found for the given terms.
+//
+// invoke('googleImageSearch', { query: 'Bogèst restaurant' })            // one term
+// invoke('googleImageSearch', { query: 'all' })                        // default set
+// invoke('googleImageSearch', { query: 'Bogèst interieur', num: 8 })
 export default async function (req) {
   try {
-    // Haal de SERPAPI_API_KEY uit je secrets.
-    const API_KEY = process.env.SERPAPI_API_KEY; 
-    
-    if (!API_KEY) {
-      return Response.json({ error: 'SERPAPI_API_KEY not configured in secrets' }, { status: 500 });
+    const API_KEY = process.env.GOOGLE_CSE_API_KEY;
+    const CX = process.env.GOOGLE_CSE_CX;
+    if (!API_KEY || !CX) {
+      return Response.json({ error: 'Google Custom Search keys not configured (GOOGLE_CSE_API_KEY / GOOGLE_CSE_CX)' }, { status: 500 });
     }
 
     let params = {};
@@ -26,61 +28,41 @@ export default async function (req) {
     const images = [];
     const seen = new Set();
     let apiError = null;
-
-    // We doorlopen de zoektermen
     for (const q of queries) {
       try {
-        // SerpApi endpoint voor image search
-        const endpoint = 'https://serpapi.com/search'
-          + '?engine=google_images'
-          + '&q=' + encodeURIComponent(q)
-          + '&api_key=' + encodeURIComponent(API_KEY)
-          + '&ijn=0' 
-          + '&num=' + num;
-
+        const endpoint = 'https://www.googleapis.com/customsearch/v1'
+          + '?key=' + encodeURIComponent(API_KEY)
+          + '&cx=' + encodeURIComponent(CX)
+          + '&searchType=image'
+          + '&num=' + num
+          + '&q=' + encodeURIComponent(q);
         const res = await fetch(endpoint, { signal: AbortSignal.timeout(20000) });
         if (!res.ok) {
           const body = await res.text().catch(() => '');
-          apiError = `SerpApi ${res.status}: ${body.slice(0, 300)}`;
+          apiError = `Google API ${res.status}: ${body.slice(0, 300)}`;
           continue;
         }
-        
         const data = await res.json();
-        
-        // SerpApi foutafhandeling
-        if (data.error) {
-            apiError = data.error;
-            continue;
-        }
-
-        // SerpApi geeft resultaten terug in 'images_results'
-        for (const item of data.images_results || []) {
-          const link = item.original; // De directe afbeelding-URL
+        if (data.error) apiError = data.error.message || JSON.stringify(data.error);
+        for (const item of data.items || []) {
+          const link = item.link;
           if (!link) continue;
-          
-          // Filter op extensies (JPG/PNG)
           if (!/\.(jpg|jpeg|png)(\?|$)/i.test(link)) continue;
           if (seen.has(link)) continue;
-          
           seen.add(link);
           images.push({
             url: link,
-            source: item.source || item.link || '',
+            source: item.image?.contextLink || item.displayLink || '',
             title: item.title || '',
             query: q,
           });
-          
-          if (images.length >= num) break;
         }
-      } catch (err) {
-        console.error("SerpApi fetch failed:", err);
-      }
+      } catch {}
     }
 
     if (images.length === 0 && apiError) {
       return Response.json({ ok: false, error: apiError, query: queries.join(', '), count: 0, images: [] });
     }
-    
     return Response.json({ ok: true, query: queries.join(', '), count: images.length, images, error: apiError });
   } catch (e) {
     return Response.json({ error: e.message }, { status: 500 });
