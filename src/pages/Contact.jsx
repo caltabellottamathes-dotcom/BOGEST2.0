@@ -10,6 +10,8 @@ import { base44 } from '@/api/base44Client';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 export default function Contact() {
   const { t, lang } = useLang();
   const locations = getLocations(lang).filter((l) => l.email);
@@ -44,11 +46,16 @@ export default function Contact() {
 
       <PanelContent>
       <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
+        {/* Gelaagd glas — warme gradient + ghostbull, zoals de pop-up */}
+        <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-8%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
+          <div className="relative z-10 p-5 md:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20">
           <SectionReveal direction="left">
             {success ?
             <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
-            className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
+            className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
 
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
@@ -59,7 +66,7 @@ export default function Contact() {
               className="mt-8 font-body text-sm text-primary hover:underline">{t('btn_another_message')}</button>
               </motion.div> :
 
-            <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+            <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
 
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-px w-10 bg-primary" />
@@ -104,7 +111,7 @@ export default function Contact() {
                     className={`group relative w-full text-left rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
                     <div className="relative h-28 md:h-32 overflow-hidden">
                       <img src={loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 60%)' }} />
+                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.78) 0%, rgba(26,24,20,0.1) 60%)' }} />
                       <span className="absolute left-4 top-3 font-heading font-bold text-white/35 text-3xl leading-none select-none">{String(i + 1).padStart(2, '0')}</span>
                       <h3 className="absolute left-4 right-4 bottom-3 font-heading text-lg md:text-xl font-bold text-white">{loc.name}<span className="text-primary">.</span></h3>
                       {selected && (
@@ -113,7 +120,7 @@ export default function Contact() {
                         </span>
                       )}
                     </div>
-                    <div className="p-4 bg-card/70 backdrop-blur-sm space-y-1.5">
+                    <div className="p-4 bg-white/[0.04] backdrop-blur-md space-y-1.5">
                       <p className="font-body text-sm text-muted-foreground leading-snug">{loc.address}</p>
                       <p className="font-body text-sm text-muted-foreground">{loc.phone}</p>
                       <p className="font-body text-sm text-muted-foreground break-all">{loc.email}</p>
@@ -123,6 +130,8 @@ export default function Contact() {
               })}
             </div>
           </SectionReveal>
+        </div>
+          </div>
         </div>
       </section>
       </PanelContent>

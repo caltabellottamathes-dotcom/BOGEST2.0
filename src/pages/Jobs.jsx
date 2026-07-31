@@ -251,7 +251,7 @@ export default function Jobs() {
         {/* Gelaagd glas — warme gradient + ghostbull, zoals de pop-up */}
         <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
-          <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '160%', width: 'auto', bottom: '-55%', right: '-10%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-10%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
           <div className="relative z-10 p-5 md:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <div>

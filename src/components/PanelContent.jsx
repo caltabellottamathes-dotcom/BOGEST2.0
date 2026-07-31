@@ -1,8 +1,8 @@
 import React from 'react';
 
-// The frosted-glass "skirt" that floats over a panel's header with rounded
-// top corners and a soft shadow onto the hero. Every panel ends with a
-// subtle, minimalist footer — purely a visual "einde" indication.
+// The frosted-glass "skirt" that floats over a panel's header. A subtle
+// layered gradient gives depth across every panel; each panel ends with a
+// minimalist footer — purely a visual "einde" indication.
 export default function PanelContent({ children, className = '' }) {
   return (
     <div
@@ -15,12 +15,16 @@ export default function PanelContent({ children, className = '' }) {
         boxShadow: '0 -24px 50px -14px rgba(0,0,0,0.40)',
       }}
     >
-      {children}
-      {/* Subtiele einde-van-paneel footer */}
-      <footer className="flex flex-col items-center gap-3 py-14 md:py-20 px-6 select-none">
-        <span className="h-px w-10 bg-primary/40" />
-        <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/70">Bogèst</span>
-      </footer>
+      {/* Gelaagde gradient — subtiele diepte over alle panelen */}
+      <div className="absolute inset-0 pointer-events-none rounded-t-[2rem]" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 16%, transparent 82%, rgba(40,36,28,0.12) 100%)' }} />
+      <div className="relative z-10">
+        {children}
+        {/* Subtiele einde-van-paneel footer */}
+        <footer className="flex flex-col items-center gap-3 py-14 md:py-20 px-6 select-none">
+          <span className="h-px w-10 bg-primary/40" />
+          <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/70">Bogèst</span>
+        </footer>
+      </div>
     </div>
   );
 }
