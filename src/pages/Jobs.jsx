@@ -126,13 +126,14 @@ Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we on
   },
 ];
 
-function JobCard({ job, onSelect, isSelected, lang }) {
+function JobCard({ job, onSelect, isSelected, lang, num }) {
   const [expanded, setExpanded] = useState(false);
   const { t } = useLang();
 
   return (
-    <div className={`rounded-2xl border transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur-sm ${isSelected ? 'border-primary' : 'border-border hover:border-primary/40'}`}>
-      <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5">
+    <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur-sm hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
+      <span className="absolute right-4 top-3 font-heading font-bold text-primary/10 group-hover:text-primary/20 text-5xl leading-none select-none pointer-events-none transition-colors duration-300">{num}</span>
+      <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5 relative">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
             <h3 className="font-heading text-base font-semibold text-foreground">{job.title}</h3>
@@ -146,8 +147,7 @@ function JobCard({ job, onSelect, isSelected, lang }) {
             </div>
             <p className="font-body text-sm text-muted-foreground mt-2">{job.desc}</p>
           </div>
-          <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+          <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1 border border-border group-hover:border-primary/50 transition-colors">
             {expanded ? <ChevronUp className="w-4 h-4 text-primary" /> : <ChevronDown className="w-4 h-4 text-muted-foreground" />}
           </div>
         </div>
@@ -259,7 +259,7 @@ export default function Jobs() {
             <div className="space-y-3">
               {openings.map((job, i) => (
                 <SectionReveal key={job.title} delay={i * 0.08}>
-                  <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} lang={lang} />
+                  <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} lang={lang} num={String(i + 1).padStart(2, '0')} />
                 </SectionReveal>
               ))}
             </div>
@@ -298,7 +298,8 @@ export default function Jobs() {
                 </button>
               </div>
             ) : (
-              <div className="sticky top-24 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+              <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+                <Briefcase className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>

@@ -48,7 +48,8 @@ export default function Contact() {
           <SectionReveal direction="left">
             {success ?
             <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
+            className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
+                <Mail className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -58,7 +59,8 @@ export default function Contact() {
               className="mt-8 font-body text-sm text-primary hover:underline">{t('btn_another_message')}</button>
               </motion.div> :
 
-            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+            <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+                <Mail className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('con_label')}</span>
@@ -89,19 +91,29 @@ export default function Contact() {
           </SectionReveal>
 
           <SectionReveal direction="right" delay={0.1}>
-            <div className="rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
             <div className="flex items-center gap-3 mb-4">
               <span className="h-px w-10 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('nav_locations')}</span>
             </div>
             <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-8">{t('con_locations')}<span className="text-primary">.</span></h2>
-            <div className="space-y-0">
-              {locations.map((loc, i) =>
-              <div key={loc.slug} className="py-6 border-b border-border/40 flex items-start gap-5">
-                  <span className="font-heading font-bold text-primary/20 text-3xl md:text-4xl leading-none flex-shrink-0 mt-1">{String(i + 1).padStart(2, '0')}</span>
-                  <div className="flex-1">
-                    <h3 className="font-heading text-xl font-bold text-foreground mb-3">{loc.name}<span className="text-primary">.</span></h3>
-                    <div className="space-y-2">
+            <div className="space-y-4">
+              {locations.map((loc, i) => {
+                const selected = form.location === loc.slug;
+                return (
+                  <button key={loc.slug} type="button" onClick={() => set('location', loc.slug)}
+                    className={`group relative w-full text-left rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
+                    <div className="relative h-28 md:h-32 overflow-hidden">
+                      <img src={loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.1) 60%)' }} />
+                      <span className="absolute left-4 top-3 font-heading font-bold text-white/35 text-3xl leading-none select-none">{String(i + 1).padStart(2, '0')}</span>
+                      <h3 className="absolute left-4 right-4 bottom-3 font-heading text-lg md:text-xl font-bold text-white">{loc.name}<span className="text-primary">.</span></h3>
+                      {selected && (
+                        <span className="absolute right-3 top-3 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary text-primary-foreground font-body text-[10px] tracking-[0.2em] uppercase">
+                          <Check className="w-3 h-3" />{t('shop_choose')}
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-4 bg-card/70 backdrop-blur-sm space-y-2">
                       <p className="font-body text-sm text-muted-foreground flex items-start gap-2">
                         <MapPin className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />{loc.address}
                       </p>
@@ -112,10 +124,9 @@ export default function Contact() {
                         <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.email}
                       </p>
                     </div>
-                  </div>
-                </div>
-              )}
-            </div>
+                  </button>
+                );
+              })}
             </div>
           </SectionReveal>
         </div>
