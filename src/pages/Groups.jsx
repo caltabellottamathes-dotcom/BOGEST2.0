@@ -7,8 +7,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import PanelHero from '@/components/PanelHero';
-import HostHint from '@/components/HostHint';
-import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
+import { HintLine } from '@/components/HostHint';
+import { hostQuestion } from '@/lib/hostHint';
 
 const LOCATIONS_I18N = {
   nl: [
@@ -273,11 +273,8 @@ export default function Groups() {
         </SectionReveal>
         <div className="space-y-3">
           {LOCATIONS.map((loc, i) => (
-            <SectionReveal key={loc.id} delay={i * 0.07} hover={false}>
-              <div className="group relative">
-                <LocationPanel loc={loc} />
-                {!loc.comingSoon && <HostHint variant="note" question={hostQuestion(lang, loc.name)} className="absolute top-3 right-14 z-20" />}
-              </div>
+            <SectionReveal key={loc.id} delay={i * 0.07} direction="fade" hover={false}>
+              <LocationPanel loc={loc} />
             </SectionReveal>
           ))}
         </div>
@@ -322,7 +319,7 @@ export default function Groups() {
             )}
           </SectionReveal>
 
-          <SectionReveal direction="right" delay={0.1}>
+          <SectionReveal direction="fade" delay={0.1}>
             <div className="space-y-4">
               {events.map(item => (
                 <div key={item.num} className="group relative p-5 bg-card border border-border rounded-xl">
@@ -333,7 +330,9 @@ export default function Groups() {
                       <p className="font-body text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
-                  <HostHint variant="note" question={hostQuestion(lang, item.title)} className="absolute top-3 right-3 z-20" />
+                  <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out">
+                    <HintLine question={hostQuestion(lang, item.title)} className="mt-3" />
+                  </div>
                 </div>
               ))}
             </div>

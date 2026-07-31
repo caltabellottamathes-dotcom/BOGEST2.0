@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import PanelHero from '@/components/PanelHero';
-import HostHint from '@/components/HostHint';
-import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
+import { HintLine } from '@/components/HostHint';
+import { hostQuestion } from '@/lib/hostHint';
 
 // Actuele vacatures — overgenomen van bogest.be/joinus
 const openings = [
@@ -124,7 +124,7 @@ Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we on
   },
 ];
 
-function JobCard({ job, onSelect, isSelected }) {
+function JobCard({ job, onSelect, isSelected, lang }) {
   const [expanded, setExpanded] = useState(false);
   const { t } = useLang();
 
@@ -199,6 +199,9 @@ function JobCard({ job, onSelect, isSelected }) {
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 transition-all duration-300">
                 <Briefcase className="w-3.5 h-3.5" /> {t('btn_apply')}
               </button>
+              <div className="mt-4">
+                <HintLine question={hostQuestion(lang, job.title)} />
+              </div>
             </div>
           </motion.div>
         )}
@@ -235,10 +238,7 @@ export default function Jobs() {
             <div className="space-y-3">
               {openings.map((job, i) => (
                 <SectionReveal key={job.title} delay={i * 0.08}>
-                  <div className="group relative">
-                    <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} />
-                    <HostHint variant="note" question={hostQuestion(lang, job.title)} className="absolute bottom-3 right-3 z-20" />
-                  </div>
+                  <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} lang={lang} />
                 </SectionReveal>
               ))}
             </div>

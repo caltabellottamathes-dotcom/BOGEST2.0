@@ -2,13 +2,12 @@ import React from 'react';
 import { askHost } from '@/lib/hostHint';
 
 // "Vraag het aan Bogèst" — a quiet invitation in the same tracked, all-caps
-// body type as the section eyebrows (Ons verhaal, 4 vestigingen, …). White,
-// no extra font, no monogram. It only appears on hover and is placed so it
-// never sits over readable text.
+// body type as the section eyebrows. White, no extra font, no monogram. It
+// only appears on hover and is placed so it never sits over readable text.
 //
-// variant="inline" — slides out inline after a price (menu rows).
-// variant="seal" | "note" | "photo" — a small dark chip that fades in over a
-//                                       photo or a panel/card surface.
+// HostHint (default)        — hover-gated chip/inline (image cards, menu rows).
+// HintLine (named export)  — plain, always-visible chip for expand-at-bottom
+//                             areas (location/CTA cards, accordion content).
 
 const FULL = 'Vraag het aan Bogèst';
 
@@ -36,13 +35,21 @@ export default function HostHint({ question, label = FULL, className = '', varia
     );
   }
 
-  // chip — used over photos (seal/photo) and surfaces (note)
   return (
     <button type="button" onClick={onClick}
       className={`inline-flex items-center pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out ${className}`}>
       <span className="inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full bg-black/45 border border-white/15">
         <Mark label={label} />
       </span>
+    </button>
+  );
+}
+
+export function HintLine({ question, label = FULL, className = '' }) {
+  return (
+    <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(question); }}
+      className={`inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full bg-black/45 border border-white/15 ${className}`}>
+      <Mark label={label} />
     </button>
   );
 }

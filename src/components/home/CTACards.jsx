@@ -1,14 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays, ShoppingBag, Gift } from 'lucide-react';
+import { CalendarDays, ShoppingBag, Gift } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
-import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
+import { HintLine } from '@/components/HostHint';
+import { hostQuestion } from '@/lib/hostHint';
 
 export default function CTACards() {
-  const { t } = useLang();
-  const { siteImg } = useSiteImages();
+  const { t, lang } = useLang();
   const cards = [
     {
       num: '01',
@@ -43,28 +43,25 @@ export default function CTACards() {
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('home_cta_label')}</span>
           <HomeTitle title={t('home_cta_title')} accent={t('home_cta_title_accent')} />
         </SectionReveal>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {cards.map((card, i) => {
             const Icon = card.icon;
             return (
               <SectionReveal key={card.num} delay={i * 0.1} hover={false}>
-                <Link to={card.path} className="group relative block rounded-2xl border border-border bg-card p-6 pt-12 transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
-                  {/* icon medallion — overlaps the top edge */}
-                  <span className="absolute -top-5 left-6 w-12 h-12 rounded-full bg-background border border-primary/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-500 shadow-sm">
+                <Link to={card.path} className="group relative block overflow-hidden rounded-2xl border border-border aspect-[4/5]">
+                  <img src={card.image} alt={card.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" style={{ filter: 'saturate(0.85) brightness(0.92)' }} loading="lazy" decoding="async" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+                  <span className="absolute top-4 left-4 font-heading text-4xl font-bold text-white/20 leading-none">{card.num}</span>
+                  <span className="absolute top-4 right-4 w-10 h-10 rounded-full bg-black/40 border border-white/15 flex items-center justify-center text-white" style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
                     <Icon style={{ width: 17, height: 17 }} />
                   </span>
-                  {/* italic number watermark */}
-                  <span className="absolute top-4 right-5 font-heading text-5xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-500 leading-none">{card.num}</span>
-                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary/80 mb-2 block">Bogèst</span>
-                  <h3 className="font-heading text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">{card.title}</h3>
-                  <div className="flex items-center gap-2 my-3.5">
-                    <div className="h-px w-8 bg-primary/40 group-hover:w-12 transition-all duration-500" />
-                    <div className="w-1 h-1 rounded-full bg-primary/50" />
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <h3 className="font-heading text-xl font-bold text-white leading-tight mb-1.5">{card.title}</h3>
+                    <p className="font-body text-sm text-white/70 leading-relaxed line-clamp-2">{card.desc}</p>
+                    <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out">
+                      <HintLine question={hostQuestion(lang, card.title)} className="mt-3" />
+                    </div>
                   </div>
-                  <p className="font-body text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
-                  <span className="inline-flex items-center gap-1.5 mt-5 font-body text-[10px] tracking-[0.25em] uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {t('btn_more')} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-                  </span>
                 </Link>
               </SectionReveal>
             );
