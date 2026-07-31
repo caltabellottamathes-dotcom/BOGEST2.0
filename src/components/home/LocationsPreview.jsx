@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, MapPin } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
@@ -9,9 +9,10 @@ import HintBubble from '@/components/HintBubble';
 import { hostQuestion } from '@/lib/hostHint';
 import HomeTitle from '@/components/home/HomeTitle';
 
-// "Altijd een Bogèst dichtbij" — floating image cards that overlap each
-// other slightly (rising z-index so each card floats over the previous),
-// alternating left/right alignment for an asymmetric editorial rhythm.
+// "Altijd een Bogèst dichtbij" — alternating editorial rows (image 7 / text 5),
+// pulled closer together with a slight vertical overlap so each card floats
+// over the one above it a touch (rising z-index; text stays clear via the
+// centred grid).
 export default function LocationsPreview() {
   const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
@@ -30,57 +31,63 @@ export default function LocationsPreview() {
           <HomeTitle title={t('section_locations')} accent={t('section_locations_accent')} />
         </SectionReveal>
 
-        <div className="space-y-0">
+        <div>
           {LOCATIONS_DATA.map((loc, i) => {
             const inactive = loc.active === false;
-            const alignLeft = i % 2 === 0;
+            const imageLeft = i % 2 === 0;
+            const img = siteImg('location.' + loc.slug) || loc.image;
             return (
               <SectionReveal
                 key={loc.slug}
                 direction="up"
-                className={`relative ${i === 0 ? '' : '-mt-10 md:-mt-14'}`}
+                className={`relative py-3 md:py-4 ${i === 0 ? '' : '-mt-12 md:-mt-16'}`}
                 style={{ zIndex: 10 + i }}
               >
-                <div
-                  className={`group relative rounded-3xl overflow-hidden h-[20rem] md:h-[24rem] w-full ${alignLeft ? 'md:mr-[10%]' : 'md:ml-[10%]'}`}
-                  style={{ boxShadow: '0 26px 64px rgba(0,0,0,0.45)' }}
-                >
-                  <img
-                    src={siteImg('location.' + loc.slug) || loc.image}
-                    alt={loc.name}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.88) brightness(0.92)' }}
-                    loading="lazy" decoding="async"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                  <span className={`absolute top-5 left-6 font-heading font-bold leading-none text-4xl ${inactive ? 'text-white/20' : 'text-white/30'}`}>
-                    {loc.number}
-                  </span>
-                  {inactive && (
-                    <span className="absolute top-5 right-6 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />
-                      <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
-                    </span>
-                  )}
-                  {!inactive && <HintBubble question={hostQuestion(lang, loc.name)} />}
-
-                  <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex items-end justify-between gap-4">
-                    <div>
-                      <div className="flex items-center gap-3 mb-2">
-                        <span className="h-px w-8 bg-primary/60" />
-                        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
-                      </div>
-                      <h3 className="font-heading text-2xl md:text-3xl font-bold text-white">{loc.name}</h3>
-                      {inactive ? (
-                        <p className="font-body text-sm text-white/70 mt-1">{loc.city}, {loc.region} — {t('loc_coming_soon')}.</p>
-                      ) : (
-                        <p className="font-body text-sm text-white/75 mt-1 max-w-xs leading-relaxed">{loc.address}</p>
+                <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-10 items-center">
+                  {/* Image */}
+                  <div className={`md:col-span-7 ${imageLeft ? '' : 'md:order-2'}`}>
+                    <div className="group relative overflow-hidden rounded-2xl aspect-[16/10] shadow-2xl">
+                      <img
+                        src={img}
+                        alt={loc.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.85) brightness(0.9)' }}
+                        loading="lazy" decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                      <span className={`absolute top-4 left-4 font-heading font-bold leading-none ${inactive ? 'text-white/20' : 'text-white/30'}`}>{loc.number}</span>
+                      {inactive && (
+                        <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30">
+                          <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />
+                          <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
+                        </span>
                       )}
+                      {!inactive && <HintBubble question={hostQuestion(lang, loc.name)} />}
                     </div>
-                    {!inactive && (
-                      <Link to={`/locations/${loc.slug}`} className="group/cta flex-shrink-0 inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/30 text-white hover:bg-primary hover:border-primary transition-all duration-300">
-                        <ArrowRight className="w-4 h-4 group-hover/cta:translate-x-0.5 transition-transform duration-300" />
-                      </Link>
+                  </div>
+
+                  {/* Text */}
+                  <div className={`md:col-span-5 ${imageLeft ? '' : 'md:order-1'}`}>
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
+                      <span className="h-px w-8 bg-primary/40" />
+                      <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                    </div>
+                    <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-2">{loc.name}</h3>
+                    {inactive ? (
+                      <p className="font-body text-sm text-muted-foreground max-w-xs leading-relaxed">
+                        {loc.city}, {loc.region} — {t('loc_coming_soon')}.
+                      </p>
+                    ) : (
+                      <>
+                        <p className="font-body text-sm text-muted-foreground mb-5 max-w-xs leading-relaxed">{loc.address}</p>
+                        <Link to={`/locations/${loc.slug}`} className="group/cta inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary">
+                          {t('btn_more')}
+                          <span className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-primary/40 text-primary group-hover/cta:bg-primary group-hover/cta:text-primary-foreground transition-all duration-300">
+                            <ArrowRight className="w-3.5 h-3.5 group-hover/cta:translate-x-0.5 transition-transform duration-300" />
+                          </span>
+                        </Link>
+                      </>
                     )}
                   </div>
                 </div>

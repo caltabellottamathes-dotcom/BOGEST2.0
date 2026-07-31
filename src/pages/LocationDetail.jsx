@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { MapPin, Phone, Mail, Users, Clock, Car, ArrowUpRight, Sparkles } from 'lucide-react';
 import RestaurantPanel from '@/components/RestaurantPanel';
+import PanelContent from '@/components/PanelContent';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
@@ -207,12 +208,12 @@ export default function LocationDetail() {
     <div className="w-full">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative w-full overflow-hidden">
-        <div className="relative h-[62vh] min-h-[440px] w-full">
+        <div className="relative h-[46vh] min-h-[360px] w-full">
           <img src={siteImg('location.' + slug) || loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 3%, hsl(var(--background) / 0.32) 45%, rgba(0,0,0,0.5) 100%)' }} />
           {/* Ghosted city name bleeding off the right edge */}
           <span aria-hidden className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 font-heading italic font-bold text-white/[0.06] select-none pointer-events-none leading-none" style={{ fontSize: 'clamp(8rem, 26vw, 20rem)' }}>{loc.city}</span>
-          <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-12 md:pb-16">
+          <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-28 md:pb-32">
             <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-3 block">{t('nav_locations')} · {loc.region}</span>
             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{loc.name}<span className="text-primary">.</span></h1>
             <p className="font-body text-sm md:text-base text-foreground/80 mt-3 flex items-center gap-2">
@@ -232,16 +233,14 @@ export default function LocationDetail() {
         </div>
       </section>
 
-      {/* ── Quick stats — frosted strip overlapping the hero ──────────────── */}
-      <section className="w-full px-6 md:px-10 lg:px-16 -mt-14 md:-mt-20 relative z-20">
-        <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
-          style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(12px) saturate(140%)', WebkitBackdropFilter: 'blur(12px) saturate(140%)' }}>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 md:gap-0 md:divide-x md:divide-white/10">
-            <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
-            <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
-            <StatCard icon={Clock} label={L.openToday} value={openToday} />
-            <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
-          </div>
+      <PanelContent>
+      {/* ── Quick stats ──────────────────────────────────────────────────── */}
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-8 md:pt-10 pb-2">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 md:gap-0 md:divide-x md:divide-white/10">
+          <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
+          <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
+          <StatCard icon={Clock} label={L.openToday} value={openToday} />
+          <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
         </div>
       </section>
 
@@ -390,6 +389,8 @@ export default function LocationDetail() {
           </SectionReveal>
         </div>
       </section>
+
+      </PanelContent>
 
       {/* Agent-triggered overlay (kept for the digital host / ElevenLabs) */}
       {data && (

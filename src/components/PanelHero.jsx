@@ -30,7 +30,7 @@ export default function PanelHero({ label, title, titleAccent, subtitle, childre
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 max-w-6xl md:pl-10"
       >
         <span className="md:hidden font-body text-[10px] tracking-[0.35em] uppercase text-white/80 mb-4 block">{label}</span>

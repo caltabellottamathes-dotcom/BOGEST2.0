@@ -45,7 +45,7 @@ function CategoryRow({ cat, idx }) {
       id={cat.id}
       initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="scroll-mt-32 py-12 border-b border-border last:border-0"
     >
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

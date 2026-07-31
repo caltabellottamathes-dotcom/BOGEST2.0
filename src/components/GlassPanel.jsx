@@ -84,7 +84,7 @@ export default function GlassPanelWrapper({ children }) {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="fixed right-0 z-40"
             style={{
               top: navHeight,
