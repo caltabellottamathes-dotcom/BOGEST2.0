@@ -89,14 +89,16 @@ export default async function(req) {
 
     const payload = await req.json().catch(() => ({}));
     const doPatch = !!(payload && payload.patch);
+    const patchOnly = !!(payload && payload.patchOnly);
     const inspectOnly = !!(payload && payload.inspect);
+    const quiet = inspectOnly || patchOnly;
 
     // 1) Confirm the proxy is reachable on its public URL.
-    const probe = inspectOnly ? null : await ping(key, PROXY_URL);
+    const probe = quiet ? null : await ping(key, PROXY_URL);
 
     // 2) Real chat test through the proxy.
     let chat = null;
-    if (!inspectOnly && probe && probe.ok) chat = await chatTest(key, PROXY_URL);
+    if (!quiet && probe && probe.ok) chat = await chatTest(key, PROXY_URL);
 
     // 3) Inspect the agent's prompt object (where the LLM config lives).
     const getRes = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
@@ -131,20 +133,58 @@ export default async function(req) {
       });
       const t = await r.text();
       patchResult = { reverted: r.ok, status: r.status, body: t.slice(0, 600) };
-    } else if (doPatch) {
-      const custom_llm = { server_url: PROXY_URL, model_id: 'bogest-via-base44', api_key: key };
-      const r = await fetch(`${BASE}/${AGENT_ID}`, {
-        method: 'PATCH', headers: authHeaders(),
-        body: JSON.stringify({ conversation_config: { agent: { prompt: { llm: 'custom-llm', custom_llm } } } }),
-      });
-      const t = await r.text();
-      patchResult = { ok: r.ok, status: r.status, body: t.slice(0, 1000) };
-      if (r.ok) {
-        const g = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
-        if (g.ok) {
-          const a = await g.json();
-          const p = a.conversation_config && a.conversation_config.agent && a.conversation_config.agent.prompt;
-          verify = { llm: p && p.llm, custom_llm: p && p.custom_llm };
+    } else if (doPatch || patchOnly) {
+      // ElevenLabs custom_llm.api_key must reference a stored workspace secret
+      // (ConvAISecretLocator), not an inline string. The proxy authenticates
+      // with `Authorization: Bearer <ELEVENLABS_API_KEY>`, so we store that key
+      // as a secret named OPENAI_API_KEY and point the locator at its id.
+      const SECRETS = 'https://api.elevenlabs.io/v1/convai/secrets';
+      let secretId = null;
+      let secretInfo = null;
+      const listRes = await fetch(SECRETS, { headers: authHeaders() });
+      if (listRes.ok) {
+        const list = await listRes.json();
+        const arr = Array.isArray(list) ? list : (list && list.secrets) || [];
+        const found = arr.find((s) => s && s.name === 'OPENAI_API_KEY');
+        if (found) { secretId = found.secret_id; secretInfo = { reused: true, name: found.name }; }
+      } else {
+        secretInfo = { listError: listRes.status };
+      }
+      if (!secretId) {
+        const cRes = await fetch(SECRETS, {
+          method: 'POST', headers: authHeaders(),
+          body: JSON.stringify({ type: 'new', name: 'OPENAI_API_KEY', value: key }),
+        });
+        const cTxt = await cRes.text();
+        if (cRes.ok) {
+          const cj = JSON.parse(cTxt);
+          secretId = cj.secret_id;
+          secretInfo = { created: true, name: cj.name };
+        } else {
+          secretInfo = { createError: cRes.status, body: cTxt.slice(0, 400) };
+        }
+      }
+      if (!secretId) {
+        patchResult = { ok: false, error: 'no_secret_id', secretInfo };
+      } else {
+        const custom_llm = { url: PROXY_URL, model_id: 'bogest-via-base44', api_key: { secret_id: secretId } };
+        const r = await fetch(`${BASE}/${AGENT_ID}`, {
+          method: 'PATCH', headers: authHeaders(),
+          body: JSON.stringify({ conversation_config: { agent: { prompt: { llm: 'custom-llm', custom_llm } } } }),
+        });
+        const t = await r.text();
+        patchResult = {
+          ok: r.ok, status: r.status, body: t.slice(0, 1000),
+          secretInfo,
+          locator: { url: custom_llm.url, model_id: custom_llm.model_id, api_key: custom_llm.api_key },
+        };
+        if (r.ok) {
+          const g = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
+          if (g.ok) {
+            const a = await g.json();
+            const p = a.conversation_config && a.conversation_config.agent && a.conversation_config.agent.prompt;
+            verify = { llm: p && p.llm, custom_llm: p && p.custom_llm };
+          }
         }
       }
     }
