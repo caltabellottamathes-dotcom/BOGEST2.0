@@ -35,7 +35,7 @@ export default function PanelHero({ label, title, titleAccent, subtitle, childre
       >
         <span className="md:hidden font-body text-[10px] tracking-[0.35em] uppercase text-white/80 mb-4 block">{label}</span>
         <h1
-          className="font-heading font-bold text-white leading-[0.92] tracking-tight text-[13vw] sm:text-[9vw] md:text-[7.5vw] lg:text-[6vw]"
+          className="font-heading font-bold text-white leading-[1.05] tracking-tight text-4xl sm:text-5xl md:text-6xl"
           style={{ textShadow: '0 2px 30px rgba(0,0,0,0.55)' }}
         >
           {title}

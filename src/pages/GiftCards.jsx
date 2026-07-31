@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Gift, Smile, Star, ArrowRight } from 'lucide-react';
-import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import GiftCardPanel from '@/components/reserve/GiftCardPanel';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import EditorialHighlights from '@/components/EditorialHighlights';
 
 export default function GiftCards() {
-  const { theme } = useTheme();
   const { t } = useLang();
-  const isDark = theme === 'dark';
   const [panelOpen, setPanelOpen] = useState(false);
 
   const HIGHLIGHTS = [
@@ -33,8 +31,9 @@ export default function GiftCards() {
 
       <PanelHero label={t('gc_panel_label')} title={t('gc_panel_title')} titleAccent={t('gc_panel_accent')} subtitle={t('gc_panel_subtitle')} positionKey="giftcards.hero" />
 
+      <PanelContent>
       {/* ── Highlights ───────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24">
+      <section className="w-full px-6 md:px-16 lg:px-24 pt-10 md:pt-12 pb-16 md:pb-24">
         <EditorialHighlights items={HIGHLIGHTS} />
       </section>
 
@@ -47,42 +46,21 @@ export default function GiftCards() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-6xl mx-auto"
         >
-          <div className="relative overflow-hidden rounded-2xl"
-            style={{
-              background: isDark
-                ? 'linear-gradient(135deg, rgba(40,28,0,0.95) 0%, rgba(20,14,0,0.98) 100%)'
-                : 'linear-gradient(135deg, rgba(200,210,160,0.60) 0%, rgba(107,122,63,0.20) 100%)',
-              border: isDark ? '1px solid rgba(231,205,112,0.18)' : '1px solid rgba(74,83,32,0.28)',
-            }}
-          >
-            {/* Decorative gold orb */}
-            <div
-              className="absolute -top-24 -right-24 w-80 h-80 rounded-full pointer-events-none"
-              style={{ background: isDark ? 'radial-gradient(circle, rgba(231,205,112,0.15) 0%, transparent 70%)' : 'radial-gradient(circle, rgba(107,122,63,0.15) 0%, transparent 70%)' }}
-            />
-
-            <div className="relative px-8 py-12 md:px-16 md:py-16 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+          <div className="relative rounded-3xl border border-border/50 bg-card/60 backdrop-blur-xl shadow-2xl">
+            <div className="relative px-8 py-12 md:px-14 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div className="max-w-lg">
-                <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4">
-                  {t('gc_cta_eyebrow')}
-                </p>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground leading-tight mb-4">
-                  {t('gc_cta_title')}<br className="hidden md:block" />{' '}
-                  <span className="italic text-primary">{t('gc_cta_accent')}</span>.
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="h-px w-10 bg-primary" />
+                  <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('gc_cta_eyebrow')}</span>
+                </div>
+                <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-3">
+                  {t('gc_cta_title')} <span className="italic text-primary">{t('gc_cta_accent')}</span><span className="text-primary">.</span>
                 </h2>
-                <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">
-                  {t('gc_cta_desc')}
-                </p>
+                <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">{t('gc_cta_desc')}</p>
               </div>
-
               <button
                 onClick={() => setPanelOpen(true)}
-                className="group flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 rounded-full font-body text-sm tracking-widest uppercase transition-all duration-500 hover:gap-5"
-                style={{
-                  background: 'hsl(var(--primary))',
-                  color: 'hsl(var(--primary-foreground))',
-                }}
-              >
+                className="group flex-shrink-0 inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
                 {t('gc_cta_btn')}
                 <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
@@ -90,6 +68,7 @@ export default function GiftCards() {
           </div>
         </motion.div>
       </section>
+      </PanelContent>
 
       {/* Slide-out gift card panel */}
       <GiftCardPanel isOpen={panelOpen} onClose={() => setPanelOpen(false)} />

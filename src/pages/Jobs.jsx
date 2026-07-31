@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 
@@ -228,7 +229,8 @@ export default function Jobs() {
     <div className="w-full">
       <PanelHero label={t('job_label')} title={t('job_title')} titleAccent="kom erbij" subtitle={t('job_subtitle')} positionKey="jobs.hero" />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
+      <PanelContent>
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <div>
             <SectionReveal>
@@ -300,6 +302,7 @@ export default function Jobs() {
           </SectionReveal>
         </div>
       </section>
+      </PanelContent>
     </div>
   );
 }

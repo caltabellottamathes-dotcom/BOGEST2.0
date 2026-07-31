@@ -186,12 +186,12 @@ export default function PhilosophySection() {
                     draggable={false}
                     className="absolute pointer-events-none select-none hidden md:block"
                     style={{
-                      height: '88%',
+                      height: '150%',
                       width: 'auto',
-                      bottom: '-8%',
-                      right: imageLeft ? '-6%' : 'auto',
-                      left: imageLeft ? 'auto' : '-6%',
-                      opacity: 0.10,
+                      bottom: '-118%',
+                      right: imageLeft ? '-28%' : 'auto',
+                      left: imageLeft ? 'auto' : '-28%',
+                      opacity: 0.13,
                       filter: 'grayscale(1) brightness(2.6)',
                       mixBlendMode: 'screen',
                       zIndex: 0

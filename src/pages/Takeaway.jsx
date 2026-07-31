@@ -4,6 +4,7 @@ import { ArrowRight, Clock, MapPin, ShoppingBag, Package, ExternalLink } from 'l
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import EditorialHighlights from '@/components/EditorialHighlights';
 
 const BOGEST_ONLINE_URL = 'https://www.bogest-online.be/';
@@ -24,8 +25,9 @@ export default function Takeaway() {
 
       <PanelHero label={t('ta_panel_label')} title="Bogèst" titleAccent={t('ta_panel_accent')} subtitle={t('ta_panel_subtitle')} positionKey="takeaway.hero" />
 
+      <PanelContent>
       {/* ── Highlights ───────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24">
+      <section className="w-full px-6 md:px-16 lg:px-24 pt-10 md:pt-12 pb-16 md:pb-24">
         <EditorialHighlights items={HIGHLIGHTS} />
       </section>
 
@@ -105,6 +107,7 @@ export default function Takeaway() {
           </div>
         </motion.div>
       </section>
+      </PanelContent>
 
     </div>
   );

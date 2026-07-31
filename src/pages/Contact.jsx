@@ -8,6 +8,7 @@ import { useLang } from '@/lib/LangContext';
 import { getLocations } from '@/lib/data';
 import { base44 } from '@/api/base44Client';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 
 export default function Contact() {
   const { t, lang } = useLang();
@@ -41,7 +42,8 @@ export default function Contact() {
     <div className="w-full">
       <PanelHero label={t('con_label')} title={t('con_title')} titleAccent={t('con_title_accent')} positionKey="contact.hero" />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
+      <PanelContent>
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20">
           <SectionReveal direction="left">
             {success ?
@@ -105,6 +107,7 @@ export default function Contact() {
           </SectionReveal>
         </div>
       </section>
+      </PanelContent>
     </div>
   );
 }

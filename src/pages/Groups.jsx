@@ -7,6 +7,7 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 
@@ -266,7 +267,8 @@ export default function Groups() {
     <div className="w-full">
       <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} positionKey="groups.hero" />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-16">
+      <PanelContent>
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16">
         <SectionReveal className="mb-8">
           <div className="flex items-center gap-3 mb-3">
             <span className="h-px w-10 bg-primary" />
@@ -341,6 +343,7 @@ export default function Groups() {
           </SectionReveal>
         </div>
       </section>
+      </PanelContent>
     </div>
   );
 }

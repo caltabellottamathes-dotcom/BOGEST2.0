@@ -13,8 +13,8 @@ function GlassPanelSurface() {
       style={{
         borderRadius: '24px 0 0 0',
         background: 'rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(40px) saturate(160%)',
-        WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+        backdropFilter: 'blur(20px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(20px) saturate(150%)',
         borderTop: '1px solid rgba(255,255,255,0.16)',
         borderLeft: '1px solid rgba(255,255,255,0.16)',
         boxShadow: '0 -24px 80px rgba(0,0,0,0.50)',
@@ -109,7 +109,7 @@ export default function GlassPanelWrapper({ children }) {
             <PanelScrollContext.Provider value={contentRef}>
               <div
                 ref={contentRef}
-                className="relative h-full overflow-y-auto overflow-x-hidden"
+                className="relative h-full overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain"
               >
                 {children}
               </div>

@@ -5,6 +5,7 @@ import { useLang } from '@/lib/LangContext';
 import { getLocations } from '@/lib/data';
 import ReservationPanel from '@/components/reserve/ReservationPanel';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 
 export default function Reserve() {
   const { t, lang } = useLang();
@@ -35,8 +36,9 @@ export default function Reserve() {
     <div className="w-full">
       <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} positionKey="reserve.hero" />
 
+      <PanelContent>
       {/* Location picker */}
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
         <div className="max-w-4xl">
           <div>
             <div className="flex items-center gap-3 mb-6">
@@ -87,6 +89,7 @@ export default function Reserve() {
           </AnimatePresence>
         </div>
       </section>
+      </PanelContent>
 
       {/* Slide-out reservation panel */}
       <ReservationPanel
