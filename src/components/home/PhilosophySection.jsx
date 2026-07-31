@@ -8,7 +8,7 @@ import HomeTitle from '@/components/home/HomeTitle';
 import HostHint from '@/components/HostHint';
 import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
-const PILLARS_DATA = {
+export const PILLARS_DATA = {
   nl: [
   { num: '01', title: 'Onze Formule', subtitle: 'De basis van alles', body: 'Bij Bogèst draait alles om de formule: bij elk hoofdgerecht is een voorgerecht naar keuze én een dessert inbegrepen. Geen verrassingen op de rekening — één prijs, een complete ervaring. Van de warme soep tot de laatste hap dessert, wij zorgen voor het hele traject. Dat is hoe wij gastvrijheid vieren.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg' },
   { num: '02', title: 'Onze Specialiteit', subtitle: 'Vleesambacht', body: 'Vlees is ons handwerk. Onze grilleurs kennen elk stuk, elke snede en elke techniek om de smaak optimaal tot zijn recht te laten komen. Of het nu om een malse filet pur, een goed gemarmerde ribeye of een feestelijke côte à l\'os gaat — wij weten hoe elk stuk op de grill thuishoort. Onze trots: het Belgisch Witblauw, een streekras dat vlees van uitzonderlijke fijnheid en kwaliteit levert.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg' },
@@ -32,7 +32,7 @@ const PILLARS_DATA = {
 
 };
 
-const LABELS = {
+export const LABELS = {
   nl: { label: 'Onze belofte en filosofie', title: 'Het gebaar achter Bogèst.', accent: 'Bogèst' },
   fr: { label: 'Notre promesse et philosophie', title: 'Le geste derrière Bogèst.', accent: 'Bogèst' },
   en: { label: 'Our promise and philosophy', title: 'The gesture behind Bogèst.', accent: 'Bogèst' }

@@ -16,6 +16,7 @@ import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
 import About from '@/pages/About';
 import OnsVerhaal from '@/pages/OnsVerhaal';
+import OnzeFilosofie from '@/pages/OnzeFilosofie';
 import Locations from '@/pages/Locations';
 import LocationDetail from '@/pages/LocationDetail';
 import RestaurantSpaces from '@/pages/RestaurantSpaces';
@@ -62,6 +63,7 @@ const AuthenticatedApp = () => {
         <Route path="/menu" element={<Menu />} />
         <Route path="/about" element={<About />} />
         <Route path="/about/ons-verhaal" element={<OnsVerhaal />} />
+        <Route path="/about/onze-filosofie" element={<OnzeFilosofie />} />
         <Route path="/locations" element={<Locations />} />
         <Route path="/locations/:slug" element={<LocationDetail />} />
         <Route path="/restaurant-spaces/:location" element={<RestaurantSpaces />} />
