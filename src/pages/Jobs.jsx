@@ -9,6 +9,7 @@ import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
+import { base44 } from '@/api/base44Client';
 
 // Actuele vacatures — overgenomen van bogest.be/joinus
 const openings = [
@@ -219,10 +220,25 @@ export default function Jobs() {
   const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const handleApply = (e) => {
+  const handleApply = async (e) => {
     e.preventDefault();
+    if (!selected) return;
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSuccess(true); }, 1000);
+    try {
+      await base44.functions.invoke('sendContactMessage', {
+        type: 'job',
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        message: form.motivation,
+        location: selected.location,
+        jobTitle: selected.title,
+      });
+      setSuccess(true);
+    } catch {
+      // validation/store failure — leave the form so the visitor can retry
+    }
+    setLoading(false);
   };
 
   return (

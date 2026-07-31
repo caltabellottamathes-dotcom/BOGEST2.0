@@ -32,7 +32,7 @@ export default function LocationsPreview() {
           <HomeTitle title={t('section_locations')} accent={t('section_locations_accent')} />
         </SectionReveal>
 
-        <div className="space-y-5 md:space-y-0">
+        <div className="space-y-3 md:space-y-0">
           {LOCATIONS_DATA.map((loc, i) => {
             const inactive = loc.active === false;
             const imageLeft = i % 2 === 0;
@@ -42,7 +42,7 @@ export default function LocationsPreview() {
               <SectionReveal
                 key={loc.slug}
                 direction="up"
-                className={`relative md:py-4 ${i === 0 ? '' : 'md:-mt-16'}`}
+                className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-20'}`}
                 style={{ zIndex: 10 + i }}
               >
                 {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}

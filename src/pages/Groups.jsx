@@ -10,6 +10,7 @@ import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
+import { base44 } from '@/api/base44Client';
 
 const LOCATIONS_I18N = {
   nl: [
@@ -250,10 +251,25 @@ export default function Groups() {
   const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSuccess(true); }, 1000);
+    try {
+      await base44.functions.invoke('sendContactMessage', {
+        type: 'group',
+        name: form.name,
+        email: form.email,
+        phone: form.phone,
+        guests: form.guests,
+        date: form.date,
+        message: form.notes,
+        location: form.location,
+      });
+      setSuccess(true);
+    } catch {
+      // unknown location (e.g. Lommel) or store failure — leave the form
+    }
+    setLoading(false);
   };
 
   const events = [

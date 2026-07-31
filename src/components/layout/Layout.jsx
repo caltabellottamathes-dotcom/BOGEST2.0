@@ -31,18 +31,21 @@ export default function Layout() {
   // When panel closes: restore scroll position
   useEffect(() => {
     if (isPanel) {
-      frozenScrollRef.current = window.scrollY;
+      // Return the homepage to the Hero so the blurred backdrop behind the
+      // panel is always the hero section, regardless of where the visitor was.
+      frozenScrollRef.current = 0;
+      window.scrollTo(0, 0);
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
-      document.body.style.top = `-${frozenScrollRef.current}px`;
+      document.body.style.top = '0';
       document.body.style.width = '100%';
     } else {
-      const savedScroll = frozenScrollRef.current;
+      // On close, keep the homepage on the Hero.
       document.body.style.overflow = '';
       document.body.style.position = '';
       document.body.style.top = '';
       document.body.style.width = '';
-      window.scrollTo(0, savedScroll);
+      window.scrollTo(0, 0);
     }
     return () => {
       document.body.style.overflow = '';

@@ -1,55 +1,65 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.38';
+import { resolveLocationSlug, locationEmail, locationName } from '../../shared/locationEmails.ts';
 
-const LOCATION_NAMES = {
-  hasselt: 'Bogèst Hasselt',
-  borgloon: 'Bogèst Borgloon',
-  'heusden-zolder': 'Bogèst Heusden-Zolder',
-};
-
+// Handles three website form types (contact / job application / group request).
+// The visitor never chooses an e-mail address — the correct vestiging address
+// is derived automatically from the location (or job location) they selected.
+// Every submission is also stored as a ContactRequest so the admin always has
+// a record, even if the e-mail itself cannot be delivered.
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const { name, email, message, location } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { type = 'contact', name, email, phone, message, location, jobTitle, guests, date } = body;
 
-    if (!name || !email || !message || !location) {
-      return Response.json({ error: 'Name, email, message and location are required' }, { status: 400 });
+    if (!name || !email || !location) {
+      return Response.json({ error: 'Name, email and location are required' }, { status: 400 });
     }
 
-    if (!LOCATION_NAMES[location]) {
-      return Response.json({ error: 'Invalid location' }, { status: 400 });
+    const slug = resolveLocationSlug(location);
+    const to = locationEmail(slug);
+    if (!to) {
+      return Response.json({ error: 'No e-mail address known for this location' }, { status: 400 });
+    }
+    const locName = locationName(slug);
+
+    let subject: string;
+    let bodyText: string;
+
+    if (type === 'job') {
+      subject = `Nieuwe sollicitatie — ${jobTitle || 'Vacature'} — ${locName}`;
+      bodyText = `Nieuwe sollicitatie via de website\n\nFunctie: ${jobTitle || '-'}\nVestiging: ${locName}\n\nNaam: ${name}\nE-mail: ${email}\nTelefoon: ${phone || '-'}\n\nMotivatie:\n${message || ''}\n\n---\nVerzonden via de sollicitatiepagina op de Bogèst website.`;
+    } else if (type === 'group') {
+      subject = `Nieuwe groepsaanvraag — ${locName}`;
+      bodyText = `Nieuwe groepsaanvraag via de website\n\nVestiging: ${locName}\nAantal gasten: ${guests || '-'}\nGewenste datum: ${date || '-'}\n\nNaam: ${name}\nE-mail: ${email}\nTelefoon: ${phone || '-'}\n\nOpmerkingen:\n${message || ''}\n\n---\nVerzonden via de groepenpagina op de Bogèst website.`;
+    } else {
+      if (!message) return Response.json({ error: 'Message is required' }, { status: 400 });
+      subject = `Nieuw bericht van ${name} — ${locName}`;
+      bodyText = `Nieuw contactformulier bericht\n\nVan: ${name}\nE-mail: ${email}\nVestiging: ${locName}\n\nBericht:\n${message}\n\n---\nDit bericht is verzonden via het contactformulier op de Bogèst website.`;
     }
 
-    const locName = LOCATION_NAMES[location];
-
-    // Store the contact request with location
+    // Always keep a record for the admin panel.
     await base44.asServiceRole.entities.ContactRequest.create({
       name,
       email,
-      message,
-      subject: 'Contact aanvraag — ' + locName,
-      location,
+      message: message || '',
+      subject,
+      location: slug,
       status: 'new',
       seen: false,
     });
 
-    // Send notification email to all admin users (they can forward to the correct location)
-    const users = await base44.asServiceRole.entities.User.list();
-    const admins = users.filter(u => u.role === 'admin' || u.role === 'user');
+    // Send to the correct location's e-mail address (registered users only —
+    // see the SendEmail integration note). Failures here do not fail the
+    // request: the record above is already stored.
+    const emailResult = await base44.asServiceRole.integrations.Core.SendEmail({
+      to,
+      from_name: 'Bogèst Website',
+      subject,
+      body: bodyText,
+    }).catch((err: any) => ({ error: err?.message || String(err) }));
 
-    const emailBody = `Nieuw contactformulier bericht\n\nVan: ${name}\nE-mail: ${email}\nVestiging: ${locName}\n\nBericht:\n${message}\n\n---\nDit bericht is verzonden via het contactformulier op de Bogèst website. Controleer het admin paneel voor meer details.`;
-
-    const emailResults = await Promise.all(
-      admins.map(admin =>
-        base44.asServiceRole.integrations.Core.SendEmail({
-          to: admin.email,
-          from_name: 'Bogèst Website',
-          subject: `Nieuw bericht van ${name} — ${locName}`,
-          body: emailBody,
-        }).catch(err => ({ error: err.message, email: admin.email }))
-      )
-    );
-
-    return Response.json({ success: true, notified: admins.length, results: emailResults });
+    return Response.json({ success: true, location: slug, sentTo: to, emailResult });
   } catch (error) {
     console.error('sendContactMessage error:', error);
     return Response.json({ error: error.message }, { status: 500 });

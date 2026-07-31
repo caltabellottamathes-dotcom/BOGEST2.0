@@ -7,7 +7,7 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 // bottom shadow over the photo. Asymmetric, not a centered block.
 export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage, positionKey }) {
   const { siteImg } = useSiteImages();
-  const bg = positionKey ? siteImg(positionKey) : bgImage;
+  const bg = (positionKey ? siteImg(positionKey) : null) || bgImage;
   return (
     <section className="relative w-full pt-24 md:pt-40 pb-20 md:pb-28 px-6 md:px-12 lg:px-16 border-b border-border/40 overflow-hidden">
       {bg && (

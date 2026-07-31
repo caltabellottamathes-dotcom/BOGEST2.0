@@ -1166,6 +1166,8 @@ export default function DigitalHost() {
   const responsePendingRef = useRef(false);
   const makeGreetingRef = useRef(() => '');
   const inlineMediaRef = useRef({});
+  const proactiveTouchY = useRef(0);
+  const proactiveSwiped = useRef(false);
 
   const pageGreeting = s.page_greetings[location.pathname] || s.page_greetings.default;
   const pageChips = s.page_chips[location.pathname] || [s.chip_location, s.chip_reserve, s.chip_menu];
@@ -1547,7 +1549,9 @@ export default function DigitalHost() {
                     initial={{ opacity: 0, y: -24 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: -24 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                     className="fixed top-3 left-3 right-3 z-[100000] cursor-pointer"
-                    onClick={() => openChatWithProactive(proactiveMsg.msg, proactiveMsg.actions)}
+                    onClick={() => { if (proactiveSwiped.current) { proactiveSwiped.current = false; return; } openChatWithProactive(proactiveMsg.msg, proactiveMsg.actions); }}
+                    onTouchStart={(e) => { proactiveTouchY.current = e.touches[0].clientY; }}
+                    onTouchEnd={(e) => { const dy = e.changedTouches[0].clientY - proactiveTouchY.current; if (dy < -45) { proactiveSwiped.current = true; setProactiveMsg(null); } }}
                   >
                     <div className="flex items-start gap-3 px-4 py-3 rounded-2xl"
                       style={{

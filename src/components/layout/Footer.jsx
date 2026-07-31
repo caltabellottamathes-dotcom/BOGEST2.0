@@ -39,6 +39,31 @@ export default function Footer() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [dismissed]);
 
+  // After a manual close, the footer can be brought back by swiping up from
+  // the bottom part of the page (mobile).
+  useEffect(() => {
+    let startY = 0, startX = 0, startedBottom = false;
+    const onStart = (e) => {
+      const t = e.touches[0];
+      startY = t.clientY; startX = t.clientX;
+      startedBottom = (window.innerHeight - startY) < window.innerHeight * 0.22;
+    };
+    const onEnd = (e) => {
+      if (!startedBottom) return;
+      if (window.location.pathname !== '/') return;
+      const t = e.changedTouches[0];
+      const dy = t.clientY - startY;
+      const dx = Math.abs(t.clientX - startX);
+      if (dy < -55 && dx < 70) { setVisible(true); setDismissed(false); }
+    };
+    window.addEventListener('touchstart', onStart, { passive: true });
+    window.addEventListener('touchend', onEnd, { passive: true });
+    return () => {
+      window.removeEventListener('touchstart', onStart);
+      window.removeEventListener('touchend', onEnd);
+    };
+  }, []);
+
   const quickLinks = [
     { label: t('nav_menu'), path: '/menu' },
     { label: t('nav_reserve'), path: '/reserve' },
