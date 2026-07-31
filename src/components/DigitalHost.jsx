@@ -824,10 +824,11 @@ function Typewriter({ text, speed = 22, onDone }) {
 function ProactiveActionButton({ label, url, onClick }) {
   const isExternal = url?.startsWith('http');
   const isInternal = url?.startsWith('/');
-  const cls = 'inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] cursor-pointer';
-  const style = { background: 'rgba(255,255,255,0.22)', border: '1px solid rgba(255,255,255,0.45)', color: 'rgba(255,255,255,0.97)' };
-  if (isInternal) return <Link to={url} className={cls} style={style} onClick={onClick}>{label}<ChevronRight className="w-2.5 h-2.5 opacity-70" /></Link>;
-  if (isExternal) return <a href={url} target="_blank" rel="noopener noreferrer" className={cls} style={style} onClick={onClick}>{label}<ExternalLink className="w-2.5 h-2.5 opacity-70" /></a>;
+  const cls = 'group/pbtn inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] cursor-pointer';
+  const style = { background: 'rgba(255,255,255,0.16)', border: '1px solid rgba(255,255,255,0.30)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', color: 'rgba(255,255,255,0.95)' };
+  const chev = <ChevronRight className="w-3 h-3 text-white/80 transition-transform duration-300 group-hover/pbtn:translate-x-0.5" />;
+  if (isInternal) return <Link to={url} className={cls} style={style} onClick={onClick}>{label}{chev}</Link>;
+  if (isExternal) return <a href={url} target="_blank" rel="noopener noreferrer" className={cls} style={style} onClick={onClick}>{label}<ExternalLink className="w-3 h-3 text-white/80" /></a>;
   return null;
 }
 
@@ -835,12 +836,16 @@ function ProactiveActionButton({ label, url, onClick }) {
 function ActionButton({ label, url, isDark, onClick }) {
   const isExternal = url?.startsWith('http');
   const isInternal = url?.startsWith('/');
-  const cls = 'inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] hover:opacity-90 cursor-pointer';
-  const style = isDark
-    ? { background: 'rgba(20,14,0,0.55)', border: '1px solid rgba(231,205,112,0.35)', color: 'rgba(255,235,160,0.92)' }
-    : { background: 'rgba(107,122,63,0.08)', border: '1px solid rgba(107,122,63,0.25)', color: 'hsl(var(--foreground))' };
-  if (isInternal) return <Link to={url} className={cls} style={style} onClick={onClick}>{label}<ChevronRight className="w-2.5 h-2.5 opacity-60" /></Link>;
-  if (isExternal) return <a href={url} target="_blank" rel="noopener noreferrer" className={cls} style={style} onClick={onClick}>{label}<ExternalLink className="w-2.5 h-2.5 opacity-60" /></a>;
+  const cls = 'group/btn inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] cursor-pointer';
+  const style = {
+    background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)',
+    border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.10)'),
+    backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)',
+    color: isDark ? 'rgba(255,255,255,0.92)' : 'hsl(var(--foreground))',
+  };
+  const chev = <ChevronRight className="w-3 h-3 text-primary/80 transition-transform duration-300 group-hover/btn:translate-x-0.5" />;
+  if (isInternal) return <Link to={url} className={cls} style={style} onClick={onClick}>{label}{chev}</Link>;
+  if (isExternal) return <a href={url} target="_blank" rel="noopener noreferrer" className={cls} style={style} onClick={onClick}>{label}<ExternalLink className="w-3 h-3 text-primary/80" /></a>;
   return null;
 }
 
@@ -914,10 +919,10 @@ function UiActionButton({ uiAction, label, isNav, isDark, onLinkClick }) {
   return (
     <button
       onClick={() => { dispatchUIAction(uiAction); if (isNav) onLinkClick?.(); }}
-      className="inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] hover:opacity-90 cursor-pointer"
-      style={isDark ? { background:'rgba(20,14,0,0.55)', border:'1px solid rgba(231,205,112,0.35)', color:'rgba(255,235,160,0.92)' } : { background:'rgba(107,122,63,0.08)', border:'1px solid rgba(107,122,63,0.25)', color:'hsl(var(--foreground))' }}
+      className="group/btn inline-flex items-center gap-1.5 font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] cursor-pointer"
+      style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.10)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', color: isDark ? 'rgba(255,255,255,0.92)' : 'hsl(var(--foreground))' }}
     >
-      {label}<ChevronRight className="w-2.5 h-2.5 opacity-60" />
+      {label}<ChevronRight className="w-3 h-3 text-primary/80 transition-transform duration-300 group-hover/btn:translate-x-0.5" />
     </button>
   );
 }
@@ -927,9 +932,9 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
       <div className="flex-1 min-w-0">
-        <div className="px-3.5 py-3 rounded-2xl rounded-tl-sm" style={{ background: isDark ? 'rgba(20,14,0,0.78)' : 'rgba(107,122,63,0.06)' }}>
+        <div className="px-4 py-3.5 rounded-2xl rounded-tl-md" style={{ background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.035)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
           {content && (
-            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: 'rgba(255,255,255,0.95)' }}>
+            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: isDark ? 'rgba(255,255,255,0.92)' : 'hsl(var(--foreground))' }}>
               {content}
             </p>
           )}
@@ -960,8 +965,8 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
 function UserBubble({ content, isDark }) {
   return (
     <div className="flex justify-end">
-      <div className="max-w-[78%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm" style={{ background: isDark ? 'rgba(20,14,0,0.72)' : 'rgba(107,122,63,0.12)', border: isDark ? '1px solid rgba(231,205,112,0.25)' : '1px solid rgba(107,122,63,0.25)' }}>
-        <p className="font-body text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.95)' }}>{content}</p>
+      <div className="max-w-[78%] px-4 py-2.5 rounded-2xl rounded-tr-md" style={{ background: isDark ? 'rgba(231,205,112,0.16)' : 'rgba(107,122,63,0.14)', border: '1px solid ' + (isDark ? 'rgba(231,205,112,0.34)' : 'rgba(107,122,63,0.30)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
+        <p className="font-body text-sm leading-relaxed" style={{ color: isDark ? 'rgba(255,255,255,0.95)' : 'hsl(var(--foreground))' }}>{content}</p>
       </div>
     </div>
   );
@@ -970,7 +975,7 @@ function UserBubble({ content, isDark }) {
 function Chip({ label, onClick, isDark }) {
   return (
     <button onClick={() => onClick(label)} className="font-body text-xs py-1.5 px-3 rounded-full transition-all duration-200 hover:scale-[1.03] text-left"
-      style={{ background: isDark ? 'rgba(20,14,0,0.55)' : 'rgba(107,122,63,0.08)', border: isDark ? '1px solid rgba(231,205,112,0.35)' : '1px solid rgba(107,122,63,0.25)', color: isDark ? 'rgba(255,235,160,0.92)' : 'hsl(var(--foreground))' }}>
+      style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.04)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.10)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)', color: isDark ? 'rgba(255,255,255,0.92)' : 'hsl(var(--foreground))' }}>
       {label}
     </button>
   );
@@ -1732,7 +1737,7 @@ export default function DigitalHost() {
               </div>
 
               {/* Messages */}
-              <div className="chat-messages-hide-scrollbar flex-1 overflow-y-auto px-3 py-4 space-y-4 overscroll-contain relative z-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <div className="chat-messages-hide-scrollbar flex-1 overflow-y-auto px-3.5 py-4 space-y-5 overscroll-contain relative z-10" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
@@ -1746,7 +1751,7 @@ export default function DigitalHost() {
                 {isLoading && (
                   <div className="flex items-start gap-2">
                     <LogoAvatar size="sm" online={false} isDark={isDark} />
-                    <div className="px-3.5 py-3 rounded-2xl rounded-tl-sm" style={{ background: isDark ? 'rgba(20,14,0,0.78)' : 'rgba(107,122,63,0.06)' }}>
+                    <div className="px-4 py-3.5 rounded-2xl rounded-tl-md" style={{ background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.035)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
                       <TypingDots />
                     </div>
                   </div>
