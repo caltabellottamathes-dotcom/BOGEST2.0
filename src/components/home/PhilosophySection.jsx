@@ -183,20 +183,7 @@ export default function PhilosophySection() {
 
                       {/* Image — portrait, slides in from side, with gold frame and watermark */}
                       <div className={`relative col-span-1 md:col-span-5 flex items-center overflow-hidden ${imageLeft ? 'order-1 md:order-1' : 'order-1 md:order-2'}`}>
-                        {/* Giant watermark number behind image */}
-                        <span
-                          className="absolute font-heading font-bold select-none leading-none pointer-events-none"
-                          style={{
-                            fontSize: 'clamp(4rem, 14vw, 12rem)',
-                            color: isLight ? 'rgba(0,0,0,0.05)' : 'rgba(255,255,255,0.05)',
-                            bottom: '-1rem',
-                            left: imageLeft ? '0' : 'auto',
-                            right: imageLeft ? 'auto' : '0',
-                            zIndex: 0
-                          }}>
-                          
-                          {pillar.num}
-                        </span>
+                        {/* chapter numeral moved to the text column as a graphic anchor */}
                         {/* Image with refined frame — slides in from its side */}
                         <div
                           ref={el => imgRefs.current[i] = el}
@@ -226,14 +213,21 @@ export default function PhilosophySection() {
                       {/* Text — editorial layout with progress indicator */}
                       <div className={`relative col-span-1 md:col-span-7 flex flex-col justify-start md:justify-end pb-2 md:pb-10 ${imageLeft ? 'order-2 md:order-2' : 'order-2 md:order-1'}`}>
 
+                        {/* Giant chapter numeral — graphic anchor, bleeds off the outer edge */}
+                        <span aria-hidden className="absolute font-heading font-bold select-none leading-none pointer-events-none hidden md:block"
+                          style={{ fontSize: 'clamp(8rem, 26vw, 20rem)', color: 'hsl(var(--primary) / 0.12)', top: '-2rem', right: imageLeft ? '-0.5rem' : 'auto', left: imageLeft ? 'auto' : '-0.5rem', zIndex: 0 }}>
+                          {pillar.num}
+                        </span>
+
                         {/* Top corner — brand mark fills empty upper corner */}
-                        <div className={`absolute top-0 hidden md:block ${imageLeft ? 'right-0 text-right' : 'left-0'}`}>
+                        <div className={`absolute top-0 hidden md:block ${imageLeft ? 'right-0 text-right' : 'left-0'}`} style={{ zIndex: 5 }}>
                           <BogestLogo className="text-lg leading-none block" />
                           <span className="font-body text-[11px] tracking-[0.3em] uppercase block mt-1 text-foreground">
                             {labels.label}
                           </span>
                         </div>
 
+                        <div className="relative z-10">
                         {/* Progress indicator */}
                         <div className="flex items-center gap-1.5 mb-3 md:mb-6">
                           {pillars.map((_, idx) =>
@@ -253,13 +247,16 @@ export default function PhilosophySection() {
                         </div>
 
                         {/* Subtitle as overline */}
-                        <span className="font-body text-xs tracking-[0.35em] uppercase text-primary mb-2 md:mb-3 block">
-                          {pillar.subtitle}
-                        </span>
+                        <div className="flex items-center gap-3 mb-2 md:mb-3">
+                          <span className="h-px w-8 bg-primary/50" />
+                          <span className="font-body text-xs tracking-[0.35em] uppercase text-primary">
+                            {pillar.subtitle}
+                          </span>
+                        </div>
 
                         {/* Title */}
-                        <h3 className="font-heading text-2xl md:text-4xl lg:text-5xl font-bold leading-tight mb-2 md:mb-4 text-foreground">
-                          {pillar.title}.
+                        <h3 className="font-heading text-3xl md:text-5xl lg:text-[4.5vw] font-bold leading-[0.98] mb-2 md:mb-4 text-foreground">
+                          {pillar.title}<span className="text-primary">.</span>
                         </h3>
 
                         {/* Refined divider */}
@@ -272,6 +269,7 @@ export default function PhilosophySection() {
                         <p className="font-body text-sm md:text-base leading-snug md:leading-relaxed w-full pr-4 text-foreground">
                           {pillar.body}
                         </p>
+                        </div>
                       </div>
 
                     </div>

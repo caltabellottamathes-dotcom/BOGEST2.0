@@ -51,8 +51,8 @@ function CategoryRow({ cat, idx }) {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-4">
           <div className="lg:sticky lg:top-32">
-            <span className="font-heading text-5xl md:text-6xl font-bold text-primary/15 block leading-none mb-3">{String(idx + 1).padStart(2, '0')}</span>
-            <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground">{t(cat.key)}</h3>
+            <span className="font-heading font-bold text-primary/20 block leading-none mb-4 text-7xl md:text-8xl">{String(idx + 1).padStart(2, '0')}</span>
+            <h3 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground">{t(cat.key)}<span className="text-primary">.</span></h3>
           </div>
         </div>
         <div className="lg:col-span-8">
@@ -91,9 +91,12 @@ function Maandselectie() {
   const suggestions = SUGGESTIONS[lang] || SUGGESTIONS.nl;
   return (
     <section className="w-full px-6 md:px-10 lg:px-16 pt-12 md:pt-16 pb-10">
-      <div className="mb-7">
-        <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2 block">{monthLabel} {now.getFullYear()}</span>
-        <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground">{(SECTION_LABELS[lang] || SECTION_LABELS.nl).title}</h2>
+      <div className="mb-8 md:mb-10">
+        <div className="flex items-center gap-3 mb-4">
+          <span className="h-px w-10 bg-primary" />
+          <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{monthLabel} {now.getFullYear()}</span>
+        </div>
+        <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground">{(SECTION_LABELS[lang] || SECTION_LABELS.nl).title}<span className="text-primary">.</span></h2>
       </div>
       <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {suggestions.map((item) => (
@@ -133,18 +136,22 @@ export default function Menu() {
 
       <Maandselectie />
 
-      <div className="sticky top-0 z-30 bg-background/60 backdrop-blur-2xl border-b border-white/8">
-        <div className="w-full px-6 md:px-10 lg:px-16 py-3 overflow-x-auto">
-          <div className="flex gap-1.5 min-w-max">
-            {MENU_DATA.map((cat, i) => (
-              <button key={cat.id} onClick={() => scrollTo(cat.id)}
-                className={`px-4 py-2 rounded-full font-body text-xs tracking-wide whitespace-nowrap transition-all duration-200 ${
-                  activeId === cat.id ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                }`}>
-                <span className="opacity-50 mr-1.5 font-heading">{String(i + 1).padStart(2, '0')}</span>
-                {t(cat.key)}
-              </button>
-            ))}
+      <div className="sticky top-0 z-30 bg-background/70 backdrop-blur-2xl border-b border-white/8">
+        <div className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto">
+          <div className="flex gap-6 min-w-max">
+            {MENU_DATA.map((cat, i) => {
+              const active = activeId === cat.id;
+              return (
+                <button key={cat.id} onClick={() => scrollTo(cat.id)}
+                  className={`inline-flex items-center gap-2 font-body text-[11px] tracking-[0.25em] uppercase whitespace-nowrap transition-colors duration-200 ${
+                    active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
+                  }`}>
+                  <span className={`font-heading text-sm font-bold ${active ? 'text-primary' : 'text-muted-foreground/50'}`}>{String(i + 1).padStart(2, '0')}</span>
+                  <span>{t(cat.key)}</span>
+                  <span className={`h-1 w-1 rounded-full bg-primary transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0'}`} />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
