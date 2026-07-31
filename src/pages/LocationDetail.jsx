@@ -362,8 +362,8 @@ export default function LocationDetail() {
           {loc.zenchefId && (
             <div className="mt-10 flex flex-wrap gap-3 relative z-10">
               <Link to={`/reserve?loc=${loc.slug}`}
-                className="inline-flex items-center gap-2 px-7 py-3 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
-                {L.reserveCta} <ArrowUpRight className="w-3 h-3" />
+                className="inline-flex items-center px-7 py-3 bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full transition-all duration-500">
+                {L.reserveCta}
               </Link>
               <Link to="/groups"
                 className="inline-flex items-center gap-2 px-7 py-3 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-500">
@@ -440,8 +440,8 @@ export default function LocationDetail() {
               <div className="pt-4 border-t border-border flex flex-col gap-2.5">
                 {loc.zenchefId && (
                   <Link to={`/reserve?loc=${loc.slug}`}
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-300">
-                    {t('btn_reserve')} <ArrowUpRight className="w-3 h-3" />
+                    className="inline-flex items-center justify-center px-5 py-3 bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full transition-all duration-300">
+                    {t('btn_reserve')}
                   </Link>
                 )}
                 {loc.mapsUrl && (

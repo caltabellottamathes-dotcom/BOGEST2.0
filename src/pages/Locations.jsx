@@ -87,7 +87,7 @@ export default function Locations() {
                         </div>
                         {loc.zenchefId && (
                           <div className="mt-auto flex flex-wrap gap-3">
-                            <Link to={`/reserve?loc=${loc.slug}`} className="inline-flex items-center px-6 py-2.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
+                            <Link to={`/reserve?loc=${loc.slug}`} className="inline-flex items-center px-6 py-2.5 bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full transition-all duration-500">
                               {t('btn_reserve')}
                             </Link>
                             <Link to={`/locations/${loc.slug}`} className="inline-flex items-center gap-2 px-6 py-2.5 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-500">

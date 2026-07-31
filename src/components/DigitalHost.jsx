@@ -1776,8 +1776,8 @@ export default function DigitalHost() {
                     style={{ color: 'rgba(255,255,255,0.95)', caretColor: 'rgba(231,205,112,0.9)', fontSize: '16px' }}
                   />
                   <button onClick={() => sendMessage()} disabled={!input.trim() || isLoading}
-                    className="w-8 h-8 rounded-full bg-primary flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:opacity-90 disabled:opacity-25 disabled:cursor-not-allowed">
-                    <Send className="w-3.5 h-3.5 text-primary-foreground" />
+                    className="w-8 h-8 rounded-full bg-primary/15 border border-primary/40 backdrop-blur-md flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:bg-primary/25 disabled:opacity-25 disabled:cursor-not-allowed">
+                    <Send className="w-3.5 h-3.5 text-primary" />
                   </button>
                 </div>
                 <p className="font-body text-[9px] text-muted-foreground/50 text-center mt-2 tracking-wide">

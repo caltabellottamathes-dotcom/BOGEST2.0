@@ -5,9 +5,8 @@ import { useLang } from '@/lib/LangContext';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
-// Compacte reserverings-CTA — de langwerpige foto is vervangen door een
-// transparant glasmorphism-vlak met de bull-ghost (zoals Lommel in /locations).
-// De zwevende glazen kaart behoudt de 1:1-verhouding met OrderCtaSection.
+// Compacte reserverings-CTA — glasmorphism-vlak met bull-ghost, met
+// banner-tekst (zoals OrderCtaSection) + zwevende glazen CTA-kaart.
 export default function ReserveCtaSection() {
   const { t } = useLang();
   return (
@@ -26,20 +25,27 @@ export default function ReserveCtaSection() {
             className="absolute pointer-events-none select-none"
             style={{ height: '220%', width: 'auto', bottom: '-70%', right: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
           />
+          {/* Tekst links */}
+          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
+            <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{t('btn_reserve')}</p>
+            <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
+              {t('res_title')}<span className="text-primary">.</span>
+            </h2>
+            <p className="font-body text-xs md:text-sm text-muted-foreground leading-relaxed mt-2 line-clamp-3">{t('res_subtitle')}</p>
+          </div>
         </div>
 
+        {/* Zwevende glazen CTA-kaart — 1:1 OrderCtaSection */}
         <div
           className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
           style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}
         >
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
               <CalendarDays className="w-4 h-4 text-primary" />
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">Bogèst</span>
           </div>
-          <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight mb-2">{t('res_title')}</h2>
-          <p className="font-body text-sm text-white/70 leading-relaxed mb-5">{t('res_subtitle')}</p>
           <Link to="/reserve" className="group inline-flex items-center gap-3">
             <span className="font-body text-xs tracking-[0.3em] uppercase text-white group-hover:text-primary transition-colors duration-300">{t('btn_reserve')}</span>
             <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/40 text-white group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">

@@ -89,7 +89,7 @@ export default function Groups() {
                 <textarea placeholder={t('grp_notes')} value={form.notes} onChange={e => set('notes', e.target.value)} rows={4}
                   className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                 <Button type="submit" disabled={loading}
-                  className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto">
+                  className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">
                   {loading ? t('grp_sending') : t('btn_send_request')}
                 </Button>
               </form>

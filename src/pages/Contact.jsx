@@ -83,7 +83,7 @@ export default function Contact() {
               className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                 {error && <p className="font-body text-sm text-destructive">{error}</p>}
                 <Button type="submit" disabled={loading}
-              className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto">
+              className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">
                   {loading ? t('con_sending') : t('con_send')}
                 </Button>
               </form>

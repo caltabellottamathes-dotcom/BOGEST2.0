@@ -11,6 +11,8 @@ import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 import { base44 } from '@/api/base44Client';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 // Actuele vacatures — overgenomen van bogest.be/joinus
 const openings = [
   {
@@ -131,7 +133,7 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
   const { t } = useLang();
 
   return (
-    <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur-sm hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
+    <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-white/[0.04] backdrop-blur-md hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
       <span className="absolute right-4 top-3 font-heading font-bold text-primary/10 group-hover:text-primary/20 text-5xl leading-none select-none pointer-events-none transition-colors duration-300">{num}</span>
       <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5 relative">
         <div className="flex items-start justify-between gap-3">
@@ -197,7 +199,7 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
               )}
 
               <button onClick={() => onSelect(job)}
-                className="inline-flex items-center px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 transition-all duration-300">
+                className="inline-flex items-center px-5 py-2.5 rounded-full bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase transition-all duration-300">
                 {t('btn_apply')}
               </button>
               <div className="mt-4">
@@ -246,6 +248,11 @@ export default function Jobs() {
 
       <PanelContent>
       <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
+        {/* Gelaagd glas — warme gradient + ghostbull, zoals de pop-up */}
+        <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '160%', width: 'auto', bottom: '-55%', right: '-10%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
+          <div className="relative z-10 p-5 md:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <div>
             <SectionReveal>
@@ -265,7 +272,7 @@ export default function Jobs() {
             </div>
 
             <SectionReveal delay={0.1}>
-              <div className="mt-8 p-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm shadow-lg">
+              <div className="mt-8 p-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md shadow-lg">
                 <h3 className="font-heading text-base font-semibold text-foreground mb-3">Liever langslopen?</h3>
                 <p className="font-body text-sm text-muted-foreground mb-4">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
                 <ul className="space-y-2 font-body text-sm text-muted-foreground">
@@ -284,7 +291,7 @@ export default function Jobs() {
 
           <SectionReveal direction="right" delay={0.1}>
             {success ? (
-              <div className="flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
+              <div className="flex flex-col items-center text-center rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -295,7 +302,7 @@ export default function Jobs() {
                 </button>
               </div>
             ) : (
-              <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
+              <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
 
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />
@@ -313,13 +320,15 @@ export default function Jobs() {
                   <textarea placeholder={t('job_motivation')} value={form.motivation} onChange={e => set('motivation', e.target.value)} rows={5}
                     className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                   <Button type="submit" disabled={loading}
-                    className="bg-primary text-primary-foreground hover:bg-primary/90 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto">
+                    className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">
                     {loading ? t('job_sending') : t('job_send')}
                   </Button>
                 </form>
               </div>
             )}
           </SectionReveal>
+        </div>
+          </div>
         </div>
       </section>
       </PanelContent>
