@@ -50,21 +50,21 @@ async function ping(key, url) {
   }
 }
 
+// Fetch the agent's REAL system prompt — the one ElevenLabs sends in a live
+// call — so tests exercise the actual pushed instructions (incl. the
+// anticipatory-navigation rules) through the proxy + websiteAction tool.
+async function getRealSystemPrompt() {
+  const g = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
+  if (!g.ok) return SYS;
+  const a = await g.json();
+  const p = a.conversation_config && a.conversation_config.agent && a.conversation_config.agent.prompt && a.conversation_config.agent.prompt.prompt;
+  return (typeof p === 'string' && p.length) ? p : SYS;
+}
+
 async function chatTest(key, url, message) {
   const t0 = Date.now();
   try {
-    // Use the REAL agent system prompt (the one ElevenLabs sends in a live
-    // call) so the test exercises the actual pushed instructions — including
-    // the anticipatory-navigation rules — through the proxy + websiteAction.
-    let systemPrompt = SYS;
-    try {
-      const g = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
-      if (g.ok) {
-        const a = await g.json();
-        const p = a.conversation_config && a.conversation_config.agent && a.conversation_config.agent.prompt && a.conversation_config.agent.prompt.prompt;
-        if (typeof p === 'string' && p.length) systemPrompt = p;
-      }
-    } catch { /* fall back to short SYS */ }
+    const systemPrompt = await getRealSystemPrompt();
     const messages = [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: message || DEFAULT_TEST_MSG },
@@ -95,6 +95,76 @@ async function chatTest(key, url, message) {
   }
 }
 
+// The LIVE ElevenLabs path uses stream:true. Verify tool_calls actually appear
+// in the SSE delta stream (not just the bulk JSON) in the exact OpenAI chunk
+// shape, because that's what the widget parses to execute the client tool.
+async function streamingTest(key, url, message) {
+  const t0 = Date.now();
+  try {
+    const systemPrompt = await getRealSystemPrompt();
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message || DEFAULT_TEST_MSG },
+    ];
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
+      body: JSON.stringify({ model: 'bogest-via-base44', messages, tools: TOOLS, stream: true }),
+    });
+    if (!res.ok || !res.body) return { ok: false, status: res.status, totalMs: Date.now() - t0 };
+    const reader = res.body.getReader();
+    const dec = new TextDecoder();
+    let buf = '';
+    let content = '';
+    let frames = 0;
+    let finishReason = null;
+    const tcs = {};
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let idx;
+      while ((idx = buf.indexOf('\n\n')) !== -1) {
+        const block = buf.slice(0, idx); buf = buf.slice(idx + 2);
+        for (const line of block.split('\n')) {
+          if (!line.startsWith('data: ')) continue;
+          const payload = line.slice(6);
+          if (payload === '[DONE]') continue;
+          frames++;
+          try {
+            const obj = JSON.parse(payload);
+            const ch = obj.choices && obj.choices[0];
+            if (!ch) continue;
+            if (ch.delta && typeof ch.delta.content === 'string') content += ch.delta.content;
+            if (ch.delta && Array.isArray(ch.delta.tool_calls)) {
+              for (const tc of ch.delta.tool_calls) {
+                const i = tc.index ?? 0;
+                if (!tcs[i]) tcs[i] = { id: tc.id || '', name: '', arguments: '' };
+                if (tc.id) tcs[i].id = tc.id;
+                if (tc.function && tc.function.name) tcs[i].name = tc.function.name;
+                if (tc.function && typeof tc.function.arguments === 'string') tcs[i].arguments += tc.function.arguments;
+              }
+            }
+            if (ch.finish_reason) finishReason = ch.finish_reason;
+          } catch { /* partial frame */ }
+        }
+      }
+    }
+    const tool_calls = Object.values(tcs).map((t) => ({ id: t.id, function: { name: t.name, arguments: t.arguments } }));
+    return {
+      ok: true,
+      totalMs: Date.now() - t0,
+      frames,
+      finishReason,
+      content,
+      tool_calls,
+      hasToolCall: tool_calls.length > 0,
+    };
+  } catch (e) {
+    return { ok: false, totalMs: Date.now() - t0, error: String(e) };
+  }
+}
+
 export default async function(req) {
   try {
     const key = secrets.get('ELEVENLABS_API_KEY');
@@ -109,9 +179,13 @@ export default async function(req) {
     // 1) Confirm the proxy is reachable on its public URL.
     const probe = quiet ? null : await ping(key, PROXY_URL);
 
-    // 2) Real chat test through the proxy.
+    // 2) Real chat test through the proxy (bulk) + the live STREAMING path.
     let chat = null;
-    if (!quiet && probe && probe.ok) chat = await chatTest(key, PROXY_URL, payload?.message);
+    let stream = null;
+    if (!quiet && probe && probe.ok) {
+      chat = await chatTest(key, PROXY_URL, payload?.message);
+      stream = await streamingTest(key, PROXY_URL, payload?.message);
+    }
 
     // 3) Inspect the agent's prompt object (where the LLM config lives).
     const getRes = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
@@ -131,7 +205,7 @@ export default async function(req) {
             llmFields[k] = Array.isArray(v) ? `[${v.length}]` : (typeof v === 'string' ? v.slice(0, 200) : v);
           }
         }
-        promptSummary = { promptKeys, llm: prompt.llm, llmFields };
+        promptSummary = { promptKeys, llm: prompt.llm, llmFields, custom_llm: prompt.custom_llm };
       }
     } else {
       promptSummary = { error: String(getRes.status) };
@@ -207,6 +281,7 @@ export default async function(req) {
       proxyUrl: PROXY_URL,
       probe,
       chatTest: chat,
+      streamingTest: stream,
       agent: { ok: agentOk, agentKeys, prompt: promptSummary },
       patchResult,
       verify,
