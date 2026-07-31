@@ -209,3 +209,83 @@ export function matchFuzzy(text) {
   }
   return best;
 }
+
+// ── Stage A.6: instant semantic (intent) match ───────────────────────────
+// A curated, multilingual cluster map. Each cluster groups the RANGE of ways
+// a visitor might refer to a section — synonyms, associated words, related
+// categories, paraphrases — not just its literal name. matchSemantic scans
+// the (often long) agent topic for any cluster word on a WORD BOUNDARY and
+// returns the best entry (longest word, then most specific type) — instantly,
+// with no LLM round-trip. This is what makes "I love a good steak",
+// "where are you guys", "a birthday with 20 people" or "do you have gift cards"
+// navigate the moment the DIRECTION of the conversation becomes clear, before
+// any exact section name is spoken.
+const SEMANTIC_CLUSTERS = [
+  { id: 'menu', words: ['menu', 'kaart', 'carte', 'speisekarte', 'dish', 'dishes', 'gerecht', 'gerechten', 'food', 'eten', 'maaltijd', 'cuisine', 'keuken', 'plats', 'nourriture', 'wat staat er op het menu', 'kaart bekijken', 'what do you serve'] },
+  { id: 'menu-cat-runs', words: ['meat', 'vlees', 'beef', 'rundvlees', 'steak', 'steaks', 'grill', 'gegrild', 'biefstuk', 'entrecote', 'entrecôte', 'côte à l os', 'cote a l os', 'chateaubriand', 'filet pur', 'ossehaas', 'ribeye', 'rib eye', 'tbone', 't bone', 'dry aged', 'dry-aged', 'carne', 'bœuf', 'boeuf', 'stuk vlees', 'piece of meat', 'vleesgerecht', 'vleesgerechten', 'rund'] },
+  { id: 'menu-cat-masters', words: ['masters', 'masters of meat', 'premium beef', 'angus', 'hereford', 'premiumrunds'] },
+  { id: 'menu-cat-kip', words: ['kip', 'kippen', 'chicken', 'poulet', 'gevogelte', 'volaille', 'poultry', 'kefte', 'vol au vent'] },
+  { id: 'menu-cat-vis', words: ['vis', 'visgerechten', 'fish', 'poisson', 'zalm', 'salmon', 'scampi', 'zeetong', 'vegetarisch', 'vegetarische', 'veggie', 'vegetarian', 'groenten', 'groente'] },
+  { id: 'menu-cat-varken', words: ['varken', 'varkens', 'pork', 'porc', 'spare ribs', 'spare-ribs', 'ribs', 'varkenshaasje', 'tomapork', 'ribbetjes'] },
+  { id: 'menu-cat-klassiekers', words: ['klassieker', 'klassiekers', 'classics', 'classiques', 'stoofvlees', 'tartaar', 'tartare', 'steak tartaar', 'lamsschouder', 'stew', 'bouletten'] },
+  { id: 'menu-cat-sauzen', words: ['saus', 'sauzen', 'sauce', 'sauces', 'béarnaise', 'bearnaise', 'roquefort', 'peperroom', 'sausjes'] },
+  { id: 'menu-cat-bijgerechten', words: ['bijgerecht', 'bijgerechten', 'sides', 'accompagnements', 'kroketten', 'spinazie'] },
+  { id: 'menu-cat-nagerechten', words: ['nagerecht', 'nagerechten', 'dessert', 'desserts', 'zoet', 'crème brûlée', 'tiramisu', 'panna cotta', 'dame blanche', 'sweet', 'sweets', 'ijs'] },
+  { id: 'menu-cat-voorgerechten', words: ['voorgerecht', 'voorgerechten', 'starter', 'starters', 'entrée', 'entrees', 'soep', 'garnaalkroket'] },
+  { id: 'reserve', words: ['reserveer', 'reserveren', 'reservatie', 'reservaties', 'reservering', 'reservation', 'booking', 'boek', 'boeken', 'tafel', 'table', 'tafel boeken', 'tafel reserveren', 'een tafel', 'book a table', 'reservatie maken', 'diner reserveren'] },
+  { id: 'locations', words: ['vestigingen', 'vestiging', 'locaties', 'locatie', 'adres', 'address', 'adressen', 'waar zitten jullie', 'waar zijn jullie', 'waar zitten', 'where are you', 'where are we', 'which cities', 'welke steden', 'cities', 'steden', 'find us', 'drie vestigingen', 'three restaurants', 'waar zit bogest'] },
+  { id: 'loc-hasselt', words: ['hasselt', 'bogest hasselt', 'bogèst hasselt', 'vestiging hasselt', 'restaurant hasselt', 'in hasselt', 'te hasselt', 'à hasselt', 'at hasselt'] },
+  { id: 'loc-borgloon', words: ['borgloon', 'bogest borgloon', 'bogèst borgloon', 'vestiging borgloon', 'restaurant borgloon', 'in borgloon', 'te borgloon', 'à borgloon'] },
+  { id: 'loc-heusden-zolder', words: ['heusden zolder', 'heusden-zolder', 'heusden', 'zolder', 'bogest heusden', 'vestiging heusden', 'restaurant heusden', 'in heusden', 'te heusden', 'à heusden'] },
+  { id: 'gift-cards', words: ['cadeaubon', 'cadeaubonnen', 'cadeau', 'cadeaus', 'giftcard', 'giftcards', 'gift card', 'gift', 'voucher', 'bon cadeau', 'kado', 'kadotje', 'kerstcadeau', 'verjaardagscadeau', 'cadeau doen', 'present', 'cadeaubon kopen'] },
+  { id: 'takeaway', words: ['afhalen', 'afhaal', 'takeaway', 'take away', 'take-away', 'takeout', 'take out', 'pickup', 'pick up', 'meenemen', 'emporter', 'a emporter', 'à emporter', 'order online', 'bestellen', 'bestel', 'thuis', 'delivery', 'levering', 'afhaalmenu'] },
+  { id: 'contact', words: ['contact', 'contacteer', 'contactformulier', 'bericht', 'sturen', 'vraag', 'question', 'email', 'mail', 'phone', 'bellen', 'klacht', 'complaint', 'contact form', 'contact opnemen', 'een vraag', 'stuur een bericht'] },
+  { id: 'groups', words: ['groep', 'groepen', 'group', 'groups', 'event', 'events', 'feest', 'feestje', 'party', 'verjaardag', 'anniversary', 'celebration', 'bedrijf', 'company', 'team', 'teamuitje', 'business', 'privé', 'private', 'private dining', 'groepsboeking', 'groepsreservatie', 'receptie', 'reception', 'met een groep', 'met de groep'] },
+  { id: 'jobs', words: ['job', 'jobs', 'vacature', 'vacatures', 'vacancy', 'career', 'careers', 'werk', 'werken', 'work', 'solliciteren', 'apply', 'hiring', 'werk bij', 'werken bij', 'job offer'] },
+  { id: 'about', words: ['over ons', 'geschiedenis', 'wie zijn wij', 'who are we', 'wie we zijn', 'story', 'our story', 'notre histoire', 'missie', 'waarden', 'values', 'waarom bogest'] },
+  { id: 'about-ons-verhaal', words: ['ons verhaal', 'het verhaal', 'onze geschiedenis', 'verhaal van bogest'] },
+  { id: 'about-onze-filosofie', words: ['onze filosofie', 'filosofie pagina', 'de filosofie', 'pijlers', 'pillars', 'our philosophy', 'notre philosophie', 'belofte', 'filosofie van bogest', 'what makes us unique', 'wat ons uniek maakt'] },
+  { id: 'instagram', words: ['instagram', 'insta', 'social', 'socials', 'social media', 'foto', 'fotos', 'photo', 'photos', 'pictures', 'beeld', 'beelden', 'sfeerbeeld', 'sfeerbeelden', 'feed', 'posts'] },
+  { id: 'home-story', words: ['verhaal'] },
+  { id: 'home-philosophy', words: ['filosofie', 'philosophy', 'formule', 'specialiteit', 'wijnen', 'sfeer'] },
+  { id: 'home-suggestions', words: ['suggesties', 'maandelijkse suggesties', 'monthly suggestions', 'specials', 'seizoenspecials', 'suggestions du mois', 'seizoen', 'seizoensgerecht', 'chef suggestie'] },
+  { id: 'home-reviews', words: ['ervaringen', 'reviews', 'recensies', 'testimonials', 'beoordelingen', 'wat zeggen klanten', 'avis', 'guest reviews', 'gasten'] },
+  { id: 'home-stats', words: ['stats', 'statistieken', 'cijfers', 'in cijfers', 'chiffres', 'in numbers', 'jaar ervaring'] },
+  { id: 'home-cta', words: ['acties', 'reserveer nu', 'actiekaarten', 'bestel nu', 'reserveer direct'] },
+  { id: 'close-panel', words: ['close', 'sluiten', 'sluit', 'dicht', 'fermer', 'ferme', 'never mind', 'laat maar', 'laat maar zitten', 'stop', 'annuleer', 'cancel', 'terug', 'go back', 'back', 'verberg', 'sluit dit', 'weg ermee', 'dismiss', 'sluit het panel', 'sluit het'] },
+];
+
+const SEM_PRIORITY = { 'close': 5, dish: 4, location: 3, 'menu-category': 2, section: 2, page: 1 };
+
+function containsWord(t, term) {
+  const esc = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp('(^|\\W)' + esc + '(\\W|$)').test(t);
+}
+
+export function matchSemantic(text) {
+  const t = norm(text);
+  if (!t || t.length < 2) return null;
+  let bestId = null;
+  let bestLen = 0;
+  let bestPri = 0;
+  for (const cluster of SEMANTIC_CLUSTERS) {
+    const entry = CONTENT_INDEX.find((e) => e.id === cluster.id);
+    const pri = SEM_PRIORITY[entry?.type] || 1;
+    for (const w of cluster.words) {
+      const wn = norm(w);
+      if (wn.length < 3) continue;
+      if (!containsWord(t, wn)) continue;
+      // Longest word wins; on a tie, the more specific type wins — so
+      // "spare ribs" highlights the dish/category, "meat" opens the beef
+      // category, and "close / laat maar" dismisses the panel.
+      const better = wn.length > bestLen || (wn.length === bestLen && pri > bestPri);
+      if (better) {
+        bestId = cluster.id;
+        bestLen = wn.length;
+        bestPri = pri;
+      }
+    }
+  }
+  if (!bestId) return null;
+  return CONTENT_INDEX.find((e) => e.id === bestId) || null;
+}

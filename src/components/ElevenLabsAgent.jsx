@@ -3,25 +3,27 @@ import { useEffect, useRef, useState } from 'react';
 import '@/lib/websiteActions';
 import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
 import {
-  startWebsiteSyncEngine,
-  stopWebsiteSyncEngine,
-  onTranscriptMessage,
   handleWebsiteActionToolCall,
+  startWebsiteSyncEngine,
 } from '@/lib/websiteSyncEngine';
 
 /**
- * ElevenLabs Conversational AI Widget + Conversational Sync Engine.
+ * ElevenLabs Conversational AI Widget — rebuilt around a single, reliable
+ * trigger: the agent calls the "websiteAction" CLIENT TOOL the instant it
+ * touches a topic. The tool is fire-and-forget (expects_response: false on
+ * the ElevenLabs tool config), so the host keeps talking while the page
+ * navigates / scrolls / highlights silently in the background.
  *
- * The agent talks naturally. The sync engine listens to the agent's transcript
- * (via the widget's onMessage hook) and maps what it says to the website
- * content index, driving navigate/scroll/highlight automatically so the page
- * stays in sync with the conversation. The agent may also call the
- * "websiteAction" client tool with { action: "go", target: "<topic>" } to
- * force a sync — both paths feed the same router.
+ * There is NO transcript listening. The earlier onMessage-based proactivity
+ * fought the tool path and was unreliable on the embed widget (especially
+ * mobile) — it has been removed. Proactivity now comes from the agent's own
+ * tool call, driven by its system prompt.
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
-  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
+  const [hidden, setHidden] = useState(
+    () => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active')
+  );
 
   useEffect(() => {
     const handler = (e) => setHidden(e.detail?.open === true);
@@ -47,46 +49,29 @@ export default function ElevenLabsAgent() {
       setTimeout(injectScript, 500);
     }
 
-    startWebsiteSyncEngine();
-
     const el = widgetRef.current;
     if (!el) return;
 
-    // The "call" event fires when the widget is about to start a conversation.
-    // We hook the conversation config: chain onMessage so the engine can read
-    // the agent's speech, and register the websiteAction client tool.
+    // "call" fires when a conversation is about to start. We hook the
+    // conversation config to register the websiteAction client tool and reset
+    // the sync dedup state for the fresh conversation.
     const onCall = (event) => {
       if (!event?.detail?.config) return;
+      startWebsiteSyncEngine();
       const cfg = event.detail.config;
-
-      // Chain onMessage to capture the transcript (agent speech) without
-      // breaking the widget's own rendering.
-      const origOnMessage = cfg.onMessage;
-      cfg.onMessage = (m) => {
-        try {
-          onTranscriptMessage(m);
-        } catch {
-          /* keep the widget alive even if the engine throws */
-        }
-        if (typeof origOnMessage === 'function') return origOnMessage(m);
-      };
 
       cfg.clientTools = {
         websiteAction: async (params = {}) => {
           const result = await handleWebsiteActionToolCall(params);
-          // After a successful action that changes the page, collapse the
-          // widget so the visitor can see what the host just opened. The
-          // agent keeps speaking while minimized.
+          // After a content action succeeds, collapse the widget so the
+          // visitor sees what just opened. The agent keeps speaking while
+          // minimized. Skip for actions that don't take the visitor anywhere.
           if (result?.success) {
             const a = String(params.action || 'go').toLowerCase();
             if (a !== 'close' && a !== 'search' && a !== 'showbeeldbankphoto' && a !== 'showphoto') {
               setTimeout(() => {
-                try {
-                  minimizeElevenLabsWidget();
-                } catch {
-                  /* ignore */
-                }
-              }, 800);
+                try { minimizeElevenLabsWidget(); } catch { /* ignore */ }
+              }, 700);
             }
           }
           return result;
@@ -97,7 +82,6 @@ export default function ElevenLabsAgent() {
 
     return () => {
       el.removeEventListener('elevenlabs-convai:call', onCall);
-      stopWebsiteSyncEngine();
     };
   }, []);
 

@@ -1,37 +1,39 @@
 import { base44 } from '@/api/base44Client';
-import { matchLocal, matchFuzzy, compactIndex, CONTENT_INDEX } from '@/lib/websiteContentIndex';
+import { matchLocal, matchFuzzy, matchSemantic, compactIndex, CONTENT_INDEX } from '@/lib/websiteContentIndex';
 
 /**
- * Two-stage topic router — the "brain" that keeps the website in sync with the
- * conversation by understanding INTENT, not just literal words.
+ * Multi-stage topic router — the "brain" that keeps the website in sync with
+ * the conversation by understanding INTENT and ASSOCIATED terms, not just
+ * literal words.
  *
- * Stage A — instant local EXACT match against the content index (free). Only
- *           exact matches short-circuit here, so ambiguous or paraphrased topics
- *           fall through to the LLM.
- * Stage B — an LLM (Gemini Flash via Base44 integration credits) reads the
- *           agent's words + the full content index and returns the single best
- *           matching entry id, or null. This is what makes the engine
- *           understand "that dry-aged steak you guys are known for",
- *           "where are you located", "show me the terrace in Borgloon", or
- *           "never mind, close that" — regardless of phrasing or language
- *           (Dutch / French / English).
+ * Stage A   — instant local EXACT match (free).
+ * Stage A.5 — instant local FUZZY match: a specific dish / category /
+ *             location / section alias inside the topic (longest alias wins,
+ *             dish beats category) — no LLM round-trip.
+ * Stage A.6 — instant SEMANTIC match: a curated multilingual cluster map of
+ *             synonyms / associated words / paraphrases → entry. This is what
+ *             makes "I love a good steak", "where are you guys", "a birthday
+ *             with 20 people" or "do you have gift cards" navigate the instant
+ *             the direction becomes clear, without an exact keyword.
+ * Stage B   — LLM (Gemini Flash) reads the agent's words + the full content
+ *             index and returns the single best matching entry id, or null.
+ *             Handles anything the local stages missed, across Dutch / French
+ *             / English.
  */
-
 let routePromise = null;
 let lastInput = null;
 
-const LLM_PROMPT = (text, list) => `You are the navigation brain of the Bogèst restaurant website. You map what the digital host is currently talking about to exactly ONE website content entry — understanding INTENT and MEANING, not only literal words. The topic may paraphrase, translate (Dutch / French / English), or describe something indirectly.
+const LLM_PROMPT = (text, list) => `You are the navigation brain of the Bogèst restaurant website. You map what the digital host is currently talking about to exactly ONE website content entry — understanding INTENT, MEANING and ASSOCIATED concepts, not only literal words. The topic may paraphrase, translate (Dutch / French / English), or describe something indirectly (e.g. "meat", "a good steak", "a birthday with 20 people", "where are you guys", "do you have gift cards").
 
 Rules:
-- Match the visitor's INTENT, not just keywords.
-- "where are you / which cities / addresses / locations" → id "locations" (overview of ALL restaurants).
-- A specific city or restaurant name (Hasselt, Borgloon, Heusden-Zolder) → that specific location entry (loc-hasselt / loc-borgloon / loc-heusden-zolder) — which opens the location info page.
-- Terrace / spaces / rooms / "restaurant en ruimtes" of a specific city → that location's spaces entry (loc-<city>-spaces) — scrolls to the spaces section on that location's page.
+- Match the visitor's INTENT and associated terms, not just keywords. "meat/steak/beef/dish/food" → a menu category or dish; "birthday/party/group/company/team" → groups; "where/cities/address/waar" → locations overview; "gift/voucher/cadeau" → gift cards; "takeaway/pickup/order online/afhalen" → takeaway; "book/table/reserve/tafel" → reservations; "hours/open/openingsuren" → a location's hours; "story/verhaal" → about/story; "philosophy/filosofie/pijlers" → philosophy; "reviews/ervaringen" → reviews; "instagram/social/foto's" → instagram.
+- A specific city or restaurant name (Hasselt, Borgloon, Heusden-Zolder) → that specific location entry (loc-hasselt / loc-borgloon / loc-heusden-zolder).
+- Terrace / spaces / rooms of a specific city → that location's spaces entry (loc-<city>-spaces).
 - Opening hours / parking / contact / address of a specific city → that location's sub-section (loc-<city>-hours / -parking / -contact).
-- Prefer the MOST SPECIFIC match: an individual dish (id menu-dish-*) beats its category (menu-cat-*); a specific location beats the locations overview.
+- Prefer the MOST SPECIFIC match: an individual dish (menu-dish-*) beats its category (menu-cat-*); a specific location beats the locations overview.
 - If the host is clearly describing a named dish on the menu, return that dish id (menu-dish-*).
 - If the intent is to close / dismiss / stop / go back / "never mind" a panel, return id "close-panel".
-- If nothing on the website corresponds to the topic (e.g. weather, greeting, small talk, "hoe laat is het"), return { "id": null, "confidence": 0 }.
+- If nothing on the website corresponds to the topic (weather, greeting, small talk, "hoe laat is het"), return { "id": null, "confidence": 0 }.
 
 Return JSON: { "id": "<entry id or null>", "confidence": <0..1> }.
 Pick the single best match.
@@ -49,11 +51,17 @@ export async function routeTopic(topic) {
   const local = matchLocal(text);
   if (local) return local;
 
-  // Stage A.5 — local fuzzy match (instant, free): if a specific dish /
-  // category / location / section alias is mentioned inside the topic, route
-  // to it without an LLM round-trip so scroll & highlight react instantly.
+  // Stage A.5 — local fuzzy match (instant, free): specific dish / category /
+  // location / section alias inside the topic — longest alias wins, dish beats
+  // category, specific location beats generic section.
   const fuzzy = matchFuzzy(text);
   if (fuzzy) return fuzzy;
+
+  // Stage A.6 — local semantic match (instant, free): curated synonym /
+  // associated-word clusters, including pages — fires on direction, not exact
+  // keyword.
+  const semantic = matchSemantic(text);
+  if (semantic) return semantic;
 
   // Stage B — LLM router. Debounce identical consecutive calls.
   if (lastInput === text && routePromise) return routePromise;
