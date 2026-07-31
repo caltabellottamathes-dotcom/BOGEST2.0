@@ -21,7 +21,7 @@ export default function About() {
       cta: 'Lees verder',
     },
     {
-      to: '/instagram',
+      to: '/about/instagram',
       num: '02',
       title: 'Achter de schermen',
       desc: 'Sfeerbeelden en momenten vanuit onze vestigingen — live op Instagram.',
@@ -49,7 +49,7 @@ export default function About() {
                 <h2 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-1 leading-tight">{c.title}<span className="text-primary">.</span></h2>
                 <p className="font-body text-xs text-muted-foreground leading-relaxed max-w-[16rem] mb-3">{c.desc}</p>
                 <span className="inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.3em] uppercase text-primary transition-all duration-300 group-hover:gap-2.5">
-                  {c.to === '/instagram' && <InstagramIcon className="w-3 h-3" />}
+                  {c.to === '/about/instagram' && <InstagramIcon className="w-3 h-3" />}
                   {c.cta}
                   <ArrowRight className="w-3 h-3" />
                 </span>

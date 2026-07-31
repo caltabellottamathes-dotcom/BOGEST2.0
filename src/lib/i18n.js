@@ -187,6 +187,8 @@ export const translations = {
     gc_cta_accent: 'via ZenChef',
     gc_cta_desc: 'Kies uw bedrag, voeg een persoonlijk bericht toe en ontvang uw bon onmiddellijk — digitaal of op te halen in het restaurant.',
     gc_cta_btn: 'Cadeaubon kopen',
+    gc_cta_buy: 'Bestel Cadeaubon',
+    gc_cta_check: 'Saldo controleren',
 
     // Checkout
     ch_title: 'Afrekenen',
@@ -600,6 +602,8 @@ export const translations = {
     gc_cta_accent: 'via ZenChef',
     gc_cta_desc: "Choisissez votre montant, ajoutez un message personnel et recevez votre bon immédiatement — numérique ou à retirer au restaurant.",
     gc_cta_btn: 'Acheter un bon',
+    gc_cta_buy: 'Commander une carte-cadeau',
+    gc_cta_check: 'Vérifier le solde',
 
     ch_title: 'Paiement',
     ch_order_summary: 'Récapitulatif',
@@ -998,6 +1002,8 @@ export const translations = {
     gc_cta_accent: 'via ZenChef',
     gc_cta_desc: 'Choose your amount, add a personal message and receive your card immediately — digital or available at the restaurant.',
     gc_cta_btn: 'Buy a card',
+    gc_cta_buy: 'Order a gift card',
+    gc_cta_check: 'Check balance',
 
     ch_title: 'Checkout',
     ch_order_summary: 'Order summary',

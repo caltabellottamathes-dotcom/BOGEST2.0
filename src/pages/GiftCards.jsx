@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Gift, Smile, Star, ArrowRight } from 'lucide-react';
+import { Gift, Smile, Star, ArrowRight, Wallet } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
-import GiftCardPanel from '@/components/reserve/GiftCardPanel';
+import GiftCardBuyPanel from '@/components/reserve/GiftCardBuyPanel';
+import GiftCardCheckPanel from '@/components/reserve/GiftCardCheckPanel';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 import EditorialHighlights from '@/components/EditorialHighlights';
 
 export default function GiftCards() {
   const { t } = useLang();
-  const [panelOpen, setPanelOpen] = useState(false);
+  const [buyOpen, setBuyOpen] = useState(false);
+  const [checkOpen, setCheckOpen] = useState(false);
 
   const HIGHLIGHTS = [
     { icon: Gift, title: t('gc_h1_title'), body: t('gc_h1_body') },
@@ -18,13 +20,13 @@ export default function GiftCards() {
   ];
 
   useEffect(() => {
-    if (panelOpen) {
+    if (buyOpen || checkOpen) {
       document.body.classList.add('modal-open');
     } else {
       document.body.classList.remove('modal-open');
     }
     return () => document.body.classList.remove('modal-open');
-  }, [panelOpen]);
+  }, [buyOpen, checkOpen]);
 
   return (
     <div className="w-full min-h-screen">
@@ -37,7 +39,7 @@ export default function GiftCards() {
         <EditorialHighlights items={HIGHLIGHTS} />
       </section>
 
-      {/* ── Gift Card Shop ───────────────────────────────────── */}
+      {/* ── Gift Card Shop — twee call-to-actions ───────────── */}
       <section className="w-full px-6 md:px-16 lg:px-24 pb-24 md:pb-32">
         <motion.div
           initial={{ opacity: 0, y: 32 }}
@@ -58,20 +60,33 @@ export default function GiftCards() {
                 </h2>
                 <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">{t('gc_cta_desc')}</p>
               </div>
-              <button
-                onClick={() => setPanelOpen(true)}
-                className="group flex-shrink-0 inline-flex items-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
-                {t('gc_cta_btn')}
-                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
+              <div className="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+                <button
+                  onClick={() => setBuyOpen(true)}
+                  className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500"
+                >
+                  <Gift className="w-4 h-4" />
+                  {t('gc_cta_buy')}
+                  <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </button>
+                <button
+                  onClick={() => setCheckOpen(true)}
+                  className="group inline-flex items-center justify-center gap-2 px-7 py-3.5 border border-primary/40 text-primary font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/10 transition-all duration-500"
+                >
+                  <Wallet className="w-4 h-4" />
+                  {t('gc_cta_check')}
+                </button>
+              </div>
             </div>
           </div>
         </motion.div>
       </section>
       </PanelContent>
 
-      {/* Slide-out gift card panel */}
-      <GiftCardPanel isOpen={panelOpen} onClose={() => setPanelOpen(false)} />
+      {/* Overlay 1 — uitsluitend de ZenChef-cadeaubonwidget */}
+      <GiftCardBuyPanel isOpen={buyOpen} onClose={() => setBuyOpen(false)} />
+      {/* Overlay 2 — uitsluitend de saldo-controle */}
+      <GiftCardCheckPanel isOpen={checkOpen} onClose={() => setCheckOpen(false)} />
 
     </div>
   );

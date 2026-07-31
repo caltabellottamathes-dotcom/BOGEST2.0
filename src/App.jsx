@@ -76,7 +76,7 @@ const AuthenticatedApp = () => {
         <Route path="/yellow-preview" element={<YellowPreview />} />
         <Route path="/burgundy-preview" element={<BurgundyPreview />} />
         <Route path="/powder-blue-preview" element={<PowderBluePreview />} />
-        <Route path="/instagram" element={<Instagram />} />
+        <Route path="/about/instagram" element={<Instagram />} />
         <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
         <Route element={<AdminGate />}>
           <Route path="/assets" element={<Assets />} />

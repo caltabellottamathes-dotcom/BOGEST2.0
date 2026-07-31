@@ -57,7 +57,7 @@ INDEX.push(
   make('contact', 'page', 'Contact', ['contact', 'contacteer', 'contactformulier', 'contact us', 'nous contacter', 'bericht', 'stuur een bericht', 'een vraag stellen', 'contact opnemen'], '/contact', 'navigate', 'contact', 'Contact form / send a message'),
   make('groups', 'page', 'Groups', ['groups', 'groepen', 'groep', 'group bookings', 'events', 'party', 'private dining', 'privé dining', 'groepsreservatie', 'company', 'met een groep', 'groepsboeking', 'bedrijf', 'teamuitje'], '/groups', 'navigate', 'groups', 'Group bookings / events / private dining'),
   make('jobs', 'page', 'Jobs', ['jobs', 'vacatures', 'vacature', 'careers', 'work', 'werken bij', 'travail', 'job', 'werken', 'solliciteren', 'vacature'], '/jobs', 'navigate', 'jobs', 'Jobs / careers / work with us'),
-  make('instagram', 'page', 'Instagram', ['instagram', 'social', 'socials', 'social media', 'photos', "foto's", 'fotos', 'feed', 'posts'], '/instagram', 'navigate', 'instagram', 'Instagram feed / social photos'),
+  make('instagram', 'page', 'Instagram', ['instagram', 'social', 'socials', 'social media', 'photos', "foto's", 'fotos', 'feed', 'posts'], '/about/instagram', 'navigate', '/about/instagram', 'Instagram feed / social photos'),
 );
 
 // ── Locations (specific) ──────────────────────────────────────────────────
