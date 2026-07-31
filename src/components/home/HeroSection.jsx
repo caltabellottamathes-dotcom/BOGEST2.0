@@ -55,7 +55,7 @@ export default function HeroSection() {
       <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-r from-black/40 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/50 via-black/10 to-transparent'}`} />
 
       {/* Content */}
-      <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-28 sm:pb-6 md:pb-10">
+      <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -86,7 +86,7 @@ export default function HeroSection() {
               initial={{ y: 120 }}
               animate={{ y: 0 }}
               transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-baseline gap-3 md:gap-5 leading-none"
+              className="flex flex-wrap items-baseline gap-3 md:gap-5 leading-none"
             >
               <span
                 className="font-heading font-bold text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight"
@@ -104,7 +104,7 @@ export default function HeroSection() {
               initial={{ y: 120 }}
               animate={{ y: 0 }}
               transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-baseline gap-3 md:gap-5 leading-none mt-1"
+              className="flex flex-wrap items-baseline gap-3 md:gap-5 leading-none mt-1"
             >
               <span className="font-heading font-bold italic text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-primary">
                 {theme === 'light' ? 'SMAAK' : t('hero_line2')}
@@ -127,7 +127,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="hidden sm:flex flex-wrap items-center gap-4"
+            className="flex flex-wrap items-center gap-3 sm:gap-4"
           >
             <Link
               to="/reserve"
@@ -151,7 +151,7 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
           onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-          className="hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer"
+          className="flex absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer"
         >
           <span className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30">{t('hero_scroll')}</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 2 }}>

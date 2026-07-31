@@ -5,7 +5,7 @@ import React from 'react';
 // every home title reacts the same way.
 export default function HomeTitle({ title, accent, breakLine = false, className = '' }) {
   const base =
-    'group font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight transition-colors duration-300 cursor-default hover:text-primary';
+    'group font-heading text-[clamp(2rem,8vw,2.4rem)] md:text-4xl lg:text-5xl font-bold text-foreground leading-tight transition-colors duration-300 cursor-default hover:text-primary';
 
   const Accent = () => (
     <span className="italic text-primary transition-colors duration-300 group-hover:text-foreground">

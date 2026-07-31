@@ -61,7 +61,7 @@ export function SuggestionCard({ item, showFade = true }) {
   const readLess = lang === 'nl' ? 'Lees minder' : lang === 'fr' ? 'Lire moins' : 'Read less';
 
   return (
-    <div className="flex-shrink-0 w-[320px] md:w-[360px] group relative">
+    <div className="flex-shrink-0 w-[280px] md:w-[360px] group relative">
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}

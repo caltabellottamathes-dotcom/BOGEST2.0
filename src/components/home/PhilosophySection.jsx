@@ -206,7 +206,7 @@ export default function PhilosophySection() {
                         {/* Image with refined frame — slides in from its side */}
                         <div
                           ref={el => imgRefs.current[i] = el}
-                          className="relative overflow-hidden rounded-2xl w-full aspect-[16/10] md:aspect-[3/4] max-h-[130px] md:max-h-full"
+                          className="relative overflow-hidden rounded-2xl w-full aspect-[16/10] md:aspect-[3/4] max-h-[150px] md:max-h-full"
                           style={{
                             boxShadow: isMobile ? 'none' : (isLight ? '0 16px 56px rgba(0,0,0,0.16)' : '0 16px 56px rgba(0,0,0,0.55)'),
                             border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(231, 205, 112, 0.22)',
@@ -233,8 +233,8 @@ export default function PhilosophySection() {
                       <div className={`relative col-span-1 md:col-span-7 flex flex-col justify-start md:justify-end pb-2 md:pb-10 ${imageLeft ? 'order-2 md:order-2' : 'order-2 md:order-1'}`}>
 
                         {/* Giant chapter numeral — graphic anchor, bleeds off the outer edge */}
-                        <span aria-hidden className="absolute font-heading font-bold select-none leading-none pointer-events-none hidden md:block"
-                          style={{ fontSize: 'clamp(8rem, 26vw, 20rem)', color: 'hsl(var(--primary) / 0.12)', top: '-2rem', right: imageLeft ? '-0.5rem' : 'auto', left: imageLeft ? 'auto' : '-0.5rem', zIndex: 0 }}>
+                        <span aria-hidden className="absolute font-heading font-bold select-none leading-none pointer-events-none block"
+                          style={{ fontSize: 'clamp(4rem, 22vw, 20rem)', color: 'hsl(var(--primary) / 0.12)', top: '-0.5rem', right: imageLeft ? '-0.3rem' : 'auto', left: imageLeft ? 'auto' : '-0.3rem', zIndex: 0 }}>
                           {pillar.num}
                         </span>
 

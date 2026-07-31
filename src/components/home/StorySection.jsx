@@ -26,7 +26,7 @@ export default function StorySection() {
               </div>
 
               {/* Enlarged formula card */}
-              <div className="relative mt-6 md:absolute md:-bottom-8 md:right-6 md:mt-0 rounded-2xl p-6 shadow-2xl max-w-[280px]"
+              <div className="relative -mt-12 mx-4 md:mx-0 md:absolute md:-bottom-8 md:right-6 md:mt-0 rounded-2xl p-6 shadow-2xl max-w-[280px]"
                 style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(40px) saturate(160%)', WebkitBackdropFilter: 'blur(40px) saturate(160%)', border: '1px solid rgba(255,255,255,0.16)' }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center"
