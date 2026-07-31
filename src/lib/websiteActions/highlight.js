@@ -33,6 +33,12 @@ function ensureStyle() {
       0%, 100% { outline-color: hsl(var(--primary) / 0.95); background-color: hsl(var(--primary) / 0.12); }
       50%      { outline-color: hsl(var(--primary) / 0.45); background-color: hsl(var(--primary) / 0.20); }
     }
+    @media (prefers-reduced-motion: reduce) {
+      .${HIGHLIGHT_CLASS} {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   `;
   document.head.appendChild(css);
 }

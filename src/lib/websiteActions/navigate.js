@@ -16,6 +16,7 @@ const ROUTES = {
   home: '/',
   menu: '/menu', kaart: '/menu',
   about: '/about', story: '/about', verhaal: '/about',
+  'ons-verhaal': '/about/ons-verhaal',
   locations: '/locations', vestigingen: '/locations', locaties: '/locations',
   hasselt: '/locations/hasselt',
   borgloon: '/locations/borgloon',

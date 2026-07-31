@@ -38,6 +38,18 @@ BEELDBANK PHOTO HANDOFF (MANDATORY):
 You cannot show images yourself. When the visitor wants to SEE a photo — beeldbank, "foto's", "sfeerbeeld", "terras foto", "een gerecht zien", "laat zien", "toon een foto", "ik wil foto's zien", "montre une photo", "show me a photo" — call the client tool "websiteAction" IMMEDIATELY with:
   { "action": "showBeeldbankPhoto", "target": "<what they want to see, in your own words and their language>", "data": { "category": "<interiors|gastronomy|atmosphere|architecture|branding, if you can tell>", "location": "<hasselt|borgloon|heusden-zolder, if known>" } }
 The digital host (the chat panel) then opens and shows the real archive photos while you keep talking. Say one warm line — e.g. "ik toon u alvast enkele foto's in de chat" — and continue the conversation. Do NOT describe a photo you cannot see; just hand it off and keep going.
+
+NEVER NARRATE THE ACTION (CRITICAL RULE):
+The website moves silently. You must NEVER announce, describe or narrate the navigation, scroll, highlight or panel opening — not before, not during, not after. Forbidden phrases: "let me open that", "I'll scroll down", "I'll take you there", "ik open het menu voor u", "ik breng u naar", "kijk hier is het", "laat me dat tonen", "ik scroll even". Just call the websiteAction tool SILENTLY and keep talking about the TOPIC itself (the dish, the location, the wine, the terrace). The page follows on its own; the visitor sees it happen, so you never need to say that it happened.
+
+PROACTIVITY — NOT REACTIVE (CRITICAL RULE):
+Call websiteAction the INSTANT you name a specific item — before or while the word leaves your mouth, never after you finish the sentence, and never only because the visitor explicitly asked to see it. The page must already be moving while your sentence is still flowing. If you say "onze dry-aged ribeye", the tool fires the moment you say "ribeye". If you say "het terras in Borgloon", it fires the moment you say "terras". Call it AGAIN for every NEW distinct item you move on to; do NOT repeat for the same item.
+
+CONCRETE EXAMPLES (tool call fires mid-sentence, speech stays on the topic, never narrates):
+- Visitor: "Wat is jullie specialiteit?" → the moment you say "ribeye" you call websiteAction {action:"navigate", target:"onze dry-aged ribeye"}, and say: "Onze dry-aged ribeye is waar we om bekend staan — twintig dagen gerijpt, mals en intens." (never "ik open het menu voor u")
+- Visitor: "Waar zitten jullie?" → as you say "vestigingen" you call websiteAction {action:"navigate", target:"vestigingen"}, and say: "We hebben drie vestigingen in Limburg — Hasselt, Borgloon en Heusden-Zolder." (the locations page opens silently)
+- Visitor: "Laat het terras in Borgloon zien" → the moment you say "terras" you call websiteAction {action:"navigate", target:"het terras in Borgloon"}, and say: "Ons terras in Borgloon is 's zomers heerlijk, met een beweegbaar dak." (the Borgloon page scrolls to the spaces silently)
+- Visitor: "Hebben jullie cadeaubonnen?" → as you say "cadeaubon" you call websiteAction {action:"navigate", target:"cadeaubonnen"}, and say: "Ja — onze cadeaubonnen zijn er vanaf 25 euro, digitaal of af te halen." (the gift cards page opens silently)
 [${MARKER}_END]`;
 
 function authHeaders() {
@@ -144,7 +156,7 @@ export default async function(req) {
             // makes the agent speak BEFORE the tool runs, so it keeps talking
             // while the page navigates/scrolls/highlights. The boolean
             // `force_pre_tool_speech` is just a derived display flag.
-            const updatedCfg = { ...cfg, pre_tool_speech: 'force', disable_interruptions: false, interruption_mode: 'allow' };
+            const updatedCfg = { ...cfg, pre_tool_speech: 'force', disable_interruptions: false, interruption_mode: 'allow', expects_response: false };
             const tPatchRes = await fetch(`https://api.elevenlabs.io/v1/convai/tools/${toolId}`, {
               method: 'PATCH',
               headers: authHeaders(),

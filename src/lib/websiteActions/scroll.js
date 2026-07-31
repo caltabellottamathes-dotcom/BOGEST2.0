@@ -26,7 +26,8 @@ registerAction('scroll', async ({ target, options = {}, data = {} }) => {
   if (!el) return { error: 'not_found', target };
   const offset = Number.isFinite(options?.offset) ? options.offset
     : Number.isFinite(data?.offset) ? data.offset : 88;
-  const behavior = options?.behavior || 'smooth';
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const behavior = reduceMotion ? 'auto' : (options?.behavior || 'smooth');
 
   // Scroll the nearest scrollable ancestor (e.g. an open glass panel's
   // content area) when the element lives inside one, otherwise the window.

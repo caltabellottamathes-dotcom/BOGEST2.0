@@ -24,6 +24,8 @@ export function waitForElement(find, { timeout = 1200, interval = 80 } = {}) {
  */
 export function scrollIntoContainerView(el, { behavior = 'smooth' } = {}) {
   if (!el) return;
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) behavior = 'auto';
   let node = el.parentElement;
   let scroller = null;
   while (node) {
