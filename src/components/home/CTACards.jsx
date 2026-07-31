@@ -35,7 +35,7 @@ export default function CTACards() {
             </div>
 
             {/* floating glass card — asymmetric right, options stacked underneath each other */}
-            <div className="relative mx-4 -mt-20 md:absolute md:-bottom-10 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-6"
+            <div className="relative mx-4 -mt-20 md:absolute md:-top-10 md:right-10 lg:right-14 md:mx-0 md:max-w-sm rounded-2xl p-6"
               style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(40px) saturate(160%)', WebkitBackdropFilter: 'blur(40px) saturate(160%)', border: '1px solid rgba(255,255,255,0.16)', boxShadow: '0 24px 60px rgba(0,0,0,0.45)' }}>
               <div className="flex items-center gap-3 mb-5">
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center"

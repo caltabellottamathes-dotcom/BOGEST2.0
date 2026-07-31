@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useLang } from '@/lib/LangContext';
 import { MENU_DATA, loc } from '@/lib/data';
@@ -6,18 +6,17 @@ import { PanelScrollContext } from '@/components/GlassPanel';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 import HostHint from '@/components/HostHint';
-import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
+import { hostQuestion } from '@/lib/hostHint';
 import { SuggestionCard, SUGGESTIONS, MONTH_NAMES, SECTION_LABELS } from '@/components/home/SeasonalSection';
 import ReserveCtaSection from '@/components/ReserveCtaSection';
 
 function PageHero() {
   const { t } = useLang();
   return (
-    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle="Onze kaart — vuur, vlees en gulhartige gerechten, met seizoenssuggesties van de chef." positionKey="menu.hero">
-      <div className="inline-flex items-center gap-3 px-4 py-2.5 bg-primary/8 rounded-lg border border-primary/15 mt-5">
-        <span className="font-body text-xs text-muted-foreground">{t('menu_formula_label')}</span>
-        <span className="font-body text-sm text-foreground font-medium">{t('menu_formula')}</span>
-      </div>
+    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle="Onze kaart — vuur, vlees en gulhartige gerechten, met seizoenssuggesties van de chef.">
+      <p className="font-body text-sm text-white/75 mt-4 max-w-xl leading-relaxed" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}>
+        <span className="text-primary font-medium">{t('menu_formula_label')} — </span>{t('menu_formula')}.
+      </p>
     </PanelHero>
   );
 }
@@ -115,9 +114,13 @@ export default function Menu() {
   const { t } = useLang();
   const [activeId, setActiveId] = useState(MENU_DATA[0].id);
   const panelRef = useContext(PanelScrollContext);
+  const tabsScrollRef = useRef(null);
+  const tabRefs = useRef({});
+  const programmaticRef = useRef(false);
 
   const scrollTo = (id) => {
     setActiveId(id);
+    programmaticRef.current = true;
     const el = document.getElementById(id);
     if (!el) return;
     const container = panelRef?.current;
@@ -129,7 +132,37 @@ export default function Menu() {
     } else {
       el.scrollIntoView({ behavior: 'smooth' });
     }
+    window.setTimeout(() => { programmaticRef.current = false; }, 850);
   };
+
+  // Scroll-spy — the tab of the section currently in view lights up (gold).
+  useEffect(() => {
+    const container = panelRef?.current;
+    if (!container) return;
+    const onScroll = () => {
+      if (programmaticRef.current) return;
+      const trigger = container.getBoundingClientRect().top + 150;
+      let current = MENU_DATA[0].id;
+      for (const cat of MENU_DATA) {
+        const el = document.getElementById(cat.id);
+        if (!el) continue;
+        if (el.getBoundingClientRect().top <= trigger) current = cat.id;
+      }
+      setActiveId((prev) => (prev !== current ? current : prev));
+    };
+    onScroll();
+    container.addEventListener('scroll', onScroll, { passive: true });
+    return () => container.removeEventListener('scroll', onScroll);
+  }, [panelRef]);
+
+  // Keep the active tab centred inside the horizontal tabs scroller.
+  useEffect(() => {
+    const scroller = tabsScrollRef.current;
+    const btn = tabRefs.current[activeId];
+    if (!scroller || !btn) return;
+    const target = btn.offsetLeft - scroller.clientWidth / 2 + btn.offsetWidth / 2;
+    scroller.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+  }, [activeId]);
 
   return (
     <div className="w-full">
@@ -138,16 +171,14 @@ export default function Menu() {
       <PanelContent>
       <Maandselectie />
 
-      <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-white/8">
-        <div className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto">
+      <div className="sticky top-0 z-30 bg-background/92 backdrop-blur-sm border-b border-white/8">
+        <div ref={tabsScrollRef} className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div className="flex gap-6 min-w-max">
             {MENU_DATA.map((cat, i) => {
               const active = activeId === cat.id;
               return (
-                <button key={cat.id} onClick={() => scrollTo(cat.id)}
-                  className={`inline-flex items-center gap-2 font-body text-[11px] tracking-[0.25em] uppercase whitespace-nowrap transition-colors duration-200 ${
-                    active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'
-                  }`}>
+                <button key={cat.id} ref={(el) => { if (el) tabRefs.current[cat.id] = el; }} onClick={() => scrollTo(cat.id)}
+                  className={`inline-flex items-center gap-2 font-body text-[11px] tracking-[0.25em] uppercase whitespace-nowrap transition-colors duration-200 ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
                   <span className={`font-heading text-sm font-bold ${active ? 'text-primary' : 'text-muted-foreground/50'}`}>{String(i + 1).padStart(2, '0')}</span>
                   <span>{t(cat.key)}</span>
                   <span className={`h-1 w-1 rounded-full bg-primary transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0'}`} />

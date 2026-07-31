@@ -110,6 +110,7 @@ export default function GlassPanelWrapper({ children }) {
               <div
                 ref={contentRef}
                 className="relative h-full overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain"
+                style={{ WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' }}
               >
                 {children}
               </div>

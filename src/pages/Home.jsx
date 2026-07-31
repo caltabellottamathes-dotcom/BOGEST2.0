@@ -19,8 +19,8 @@ export default function Home() {
       <LocationsPreview />
       <PhilosophySection />
       <SeasonalSection />
-      <CTACards />
       <ReviewsSection />
+      <CTACards />
     </>
   );
 }

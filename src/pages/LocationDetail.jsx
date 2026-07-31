@@ -7,6 +7,8 @@ import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 // ── Restaurant & spaces per location (nl / fr / en) ──────────────────────────
 const SPACES = {
   nl: {
@@ -15,15 +17,15 @@ const SPACES = {
       spaces: [
         { name: 'De Bar', capacity: 40, desc: 'Karakteristiek met de stierenkop en open haard.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819061-M771PN6UEKBULK7QL4YF/104452603_569843427256836_5136003467880034448_n.jpg' },
         { name: 'Open Keuken / Tomahawk', capacity: 14, desc: 'De open keuken — ideaal voor een exclusieve vleesbeleving.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg' },
-        { name: 'De Living', capacity: 45, desc: 'Vernieuwd met authentieke elementen.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg' },
-        { name: 'Het Terras', capacity: 50, desc: 'Buitenterras met duurzame materialen.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS7OTC5NE/IMG_4180.jpg' },
+        { name: 'De Living', capacity: 45, desc: 'Vernieuwd met authentieke elementen.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OYUUDSFSMKYI/IMG_4186.jpg' },
+        { name: 'Het Terras', capacity: 50, desc: 'Buitenterras met duurzame materialen.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS5OTC5NE/IMG_4180.jpg' },
       ],
     },
     borgloon: {
       title: 'Restaurant en Ruimtes', location: 'Bogèst Borgloon',
       spaces: [
         { name: 'De Bar', capacity: 40, desc: 'Ideaal voor aperitieven met vrienden.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802728-7LJYOC6YHA2PJVKIDKGG/bar+foto.jpeg' },
-        { name: 'De Living', capacity: 44, desc: 'Centraal in het restaurant, erg gezellig voor een grotere groep.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MY4ZEZKY/living2.jpeg' },
+        { name: 'De Living', capacity: 44, desc: 'Centraal in het restaurant, erg gezellig voor een grotere groep.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MYZEZKY/living2.jpeg' },
         { name: 'De Toog', capacity: 25, desc: 'Kleinere gezellige ruimte aansluitend aan de keuken.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802739-61LMNQL52FSYCJKA3O7F/WhatsApp+Image+2022-02-03+at+19.01.48.jpeg' },
         { name: 'De Koelcel', capacity: 42, desc: 'Unieke ruimte met doorkijkraam op het vlees.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802744-PRS75L0LKF5TIBCFBON6/koelcel.jpg' },
         { name: 'Het Terras', capacity: 60, desc: 'Zomers terras met beweegbaar dak.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802749-3W8YU4ZMJS6D1H37O1ZD/196900130_3314256705467512_189454985727372203_n.jpeg' },
@@ -43,15 +45,15 @@ const SPACES = {
       spaces: [
         { name: 'Le Bar', capacity: 40, desc: 'Caractéristique avec la tête de taureau et la cheminée ouverte.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819061-M771PN6UEKBULK7QL4YF/104452603_569843427256836_5136003467880034448_n.jpg' },
         { name: 'Cuisine Ouverte / Tomahawk', capacity: 14, desc: 'La cuisine ouverte — idéale pour une expérience viande exclusive.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg' },
-        { name: 'Le Living', capacity: 45, desc: 'Rénové avec des éléments authentiques.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg' },
-        { name: 'La Terrasse', capacity: 50, desc: 'Terrasse extérieure avec matériaux durables.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS7OTC5NE/IMG_4180.jpg' },
+        { name: 'Le Living', capacity: 45, desc: 'Rénové avec des éléments authentiques.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OYUUDSFSMKYI/IMG_4186.jpg' },
+        { name: 'La Terrasse', capacity: 50, desc: 'Terrasse extérieure avec matériaux durables.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS5OTC5NE/IMG_4180.jpg' },
       ],
     },
     borgloon: {
       title: 'Restaurant et Espaces', location: 'Bogèst Borgloon',
       spaces: [
         { name: 'Le Bar', capacity: 40, desc: 'Idéal pour les apéritifs entre amis.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802728-7LJYOC6YHA2PJVKIDKGG/bar+foto.jpeg' },
-        { name: 'Le Living', capacity: 44, desc: 'Au cœur du restaurant, très convivial pour un grand groupe.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MY4ZEZKY/living2.jpeg' },
+        { name: 'Le Living', capacity: 44, desc: 'Au cœur du restaurant, très convivial pour un grand groupe.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MYZEZKY/living2.jpeg' },
         { name: 'Le Comptoir', capacity: 25, desc: 'Petit espace convivial attenant à la cuisine.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802739-61LMNQL52FSYCJKA3O7F/WhatsApp+Image+2022-02-03+at+19.01.48.jpeg' },
         { name: 'La Cave Réfrigérée', capacity: 42, desc: 'Espace unique avec vue sur la viande.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802744-PRS75L0LKF5TIBCFBON6/koelcel.jpg' },
         { name: 'La Terrasse', capacity: 60, desc: 'Terrasse estivale avec toit mobile.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802749-3W8YU4ZMJS6D1H37O1ZD/196900130_3314256705467512_189454985727372203_n.jpeg' },
@@ -69,17 +71,17 @@ const SPACES = {
     hasselt: {
       title: 'Restaurant and Spaces', location: 'Bogèst Hasselt',
       spaces: [
-        { name: 'The Bar', capacity: 40, desc: 'Characterful with the bull\'s head and open fireplace.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819061-M771PN6UEKBULK7QL4YF/104452603_569843427256836_5136003467880034448_n.jpg' },
+        { name: 'The Bar', capacity: 40, desc: "Characterful with the bull's head and open fireplace.", image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819061-M771PN6UEKBULK7QL4YF/104452603_569843427256836_5136003467880034448_n.jpg' },
         { name: 'Open Kitchen / Tomahawk', capacity: 14, desc: 'The open kitchen — ideal for an exclusive meat experience.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg' },
-        { name: 'The Living Room', capacity: 45, desc: 'Renovated with authentic elements.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg' },
-        { name: 'The Terrace', capacity: 50, desc: 'Outdoor terrace with sustainable materials.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS7OTC5NE/IMG_4180.jpg' },
+        { name: 'The Living Room', capacity: 45, desc: 'Renovated with authentic elements.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OYUUDSFSMKYI/IMG_4186.jpg' },
+        { name: 'The Terrace', capacity: 50, desc: 'Outdoor terrace with sustainable materials.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819075-OY72K200C7HXS5OTC5NE/IMG_4180.jpg' },
       ],
     },
     borgloon: {
       title: 'Restaurant and Spaces', location: 'Bogèst Borgloon',
       spaces: [
         { name: 'The Bar', capacity: 40, desc: 'Ideal for aperitifs with friends.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802728-7LJYOC6YHA2PJVKIDKGG/bar+foto.jpeg' },
-        { name: 'The Living Room', capacity: 44, desc: 'Central in the restaurant, very cosy for a larger group.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MY4ZEZKY/living2.jpeg' },
+        { name: 'The Living Room', capacity: 44, desc: 'Central in the restaurant, very cosy for a larger group.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802733-3PGFA7WU2025MYZEZKY/living2.jpeg' },
         { name: 'The Counter', capacity: 25, desc: 'Smaller cosy space adjoining the kitchen.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802739-61LMNQL52FSYCJKA3O7F/WhatsApp+Image+2022-02-03+at+19.01.48.jpeg' },
         { name: 'The Cold Room', capacity: 42, desc: 'Unique space with a view through to the meat.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802744-PRS75L0LKF5TIBCFBON6/koelcel.jpg' },
         { name: 'The Terrace', capacity: 60, desc: 'Summer terrace with a movable roof.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906802749-3W8YU4ZMJS6D1H37O1ZD/196900130_3314256705467512_189454985727372203_n.jpeg' },
@@ -106,7 +108,7 @@ const STR = {
   fr: {
     spacesIntro: "Chaque espace a son propre caractère — du bar intimiste à la grande terrasse. Trouvez l'endroit qui convient à votre groupe.",
     aboutExtra: "Un lieu chaleureux où artisanat, hospitalité et cuisine généreuse se rencontrent. Que ce soit pour un dîner intime ou une fête en grand groupe, notre équipe vous accueille avec plaisir.",
-    totalCap: 'Capacité totale', spacesLabel: 'Espaces', openToday: 'Ouvert aujourd’hui', parkingLabel: 'Parking',
+    totalCap: 'Capacité totale', spacesLabel: 'Espaces', openToday: "Ouvert aujourd'hui", parkingLabel: 'Parking',
     groupsCta: 'Groupes & events', routeCta: 'Itinéraire', reserveCta: 'Réserver une table',
     comingSoon: 'Bientôt ouvert', comingSoonDesc: "Notre quatrième établissement est en préparation. Nous vous tiendrons informés.",
   },
@@ -121,10 +123,10 @@ const STR = {
 
 function StatCard({ icon: Icon, label, value }) {
   return (
-    <div className="p-4 border-l border-border/60">
-      <div className="flex items-center gap-2 mb-2">
+    <div className="p-5 md:p-6">
+      <div className="flex items-center gap-2 mb-2.5">
         <Icon className="w-3.5 h-3.5 text-primary" />
-        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground">{label}</span>
+        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-foreground/70">{label}</span>
       </div>
       <p className="font-heading text-2xl md:text-3xl font-bold text-primary leading-none">{value}</p>
     </div>
@@ -205,20 +207,22 @@ export default function LocationDetail() {
     <div className="w-full">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative w-full overflow-hidden">
-        <div className="relative h-[58vh] min-h-[380px] w-full">
+        <div className="relative h-[62vh] min-h-[440px] w-full">
           <img src={siteImg('location.' + slug) || loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 4%, hsl(var(--background) / 0.35) 42%, rgba(0,0,0,0.45) 100%)' }} />
-          <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-10 md:pb-14">
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 3%, hsl(var(--background) / 0.32) 45%, rgba(0,0,0,0.5) 100%)' }} />
+          {/* Ghosted city name bleeding off the right edge */}
+          <span aria-hidden className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 font-heading italic font-bold text-white/[0.06] select-none pointer-events-none leading-none" style={{ fontSize: 'clamp(8rem, 26vw, 20rem)' }}>{loc.city}</span>
+          <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-12 md:pb-16">
             <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-3 block">{t('nav_locations')} · {loc.region}</span>
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{loc.name}</h1>
-            <p className="font-body text-sm md:text-base text-muted-foreground mt-2 flex items-center gap-2">
+            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{loc.name}<span className="text-primary">.</span></h1>
+            <p className="font-body text-sm md:text-base text-foreground/80 mt-3 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-primary" /> {loc.address}
             </p>
             {highlights.length > 0 && (
               <div className="flex flex-wrap gap-2 mt-5">
                 {highlights.map(h => (
                   <span key={h} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-body text-xs text-foreground"
-                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(8px)' }}>
+                    style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)' }}>
                     <Sparkles className="w-3 h-3 text-primary" /> {h}
                   </span>
                 ))}
@@ -228,21 +232,27 @@ export default function LocationDetail() {
         </div>
       </section>
 
-      {/* ── Quick stats ───────────────────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-10 lg:px-16 -mt-12 md:-mt-16 relative z-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 rounded-2xl overflow-hidden border border-border/50 bg-card/65 backdrop-blur-md shadow-2xl">
-          <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
-          <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
-          <StatCard icon={Clock} label={L.openToday} value={openToday} />
-          <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
+      {/* ── Quick stats — frosted strip overlapping the hero ──────────────── */}
+      <section className="w-full px-6 md:px-10 lg:px-16 -mt-14 md:-mt-20 relative z-20">
+        <div className="rounded-2xl overflow-hidden border border-white/10 shadow-2xl"
+          style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(12px) saturate(140%)', WebkitBackdropFilter: 'blur(12px) saturate(140%)' }}>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-8 md:gap-0 md:divide-x md:divide-white/10">
+            <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
+            <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
+            <StatCard icon={Clock} label={L.openToday} value={openToday} />
+            <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
+          </div>
         </div>
       </section>
 
-      {/* ── Restaurant en ruimtes (prominent, top) ───────────────────────── */}
+      {/* ── Restaurant en ruimtes ────────────────────────────────────────── */}
       {spaces.length > 0 && (
-        <section id="spaces" className="w-full px-6 md:px-10 lg:px-16 py-12 md:py-16">
+        <section id="spaces" className="relative w-full px-6 md:px-10 lg:px-16 py-14 md:py-20 overflow-hidden">
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false}
+            className="absolute pointer-events-none select-none hidden md:block"
+            style={{ height: '120%', width: 'auto', right: '-6%', bottom: '-46%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
           <SectionReveal>
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 relative z-10">
               <div>
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />
@@ -253,35 +263,39 @@ export default function LocationDetail() {
               </div>
               <div className="flex items-center gap-2 font-body text-sm text-muted-foreground whitespace-nowrap">
                 <Users className="w-4 h-4 text-primary" />
-                {spaces.length} {L.spacesLabel.toLowerCase()} · {lang === 'fr' ? 'jusqu’à' : lang === 'en' ? 'up to' : 'tot'} {totalCapacity} {lang === 'en' ? 'guests' : 'personen'}
+                {spaces.length} {L.spacesLabel.toLowerCase()} · {lang === 'fr' ? "jusqu'à" : lang === 'en' ? 'up to' : 'tot'} {totalCapacity} {lang === 'en' ? 'guests' : 'personen'}
               </div>
             </div>
           </SectionReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {spaces.map((space, i) => (
-              <SectionReveal key={space.name} delay={i * 0.07}>
-                <div className="group relative overflow-hidden rounded-2xl h-full">
-                  <div className="absolute inset-0">
-                    <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                  </div>
-                  <div className="relative h-full min-h-[15rem] flex flex-col justify-end p-5">
-                    <div className="flex items-center justify-between gap-3 mb-1">
-                      <h3 className="font-heading text-xl font-bold text-white">{space.name}</h3>
-                      <span className="inline-flex items-center gap-1 font-body text-xs text-primary whitespace-nowrap">
-                        <Users className="w-3 h-3" /> {space.capacity}p
-                      </span>
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-5 relative z-10">
+            {spaces.map((space, i) => {
+              const span = i % 2 === 0 ? 'md:col-span-7' : 'md:col-span-5';
+              return (
+                <SectionReveal key={space.name} delay={i * 0.06} className={span}>
+                  <div className="group relative overflow-hidden rounded-2xl h-full min-h-[16rem] md:min-h-[20rem]"
+                    style={{ boxShadow: '0 18px 48px rgba(0,0,0,0.4)' }}>
+                    <div className="absolute inset-0">
+                      <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                     </div>
-                    <p className="font-body text-sm text-white/75 leading-relaxed max-w-xs">{space.desc}</p>
+                    <div className="relative h-full flex flex-col justify-end p-6">
+                      <div className="flex items-center justify-between gap-3 mb-1.5">
+                        <h3 className="font-heading text-xl md:text-2xl font-bold text-white">{space.name}</h3>
+                        <span className="inline-flex items-center gap-1 font-body text-xs text-primary whitespace-nowrap px-2.5 py-1 rounded-full bg-black/35 border border-primary/30">
+                          <Users className="w-3 h-3" /> {space.capacity}p
+                        </span>
+                      </div>
+                      <p className="font-body text-sm text-white/75 leading-relaxed max-w-xs">{space.desc}</p>
+                    </div>
                   </div>
-                </div>
-              </SectionReveal>
-            ))}
+                </SectionReveal>
+              );
+            })}
           </div>
 
           {loc.zenchefId && (
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-10 flex flex-wrap gap-3 relative z-10">
               <Link to={`/reserve?loc=${loc.slug}`}
                 className="inline-flex items-center gap-2 px-7 py-3 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
                 {L.reserveCta} <ArrowUpRight className="w-3 h-3" />
@@ -295,13 +309,14 @@ export default function LocationDetail() {
         </section>
       )}
 
-      {/* ── About + practical info ────────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-10 lg:px-16 py-12 md:py-16 border-t border-border">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
-          <div className="lg:col-span-2">
+      {/* ── About + practical info ───────────────────────────────────────── */}
+      <section className="relative w-full px-6 md:px-10 lg:px-16 py-14 md:py-20 border-t border-border overflow-hidden">
+        <span aria-hidden className="absolute -bottom-10 right-2 md:right-10 font-heading italic font-bold text-foreground/[0.04] select-none pointer-events-none leading-none" style={{ fontSize: 'clamp(7rem, 20vw, 16rem)' }}>{loc.city}</span>
+        <div className="relative grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
+          <div className="lg:col-span-7">
             <SectionReveal>
-              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2 block">{t('loc_about')} {loc.city}</span>
-              <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-4">{loc.name}</h2>
+              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('loc_about')} {loc.city}</span>
+              <h2 className="font-heading text-2xl md:text-4xl font-bold text-foreground mb-5 leading-tight">{loc.name}<span className="text-primary">.</span></h2>
               <p className="font-body text-base text-muted-foreground leading-relaxed">{t('loc_about_desc').replace('{city}', loc.city)}</p>
               <p className="font-body text-base text-muted-foreground leading-relaxed mt-4">{L.aboutExtra}</p>
             </SectionReveal>
@@ -311,9 +326,9 @@ export default function LocationDetail() {
                 <h3 className="font-heading text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                   <Clock className="w-4 h-4 text-primary" /> {t('loc_hours')}
                 </h3>
-                <div className="space-y-0 rounded-xl border border-border overflow-hidden">
+                <div className="space-y-0 rounded-xl border border-border overflow-hidden bg-card/40">
                   {loc.hours.map((h, i) => (
-                    <div key={h.day} className={`flex justify-between font-body text-sm px-4 py-2.5 ${i % 2 === 0 ? 'bg-card/40' : ''} border-b border-border/40 last:border-0`}>
+                    <div key={h.day} className={`flex justify-between font-body text-sm px-4 py-2.5 ${i % 2 === 0 ? 'bg-card/30' : ''} border-b border-border/40 last:border-0`}>
                       <span className="text-foreground">{h.day}</span>
                       <span className={h.time === 'Gesloten' || h.time === 'Fermé' || h.time === 'Closed' || h.time.includes('beschikbaar') ? 'text-muted-foreground' : 'text-primary font-medium'}>
                         {h.time}
@@ -336,8 +351,8 @@ export default function LocationDetail() {
             </div>
           </div>
 
-          <SectionReveal id="contact" direction="right" delay={0.1} className="h-fit">
-            <div className="bg-card border border-border rounded-xl p-7 space-y-5 sticky top-24">
+          <SectionReveal id="contact" direction="right" delay={0.1} className="lg:col-span-5 h-fit">
+            <div className="bg-card border border-border rounded-2xl p-7 space-y-5 sticky top-24">
               <h3 className="font-heading text-lg font-semibold text-foreground">Contact</h3>
               <div className="space-y-4">
                 <div className="flex items-start gap-3">
