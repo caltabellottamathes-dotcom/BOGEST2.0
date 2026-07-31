@@ -1012,12 +1012,15 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   const isReturning = visitorMemory && visitorMemory.visits > 1;
 
   const videoRef = useRef(null);
+  const [videoReady, setVideoReady] = useState(false);
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
     el.muted = false;
     const p = el.play();
     if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
+    const fallback = setTimeout(() => setVideoReady(true), 2200);
+    return () => clearTimeout(fallback);
   }, []);
 
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
@@ -1055,9 +1058,9 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: videoReady ? 1 : 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={onSkip} />
-      <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
+      <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={videoReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 24 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
@@ -1069,6 +1072,8 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline
+              onLoadedData={() => setVideoReady(true)}
+              onError={() => setVideoReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}
@@ -1218,7 +1223,9 @@ export default function DigitalHost() {
 
   // Listen for hero button click — open chat with a special hero greeting
   useEffect(() => {
-    const handler = () => {
+    const handler = (e) => {
+      const question = e?.detail?.question;
+      if (question) { openChat(question); return; }
       sessionStorage.setItem('bogest-host-seen', '1');
       const heroGreeting = makeGreetingRef.current();
       greetingRef.current = heroGreeting;
@@ -1464,7 +1471,7 @@ export default function DigitalHost() {
   const openChat = (preload = null) => {
     setProactiveMsg(null);
     sessionStorage.setItem('bogest-host-seen', '1');
-    if (messages.length === 0) {
+    if (!preload && messages.length === 0) {
       historyRef.current = [];
       const g = buildPersonalGreeting();
       greetingRef.current = g;

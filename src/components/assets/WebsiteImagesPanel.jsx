@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { X, Globe, Check, RotateCcw, Loader2, Search, ArrowLeft, ImageOff } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useSiteImages } from '@/lib/SiteImageContext';

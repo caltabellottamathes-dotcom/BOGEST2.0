@@ -5,6 +5,8 @@ import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
@@ -13,9 +15,9 @@ const MONTH_NAMES = {
 };
 
 const SECTION_LABELS = {
-  nl: { title: 'Deze maand bij Bogèst.', accent: 'Bogèst' },
-  fr: { title: 'Ce mois-ci chez Bogèst.', accent: 'Bogèst' },
-  en: { title: 'This month at Bogèst.', accent: 'Bogèst' },
+  nl: { title: 'De Maandselectie van onze Chef.', accent: 'Chef' },
+  fr: { title: 'La sélection du mois de notre Chef.', accent: 'Chef' },
+  en: { title: "Our Chef's monthly selection.", accent: 'Chef' },
 };
 
 const MENU_LABELS = {
@@ -79,6 +81,7 @@ function SuggestionCard({ item }) {
             {item.price}
           </span>
         </div>
+        <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
       </div>
       <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
         {item.name}

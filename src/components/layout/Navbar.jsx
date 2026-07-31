@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
@@ -17,6 +17,7 @@ export default function Navbar() {
   const { theme } = useTheme();
   const { lang, t, changeLang } = useLang();
   const location = useLocation();
+  const navigate = useNavigate();
   const langRef = useRef(null);
 
   const isHome = location.pathname === '/';
@@ -92,9 +93,17 @@ export default function Navbar() {
       >
         <nav className="w-full px-6 md:px-10 lg:px-16 h-16 md:h-20 flex items-center justify-between gap-6">
           {/* Logo — wordmark only, hide when mobile menu is open to avoid overlap */}
-          <Link to="/" className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              if (location.pathname !== '/') navigate('/');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+          >
             <BogestLogo className="text-xl tracking-wide" />
-          </Link>
+          </button>
 
           {/* Desktop Nav */}
           <div className="hidden lg:flex items-center gap-7">

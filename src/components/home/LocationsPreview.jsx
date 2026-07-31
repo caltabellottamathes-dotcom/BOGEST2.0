@@ -5,6 +5,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 import HomeTitle from '@/components/home/HomeTitle';
 
 export default function LocationsPreview() {
@@ -83,6 +85,7 @@ export default function LocationsPreview() {
                         <ArrowUpRight className="w-4 h-4 opacity-0 -translate-y-0.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" />
                       </h3>
                     </div>
+                    <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
                   </Link>
                 )}
               </SectionReveal>

@@ -4,6 +4,8 @@ import { ArrowRight } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const dishes = [
   {
@@ -27,7 +29,7 @@ const dishes = [
 ];
 
 export default function SignatureDishes() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
   return (
     <section className="w-full py-24 md:py-32 bg-card">
@@ -60,6 +62,7 @@ export default function SignatureDishes() {
                   <span className="absolute top-4 left-4 inline-block px-3 py-1 bg-black/25 backdrop-blur-sm text-white font-body text-[10px] tracking-[0.2em] uppercase rounded-full border border-white/10">
                     {dish.tag}
                   </span>
+                  <HostHint question={hostQuestion(lang, dish.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
                 </div>
                 <h3 className="font-heading text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
                   {dish.name}

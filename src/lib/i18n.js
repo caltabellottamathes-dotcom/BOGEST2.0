@@ -373,9 +373,9 @@ export const translations = {
     home_cta_giftcard_desc: 'Een cadeaubon die meer belooft dan een etentje — een avond om nog lang na te vertellen.',
     home_cta_giftpackage_desc: 'Premium gin- en wijnpakketten met cadeaubon — de ideale verrassing.',
 
-    home_reviews_label: 'Wat onze gasten zeggen',
-    home_reviews_title: 'Ervaringen.',
-    home_reviews_title_accent: 'Ervaringen',
+    home_reviews_label: 'Ervaringen',
+    home_reviews_title: 'Wat onze gasten zeggen.',
+    home_reviews_title_accent: 'zeggen',
     home_reviews_rating: '4.9 gemiddeld · 400+ beoordelingen',
 
     home_locations_count: '{n} vestigingen',
@@ -773,9 +773,9 @@ export const translations = {
     home_cta_giftcard_desc: "Un bon cadeau qui promet plus qu'un dîner — une soirée dont on parlera encore longtemps.",
     home_cta_giftpackage_desc: "Coffrets premium gin et vin avec bon cadeau — la surprise idéale.",
 
-    home_reviews_label: 'Ce que disent nos invités',
-    home_reviews_title: 'Avis.',
-    home_reviews_title_accent: 'Avis',
+    home_reviews_label: 'Avis',
+    home_reviews_title: 'Ce que disent nos invités.',
+    home_reviews_title_accent: 'invités',
     home_reviews_rating: '4,9 en moyenne · 400+ avis',
 
     home_locations_count: '{n} établissements',
@@ -1170,9 +1170,9 @@ export const translations = {
     home_cta_giftcard_desc: 'A gift card that promises more than dinner — an evening they will still talk about.',
     home_cta_giftpackage_desc: 'Premium gin and wine packages with a gift card — the perfect surprise.',
 
-    home_reviews_label: 'What our guests say',
-    home_reviews_title: 'Reviews.',
-    home_reviews_title_accent: 'Reviews',
+    home_reviews_label: 'Reviews',
+    home_reviews_title: 'What our guests say.',
+    home_reviews_title_accent: 'say',
     home_reviews_rating: '4.9 average · 400+ reviews',
 
     home_locations_count: '{n} locations',

@@ -6,6 +6,8 @@ import { useLang } from '@/lib/LangContext';
 import { MENU_DATA, loc } from '@/lib/data';
 import { PanelScrollContext } from '@/components/GlassPanel';
 import PanelHero from '@/components/PanelHero';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 function PageHero() {
   const { t } = useLang();
@@ -56,20 +58,23 @@ function CategoryRow({ cat }) {
           {cat.items.map(item => {
             const priceStr = formatPrice(item.price, lang);
             return (
-              <div key={item.id} data-highlight={slugify(loc(item.name, 'nl'))} className="group flex items-baseline justify-between gap-4 py-3.5 border-b border-border/50 last:border-0">
-                <div className="min-w-0">
+              <div key={item.id} data-highlight={slugify(loc(item.name, 'nl'))} className="group relative flex items-baseline justify-between gap-4 py-3.5 border-b border-border/50 last:border-0">
+                <div className="min-w-0 pr-2">
                   <span className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300">
                     {loc(item.name, lang)}
                   </span>
                   {item.desc && <p className="font-body text-xs text-muted-foreground mt-0.5">{loc(item.desc, lang)}</p>}
                 </div>
-                {priceStr ? (
-                  <span className="font-body text-sm font-medium text-primary whitespace-nowrap">{priceStr}</span>
-                ) : (
-                  <span className="font-body text-[10px] tracking-[0.15em] uppercase text-primary/80 whitespace-nowrap px-2 py-0.5 rounded-full border border-primary/25 bg-primary/5">
-                    {t('menu_included')}
-                  </span>
-                )}
+                <div className="relative flex-shrink-0">
+                  {priceStr ? (
+                    <span className="font-body text-sm font-medium text-primary whitespace-nowrap">{priceStr}</span>
+                  ) : (
+                    <span className="font-body text-[10px] tracking-[0.15em] uppercase text-primary/80 whitespace-nowrap px-2 py-0.5 rounded-full border border-primary/25 bg-primary/5">
+                      {t('menu_included')}
+                    </span>
+                  )}
+                  <HostHint question={hostQuestion(lang, loc(item.name, lang))} label={hostHintLabel(lang)} className="absolute right-0 top-1/2 -translate-y-1/2 z-10 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto" />
+                </div>
               </div>
             );
           })}
