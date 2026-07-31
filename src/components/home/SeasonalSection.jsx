@@ -53,7 +53,7 @@ export const SUGGESTIONS = {
   ],
 };
 
-export function SuggestionCard({ item }) {
+export function SuggestionCard({ item, showFade = true }) {
   const [expanded, setExpanded] = useState(false);
   const { lang } = useLang();
   const { siteImg } = useSiteImages();
@@ -63,7 +63,7 @@ export function SuggestionCard({ item }) {
 
   return (
     <div className="flex-shrink-0 w-[320px] md:w-[360px] group relative">
-      <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="top-4 left-1/2 -translate-x-1/2" />
+      <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}
@@ -87,24 +87,30 @@ export function SuggestionCard({ item }) {
       <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
         {item.name}
       </h3>
-      <div className="relative">
-        <div
-          className="overflow-hidden transition-all duration-500 ease-in-out"
-          style={{ maxHeight: expanded ? '300px' : '68px' }}
-        >
-          <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-        </div>
-        {!expanded && (
-          <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
-        )}
-      </div>
-      <button
-        onClick={() => setExpanded(!expanded)}
-        className="mt-2 inline-flex items-center gap-1 font-body text-xs tracking-[0.15em] uppercase text-primary hover:text-foreground transition-colors duration-200"
-      >
-        {expanded ? readLess : readMore}
-        <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
-      </button>
+      {showFade ? (
+        <>
+          <div className="relative">
+            <div
+              className="overflow-hidden transition-all duration-500 ease-in-out"
+              style={{ maxHeight: expanded ? '300px' : '68px' }}
+            >
+              <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+            </div>
+            {!expanded && (
+              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+            )}
+          </div>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-2 inline-flex items-center gap-1 font-body text-xs tracking-[0.15em] uppercase text-primary hover:text-foreground transition-colors duration-200"
+          >
+            {expanded ? readLess : readMore}
+            <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
+          </button>
+        </>
+      ) : (
+        <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+      )}
     </div>
   );
 }

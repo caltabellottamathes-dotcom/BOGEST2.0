@@ -95,6 +95,7 @@ export const translations = {
     cat_sides: 'Bijgerechten',
     cat_desserts: 'Nagerechten',
     cat_drinks: 'Dranken',
+    cat_kids: 'Kinderen',
 
     // Reservation
     res_title: 'Reserveer uw tafel',
@@ -510,6 +511,7 @@ export const translations = {
     cat_sides: 'Accompagnements',
     cat_desserts: 'Desserts',
     cat_drinks: 'Boissons',
+    cat_kids: 'Enfants',
 
     res_title: 'Réserver votre table',
     res_label: 'Réservation',
@@ -907,6 +909,7 @@ export const translations = {
     cat_sides: 'Sides',
     cat_desserts: 'Desserts',
     cat_drinks: 'Drinks',
+    cat_kids: 'Kids',
 
     res_title: 'Reserve your table',
     res_label: 'Reserve',

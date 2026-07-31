@@ -325,6 +325,17 @@ export const MENU_DATA = [
       { id: 'd7', name: { nl: 'Twijfelaar Bogèst', fr: "L'Indécis Bogèst", en: "The Doubter Bogèst" }, desc: { nl: 'Chocolademousse & Entremisu', fr: "Mousse au chocolat & Entremisu", en: "Chocolate mousse & Entremisu" }, price: null },
     ],
   },
+  {
+    id: 'kinderen',
+    key: 'cat_kids',
+    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799922-SLXI4OSI7W3KWGKE3UFY/5a7c094c-9679-410a-bbc5-5f8c663d8a14.JPG',
+    items: [
+      { id: 'kd1', name: { nl: 'Kindermenu — Steak Frites', fr: "Menu enfant — Steak Frites", en: "Kids menu — Steak Frites" }, desc: { nl: 'Kleine steak, kroketten en een ijsje', fr: "Petit steak, croquettes et une glace", en: "Small steak, croquettes and an ice cream" }, price: 16.90 },
+      { id: 'kd2', name: { nl: 'Kindermenu — Kippenbrochette', fr: "Menu enfant — Brochette de poulet", en: "Kids menu — Chicken brochette" }, desc: { nl: 'Kleine brochette, kroketten en een ijsje', fr: "Petite brochette, croquettes et une glace", en: "Small brochette, croquettes and an ice cream" }, price: 16.90 },
+      { id: 'kd3', name: { nl: 'Kindermenu — Scampi', fr: "Menu enfant — Scampis", en: "Kids menu — Scampi" }, desc: { nl: 'Kleine scampi, kroketten en een ijsje', fr: "Petits scampis, croquettes et une glace", en: "Small scampi, croquettes and an ice cream" }, price: 16.90 },
+      { id: 'kd4', name: { nl: 'Kipnuggets met kroketten', fr: "Nuggets de poulet et croquettes", en: "Chicken nuggets with croquettes" }, price: 12.90 },
+    ],
+  },
 ];
 
 // Takeaway menu (simplified pricing)

@@ -151,7 +151,7 @@ function LocationPanel({ loc }) {
       <button onClick={() => !loc.comingSoon && setOpen(o => !o)}
         className={`w-full text-left flex items-center gap-5 p-5 transition-all duration-300 ${loc.comingSoon ? 'cursor-default opacity-60' : 'hover:bg-white/[0.03]'}`}>
         <div className="relative w-20 h-20 rounded-xl overflow-hidden flex-shrink-0">
-          <img src={siteImg('location.' + loc.id) || loc.image} alt={loc.name} className="w-full h-full object-cover" />
+          <img src={siteImg('location.' + loc.id) || loc.image} alt={loc.name} className="w-full h-full object-cover" loading="lazy" decoding="async" />
           {loc.comingSoon && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
               <span className="font-body text-[8px] text-white tracking-widest uppercase text-center">{t('loc_coming_soon')}</span>
@@ -202,7 +202,7 @@ function LocationPanel({ loc }) {
                       <div key={space.name} className="rounded-xl overflow-hidden"
                         style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
                         <div className="h-36 overflow-hidden">
-                          <img src={siteImg('space.' + loc.id + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                          <img src={siteImg('space.' + loc.id + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" decoding="async" />
                         </div>
                         <div className="p-4">
                           <div className="flex items-center justify-between mb-1.5">
@@ -273,10 +273,10 @@ export default function Groups() {
         </SectionReveal>
         <div className="space-y-3">
           {LOCATIONS.map((loc, i) => (
-            <SectionReveal key={loc.id} delay={i * 0.07}>
+            <SectionReveal key={loc.id} delay={i * 0.07} hover={false}>
               <div className="group relative">
                 <LocationPanel loc={loc} />
-                {!loc.comingSoon && <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />}
+                {!loc.comingSoon && <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute top-3 right-14 z-20" />}
               </div>
             </SectionReveal>
           ))}
@@ -333,7 +333,7 @@ export default function Groups() {
                       <p className="font-body text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
-                  <HostHint question={hostQuestion(lang, item.title)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />
+                  <HostHint question={hostQuestion(lang, item.title)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
                 </div>
               ))}
             </div>
