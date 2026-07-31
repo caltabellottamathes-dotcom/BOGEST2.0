@@ -11,7 +11,7 @@ export default function PanelHero({ label, title, titleAccent, subtitle, childre
       {bg && (
         <div className="absolute inset-0 z-0">
           <img src={bg} alt="" className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/30 to-black/75 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/85 via-black/40 to-transparent pointer-events-none" />
         </div>
       )}
       {!bgImage && <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />}

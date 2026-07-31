@@ -13,14 +13,14 @@ export default function ReserveCtaSection({ positionKey = 'reserve' }) {
   const { siteImg } = useSiteImages();
   const bg = siteImg(positionKey) || FALLBACK_IMG;
   return (
-    <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-14">
+    <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
       <div className="relative">
         <div className="overflow-hidden rounded-2xl h-[200px] md:h-[260px]">
           <img src={bg} alt="" aria-hidden="true" className="w-full h-full object-cover" loading="lazy" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent pointer-events-none" />
         </div>
 
-        <div className="relative mx-4 -mt-12 md:absolute md:-bottom-5 md:right-8 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
+        <div className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
           style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(40px) saturate(160%)', WebkitBackdropFilter: 'blur(40px) saturate(160%)', border: '1px solid rgba(255,255,255,0.16)', boxShadow: '0 20px 50px rgba(0,0,0,0.40)' }}>
           <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center"

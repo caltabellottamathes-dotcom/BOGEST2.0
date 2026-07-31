@@ -149,11 +149,11 @@ export default function Menu() {
         </div>
       </div>
 
-      <div className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <div className="w-full px-6 md:px-10 lg:px-16 pb-10">
         {MENU_DATA.map((cat, idx) => <CategoryRow key={cat.id} cat={cat} idx={idx} />)}
-
-        <ReserveCtaSection />
       </div>
+
+      <ReserveCtaSection />
     </div>
   );
 }

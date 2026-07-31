@@ -5,7 +5,7 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
-import { HintLine } from '@/components/HostHint';
+import HintBubble from '@/components/HintBubble';
 import { hostQuestion } from '@/lib/hostHint';
 import HomeTitle from '@/components/home/HomeTitle';
 
@@ -87,11 +87,9 @@ export default function LocationsPreview() {
                           {loc.name}
                           <ArrowUpRight className="w-4 h-4 opacity-0 -translate-y-0.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" />
                         </h3>
-                        <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out">
-                          <HintLine question={hostQuestion(lang, loc.name)} className="mt-2.5" />
-                        </div>
                       </div>
                     </Link>
+                    <HintBubble question={hostQuestion(lang, loc.name)} />
                   </div>
                 )}
               </SectionReveal>
