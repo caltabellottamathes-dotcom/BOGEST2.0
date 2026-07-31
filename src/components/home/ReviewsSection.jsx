@@ -8,54 +8,12 @@ import HomeTitle from '@/components/home/HomeTitle';
 
 // Fallback reviews used when no Zenchef reviews are in the database yet
 const FALLBACK_REVIEWS = [
-  {
-    name: 'Sophie V.',
-    location: 'Hasselt',
-    rating: 5,
-    text: 'Absolute topervaring! Het vlees was ongelooflijk mals en de sfeer in de hoeve is gewoon prachtig. We komen zeker terug!',
-    date: 'April 2026',
-    source: 'Google',
-  },
-  {
-    name: 'Marc & Elien',
-    location: 'Borgloon',
-    rating: 5,
-    text: 'De Belgisch Wit Blauw was perfect bereid — botermals en heerlijk van smaak. Het voorgerecht en dessert incluis maakt dit een ongeëvenaarde prijs-kwaliteit verhouding.',
-    date: 'Maart 2026',
-    source: 'Google',
-  },
-  {
-    name: 'Thomas K.',
-    location: 'Heusden-Zolder',
-    rating: 5,
-    text: 'Al jaren trouwe klant bij Bogèst en we worden nooit teleurgesteld. Heerlijk eten, authentieke sfeer en vriendelijk personeel. Een aanrader voor iedereen!',
-    date: 'Mei 2026',
-    source: 'TripAdvisor',
-  },
-  {
-    name: 'Isabelle D.',
-    location: 'Borgloon',
-    rating: 5,
-    text: 'De combinatie van de prachtige hoeve en het sublieme eten maakt Bogèst tot een bijzonder adres in Limburg. De huiswijn is een absolute topper!',
-    date: 'Februari 2026',
-    source: 'Google',
-  },
-  {
-    name: 'Pieter & Ann',
-    location: 'Hasselt',
-    rating: 5,
-    text: 'Onze verjaardagstafel was perfect verzorgd. Vriendelijk team, heerlijk eten en een sfeer die het extra speciaal maakt. Dankjewel Bogèst!',
-    date: 'Mei 2026',
-    source: 'Google',
-  },
-  {
-    name: 'Laura M.',
-    location: 'Heusden-Zolder',
-    rating: 4,
-    text: 'Geweldige beleving van begin tot eind. De spare ribs zijn een must-try. Zeker één van de beste restaurants in Limburg.',
-    date: 'April 2026',
-    source: 'TripAdvisor',
-  },
+  { name: 'Sophie V.', location: 'Hasselt', rating: 5, text: 'Absolute topervaring! Het vlees was ongelooflijk mals en de sfeer in de hoeve is gewoon prachtig. We komen zeker terug!', date: 'April 2026', source: 'Google' },
+  { name: 'Marc & Elien', location: 'Borgloon', rating: 5, text: 'De Belgisch Wit Blauw was perfect bereid — botermals en heerlijk van smaak. Het voorgerecht en dessert incluis maakt dit een ongeëvenaarde prijs-kwaliteit verhouding.', date: 'Maart 2026', source: 'Google' },
+  { name: 'Thomas K.', location: 'Heusden-Zolder', rating: 5, text: 'Al jaren trouwe klant bij Bogèst en we worden nooit teleurgesteld. Heerlijk eten, authentieke sfeer en vriendelijk personeel. Een aanrader voor iedereen!', date: 'Mei 2026', source: 'TripAdvisor' },
+  { name: 'Isabelle D.', location: 'Borgloon', rating: 5, text: 'De combinatie van de prachtige hoeve en het sublieme eten maakt Bogèst tot een bijzonder adres in Limburg. De huiswijn is een absolute topper!', date: 'Februari 2026', source: 'Google' },
+  { name: 'Pieter & Ann', location: 'Hasselt', rating: 5, text: 'Onze verjaardagstafel was perfect verzorgd. Vriendelijk team, heerlijk eten en een sfeer die het extra speciaal maakt. Dankjewel Bogèst!', date: 'Mei 2026', source: 'Google' },
+  { name: 'Laura M.', location: 'Heusden-Zolder', rating: 4, text: 'Geweldige beleving van begin tot eind. De spare ribs zijn een must-try. Zeker één van de beste restaurants in Limburg.', date: 'April 2026', source: 'TripAdvisor' },
 ];
 
 function Stars({ count }) {
@@ -78,6 +36,9 @@ function formatDate(dateStr) {
   }
 }
 
+// Editorial reviews — one oversized italic pull-quote anchors the page, two
+// supporting quotes sit smaller to the right of a hairline. Replaces the flat
+// 3-column card grid.
 export default function ReviewsSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
@@ -90,6 +51,8 @@ export default function ReviewsSection() {
   const pages = Math.ceil(reviews.length / perPage);
   const safePage = Math.min(page, pages - 1);
   const visible = reviews.slice(safePage * perPage, safePage * perPage + perPage);
+  const featured = visible[0];
+  const supporting = visible.slice(1);
 
   const loadReviews = () => {
     base44.entities.ZenchefReview.list('-date', 100)
@@ -113,7 +76,6 @@ export default function ReviewsSection() {
 
   useEffect(() => {
     loadReviews();
-    // Live-refresh whenever a new review is synced into the database.
     const unsubscribe = base44.entities.ZenchefReview.subscribe((event) => {
       if (event && (event.type === 'create' || event.type === 'update')) loadReviews();
     });
@@ -121,94 +83,88 @@ export default function ReviewsSection() {
   }, []);
 
   return (
-    <section id="ervaringen" className="w-full pt-14 md:pt-20 pb-[480px] md:pb-[520px] relative overflow-hidden">
-      {/* Glass bg accent */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/4 via-transparent to-primary/2 pointer-events-none" />
-      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1400&q=80" alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-[0.05] pointer-events-none" />
+    <section id="ervaringen" className="w-full pt-16 md:pt-24 pb-20 relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-transparent pointer-events-none" />
 
       <div className="w-full px-6 md:px-10 lg:px-16">
-        {/* Header */}
+        {/* Header — asymmetric */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between mb-14"
+          className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 md:mb-16 gap-6"
         >
           <div>
-            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
-              {t('home_reviews_label')}
-            </span>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="h-px w-10 bg-primary" />
+              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('home_reviews_label')}</span>
+            </div>
             <HomeTitle title={t('home_reviews_title')} accent={t('home_reviews_title_accent')} />
             <div className="flex items-center gap-3 mt-4">
               <Stars count={5} />
               <span className="font-body text-sm text-muted-foreground">{t('home_reviews_rating')}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 mt-6 md:mt-0">
-            <button
-              onClick={() => setPage(p => Math.max(0, p - 1))}
-              disabled={safePage === 0}
-              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
-            >
+          <div className="flex items-center gap-2">
+            <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={safePage === 0}
+              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30">
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <button
-              onClick={() => setPage(p => Math.min(pages - 1, p + 1))}
-              disabled={safePage === pages - 1}
-              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
-            >
+            <button onClick={() => setPage(p => Math.min(pages - 1, p + 1))} disabled={safePage === pages - 1}
+              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
         </motion.div>
 
-        {/* Review cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          {visible.map((review, i) => (
-            <motion.div
-              key={review.name + review.date + page}
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="relative p-6 rounded-xl border border-border bg-background/60 backdrop-blur-md hover:border-primary/30 hover:bg-background/80 transition-all duration-300"
-            >
-              {/* Glass shimmer */}
-              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
-
-              <div className="relative">
-                <div className="flex items-start justify-between mb-4">
-                  <Stars count={review.rating} />
-                  <span className="font-body text-[10px] tracking-widest uppercase text-muted-foreground/60">
-                    {review.source}
-                  </span>
-                </div>
-                <p className="font-body text-sm text-foreground leading-relaxed mb-5 italic">
-                  "{review.text}"
-                </p>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-heading text-sm font-semibold text-foreground">{review.name}</p>
-                    <p className="font-body text-xs text-muted-foreground">{review.location}{review.date ? ` · ${review.date}` : ''}</p>
-                  </div>
-                </div>
+        {/* Featured pull-quote + supporting */}
+        {featured && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+            <div className="lg:col-span-8">
+              <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[22vw] sm:text-[16vw] lg:text-[10vw] -mb-2 select-none">“</span>
+              <motion.blockquote
+                key={featured.name + featured.date + page}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground"
+              >
+                {featured.text}
+              </motion.blockquote>
+              <div className="flex flex-wrap items-center gap-3 mt-8">
+                <span className="h-px w-8 bg-primary" />
+                <p className="font-heading text-base font-semibold text-foreground">{featured.name}</p>
+                <span className="font-body text-xs text-muted-foreground">{featured.location}{featured.date ? ` · ${featured.date}` : ''}</span>
+                <Stars count={featured.rating} />
               </div>
-            </motion.div>
-          ))}
-        </div>
+            </div>
+
+            <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-8 flex flex-col gap-7">
+              {supporting.map((r, i) => (
+                <motion.div
+                  key={r.name + r.date + page}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.15 + i * 0.12 }}
+                >
+                  <Stars count={r.rating} />
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed mt-2.5 line-clamp-3">“{r.text}”</p>
+                  <p className="font-heading text-sm font-semibold text-foreground mt-2.5">
+                    {r.name} <span className="font-body text-xs text-muted-foreground font-normal">· {r.location}</span>
+                  </p>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Pagination dots */}
-        {!showAll && (
-          <div className="flex justify-center gap-2 mt-8">
+        {!showAll && pages > 1 && (
+          <div className="flex justify-center gap-2 mt-12">
             {Array.from({ length: pages }).map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i)}
-                className={`h-1.5 rounded-full transition-all duration-300 ${
-                  safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'
-                }`}
-              />
+              <button key={i} onClick={() => setPage(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'}`} />
             ))}
           </div>
         )}
@@ -224,16 +180,18 @@ export default function ReviewsSection() {
         )}
 
         {showAll && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 mt-10 lg:border-t lg:border-border lg:pt-10">
             {reviews.map((review, i) => (
-              <div key={i} className="relative p-6 rounded-xl border border-border bg-background/60 backdrop-blur-md hover:border-primary/30 transition-all duration-300">
-                <div className="flex items-start justify-between mb-4">
-                  <Stars count={review.rating} />
-                  <span className="font-body text-[10px] tracking-widest uppercase text-muted-foreground/60">{review.source}</span>
+              <div key={i} className="flex gap-5">
+                <span className="font-heading italic text-primary text-3xl leading-none select-none">“</span>
+                <div>
+                  <p className="font-body text-sm text-foreground/90 leading-relaxed italic mb-3">{review.text}</p>
+                  <div className="flex items-center gap-3">
+                    <p className="font-heading text-sm font-semibold text-foreground">{review.name}</p>
+                    <Stars count={review.rating} />
+                    <span className="font-body text-xs text-muted-foreground">{review.location}{review.date ? ` · ${review.date}` : ''}</span>
+                  </div>
                 </div>
-                <p className="font-body text-sm text-foreground leading-relaxed mb-5 italic">"{review.text}"</p>
-                <p className="font-heading text-sm font-semibold text-foreground">{review.name}</p>
-                <p className="font-body text-xs text-muted-foreground">{review.location}{review.date ? ` · ${review.date}` : ''}</p>
               </div>
             ))}
           </div>
