@@ -101,21 +101,21 @@ const STR = {
     aboutExtra: 'Een sfeervolle plek waar ambacht, gastvrijheid en een gulhartige keuken samenkomen. Of u nu komt voor een intiem diner of een feest met een grotere groep, ons team ontvangt u graag.',
     totalCap: 'Totale capaciteit', spacesLabel: 'Ruimtes', openToday: 'Open vandaag', parkingLabel: 'Parking',
     groupsCta: 'Groepen & events', routeCta: 'Route', reserveCta: 'Reserveer een tafel',
-    comingSoon: 'Binnenkort', comingSoonDesc: 'Onze vierde vestiging is in voorbereiding. We houden u graag op de hoogte.',
+    comingSoon: 'Binnenkort geopend', comingSoonDesc: 'Onze vierde vestiging is in voorbereiding. We houden u graag op de hoogte.',
   },
   fr: {
     spacesIntro: "Chaque espace a son propre caractère — du bar intimiste à la grande terrasse. Trouvez l'endroit qui convient à votre groupe.",
     aboutExtra: "Un lieu chaleureux où artisanat, hospitalité et cuisine généreuse se rencontrent. Que ce soit pour un dîner intime ou une fête en grand groupe, notre équipe vous accueille avec plaisir.",
     totalCap: 'Capacité totale', spacesLabel: 'Espaces', openToday: 'Ouvert aujourd’hui', parkingLabel: 'Parking',
     groupsCta: 'Groupes & events', routeCta: 'Itinéraire', reserveCta: 'Réserver une table',
-    comingSoon: 'Bientôt', comingSoonDesc: "Notre quatrième établissement est en préparation. Nous vous tiendrons informés.",
+    comingSoon: 'Bientôt ouvert', comingSoonDesc: "Notre quatrième établissement est en préparation. Nous vous tiendrons informés.",
   },
   en: {
     spacesIntro: 'Each space has its own character — from the intimate bar to the spacious terrace. Find the spot that suits your party.',
     aboutExtra: 'A warm place where craft, hospitality and a generous kitchen come together. Whether for an intimate dinner or a celebration with a larger group, our team welcomes you gladly.',
     totalCap: 'Total capacity', spacesLabel: 'Spaces', openToday: 'Open today', parkingLabel: 'Parking',
     groupsCta: 'Groups & events', routeCta: 'Directions', reserveCta: 'Reserve a table',
-    comingSoon: 'Coming soon', comingSoonDesc: 'Our fourth location is in preparation. We will keep you posted.',
+    comingSoon: 'Opening soon', comingSoonDesc: 'Our fourth location is in preparation. We will keep you posted.',
   },
 };
 

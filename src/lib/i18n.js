@@ -242,7 +242,7 @@ export const translations = {
     loc_not_found: 'Vestiging niet gevonden',
     loc_back: 'Terug naar de vestigingen',
     loc_spaces: 'Ruimtes & capaciteit',
-    loc_coming_soon: 'Binnenkort',
+    loc_coming_soon: 'Binnenkort geopend',
 
     // Groups
     grp_title: 'Groepen & Evenementen',
@@ -651,7 +651,7 @@ export const translations = {
     loc_not_found: 'Établissement introuvable',
     loc_back: 'Retour aux établissements',
     loc_spaces: 'Espaces & capacité',
-    loc_coming_soon: 'Bientôt',
+    loc_coming_soon: 'Bientôt ouvert',
 
     grp_title: 'Groupes & Événements',
     grp_title_main: 'Groupes &',
@@ -1049,7 +1049,7 @@ export const translations = {
     loc_not_found: 'Venue not found',
     loc_back: 'Back to the venues',
     loc_spaces: 'Spaces & capacity',
-    loc_coming_soon: 'Coming soon',
+    loc_coming_soon: 'Opening soon',
 
     grp_title: 'Groups & Events',
     grp_title_main: 'Groups &',

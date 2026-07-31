@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 
-export default function SectionReveal({ children, className = '', delay = 0, direction = 'up', hover = true, ...rest }) {
+export default function SectionReveal({ children, className = '', delay = 0, direction = 'up', hover = false, ...rest }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
