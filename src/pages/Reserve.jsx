@@ -53,7 +53,7 @@ export default function Reserve() {
                   <button
                     key={loc.slug}
                     onClick={() => setSelected(loc.slug)}
-                    className={`relative p-5 text-left transition-all duration-300 border-l-2 ${isActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
+                    className={`relative p-5 text-left transition-all duration-300 border-l-2 ${isActive ? 'border-primary bg-primary/5 -translate-y-1 shadow-xl' : 'border-border hover:border-primary/40'}`}
                   >
                     <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2 block">{loc.number}</span>
                     <h4 className="font-heading text-lg font-semibold text-foreground">

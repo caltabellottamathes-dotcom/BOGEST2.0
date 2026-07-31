@@ -136,7 +136,7 @@ export default function Menu() {
 
       <Maandselectie />
 
-      <div className="sticky top-0 z-30 bg-background/70 backdrop-blur-2xl border-b border-white/8">
+      <div className="sticky top-0 z-30 bg-background/70 backdrop-blur-xl border-b border-white/8">
         <div className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto">
           <div className="flex gap-6 min-w-max">
             {MENU_DATA.map((cat, i) => {

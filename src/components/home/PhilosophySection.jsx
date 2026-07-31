@@ -167,8 +167,8 @@ export default function PhilosophySection() {
                     height: isMobile ? '86%' : '78%',
                     zIndex: 10 + i,
                     background: glassBg,
-                    backdropFilter: isMobile ? 'blur(16px)' : 'blur(40px)',
-                    WebkitBackdropFilter: isMobile ? 'blur(16px)' : 'blur(40px)',
+                    backdropFilter: isMobile ? 'blur(14px)' : 'blur(20px)',
+                    WebkitBackdropFilter: isMobile ? 'blur(14px)' : 'blur(20px)',
                     borderTop: glassBorder,
                     borderRadius: '24px 24px 0 0',
                     boxShadow: glassShadow,
@@ -186,13 +186,13 @@ export default function PhilosophySection() {
                     draggable={false}
                     className="absolute pointer-events-none select-none hidden md:block"
                     style={{
-                      height: 'clamp(12rem, 30vw, 26rem)',
+                      height: '88%',
                       width: 'auto',
-                      bottom: '-1.5rem',
-                      right: imageLeft ? '-1rem' : 'auto',
-                      left: imageLeft ? 'auto' : '-1rem',
-                      opacity: 0.08,
-                      filter: 'grayscale(1) brightness(2.4)',
+                      bottom: '-8%',
+                      right: imageLeft ? '-6%' : 'auto',
+                      left: imageLeft ? 'auto' : '-6%',
+                      opacity: 0.10,
+                      filter: 'grayscale(1) brightness(2.6)',
                       mixBlendMode: 'screen',
                       zIndex: 0
                     }}

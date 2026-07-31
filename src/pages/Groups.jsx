@@ -326,15 +326,13 @@ export default function Groups() {
           <SectionReveal direction="fade" delay={0.1}>
             <div className="space-y-4">
               {events.map(item => (
-                <div key={item.num} className="group relative py-5 border-b border-border/40">
-                  <div className="flex items-start gap-5">
-                    <span className="font-heading text-3xl font-bold text-primary/30 leading-none w-10 flex-shrink-0">{item.num}</span>
-                    <div>
-                      <h4 className="font-heading text-lg font-semibold text-foreground mb-1">{item.title}<span className="text-primary">.</span></h4>
-                      <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                    </div>
+                <div key={item.num} className="group relative py-6 border-b border-border/40">
+                  <span className="absolute -top-3 left-0 font-heading text-6xl font-bold text-primary/15 leading-none pointer-events-none select-none">{item.num}</span>
+                  <div className="relative pl-16">
+                    <h4 className="font-heading text-lg font-semibold text-foreground mb-1">{item.title}<span className="text-primary">.</span></h4>
+                    <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                   </div>
-                  <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out pl-[3.75rem]">
+                  <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out pl-16">
                     <HintLine question={hostQuestion(lang, item.title)} className="mt-3" />
                   </div>
                 </div>

@@ -229,8 +229,8 @@ export default function LocationDetail() {
       </section>
 
       {/* ── Quick stats ───────────────────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-10 lg:px-16 -mt-6 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <section className="w-full px-6 md:px-10 lg:px-16 -mt-12 md:-mt-16 relative z-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 rounded-2xl overflow-hidden border border-border/50 bg-card/60 backdrop-blur-xl shadow-2xl">
           <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
           <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
           <StatCard icon={Clock} label={L.openToday} value={openToday} />
