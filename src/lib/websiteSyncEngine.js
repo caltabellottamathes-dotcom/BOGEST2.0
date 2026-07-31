@@ -24,10 +24,7 @@ let lastTargetAt = 0;
 let debounceTimer = null;
 const DEDUP_MS = 4000;
 const DEBOUNCE_MS = 200;
-// Wait for the glass panel's slide-in animation (≈450ms) to finish before
-// scrolling/highlighting, so the target lands on settled geometry instead of
-// firing mid-slide (which read as "scroll/highlight not happening").
-const NAV_RENDER_MS = 500;
+const NAV_RENDER_MS = 150;
 
 function resetDedupIfStale() {
   if (lastTargetId && Date.now() - lastTargetAt > DEDUP_MS) {
