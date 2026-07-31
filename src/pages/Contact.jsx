@@ -57,7 +57,7 @@ export default function Contact() {
               </motion.div> :
 
             <form onSubmit={handleSubmit} className="space-y-5">
-                <h2 className="font-heading text-2xl font-bold text-foreground mb-6">{t('con_send_us')}.</h2>
+                <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-6">{t('con_send_us')}<span className="text-primary">.</span></h2>
                 <select
                   value={form.location}
                   onChange={(e) => set('location', e.target.value)}
@@ -83,19 +83,19 @@ export default function Contact() {
           </SectionReveal>
 
           <SectionReveal direction="right" delay={0.1}>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-8">{t('con_locations')}.</h2>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-8">{t('con_locations')}<span className="text-primary">.</span></h2>
             <div className="space-y-7">
               {locations.map((loc) =>
-              <div key={loc.slug} className="p-5 bg-card border border-border rounded-xl">
-                  <h3 className="font-heading text-base font-semibold text-foreground mb-3">{loc.name}</h3>
+              <div key={loc.slug} className="py-6 border-b border-border/40">
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{loc.name}<span className="text-primary">.</span></h3>
                   <div className="space-y-2">
-                    <p className="font-body text-xs text-muted-foreground flex items-start gap-2">
+                    <p className="font-body text-sm text-muted-foreground flex items-start gap-2">
                       <MapPin className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />{loc.address}
                     </p>
-                    <p className="font-body text-xs text-muted-foreground flex items-center gap-2">
+                    <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
                       <Phone className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.phone}
                     </p>
-                    <p className="font-body text-xs text-muted-foreground flex items-center gap-2">
+                    <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
                       <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.email}
                     </p>
                   </div>

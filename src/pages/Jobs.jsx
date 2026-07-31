@@ -232,8 +232,12 @@ export default function Jobs() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <div>
             <SectionReveal>
-              <h2 className="font-heading text-2xl font-bold text-foreground mb-2">{t('job_openings')}.</h2>
-              <p className="font-body text-sm text-muted-foreground mb-6">{t('job_openings_desc')}</p>
+              <div className="flex items-center gap-3 mb-3">
+                <span className="h-px w-10 bg-primary" />
+                <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>
+              </div>
+              <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-3">{t('job_openings')}<span className="text-primary">.</span></h2>
+              <p className="font-body text-sm text-muted-foreground mb-8 max-w-xl">{t('job_openings_desc')}</p>
             </SectionReveal>
             <div className="space-y-3">
               {openings.map((job, i) => (
@@ -275,7 +279,7 @@ export default function Jobs() {
               </div>
             ) : (
               <div className="sticky top-24">
-                <h2 className="font-heading text-2xl font-bold text-foreground mb-2">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold leading-[0.95] text-foreground mb-2">
                   {selected ? `${t('job_apply_for')}${selected.title}` : t('job_apply_title') + '.'}
                 </h2>
                 {!selected && <p className="font-body text-sm text-muted-foreground mb-6">{t('job_apply_desc')}</p>}

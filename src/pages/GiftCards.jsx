@@ -5,6 +5,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import GiftCardPanel from '@/components/reserve/GiftCardPanel';
 import PanelHero from '@/components/PanelHero';
+import EditorialHighlights from '@/components/EditorialHighlights';
 
 export default function GiftCards() {
   const { theme } = useTheme();
@@ -34,23 +35,7 @@ export default function GiftCards() {
 
       {/* ── Highlights ───────────────────────────────────────── */}
       <section className="w-full px-6 md:px-16 lg:px-24 py-16 md:py-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 max-w-5xl">
-          {HIGHLIGHTS.map(({ icon: Icon, title, body }, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <div className="w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mb-5">
-                <Icon className="w-4 h-4 text-primary" />
-              </div>
-              <h3 className="font-heading text-xl font-semibold text-foreground mb-3">{title}</h3>
-              <p className="font-body text-sm text-muted-foreground leading-relaxed">{body}</p>
-            </motion.div>
-          ))}
-        </div>
+        <EditorialHighlights items={HIGHLIGHTS} />
       </section>
 
       {/* ── Gift Card Shop ───────────────────────────────────── */}

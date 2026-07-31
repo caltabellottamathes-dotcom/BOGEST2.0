@@ -39,32 +39,32 @@ export default function Reserve() {
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-24">
         <div className="max-w-4xl">
           <div>
-            <p className="font-body text-xs tracking-[0.2em] uppercase text-muted-foreground mb-5 flex items-center gap-2">
-              <MapPin className="w-3.5 h-3.5 text-primary" />
-              {t('res_location')}
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-10">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="h-px w-10 bg-primary" />
+              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5" />
+                {t('res_location')}
+              </span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
               {LOCATIONS_DATA.filter(l => l.zenchefId).map(loc => {
                 const isActive = selected === loc.slug;
                 return (
                   <button
                     key={loc.slug}
                     onClick={() => setSelected(loc.slug)}
-                    className={`relative p-5 rounded-xl border-2 text-left transition-all duration-300 ${
-                      isActive
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/40'
-                    }`}
+                    className={`relative p-5 text-left transition-all duration-300 border-l-2 ${isActive ? 'border-primary bg-primary/5' : 'border-border hover:border-primary/40'}`}
                   >
-                    {isActive && (
-                      <span className="absolute top-3 right-3 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
-                        <Check className="w-3 h-3 text-primary-foreground" />
-                      </span>
-                    )}
-                    <h4 className="font-heading text-base font-semibold text-foreground">
+                    <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2 block">{loc.number}</span>
+                    <h4 className="font-heading text-lg font-semibold text-foreground">
                       {loc.name}
                     </h4>
                     <p className="font-body text-xs text-muted-foreground mt-1">{loc.city}</p>
+                    {isActive && (
+                      <span className="absolute top-4 right-4 w-5 h-5 rounded-full bg-primary flex items-center justify-center">
+                        <Check className="w-3 h-3 text-primary-foreground" />
+                      </span>
+                    )}
                   </button>
                 );
               })}

@@ -121,12 +121,12 @@ const STR = {
 
 function StatCard({ icon: Icon, label, value }) {
   return (
-    <div className="rounded-xl border border-border bg-card/70 backdrop-blur-md p-4">
-      <div className="flex items-center gap-2 text-primary mb-1.5">
-        <Icon className="w-4 h-4" />
-        <span className="font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground">{label}</span>
+    <div className="p-4 border-l border-border/60">
+      <div className="flex items-center gap-2 mb-2">
+        <Icon className="w-3.5 h-3.5 text-primary" />
+        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground">{label}</span>
       </div>
-      <p className="font-heading text-lg font-semibold text-foreground leading-tight">{value}</p>
+      <p className="font-heading text-2xl md:text-3xl font-bold text-primary leading-none">{value}</p>
     </div>
   );
 }
@@ -244,9 +244,12 @@ export default function LocationDetail() {
           <SectionReveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
               <div>
-                <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2 block">{t('loc_spaces')}</span>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">{data.title}</h2>
-                <p className="font-body text-sm text-muted-foreground mt-3 max-w-xl leading-relaxed">{L.spacesIntro}</p>
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="h-px w-10 bg-primary" />
+                  <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('loc_spaces')}</span>
+                </div>
+                <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground">{data.title}<span className="text-primary">.</span></h2>
+                <p className="font-body text-sm text-muted-foreground mt-4 max-w-xl leading-relaxed">{L.spacesIntro}</p>
               </div>
               <div className="flex items-center gap-2 font-body text-sm text-muted-foreground whitespace-nowrap">
                 <Users className="w-4 h-4 text-primary" />
@@ -258,18 +261,19 @@ export default function LocationDetail() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {spaces.map((space, i) => (
               <SectionReveal key={space.name} delay={i * 0.07}>
-                <div className="group rounded-2xl overflow-hidden border border-border hover:border-primary/40 transition-all duration-300 bg-card h-full flex flex-col">
-                  <div className="h-44 overflow-hidden">
+                <div className="group relative overflow-hidden rounded-2xl h-full">
+                  <div className="absolute inset-0">
                     <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                   </div>
-                  <div className="p-5 flex-1 flex flex-col">
-                    <div className="flex items-start justify-between gap-3 mb-1">
-                      <h3 className="font-heading text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-300">{space.name}</h3>
+                  <div className="relative h-full min-h-[15rem] flex flex-col justify-end p-5">
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <h3 className="font-heading text-xl font-bold text-white">{space.name}</h3>
                       <span className="inline-flex items-center gap-1 font-body text-xs text-primary whitespace-nowrap">
                         <Users className="w-3 h-3" /> {space.capacity}p
                       </span>
                     </div>
-                    <p className="font-body text-sm text-muted-foreground leading-relaxed">{space.desc}</p>
+                    <p className="font-body text-sm text-white/75 leading-relaxed max-w-xs">{space.desc}</p>
                   </div>
                 </div>
               </SectionReveal>

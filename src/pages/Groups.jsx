@@ -267,9 +267,13 @@ export default function Groups() {
       <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} positionKey="groups.hero" />
 
       <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-16">
-        <SectionReveal className="mb-6">
-          <h2 className="font-heading text-2xl font-bold text-foreground mb-2">{t('grp_choose_location')}.</h2>
-          <p className="font-body text-sm text-muted-foreground">{t('grp_choose_desc')}</p>
+        <SectionReveal className="mb-8">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="h-px w-10 bg-primary" />
+            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">Events</span>
+          </div>
+          <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-3">{t('grp_choose_location')}<span className="text-primary">.</span></h2>
+          <p className="font-body text-sm text-muted-foreground max-w-xl">{t('grp_choose_desc')}</p>
         </SectionReveal>
         <div className="space-y-3">
           {LOCATIONS.map((loc, i) => (
@@ -283,8 +287,8 @@ export default function Groups() {
       <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <SectionReveal>
-            <h2 className="font-heading text-2xl font-bold text-foreground mb-6">{t('grp_request_title')}.</h2>
-            <p className="font-body text-sm text-muted-foreground mb-8 leading-relaxed">{t('grp_request_desc')}</p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-4">{t('grp_request_title')}<span className="text-primary">.</span></h2>
+            <p className="font-body text-sm text-muted-foreground mb-8 leading-relaxed max-w-xl">{t('grp_request_desc')}</p>
             {success ? (
               <div className="flex flex-col items-center text-center py-12">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
@@ -322,15 +326,15 @@ export default function Groups() {
           <SectionReveal direction="fade" delay={0.1}>
             <div className="space-y-4">
               {events.map(item => (
-                <div key={item.num} className="group relative p-5 bg-card border border-border rounded-xl">
-                  <div className="flex items-start gap-4">
-                    <span className="font-heading text-2xl font-bold text-primary">{item.num}</span>
+                <div key={item.num} className="group relative py-5 border-b border-border/40">
+                  <div className="flex items-start gap-5">
+                    <span className="font-heading text-3xl font-bold text-primary/30 leading-none w-10 flex-shrink-0">{item.num}</span>
                     <div>
-                      <h4 className="font-heading text-base font-semibold text-foreground mb-1">{item.title}</h4>
-                      <p className="font-body text-sm text-muted-foreground">{item.desc}</p>
+                      <h4 className="font-heading text-lg font-semibold text-foreground mb-1">{item.title}<span className="text-primary">.</span></h4>
+                      <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
-                  <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out">
+                  <div className="overflow-hidden max-h-0 group-hover:max-h-14 transition-all duration-500 ease-out pl-[3.75rem]">
                     <HintLine question={hostQuestion(lang, item.title)} className="mt-3" />
                   </div>
                 </div>

@@ -178,7 +178,26 @@ export default function PhilosophySection() {
                     backfaceVisibility: 'hidden'
                   }}>
                   
-                  <div className="w-full h-full flex items-stretch px-4 md:px-12 lg:px-16 py-3 md:py-8 opacity-100">
+                  {/* Bull mark — large ghosted watermark in the bottom corner beside the text */}
+                  <img
+                    src="https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png"
+                    alt=""
+                    aria-hidden
+                    draggable={false}
+                    className="absolute pointer-events-none select-none hidden md:block"
+                    style={{
+                      height: 'clamp(12rem, 30vw, 26rem)',
+                      width: 'auto',
+                      bottom: '-1.5rem',
+                      right: imageLeft ? '-1rem' : 'auto',
+                      left: imageLeft ? 'auto' : '-1rem',
+                      opacity: 0.08,
+                      filter: 'grayscale(1) brightness(2.4)',
+                      mixBlendMode: 'screen',
+                      zIndex: 0
+                    }}
+                  />
+                  <div className="relative z-10 w-full h-full flex items-stretch px-4 md:px-12 lg:px-16 py-3 md:py-8 opacity-100">
                     <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 lg:gap-12 items-stretch">
 
                       {/* Image — portrait, slides in from side, with gold frame and watermark */}
