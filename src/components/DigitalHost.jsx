@@ -1020,8 +1020,9 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     const p = el.play();
     if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
     const fallback = setTimeout(() => setVideoReady(true), 2200);
-    return () => clearTimeout(fallback);
+    return () => { clearTimeout(fallback); try { videoRef.current?.pause(); } catch {} };
   }, []);
+  const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   useEffect(() => {
@@ -1059,7 +1060,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   return (
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
-        className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={onSkip} />
+        className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={() => { pauseVideo(); onSkip(); }} />
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={videoReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 24 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
@@ -1087,7 +1088,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
           {/* Content — bottom on mobile, right on sm+ */}
           <div className="relative flex-1 flex flex-col px-6 sm:px-8 py-6 overflow-y-auto">
             {/* Close */}
-            <button onClick={onSkip}
+            <button onClick={() => { pauseVideo(); onSkip(); }}
               className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
               style={{ background: isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)' }}>
               <X className="w-3.5 h-3.5" />
@@ -1104,9 +1105,9 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
 
             {/* Action buttons */}
             <div className="space-y-3 mt-auto">
-              <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={onChat} variant="primary" />
-              <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={onLiveConversation} />
-              <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={onSkip} variant="ghost" />
+              <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={() => { pauseVideo(); onChat(); }} variant="primary" />
+              <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={() => { pauseVideo(); onLiveConversation(); }} />
+              <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={() => { pauseVideo(); onSkip(); }} variant="ghost" />
             </div>
           </div>
         </div>

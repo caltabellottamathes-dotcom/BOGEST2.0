@@ -5,8 +5,7 @@ import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
-import HostHint from '@/components/HostHint';
-import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
+import { askHost, hostQuestion } from '@/lib/hostHint';
 
 export const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
@@ -63,7 +62,6 @@ export function SuggestionCard({ item, showFade = true }) {
 
   return (
     <div className="flex-shrink-0 w-[320px] md:w-[360px] group relative">
-      <HostHint variant="seal" question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}
@@ -73,11 +71,13 @@ export function SuggestionCard({ item, showFade = true }) {
           loading="lazy" decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-        <div className="absolute top-4 left-4">
-          <span className="inline-block px-3 py-1 bg-black/35 backdrop-blur-md text-white font-body text-[10px] tracking-[0.2em] uppercase rounded-full border border-white/15">
-            {item.tag}
+        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(hostQuestion(lang, item.name)); }}
+          className="absolute top-4 left-4 flex flex-col items-start px-3 py-1 bg-black/35 backdrop-blur-md rounded-2xl border border-white/15 overflow-hidden transition-all duration-500 group-hover:bg-black/55">
+          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-white whitespace-nowrap">{item.tag}</span>
+          <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+            <span className="block font-body text-[9px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1">Vraag het aan Bogèst ↘</span>
           </span>
-        </div>
+        </button>
         <div className="absolute bottom-4 right-4">
           <span className="inline-block px-3 py-2 bg-white/15 backdrop-blur-md text-white font-heading text-base font-bold rounded-lg border border-white/20">
             {item.price}

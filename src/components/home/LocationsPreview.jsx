@@ -89,7 +89,7 @@ export default function LocationsPreview() {
                         </h3>
                       </div>
                     </Link>
-                    <HostHint variant="seal" question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
+                    <HostHint variant="seal" question={hostQuestion(lang, loc.name)} className="absolute top-3 right-3 z-20" />
                   </div>
                 )}
               </SectionReveal>

@@ -54,7 +54,7 @@ export default function CTACards() {
                     <Icon style={{ width: 17, height: 17 }} />
                   </span>
                   {/* italic number watermark */}
-                  <span className="absolute top-4 right-5 font-heading italic text-5xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-500 leading-none">{card.num}</span>
+                  <span className="absolute top-4 right-5 font-heading text-5xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-500 leading-none">{card.num}</span>
                   <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary/80 mb-2 block">Bogèst</span>
                   <h3 className="font-heading text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">{card.title}</h3>
                   <div className="flex items-center gap-2 my-3.5">

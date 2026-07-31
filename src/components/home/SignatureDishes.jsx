@@ -63,7 +63,7 @@ export default function SignatureDishes() {
                     {dish.tag}
                   </span>
                 </div>
-                <HostHint variant="seal" question={hostQuestion(lang, dish.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
+                <HostHint variant="seal" question={hostQuestion(lang, dish.name)} className="absolute top-3 right-3 z-20" />
                 <h3 className="font-heading text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
                   {dish.name}
                 </h3>

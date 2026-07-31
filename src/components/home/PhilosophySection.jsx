@@ -219,6 +219,7 @@ export default function PhilosophySection() {
                           <div className="absolute top-3 left-3 w-10 h-10 border-t border-l border-primary/40 rounded-tl-lg" />
                           {/* Gold accent corner — bottom-right */}
                           <div className="absolute bottom-3 right-3 w-10 h-10 border-b border-r border-primary/40 rounded-br-lg" />
+                          <HostHint variant="note" question={hostQuestion(lang, pillar.title)} className="absolute top-3 right-3 z-20" />
                         </div>
                       </div>
 
@@ -275,7 +276,6 @@ export default function PhilosophySection() {
 
                     </div>
                   </div>
-                  <HostHint variant="note" question={hostQuestion(lang, pillar.title)} label={hostHintLabel(lang)} className="absolute top-4 right-4 z-20" />
                 </div>);
 
             })}
