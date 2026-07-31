@@ -276,7 +276,7 @@ export default function Groups() {
             <SectionReveal key={loc.id} delay={i * 0.07} hover={false}>
               <div className="group relative">
                 <LocationPanel loc={loc} />
-                {!loc.comingSoon && <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute top-3 right-14 z-20" />}
+                {!loc.comingSoon && <HostHint variant="note" question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute top-3 right-14 z-20" />}
               </div>
             </SectionReveal>
           ))}
@@ -333,7 +333,7 @@ export default function Groups() {
                       <p className="font-body text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
-                  <HostHint question={hostQuestion(lang, item.title)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
+                  <HostHint variant="note" question={hostQuestion(lang, item.title)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
                 </div>
               ))}
             </div>

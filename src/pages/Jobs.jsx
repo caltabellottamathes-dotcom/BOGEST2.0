@@ -237,7 +237,7 @@ export default function Jobs() {
                 <SectionReveal key={job.title} delay={i * 0.08}>
                   <div className="group relative">
                     <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} />
-                    <HostHint question={hostQuestion(lang, job.title)} label={hostHintLabel(lang)} className="absolute bottom-3 right-3 z-20" />
+                    <HostHint variant="note" question={hostQuestion(lang, job.title)} label={hostHintLabel(lang)} className="absolute bottom-3 right-3 z-20" />
                   </div>
                 </SectionReveal>
               ))}

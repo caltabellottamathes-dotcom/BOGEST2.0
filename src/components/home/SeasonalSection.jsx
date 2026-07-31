@@ -63,7 +63,7 @@ export function SuggestionCard({ item, showFade = true }) {
 
   return (
     <div className="flex-shrink-0 w-[320px] md:w-[360px] group relative">
-      <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
+      <HostHint variant="seal" question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute top-3 right-3 z-20" />
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}

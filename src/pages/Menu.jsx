@@ -72,9 +72,9 @@ function CategoryRow({ cat, idx }) {
                       {t('menu_included')}
                     </span>
                   )}
+                  <HostHint variant="inline" question={hostQuestion(lang, loc(item.name, lang))} label={hostHintLabel(lang)} />
                 </div>
                 {item.desc && <p className="font-body text-xs text-muted-foreground mt-1.5">{loc(item.desc, lang)}</p>}
-                <HostHint question={hostQuestion(lang, loc(item.name, lang))} label={hostHintLabel(lang)} className="absolute left-0 top-full mt-1 z-20" />
               </div>
             );
           })}

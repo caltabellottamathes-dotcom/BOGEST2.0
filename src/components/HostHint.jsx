@@ -1,28 +1,74 @@
 import React from 'react';
-import { MessageCircle, ArrowRight } from 'lucide-react';
 import { askHost } from '@/lib/hostHint';
 
-// Animated-text host hint. On hover, a small chat icon slides in from the left,
-// the words of the label reveal one-by-one, and an arrow slides in from the
-// right — making the intention ("ask Bogèst") and the action clear. Position
-// it via `className` (e.g. `absolute top-3 right-3 z-20`). Parent must be
-// `group relative`.
-export default function HostHint({ question, label = 'Vraag het aan Bogèst!', className = '' }) {
-  const words = label.split(' ');
+// "De fluistering van de gastheer" — the host's whisper.
+// A warm, editorial invitation to ask Bogèst, built from one shared vocabulary:
+// a gold dot · a hairline · an italic serif phrase · a small arrow.
+// It never floats over readable text and never carries an always-on blur, so
+// nothing behind it is ever blurred or made unreadable.
+//
+// variant="inline" — a quiet margin note that slides out inline after a price
+//                    (menu rows). Takes no space when idle, expands on hover.
+// variant="seal"   — a small gold "B" monogram seal floating at an image corner
+//                    (a quiet, always-there detail); on hover the whisper slides
+//                    out beside it. Used on image cards (seasonal / signature /
+//                    locations) where the seal sits over imagery, not text.
+// variant="note"   — a small dark chip with the whisper, revealed on hover, for
+//                    panels and cards over solid/glass surfaces.
+//
+// The parent must be `group relative` (inline sits inside a group row).
+
+function Whisper({ label }) {
   return (
-    <button
-      type="button"
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(question); }}
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border pointer-events-none group-hover:pointer-events-auto transition-colors duration-300 bg-transparent group-hover:bg-black/55 border-transparent group-hover:border-white/15 ${className}`}
-      style={{ backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}
-    >
-      <MessageCircle className="w-3.5 h-3.5 text-primary opacity-0 -translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" style={{ transitionDelay: '60ms' }} />
-      <span className="flex items-center gap-[3px] font-body text-[11px] tracking-wide whitespace-nowrap text-foreground/90">
-        {words.map((w, i) => (
-          <span key={i} className="opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" style={{ transitionDelay: `${120 + i * 65}ms` }}>{w}</span>
-        ))}
+    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+      <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
+      <span className="h-px w-3 bg-primary/40 flex-shrink-0" />
+      <span className="font-heading italic text-xs text-primary leading-none">{label}</span>
+      <span className="font-body text-[10px] text-primary/60 leading-none">↗</span>
+    </span>
+  );
+}
+
+export default function HostHint({ question, label = 'Vraag het aan Bogèst', className = '', variant = 'note' }) {
+  const onClick = (e) => { e.preventDefault(); e.stopPropagation(); askHost(question); };
+
+  if (variant === 'inline') {
+    const short = label.replace(/[!.]?$/, '').split(' ').slice(0, 2).join(' ');
+    return (
+      <button type="button" onClick={onClick}
+        className="inline-flex items-center overflow-hidden max-w-0 group-hover:max-w-[160px] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out pointer-events-none group-hover:pointer-events-auto">
+        <span className="inline-flex items-center gap-1.5 whitespace-nowrap pl-2">
+          <Whisper label={short} />
+        </span>
+      </button>
+    );
+  }
+
+  if (variant === 'seal') {
+    return (
+      <button type="button" onClick={onClick} className={`flex items-center gap-2 ${className}`}>
+        {/* whisper — slides out beside the seal on hover */}
+        <span className="overflow-hidden max-w-0 group-hover:max-w-[240px] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out">
+          <span className="inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-primary/30 bg-black/55">
+            <Whisper label={label} />
+          </span>
+        </span>
+        {/* the seal — a quiet gold monogram, always present, brightens on hover */}
+        <span className="flex-shrink-0 flex items-center justify-center w-7 h-7 rounded-full bg-black/40 border border-primary/40 text-primary group-hover:bg-black/65 group-hover:border-primary transition-all duration-500"
+          style={{ backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
+          <span className="font-heading italic text-sm leading-none">B</span>
+        </span>
+      </button>
+    );
+  }
+
+  // note
+  return (
+    <button type="button" onClick={onClick}
+      className={`inline-flex items-center pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out ${className}`}>
+      <span className="inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full border border-primary/30 bg-black/55">
+        <Whisper label={label} />
       </span>
-      <ArrowRight className="w-3 h-3 text-primary opacity-0 translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" style={{ transitionDelay: `${120 + words.length * 65}ms` }} />
     </button>
   );
 }

@@ -43,24 +43,27 @@ export default function CTACards() {
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('home_cta_label')}</span>
           <HomeTitle title={t('home_cta_title')} accent={t('home_cta_title_accent')} />
         </SectionReveal>
-        <div className="border-y border-border">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
           {cards.map((card, i) => {
             const Icon = card.icon;
             return (
-              <SectionReveal key={card.num} delay={i * 0.08} hover={false}>
-                <Link to={card.path} className="group flex items-center gap-5 md:gap-10 py-8 md:py-10 px-1 hover:bg-primary/[0.03] transition-colors duration-300">
-                  <span className="font-heading text-5xl md:text-6xl font-bold text-primary/20 group-hover:text-primary transition-colors duration-300 w-14 md:w-20 flex-shrink-0 leading-none">{card.num}</span>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-1.5">
-                      <span className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 border border-primary/30 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                        <Icon style={{ width: 15, height: 15 }} />
-                      </span>
-                      <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">{card.title}</h3>
-                    </div>
-                    <p className="font-body text-sm text-muted-foreground max-w-md leading-relaxed">{card.desc}</p>
+              <SectionReveal key={card.num} delay={i * 0.1} hover={false}>
+                <Link to={card.path} className="group relative block rounded-2xl border border-border bg-card p-6 pt-12 transition-all duration-500 hover:-translate-y-1 hover:border-primary/40 hover:shadow-[0_18px_50px_rgba(0,0,0,0.18)]">
+                  {/* icon medallion — overlaps the top edge */}
+                  <span className="absolute -top-5 left-6 w-12 h-12 rounded-full bg-background border border-primary/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all duration-500 shadow-sm">
+                    <Icon style={{ width: 17, height: 17 }} />
+                  </span>
+                  {/* italic number watermark */}
+                  <span className="absolute top-4 right-5 font-heading italic text-5xl font-bold text-primary/10 group-hover:text-primary/20 transition-colors duration-500 leading-none">{card.num}</span>
+                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary/80 mb-2 block">Bogèst</span>
+                  <h3 className="font-heading text-xl font-bold text-foreground group-hover:text-primary transition-colors duration-300">{card.title}</h3>
+                  <div className="flex items-center gap-2 my-3.5">
+                    <div className="h-px w-8 bg-primary/40 group-hover:w-12 transition-all duration-500" />
+                    <div className="w-1 h-1 rounded-full bg-primary/50" />
                   </div>
-                  <span className="hidden sm:inline-flex items-center gap-2 font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground group-hover:text-primary transition-colors duration-300 flex-shrink-0">
-                    {t('btn_more')} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
+                  <span className="inline-flex items-center gap-1.5 mt-5 font-body text-[10px] tracking-[0.25em] uppercase text-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    {t('btn_more')} <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
                   </span>
                 </Link>
               </SectionReveal>

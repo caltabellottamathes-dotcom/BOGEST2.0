@@ -275,7 +275,7 @@ export default function PhilosophySection() {
 
                     </div>
                   </div>
-                  <HostHint question={hostQuestion(lang, pillar.title)} label={hostHintLabel(lang)} className="absolute top-4 right-4 z-20" />
+                  <HostHint variant="note" question={hostQuestion(lang, pillar.title)} label={hostHintLabel(lang)} className="absolute top-4 right-4 z-20" />
                 </div>);
 
             })}
