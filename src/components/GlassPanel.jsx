@@ -113,7 +113,7 @@ export default function GlassPanelWrapper({ children }) {
             <PanelScrollContext.Provider value={contentRef}>
               <div
                 ref={contentRef}
-                className="relative h-full overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain"
+                className="relative h-full overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain pb-24 md:pb-0"
                 style={{ WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' }}
               >
                 {children}

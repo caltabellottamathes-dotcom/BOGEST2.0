@@ -33,10 +33,7 @@ const TOOLS = [
   },
 ];
 
-const TEST_MESSAGES = [
-  { role: 'system', content: SYS },
-  { role: 'user', content: 'Wat is jullie specialiteit?' },
-];
+const DEFAULT_TEST_MSG = 'Wat is jullie specialiteit?';
 
 async function ping(key, url) {
   try {
@@ -53,13 +50,29 @@ async function ping(key, url) {
   }
 }
 
-async function chatTest(key, url) {
+async function chatTest(key, url, message) {
   const t0 = Date.now();
   try {
+    // Use the REAL agent system prompt (the one ElevenLabs sends in a live
+    // call) so the test exercises the actual pushed instructions — including
+    // the anticipatory-navigation rules — through the proxy + websiteAction.
+    let systemPrompt = SYS;
+    try {
+      const g = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
+      if (g.ok) {
+        const a = await g.json();
+        const p = a.conversation_config && a.conversation_config.agent && a.conversation_config.agent.prompt && a.conversation_config.agent.prompt.prompt;
+        if (typeof p === 'string' && p.length) systemPrompt = p;
+      }
+    } catch { /* fall back to short SYS */ }
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: message || DEFAULT_TEST_MSG },
+    ];
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + key },
-      body: JSON.stringify({ model: 'bogest-via-base44', messages: TEST_MESSAGES, tools: TOOLS, stream: false, debug: true }),
+      body: JSON.stringify({ model: 'bogest-via-base44', messages, tools: TOOLS, stream: false, debug: true }),
     });
     const ms = Date.now() - t0;
     const txt = await res.text().catch(() => '');
@@ -98,7 +111,7 @@ export default async function(req) {
 
     // 2) Real chat test through the proxy.
     let chat = null;
-    if (!quiet && probe && probe.ok) chat = await chatTest(key, PROXY_URL);
+    if (!quiet && probe && probe.ok) chat = await chatTest(key, PROXY_URL, payload?.message);
 
     // 3) Inspect the agent's prompt object (where the LLM config lives).
     const getRes = await fetch(`${BASE}/${AGENT_ID}`, { headers: authHeaders() });
