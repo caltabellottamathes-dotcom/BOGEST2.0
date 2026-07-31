@@ -101,8 +101,7 @@
     "guest-memory-personalisation",
     "live-social-media-connector",
     "location-recommendation",
-    "personalised-recommendation-logic",
-    "welcome-and-intent-detection"
+    "personalised-recommendation-logic"
   ],
   "selected_workspace_skill_ids": [],
   "model": "gemini_3_flash",
