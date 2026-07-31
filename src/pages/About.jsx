@@ -32,7 +32,7 @@ export default function About() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('nav_about')} title={t('about_title_main')} titleAccent="Bogèst" positionKey="about.hero" />
+      <PanelHero label={t('nav_about')} title={t('about_title_main')} titleAccent="Bogèst" subtitle="De mensen, de sfeer en de filosofie achter Bogèst." positionKey="about.hero" />
 
       <PanelContent>
         <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">

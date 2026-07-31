@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Instagram as InstagramIcon, ExternalLink, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import SectionReveal from '@/components/ui/SectionReveal';
 
 const ACCOUNT_LINKS = [
@@ -35,9 +36,11 @@ export default function Instagram() {
         bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg"
       />
 
+      <PanelContent>
       {/* Account header + live feed */}
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-16 md:pt-20 pb-16">
-        <SectionReveal className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16">
+        <SectionReveal className="mb-10">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 rounded-2xl border border-border/50 bg-white/[0.04] backdrop-blur-md p-5 md:p-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center flex-shrink-0">
               <InstagramIcon className="w-6 h-6 text-primary" />
@@ -53,6 +56,7 @@ export default function Instagram() {
             Volg op Instagram
             <ExternalLink className="w-3.5 h-3.5" />
           </a>
+          </div>
         </SectionReveal>
 
         {loading ? (
@@ -70,6 +74,11 @@ export default function Instagram() {
             <p className="font-body text-sm text-muted-foreground">Nog geen Instagram posts beschikbaar.</p>
           </div>
         ) : (
+          <>
+          <div className="flex items-center gap-3 mb-6">
+            <span className="h-px w-10 bg-primary" />
+            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">Recente posts</span>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
             {data.posts.map((post, i) => (
               <motion.a
@@ -98,6 +107,7 @@ export default function Instagram() {
               </motion.a>
             ))}
           </div>
+          </>
         )}
       </section>
 
@@ -127,6 +137,7 @@ export default function Instagram() {
           </div>
         </div>
       </section>
+      </PanelContent>
     </div>
   );
 }

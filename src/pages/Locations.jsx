@@ -15,7 +15,7 @@ export default function Locations() {
   const LOCATIONS_DATA = getLocations(lang);
   return (
     <div className="w-full">
-      <PanelHero label={t('loc_four_locations')} title={t('loc_title_main')} titleAccent={t('loc_title_accent')} positionKey="locations.hero" />
+      <PanelHero label={t('loc_four_locations')} title={t('loc_title_main')} titleAccent={t('loc_title_accent')} subtitle="Vier vestigingen in Limburg — elk met zijn eigen karakter." positionKey="locations.hero" />
 
       <PanelContent>
         <div className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
@@ -35,7 +35,7 @@ export default function Locations() {
                     </Link>
                   </div>
                   <div className={`relative z-10 ${imageLeft ? 'lg:-ml-12' : 'lg:order-1 lg:-mr-12'}`}>
-                    <div className="rounded-2xl border border-border/50 bg-card/70 backdrop-blur-xl p-6 md:p-8 shadow-2xl">
+                    <div className="rounded-2xl border border-border/50 bg-card/75 backdrop-blur-md p-6 md:p-8 shadow-2xl">
                       <Link to={`/locations/${loc.slug}`} className="group inline-flex items-center gap-2 mb-4">
                         <h3 className={`font-heading text-2xl font-bold transition-colors duration-300 ${inactive ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
                           {loc.name}<span className="text-primary">.</span>

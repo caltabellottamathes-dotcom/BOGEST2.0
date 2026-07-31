@@ -4,6 +4,7 @@ import { useLang } from '@/lib/LangContext';
 import { MENU_DATA, loc } from '@/lib/data';
 import { PanelScrollContext } from '@/components/GlassPanel';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import HostHint from '@/components/HostHint';
 import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 import { SuggestionCard, SUGGESTIONS, MONTH_NAMES, SECTION_LABELS } from '@/components/home/SeasonalSection';
@@ -12,7 +13,7 @@ import ReserveCtaSection from '@/components/ReserveCtaSection';
 function PageHero() {
   const { t } = useLang();
   return (
-    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} positionKey="menu.hero">
+    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle="Onze kaart — vuur, vlees en gulhartige gerechten, met seizoenssuggesties van de chef." positionKey="menu.hero">
       <div className="inline-flex items-center gap-3 px-4 py-2.5 bg-primary/8 rounded-lg border border-primary/15 mt-5">
         <span className="font-body text-xs text-muted-foreground">{t('menu_formula_label')}</span>
         <span className="font-body text-sm text-foreground font-medium">{t('menu_formula')}</span>
@@ -134,9 +135,10 @@ export default function Menu() {
     <div className="w-full">
       <PageHero />
 
+      <PanelContent>
       <Maandselectie />
 
-      <div className="sticky top-0 z-30 bg-background/70 backdrop-blur-xl border-b border-white/8">
+      <div className="sticky top-0 z-30 bg-background/85 backdrop-blur-md border-b border-white/8">
         <div className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto">
           <div className="flex gap-6 min-w-max">
             {MENU_DATA.map((cat, i) => {
@@ -161,6 +163,7 @@ export default function Menu() {
       </div>
 
       <ReserveCtaSection />
+      </PanelContent>
     </div>
   );
 }

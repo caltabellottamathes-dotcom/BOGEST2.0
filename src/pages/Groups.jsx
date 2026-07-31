@@ -146,7 +146,7 @@ function LocationPanel({ loc }) {
     <div className="rounded-2xl border border-border overflow-hidden transition-all duration-300"
       style={{
         background: open ? 'rgba(4,4,4,0.18)' : 'hsl(var(--card))',
-        backdropFilter: open ? 'blur(32px)' : 'none',
+        backdropFilter: open ? 'blur(16px)' : 'none',
         borderColor: open ? 'rgba(255,255,255,0.08)' : undefined,
       }}>
       <button onClick={() => !loc.comingSoon && setOpen(o => !o)}

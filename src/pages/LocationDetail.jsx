@@ -210,7 +210,7 @@ export default function LocationDetail() {
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 4%, hsl(var(--background) / 0.35) 42%, rgba(0,0,0,0.45) 100%)' }} />
           <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-10 md:pb-14">
             <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-3 block">{t('nav_locations')} · {loc.region}</span>
-            <h1 className="font-heading text-4xl md:text-6xl lg:text-7xl font-bold text-foreground">{loc.name}</h1>
+            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{loc.name}</h1>
             <p className="font-body text-sm md:text-base text-muted-foreground mt-2 flex items-center gap-2">
               <MapPin className="w-4 h-4 text-primary" /> {loc.address}
             </p>
@@ -230,7 +230,7 @@ export default function LocationDetail() {
 
       {/* ── Quick stats ───────────────────────────────────────────────────── */}
       <section className="w-full px-6 md:px-10 lg:px-16 -mt-12 md:-mt-16 relative z-20">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 rounded-2xl overflow-hidden border border-border/50 bg-card/60 backdrop-blur-xl shadow-2xl">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-0 rounded-2xl overflow-hidden border border-border/50 bg-card/65 backdrop-blur-md shadow-2xl">
           <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
           <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
           <StatCard icon={Clock} label={L.openToday} value={openToday} />

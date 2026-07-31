@@ -46,7 +46,7 @@ export default function GiftCards() {
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-6xl mx-auto"
         >
-          <div className="relative rounded-3xl border border-border/50 bg-card/60 backdrop-blur-xl shadow-2xl">
+          <div className="relative rounded-3xl border border-border/50 bg-card/65 backdrop-blur-md shadow-2xl">
             <div className="relative px-8 py-12 md:px-14 md:py-14 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
               <div className="max-w-lg">
                 <div className="flex items-center gap-3 mb-4">

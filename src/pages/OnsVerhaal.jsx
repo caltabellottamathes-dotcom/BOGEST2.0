@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowLeft } from 'lucide-react';
 import PanelHero from '@/components/PanelHero';
+import PanelContent from '@/components/PanelContent';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import { bogestImages } from '@/lib/bogestImages';
@@ -32,8 +33,9 @@ export default function OnsVerhaal() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('about_story_label')} title="Ons verhaal" titleAccent="Bogèst" positionKey="onsverhaal.hero" />
+      <PanelHero label={t('about_story_label')} title="Ons verhaal" titleAccent="Bogèst" subtitle="Het verhaal achter Bogèst — van Beau Geste tot een gulhartig steakhouse in Limburg." positionKey="onsverhaal.hero" />
 
+      <PanelContent>
       {/* Back to Over ons */}
       <div className="w-full px-6 md:px-10 lg:px-16 pt-6">
         <Link to="/about" className="inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-muted-foreground hover:text-primary transition-colors duration-300">
@@ -51,18 +53,19 @@ export default function OnsVerhaal() {
 
         {story.map((s, i) => (
           <div key={s.num} className="w-full px-6 md:px-10 lg:px-16 pb-20 md:pb-28">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-              <div className={i % 2 === 1 ? 'lg:order-2' : ''}>
-                <div className="relative overflow-hidden rounded-2xl aspect-[4/3]">
-                  <img src={s.image} alt={s.title} className="w-full h-full object-cover" style={{ filter: 'saturate(0.78) brightness(0.94)' }} />
-                  <div className="absolute bottom-4 left-4">
-                    <span className="font-heading text-6xl font-bold text-white/10 select-none">{s.num}</span>
-                  </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              <div className={`relative ${i % 2 === 1 ? 'lg:order-2' : ''}`}>
+                <div className="relative overflow-hidden rounded-2xl aspect-[4/3] border border-border/40 shadow-2xl">
+                  <img src={s.image} alt={s.title} className="w-full h-full object-cover" style={{ filter: 'saturate(0.82) brightness(0.95)' }} />
                 </div>
+                <span className="absolute -top-6 left-2 font-heading text-8xl font-bold text-primary/12 leading-none select-none pointer-events-none">{s.num}</span>
               </div>
-              <div className={i % 2 === 1 ? 'lg:order-1' : ''}>
-                <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-4 block">{s.num} / 04</span>
-                <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-6">{s.title}.</h3>
+              <div className={`relative ${i % 2 === 1 ? 'lg:order-1 lg:-ml-8' : 'lg:-mr-8'}`}>
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="h-px w-10 bg-primary" />
+                  <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{s.num} / 04</span>
+                </div>
+                <h3 className="font-heading text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-5">{s.title}<span className="text-primary">.</span></h3>
                 <p className="font-body text-base text-muted-foreground leading-relaxed">{s.text}</p>
               </div>
             </div>
@@ -135,6 +138,7 @@ export default function OnsVerhaal() {
           </Link>
         </div>
       </section>
+      </PanelContent>
     </div>
   );
 }
