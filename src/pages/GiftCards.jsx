@@ -46,6 +46,8 @@ export default function GiftCards() {
         title={t('gc_cta_title')}
         titleAccent={t('gc_cta_accent')}
         desc={t('gc_cta_desc')}
+        cardTitle={t('gc_cta_card_title')}
+        cardSubtitle={t('gc_cta_card_subtitle')}
         buttonLabel={t('gc_cta_buy')}
         onClick={() => setBuyOpen(true)}
         icon={Gift}

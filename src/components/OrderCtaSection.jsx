@@ -1,17 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useSiteImages } from '@/lib/SiteImageContext';
 
 const FALLBACK_IMG = 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798149-17KHS8RDD2FJIZI179ZQ/EF6D9D08-F3ED-41E2-9392-96AB73DEF2E6.jpeg';
 
 /**
  * OrderCtaSection — hét referentiesysteem voor "Bestel nu"-CTA's.
- * Spiegelt ReserveCtaSection (/menu) exact: dezelfde beeldbandhoogte,
- * dezelfde zwevende glazen kaart met dezelfde verhoudingen en positie.
- * Het enige verschil: de teksten zweven links over de foto (omdat er een
- * 3e partij aan te pas komt — bogest-online / ZenChef). De enkele
- * "Bestel nu"-knop zit in het zwevende kaartje rechts.
+ * De zwevende glazen kaart is 1:1 ReserveCtaSection (/menu):zelfde
+ * verhoudingen, positie, glasant, en dezelfde opbouw (icoon + "Bogèst" +
+ * titel + ondertitel + knop met cirkel-pijl). Het enige verschil: de
+ * paginateksten zweven links over de foto (omdat er een 3e partij aan te
+ * pas komt — bogest-online / ZenChef).
  */
 export default function OrderCtaSection({
   positionKey,
@@ -19,31 +19,22 @@ export default function OrderCtaSection({
   title,
   titleAccent,
   desc,
+  cardTitle,
+  cardSubtitle,
   buttonLabel,
   href,
   to,
   onClick,
-  icon: Icon = ExternalLink,
+  icon: Icon = ArrowRight,
   cardEyebrow = 'Bogèst',
-  external = false,
 }) {
   const { siteImg } = useSiteImages();
   const bg = (positionKey ? siteImg(positionKey) : null) || FALLBACK_IMG;
-  const isExternal = external || (!!href && !to && !onClick);
 
-  const CtaInner = () => (
-    <span className="group inline-flex items-center gap-3">
-      <span className="font-body text-xs tracking-[0.3em] uppercase text-white group-hover:text-primary transition-colors duration-300">{buttonLabel}</span>
-      <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/40 text-white group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-        {isExternal ? <ExternalLink className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
-      </span>
-    </span>
-  );
-
-  const Cta = () => {
-    if (href) return <a href={href} target="_blank" rel="noopener noreferrer" className="inline-flex"><CtaInner /></a>;
-    if (to) return <Link to={to} className="inline-flex"><CtaInner /></Link>;
-    return <button type="button" onClick={onClick} className="inline-flex text-left"><CtaInner /></button>;
+  const CtaLink = ({ children }) => {
+    if (href) return <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3">{children}</a>;
+    if (to) return <Link to={to} className="group inline-flex items-center gap-3">{children}</Link>;
+    return <button type="button" onClick={onClick} className="group inline-flex items-center gap-3">{children}</button>;
   };
 
   return (
@@ -69,7 +60,7 @@ export default function OrderCtaSection({
           </div>
         </div>
 
-        {/* Zwevend glazen kaartje — 1:1 ReserveCtaSection (zelfde verhoudingen & positie) */}
+        {/* Zwevende glazen kaart — exact 1:1 ReserveCtaSection (/menu) */}
         <div
           className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
           style={{
@@ -80,13 +71,20 @@ export default function OrderCtaSection({
             boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)',
           }}
         >
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-3">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
               <Icon className="w-4 h-4 text-primary" />
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">{cardEyebrow}</span>
           </div>
-          <Cta />
+          {cardTitle && <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight mb-2">{cardTitle}</h2>}
+          {cardSubtitle && <p className="font-body text-sm text-white/70 leading-relaxed mb-5">{cardSubtitle}</p>}
+          <CtaLink>
+            <span className="font-body text-xs tracking-[0.3em] uppercase text-white group-hover:text-primary transition-colors duration-300">{buttonLabel}</span>
+            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/40 text-white group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+              <ArrowRight className="w-4 h-4" />
+            </span>
+          </CtaLink>
         </div>
       </div>
     </section>

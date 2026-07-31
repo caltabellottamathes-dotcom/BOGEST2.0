@@ -128,6 +128,8 @@ export const translations = {
     ta_home_p1: 'Wij bereiden alles met zorg; thuis hoeft u het enkel nog op te warmen volgens de instructies.',
     ta_home_p2: 'Onze thuisgerechten komen zonder voorgerecht en dessert — de restaurantformule geldt enkel in de vestiging.',
     ta_home_p3: 'De Bogèst-traiteur wordt al sinds jaar en dag perfect verzorgd door onze neef Patrick. Hij zorgt ervoor dat de smaak van Bogèst echt op uw bord belandt.',
+    ta_home_p2_title: 'Onze formule geldt niet thuis',
+    ta_home_p3_title: 'Verzorgd door Patrick',
     ta_location: 'Afhaallocatie',
     ta_choose_location: 'Kies uw vestiging',
     ta_time: 'Afhaaltijd',
@@ -189,6 +191,8 @@ export const translations = {
     gc_cta_btn: 'Cadeaubon kopen',
     gc_cta_buy: 'Bestel Cadeaubon',
     gc_cta_check: 'Saldo controleren',
+    gc_cta_card_title: 'Cadeaubon kopen',
+    gc_cta_card_subtitle: 'Digitaal of af te halen in de vestiging',
 
     // Checkout
     ch_title: 'Afrekenen',
@@ -408,6 +412,8 @@ export const translations = {
     ta_cta_accent: 'bogest-online.be',
     ta_cta_desc: 'Via ons online platform kiest u uw vestiging, uw producten en uw afhaalmoment — snel, eenvoudig en zonder wachten.',
     ta_cta_btn: 'Bestel nu',
+    ta_cta_card_title: 'Bestel online',
+    ta_cta_card_subtitle: 'Kies uw vestiging, gerechten en afhaalmoment',
 
     ta_gift_title: 'Cadeaupakketten',
     ta_gift_desc: 'Op zoek naar het perfecte geschenk? Ook onze geschenkpakketten — wijn en cadeaubon in één mooi geheel — bestelt u online via bogest-online.be.',
@@ -544,6 +550,8 @@ export const translations = {
     ta_home_p1: 'Nous préparons tout avec soin ; chez vous, il suffit de réchauffer selon les instructions.',
     ta_home_p2: "Nos plats à emporter ne comprennent pas d'entrée ni de dessert — la formule restaurant ne s'applique qu'à l'établissement.",
     ta_home_p3: "Le traiteur Bogèst est depuis toujours parfaitement pris en charge par notre cousin Patrick. Il veille à ce que le goût de Bogèst arrive pleinement dans votre assiette.",
+    ta_home_p2_title: "La formule ne s'applique pas à la maison",
+    ta_home_p3_title: 'Préparé par Patrick',
     ta_location: 'Lieu de retrait',
     ta_choose_location: 'Choisissez votre établissement',
     ta_time: 'Heure de retrait',
@@ -604,6 +612,8 @@ export const translations = {
     gc_cta_btn: 'Acheter un bon',
     gc_cta_buy: 'Commander une carte-cadeau',
     gc_cta_check: 'Vérifier le solde',
+    gc_cta_card_title: 'Acheter un bon cadeau',
+    gc_cta_card_subtitle: 'Numérique ou à retirer sur place',
 
     ch_title: 'Paiement',
     ch_order_summary: 'Récapitulatif',
@@ -809,6 +819,8 @@ export const translations = {
     ta_cta_accent: 'bogest-online.be',
     ta_cta_desc: "Via notre plateforme en ligne, choisissez votre établissement, vos produits et votre horaire de retrait — rapide, simple et sans attente.",
     ta_cta_btn: 'Commander',
+    ta_cta_card_title: 'Commander en ligne',
+    ta_cta_card_subtitle: "Choisissez votre établissement, vos plats et votre horaire",
 
     ta_gift_title: 'Colis cadeaux',
     ta_gift_desc: "Vous cherchez le cadeau parfait ? Nos colis cadeaux — vin et bon cadeau en un bel ensemble — sont également disponibles en ligne via bogest-online.be.",
@@ -944,6 +956,8 @@ export const translations = {
     ta_home_p1: 'We prepare everything with care — at home, you only need to reheat it according to the instructions.',
     ta_home_p2: 'Our takeaway dishes come without a starter or dessert — the restaurant formula applies only at the venue.',
     ta_home_p3: 'Bogèst Traiteur has been perfectly looked after for years by our cousin Patrick. He makes sure the true taste of Bogèst arrives on your plate.',
+    ta_home_p2_title: 'Our formula does not apply at home',
+    ta_home_p3_title: 'Prepared by Patrick',
     ta_location: 'Pickup location',
     ta_choose_location: 'Choose your venue',
     ta_time: 'Pickup time',
@@ -1004,6 +1018,8 @@ export const translations = {
     gc_cta_btn: 'Buy a card',
     gc_cta_buy: 'Order a gift card',
     gc_cta_check: 'Check balance',
+    gc_cta_card_title: 'Buy a gift card',
+    gc_cta_card_subtitle: 'Digital or pickup at the venue',
 
     ch_title: 'Checkout',
     ch_order_summary: 'Order summary',
@@ -1209,6 +1225,8 @@ export const translations = {
     ta_cta_accent: 'bogest-online.be',
     ta_cta_desc: 'Via our online platform, choose your location, products and pickup time — fast, easy and without waiting.',
     ta_cta_btn: 'Order now',
+    ta_cta_card_title: 'Order online',
+    ta_cta_card_subtitle: 'Choose your venue, dishes and pickup time',
 
     ta_gift_title: 'Gift packages',
     ta_gift_desc: 'Looking for the perfect gift? Our gift packages — wine and gift card in one beautiful set — are also available to order online via bogest-online.be.',
