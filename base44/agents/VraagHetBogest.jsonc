@@ -103,7 +103,7 @@
     "personalised-recommendation-logic"
   ],
   "selected_workspace_skill_ids": [],
-  "model": "gemini_3_flash",
+  "model": "automatic",
   "whatsapp_greeting": "",
   "telegram_greeting": "",
   "line_greeting": "",
