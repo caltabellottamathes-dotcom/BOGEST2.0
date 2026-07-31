@@ -131,8 +131,7 @@ function JobCard({ job, onSelect, isSelected, lang }) {
   const { t } = useLang();
 
   return (
-    <div className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isSelected ? 'border-primary' : 'border-border hover:border-primary/40'}`}
-      style={{ background: 'hsl(var(--card))' }}>
+    <div className={`rounded-2xl border transition-all duration-300 overflow-hidden bg-card/70 backdrop-blur-sm ${isSelected ? 'border-primary' : 'border-border hover:border-primary/40'}`}>
       <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -266,7 +265,7 @@ export default function Jobs() {
             </div>
 
             <SectionReveal delay={0.1}>
-              <div className="mt-8 p-5 rounded-2xl border border-border bg-card">
+              <div className="mt-8 p-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm shadow-lg">
                 <div className="flex items-center gap-3 mb-3">
                   <Footprints className="w-4 h-4 text-primary" />
                   <h3 className="font-heading text-base font-semibold text-foreground">Liever langslopen?</h3>
@@ -288,7 +287,7 @@ export default function Jobs() {
 
           <SectionReveal direction="right" delay={0.1}>
             {success ? (
-              <div className="flex flex-col items-center text-center py-16">
+              <div className="flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -299,7 +298,7 @@ export default function Jobs() {
                 </button>
               </div>
             ) : (
-              <div className="sticky top-24">
+              <div className="sticky top-24 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>

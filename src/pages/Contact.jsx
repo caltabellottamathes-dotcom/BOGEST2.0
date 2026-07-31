@@ -48,7 +48,7 @@ export default function Contact() {
           <SectionReveal direction="left">
             {success ?
             <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
-            className="flex flex-col items-center text-center py-16">
+            className="flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -58,7 +58,7 @@ export default function Contact() {
               className="mt-8 font-body text-sm text-primary hover:underline">{t('btn_another_message')}</button>
               </motion.div> :
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('con_label')}</span>
@@ -89,6 +89,7 @@ export default function Contact() {
           </SectionReveal>
 
           <SectionReveal direction="right" delay={0.1}>
+            <div className="rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
             <div className="flex items-center gap-3 mb-4">
               <span className="h-px w-10 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('nav_locations')}</span>
@@ -114,6 +115,7 @@ export default function Contact() {
                   </div>
                 </div>
               )}
+            </div>
             </div>
           </SectionReveal>
         </div>
