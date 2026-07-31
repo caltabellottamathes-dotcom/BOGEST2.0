@@ -5,19 +5,22 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/lib/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-// Shared glass surface — the same frosted-glass look as the digital host's chat window
+// Refined frosted-glass surface for the sliding panels — the same transparent
+// "layer" treatment used across the site (cards, footer). A touch more
+// transparent, a sharper hairline edge and an inset top highlight so each
+// panel reads as a distinct layer floating over the dimmed site.
 function GlassPanelSurface() {
   return (
     <div
       className="absolute inset-0 pointer-events-none"
       style={{
         borderRadius: '24px 0 0 0',
-        background: 'rgba(255,255,255,0.08)',
-        backdropFilter: 'blur(20px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(150%)',
-        borderTop: '1px solid rgba(255,255,255,0.16)',
-        borderLeft: '1px solid rgba(255,255,255,0.16)',
-        boxShadow: '0 -24px 80px rgba(0,0,0,0.50)',
+        background: 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(24px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(150%)',
+        borderTop: '1px solid rgba(255,255,255,0.14)',
+        borderLeft: '1px solid rgba(255,255,255,0.14)',
+        boxShadow: '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)',
       }}
     />
   );
@@ -57,7 +60,7 @@ export default function GlassPanelWrapper({ children }) {
 
   return (
     <>
-      {/* Backdrop — darkens the website behind the panel */}
+      {/* Backdrop — dims the site behind the panel; stays put across panel-to-panel nav */}
       <AnimatePresence>
         {isPanel && (
           <motion.div
@@ -65,9 +68,9 @@ export default function GlassPanelWrapper({ children }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-30 pointer-events-auto"
-            style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.30)' : 'rgba(0,0,0,0.55)' }}
+            style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.52)' }}
             onClick={() => navigate('/')}
           />
         )}
@@ -76,7 +79,9 @@ export default function GlassPanelWrapper({ children }) {
       {/* Page content when no panel */}
       {!isPanel && children}
 
-      {/* Panel */}
+      {/* Panel — a sleek layer that slides over the site. The previous panel
+          closes before the next opens (mode="wait") so each layer reads as a
+          distinct sheet opening and closing over the homepage beneath. */}
       <AnimatePresence mode="wait">
         {isPanel && (
           <motion.div
@@ -84,7 +89,7 @@ export default function GlassPanelWrapper({ children }) {
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="fixed right-0 z-40"
             style={{
               top: navHeight,
@@ -93,13 +98,12 @@ export default function GlassPanelWrapper({ children }) {
               maxWidth: isMobile ? '100vw' : 'min(82vw, 1200px)',
             }}
           >
-            {/* Glass panel — ultra transparent, blurry, theme-aware */}
             <GlassPanelSurface />
 
             {/* Close button */}
             <button
               onClick={() => navigate('/')}
-              className="absolute top-5 left-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-white/[0.07] border border-white/10 hover:bg-white/12"
+              className="absolute top-5 left-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-white/[0.06] border border-white/12 hover:bg-white/12 hover:border-white/25"
               style={{ backdropFilter: 'blur(12px)' }}
             >
               <X className="w-3.5 h-3.5 text-foreground/50" />

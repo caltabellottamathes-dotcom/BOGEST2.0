@@ -27,7 +27,7 @@ export default function StorySection() {
 
               {/* Enlarged formula card */}
               <div className="relative -mt-12 mx-4 md:mx-0 md:absolute md:-bottom-8 md:right-6 md:mt-0 rounded-2xl p-6 shadow-2xl max-w-[280px]"
-                style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(40px) saturate(160%)', WebkitBackdropFilter: 'blur(40px) saturate(160%)', border: '1px solid rgba(255,255,255,0.16)' }}>
+                style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.10)' }}>
                 <div className="flex items-center gap-3 mb-4">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center"
                     style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>

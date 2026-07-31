@@ -21,20 +21,21 @@ export default function Footer() {
       const isHomePage = window.location.pathname === '/';
       if (!isHomePage) { setVisible(false); return; }
 
-      const section = document.getElementById('ervaringen');
-      if (!section) return;
+      // Only reveal the footer when the visitor has truly reached the end
+      // of the page — within ~30% of a viewport of the very bottom.
+      const docEl = document.documentElement;
+      const distFromBottom = docEl.scrollHeight - (window.scrollY + window.innerHeight);
+      const nearEnd = distFromBottom < window.innerHeight * 0.3;
 
-      const rect = section.getBoundingClientRect();
-      const hasReached = rect.top <= window.innerHeight * 0.75;
-
-      if (hasReached && !dismissed) {
+      if (nearEnd && !dismissed) {
         setVisible(true);
-      } else if (!hasReached) {
+      } else if (!nearEnd) {
         setVisible(false);
         setDismissed(false);
       }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, [dismissed]);
 
@@ -58,17 +59,17 @@ export default function Footer() {
     <motion.footer
       initial={{ y: '100%' }}
       animate={{ y: visible ? 0 : '100%' }}
-      transition={{ duration: 0.7, delay: 0.65, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="fixed bottom-0 left-0 right-0 z-40 flex flex-col"
       style={{
-        background: theme === 'light' ? 'hsl(var(--background) / 0.30)' : 'rgba(0,0,0,0.38)',
-        backdropFilter: 'blur(40px)',
-        WebkitBackdropFilter: 'blur(40px)',
-        borderTop: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.10)',
+        background: theme === 'light' ? 'hsl(var(--background) / 0.30)' : 'rgba(255,255,255,0.06)',
+        backdropFilter: 'blur(24px) saturate(150%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(150%)',
+        borderTop: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.14)',
         borderLeft: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
         borderRight: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
         borderRadius: '24px 24px 0 0',
-        boxShadow: theme === 'light' ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)',
+        boxShadow: theme === 'light' ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)',
       }}
     >
       {/* Close button */}
