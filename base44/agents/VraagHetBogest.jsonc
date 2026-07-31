@@ -104,7 +104,9 @@
     "personalised-recommendation-logic",
     "welcome-and-intent-detection"
   ],
-  "selected_workspace_skill_ids": [],
+  "selected_workspace_skill_ids": [
+    "6a6c15253d5032d31630aa19"
+  ],
   "model": "gemini_3_flash",
   "whatsapp_greeting": "",
   "telegram_greeting": "",
