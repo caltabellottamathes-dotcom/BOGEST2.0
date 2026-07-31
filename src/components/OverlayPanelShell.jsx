@@ -52,17 +52,19 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
               boxShadow: isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)',
             }}
           >
-            {/* Close button — always top-left */}
+            {/* Close button — always top-left, above content */}
             <button
               onClick={onClose}
               type="button"
-              className="absolute top-5 left-4 z-30 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
+              aria-label="Sluiten"
+              className="absolute top-5 left-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
               style={{
-                background: isLight ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.10)',
-                border: isLight ? '1px solid rgba(255,255,255,0.30)' : '1px solid rgba(255,255,255,0.15)',
+                background: isLight ? 'rgba(255,255,255,0.20)' : 'rgba(255,255,255,0.14)',
+                border: isLight ? '1px solid rgba(255,255,255,0.35)' : '1px solid rgba(255,255,255,0.25)',
+                backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
               }}
             >
-              <X className="w-3.5 h-3.5 text-foreground/50" />
+              <X className="w-4 h-4 text-foreground/70" />
             </button>
 
             {/* Optional header bar */}

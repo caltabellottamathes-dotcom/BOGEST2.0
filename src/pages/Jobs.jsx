@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Briefcase, Mail, Phone, Footprints } from 'lucide-react';
+import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Mail, Phone, Footprints } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -197,8 +197,8 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
               )}
 
               <button onClick={() => onSelect(job)}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 transition-all duration-300">
-                <Briefcase className="w-3.5 h-3.5" /> {t('btn_apply')}
+                className="inline-flex items-center px-5 py-2.5 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 transition-all duration-300">
+                {t('btn_apply')}
               </button>
               <div className="mt-4">
                 <HintLine question={hostQuestion(lang, job.title)} />
@@ -266,10 +266,7 @@ export default function Jobs() {
 
             <SectionReveal delay={0.1}>
               <div className="mt-8 p-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm shadow-lg">
-                <div className="flex items-center gap-3 mb-3">
-                  <Footprints className="w-4 h-4 text-primary" />
-                  <h3 className="font-heading text-base font-semibold text-foreground">Liever langslopen?</h3>
-                </div>
+                <h3 className="font-heading text-base font-semibold text-foreground mb-3">Liever langslopen?</h3>
                 <p className="font-body text-sm text-muted-foreground mb-4">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
                 <ul className="space-y-2 font-body text-sm text-muted-foreground">
                   <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Borgloon</span> — vraag naar Ramin</li>
@@ -299,7 +296,7 @@ export default function Jobs() {
               </div>
             ) : (
               <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
-                <Briefcase className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
+
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>

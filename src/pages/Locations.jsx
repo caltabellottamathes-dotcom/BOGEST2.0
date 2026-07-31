@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, Clock, Phone, MapPin, Sparkles } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
@@ -52,8 +51,7 @@ export default function Locations() {
                             <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
                           </div>
                           <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-4">{loc.name}<span className="text-primary">.</span></h3>
-                          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 w-fit mb-5">
-                            <Sparkles className="w-3.5 h-3.5 text-primary" />
+                          <div className="inline-flex items-center px-4 py-2 rounded-full border border-primary/30 bg-primary/5 w-fit mb-5">
                             <span className="font-body text-xs tracking-wide text-primary font-medium">{t('loc_coming_soon')}</span>
                           </div>
                           <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">{lang === 'fr' ? "Notre quatrième établissement est en préparation. Nous vous tiendrons informés." : lang === 'en' ? 'Our fourth location is in preparation. We will keep you posted.' : 'Onze vierde vestiging is in voorbereiding. We houden u graag op de hoogte.'}</p>
@@ -69,38 +67,28 @@ export default function Locations() {
                           <span className="h-px w-8 bg-primary/40" />
                           <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
                         </div>
-                        <Link to={`/locations/${loc.slug}`} className="group inline-flex items-center gap-2 mb-5">
+                        <Link to={`/locations/${loc.slug}`} className="group inline-flex items-center mb-5">
                           <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">{loc.name}<span className="text-primary">.</span></h3>
-                          <ArrowUpRight className="w-4 h-4 text-primary opacity-0 group-hover:opacity-100 transition-all duration-300" />
                         </Link>
                         <div className="space-y-3 mb-6">
-                          <div className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center"><MapPin className="w-3.5 h-3.5 text-primary" /></span>
-                            <p className="font-body text-sm text-foreground/85 leading-snug pt-1">{loc.address}</p>
-                          </div>
+                          <p className="font-body text-sm text-foreground/85 leading-snug">{loc.address}</p>
                           {loc.phone && (
-                            <div className="flex items-center gap-3">
-                              <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center"><Phone className="w-3.5 h-3.5 text-primary" /></span>
-                              <p className="font-body text-sm text-foreground/85">{loc.phone}</p>
-                            </div>
+                            <p className="font-body text-sm text-foreground/85">{loc.phone}</p>
                           )}
-                          <div className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-7 h-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mt-0.5"><Clock className="w-3.5 h-3.5 text-primary" /></span>
-                            <div className="font-body text-sm text-foreground/85 pt-1">
-                              {loc.hours.slice(0, 3).map((h) => (
-                                <div key={h.day} className="flex justify-between gap-4 max-w-[16rem]">
-                                  <span className="text-muted-foreground">{h.day}</span>
-                                  <span className={h.time === 'Gesloten' || h.time === 'Fermé' || h.time === 'Closed' ? 'text-muted-foreground' : 'text-foreground/85'}>{h.time}</span>
-                                </div>
-                              ))}
-                              {loc.hours.length > 3 && <span className="text-muted-foreground/60 text-xs">{t('loc_more')}</span>}
-                            </div>
+                          <div className="pt-3 mt-1 border-t border-border/50 space-y-1.5 font-body text-sm">
+                            {loc.hours.slice(0, 3).map((h) => (
+                              <div key={h.day} className="flex justify-between gap-4 max-w-[16rem]">
+                                <span className="text-muted-foreground">{h.day}</span>
+                                <span className={h.time === 'Gesloten' || h.time === 'Fermé' || h.time === 'Closed' ? 'text-muted-foreground' : 'text-foreground/85'}>{h.time}</span>
+                              </div>
+                            ))}
+                            {loc.hours.length > 3 && <span className="text-muted-foreground/60 text-xs">{t('loc_more')}</span>}
                           </div>
                         </div>
                         {loc.zenchefId && (
                           <div className="mt-auto flex flex-wrap gap-3">
-                            <Link to={`/reserve?loc=${loc.slug}`} className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
-                              {t('btn_reserve')} <ArrowUpRight className="w-3 h-3" />
+                            <Link to={`/reserve?loc=${loc.slug}`} className="inline-flex items-center px-6 py-2.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500">
+                              {t('btn_reserve')}
                             </Link>
                             <Link to={`/locations/${loc.slug}`} className="inline-flex items-center gap-2 px-6 py-2.5 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-500">
                               {t('btn_more')}

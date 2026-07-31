@@ -5,13 +5,11 @@ import { motion, AnimatePresence } from 'framer-motion';
  * PanelSwitcher — hét referentiepatroon voor interactieve info-secties:
  * een beeldkaart aan één kant + selecteerbare pijlers met een wisselende
  * detailkaart. `mirror` plaatst het beeld rechts (inhoud links).
- * Gebruikt door TakeawayStorySection (gespiegeld), TakeawayGiftPackagesSection
- * en GiftCardsHighlights (gespiegeld) voor één consistente visuele taal.
+ * Puur typografisch — geen iconen — voor een strakke, grafische stijl.
  */
 export default function PanelSwitcher({
   items,
   label,
-  icon: SectionIcon,
   title,
   titleAccent,
   lead,
@@ -22,7 +20,6 @@ export default function PanelSwitcher({
 }) {
   const [active, setActive] = useState(0);
   const current = items[active];
-  const CurrentIcon = current.icon;
 
   return (
     <section className={`w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
@@ -39,7 +36,7 @@ export default function PanelSwitcher({
               className="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/5]"
             >
               <img src={current.img} alt={current.title} className="w-full h-full object-cover" loading="lazy" />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%)' }} />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.65) 0%, rgba(26,24,20,0.05) 55%)' }} />
               <div className="absolute left-5 right-5 bottom-5">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)' }}>
                   <span className="font-body text-xs text-white">{chipLabel || current.title}</span>
@@ -53,7 +50,6 @@ export default function PanelSwitcher({
         <div className={`md:col-span-7 order-2 ${mirror ? 'md:order-1' : ''}`}>
           {label && (
             <div className="flex items-center gap-3 mb-4">
-              {SectionIcon && <SectionIcon className="w-4 h-4 text-primary" />}
               <span className="h-px w-8 bg-primary/40" />
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{label}</span>
             </div>
@@ -65,19 +61,18 @@ export default function PanelSwitcher({
           )}
           {lead && <p className="font-body text-sm md:text-base text-muted-foreground leading-relaxed mt-5 max-w-lg">{lead}</p>}
 
-          {/* Pijlers */}
+          {/* Pijlers — typografisch, geen iconen */}
           <div className="flex flex-wrap gap-2 mt-7">
             {items.map((it, i) => {
-              const Icon = it.icon;
               const on = i === active;
               return (
                 <button
                   key={i}
                   type="button"
                   onClick={() => setActive(i)}
-                  className={`inline-flex items-center gap-2 px-4 py-2 rounded-full border font-body text-xs tracking-[0.18em] uppercase transition-all duration-300 ${on ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/40'}`}
+                  className={`font-body text-xs tracking-[0.18em] uppercase py-2 px-4 rounded-full border transition-all duration-300 ${on ? 'border-primary bg-primary/10 text-primary' : 'border-border text-muted-foreground hover:text-foreground hover:border-primary/40'}`}
                 >
-                  {Icon && <Icon className="w-3.5 h-3.5" />}{it.title}
+                  {it.title}
                 </button>
               );
             })}
@@ -91,12 +86,9 @@ export default function PanelSwitcher({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -6 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="mt-5 p-4 rounded-xl border border-border bg-card/50 backdrop-blur-sm"
+              className="mt-5 p-5 rounded-xl border border-border bg-card/50 backdrop-blur-sm"
             >
-              <div className="flex items-center gap-2 mb-1.5">
-                {CurrentIcon && <CurrentIcon className="w-4 h-4 text-primary" />}
-                <h3 className="font-heading text-lg font-semibold text-foreground">{current.title}</h3>
-              </div>
+              <h3 className="font-heading text-lg font-semibold text-foreground mb-1.5">{current.title}</h3>
               <p className="font-body text-sm text-muted-foreground leading-relaxed">{current.body}</p>
             </motion.div>
           </AnimatePresence>

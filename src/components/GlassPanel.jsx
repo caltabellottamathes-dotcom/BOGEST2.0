@@ -100,13 +100,14 @@ export default function GlassPanelWrapper({ children }) {
           >
             <GlassPanelSurface />
 
-            {/* Close button */}
+            {/* Close button — always visible above panel content */}
             <button
               onClick={() => navigate('/')}
-              className="absolute top-5 left-4 z-10 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 bg-white/[0.06] border border-white/12 hover:bg-white/12 hover:border-white/25"
-              style={{ backdropFilter: 'blur(12px)' }}
+              aria-label="Sluiten"
+              className="absolute top-5 left-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110"
+              style={{ background: 'rgba(255,255,255,0.14)', border: '1px solid rgba(255,255,255,0.25)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             >
-              <X className="w-3.5 h-3.5 text-foreground/50" />
+              <X className="w-4 h-4 text-white/90" />
             </button>
 
             {/* Scrollable content */}

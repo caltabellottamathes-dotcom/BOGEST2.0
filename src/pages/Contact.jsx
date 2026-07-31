@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Check, MapPin, Phone, Mail } from 'lucide-react';
+import { Check } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import SectionReveal from '@/components/ui/SectionReveal';
@@ -49,7 +49,7 @@ export default function Contact() {
             {success ?
             <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
             className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-10 md:p-14 shadow-lg">
-                <Mail className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
+
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -60,7 +60,7 @@ export default function Contact() {
               </motion.div> :
 
             <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-border bg-card/70 backdrop-blur-sm p-6 md:p-8 shadow-lg">
-                <Mail className="absolute -right-4 -top-4 w-24 h-24 text-primary/5 rotate-12 pointer-events-none select-none" />
+
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-px w-10 bg-primary" />
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('con_label')}</span>
@@ -113,16 +113,10 @@ export default function Contact() {
                         </span>
                       )}
                     </div>
-                    <div className="p-4 bg-card/70 backdrop-blur-sm space-y-2">
-                      <p className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                        <MapPin className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />{loc.address}
-                      </p>
-                      <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
-                        <Phone className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.phone}
-                      </p>
-                      <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
-                        <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.email}
-                      </p>
+                    <div className="p-4 bg-card/70 backdrop-blur-sm space-y-1.5">
+                      <p className="font-body text-sm text-muted-foreground leading-snug">{loc.address}</p>
+                      <p className="font-body text-sm text-muted-foreground">{loc.phone}</p>
+                      <p className="font-body text-sm text-muted-foreground break-all">{loc.email}</p>
                     </div>
                   </button>
                 );
