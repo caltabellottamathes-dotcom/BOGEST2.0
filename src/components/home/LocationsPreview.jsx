@@ -42,7 +42,7 @@ export default function LocationsPreview() {
               <SectionReveal
                 key={loc.slug}
                 direction="up"
-                className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-20'}`}
+                className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-24'}`}
                 style={{ zIndex: 10 + i }}
               >
                 {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}

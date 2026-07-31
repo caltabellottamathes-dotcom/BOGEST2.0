@@ -37,7 +37,7 @@ export default function CTACards() {
             {/* floating glass card — asymmetric right, options stacked underneath each other */}
             <div className="relative mx-4 -mt-20 md:absolute md:-top-10 md:right-10 lg:right-14 md:mx-0 md:max-w-sm rounded-2xl p-6"
               style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}>
-              <h3 className="font-heading text-xl font-bold text-white mb-5 leading-tight">Bogèst</h3>
+              <h3 className="font-heading text-2xl font-bold text-white mb-5 leading-tight">Bogèst</h3>
 
               <div className="space-y-1">
                 {cards.map((card) => {
