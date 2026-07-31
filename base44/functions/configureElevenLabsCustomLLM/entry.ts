@@ -216,7 +216,7 @@ export default async function(req) {
     if (payload && payload.revert) {
       const r = await fetch(`${BASE}/${AGENT_ID}`, {
         method: 'PATCH', headers: authHeaders(),
-        body: JSON.stringify({ conversation_config: { agent: { prompt: { llm: 'gpt-4o', custom_llm: null } } } }),
+        body: JSON.stringify({ conversation_config: { agent: { prompt: { llm: 'gpt-4o-mini', custom_llm: null } } } }),
       });
       const t = await r.text();
       patchResult = { reverted: r.ok, status: r.status, body: t.slice(0, 600) };
