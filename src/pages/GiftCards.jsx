@@ -1,23 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Gift, Smile, Star, ArrowRight, Wallet } from 'lucide-react';
+import { Gift, ArrowRight, Wallet } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import GiftCardBuyPanel from '@/components/reserve/GiftCardBuyPanel';
 import GiftCardCheckPanel from '@/components/reserve/GiftCardCheckPanel';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
-import EditorialHighlights from '@/components/EditorialHighlights';
+import GiftCardsHighlights from '@/components/GiftCardsHighlights';
 import OrderCtaSection from '@/components/OrderCtaSection';
 
 export default function GiftCards() {
   const { t } = useLang();
   const [buyOpen, setBuyOpen] = useState(false);
   const [checkOpen, setCheckOpen] = useState(false);
-
-  const HIGHLIGHTS = [
-    { icon: Gift, title: t('gc_h1_title'), body: t('gc_h1_body') },
-    { icon: Smile, title: t('gc_h2_title'), body: t('gc_h2_body') },
-    { icon: Star, title: t('gc_h3_title'), body: t('gc_h3_body') },
-  ];
 
   useEffect(() => {
     if (buyOpen || checkOpen) {
@@ -35,9 +29,7 @@ export default function GiftCards() {
 
       <PanelContent>
       {/* ── Highlights ───────────────────────────────────────── */}
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16 md:pb-20">
-        <EditorialHighlights items={HIGHLIGHTS} />
-      </section>
+      <GiftCardsHighlights />
 
       {/* ── Bestel nu — referentiesysteem (asymmetrische zwevende glazen CTA-kaart) ─ */}
       <OrderCtaSection
