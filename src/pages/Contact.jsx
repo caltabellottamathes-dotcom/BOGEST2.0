@@ -59,6 +59,10 @@ export default function Contact() {
               </motion.div> :
 
             <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="flex items-center gap-3 mb-4">
+                  <span className="h-px w-10 bg-primary" />
+                  <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('con_label')}</span>
+                </div>
                 <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-6">{t('con_send_us')}<span className="text-primary">.</span></h2>
                 <select
                   value={form.location}
@@ -85,21 +89,28 @@ export default function Contact() {
           </SectionReveal>
 
           <SectionReveal direction="right" delay={0.1}>
+            <div className="flex items-center gap-3 mb-4">
+              <span className="h-px w-10 bg-primary" />
+              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('nav_locations')}</span>
+            </div>
             <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-8">{t('con_locations')}<span className="text-primary">.</span></h2>
-            <div className="space-y-7">
-              {locations.map((loc) =>
-              <div key={loc.slug} className="py-6 border-b border-border/40">
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{loc.name}<span className="text-primary">.</span></h3>
-                  <div className="space-y-2">
-                    <p className="font-body text-sm text-muted-foreground flex items-start gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />{loc.address}
-                    </p>
-                    <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
-                      <Phone className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.phone}
-                    </p>
-                    <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
-                      <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.email}
-                    </p>
+            <div className="space-y-0">
+              {locations.map((loc, i) =>
+              <div key={loc.slug} className="py-6 border-b border-border/40 flex items-start gap-5">
+                  <span className="font-heading font-bold text-primary/20 text-3xl md:text-4xl leading-none flex-shrink-0 mt-1">{String(i + 1).padStart(2, '0')}</span>
+                  <div className="flex-1">
+                    <h3 className="font-heading text-xl font-bold text-foreground mb-3">{loc.name}<span className="text-primary">.</span></h3>
+                    <div className="space-y-2">
+                      <p className="font-body text-sm text-muted-foreground flex items-start gap-2">
+                        <MapPin className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />{loc.address}
+                      </p>
+                      <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
+                        <Phone className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.phone}
+                      </p>
+                      <p className="font-body text-sm text-muted-foreground flex items-center gap-2">
+                        <Mail className="w-3.5 h-3.5 text-primary flex-shrink-0" />{loc.email}
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}

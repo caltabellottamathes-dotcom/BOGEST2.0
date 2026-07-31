@@ -131,8 +131,8 @@ function JobCard({ job, onSelect, isSelected, lang }) {
   const { t } = useLang();
 
   return (
-    <div className={`rounded-2xl border-2 transition-all duration-300 overflow-hidden ${isSelected ? 'border-primary' : 'border-border hover:border-primary/30'}`}
-      style={{ background: expanded ? 'rgba(4,4,4,0.12)' : 'hsl(var(--card))' }}>
+    <div className={`rounded-2xl border transition-all duration-300 overflow-hidden ${isSelected ? 'border-primary' : 'border-border hover:border-primary/40'}`}
+      style={{ background: 'hsl(var(--card))' }}>
       <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1">
@@ -178,7 +178,7 @@ function JobCard({ job, onSelect, isSelected, lang }) {
               </div>
 
               {(job.applyEmail || job.applyPhone || job.walkIn) && (
-                <div className="mb-4 p-3 rounded-lg space-y-1.5" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div className="mb-4 p-3 rounded-lg space-y-1.5 bg-muted/30 border border-border">
                   {job.applyEmail && (
                     <a href={`mailto:${job.applyEmail}`} className="flex items-center gap-2 font-body text-xs text-foreground hover:text-primary transition-colors">
                       <Mail className="w-3.5 h-3.5 text-primary" /> {job.applyEmail}
@@ -266,13 +266,16 @@ export default function Jobs() {
             </div>
 
             <SectionReveal delay={0.1}>
-              <div className="mt-8 p-5 rounded-2xl border border-border" style={{ background: 'hsl(var(--card))' }}>
-                <h3 className="font-heading text-base font-semibold text-foreground mb-2">Liever langslopen?</h3>
-                <p className="font-body text-sm text-muted-foreground mb-3">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
-                <ul className="space-y-1.5 font-body text-sm text-muted-foreground">
-                  <li>📍 <span className="text-foreground">Borgloon</span> — vraag naar Ramin</li>
-                  <li>📍 <span className="text-foreground">Hasselt</span> — vraag naar Marah</li>
-                  <li>📍 <span className="text-foreground">Heusden-Zolder</span> — vraag naar Mieke</li>
+              <div className="mt-8 p-5 rounded-2xl border border-border bg-card">
+                <div className="flex items-center gap-3 mb-3">
+                  <Footprints className="w-4 h-4 text-primary" />
+                  <h3 className="font-heading text-base font-semibold text-foreground">Liever langslopen?</h3>
+                </div>
+                <p className="font-body text-sm text-muted-foreground mb-4">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
+                <ul className="space-y-2 font-body text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Borgloon</span> — vraag naar Ramin</li>
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Hasselt</span> — vraag naar Marah</li>
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Heusden-Zolder</span> — vraag naar Mieke</li>
                 </ul>
                 <div className="mt-4 pt-4 border-t border-border/50">
                   <p className="font-body text-xs text-muted-foreground">
@@ -297,6 +300,10 @@ export default function Jobs() {
               </div>
             ) : (
               <div className="sticky top-24">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="h-px w-10 bg-primary" />
+                  <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>
+                </div>
                 <h2 className="font-heading text-3xl md:text-4xl font-bold leading-[0.95] text-foreground mb-2">
                   {selected ? `${t('job_apply_for')}${selected.title}` : t('job_apply_title') + '.'}
                 </h2>
