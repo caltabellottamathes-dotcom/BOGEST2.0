@@ -53,17 +53,17 @@ export default function SignatureDishes() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {dishes.map((dish, i) => (
             <SectionReveal key={dish.name} delay={i * 0.12}>
-              <Link to="/menu" className="group block">
+              <Link to="/menu" className="group relative block">
                 <div className="relative overflow-hidden rounded-xl aspect-[3/4] mb-5">
                   <img src={siteImg('signature.' + i)} alt={dish.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    style={{ filter: 'saturate(0.82) brightness(0.95)' }} />
+                    style={{ filter: 'saturate(0.82) brightness(0.95)' }} loading="lazy" decoding="async" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
                   <span className="absolute top-4 left-4 inline-block px-3 py-1 bg-black/25 backdrop-blur-sm text-white font-body text-[10px] tracking-[0.2em] uppercase rounded-full border border-white/10">
                     {dish.tag}
                   </span>
-                  <HostHint question={hostQuestion(lang, dish.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
                 </div>
+                <HostHint question={hostQuestion(lang, dish.name)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />
                 <h3 className="font-heading text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
                   {dish.name}
                 </h3>

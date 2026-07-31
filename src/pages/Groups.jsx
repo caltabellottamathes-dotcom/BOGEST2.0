@@ -7,6 +7,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import PanelHero from '@/components/PanelHero';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const LOCATIONS_I18N = {
   nl: [
@@ -272,7 +274,10 @@ export default function Groups() {
         <div className="space-y-3">
           {LOCATIONS.map((loc, i) => (
             <SectionReveal key={loc.id} delay={i * 0.07}>
-              <LocationPanel loc={loc} />
+              <div className="group relative">
+                <LocationPanel loc={loc} />
+                {!loc.comingSoon && <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />}
+              </div>
             </SectionReveal>
           ))}
         </div>
@@ -320,7 +325,7 @@ export default function Groups() {
           <SectionReveal direction="right" delay={0.1}>
             <div className="space-y-4">
               {events.map(item => (
-                <div key={item.num} className="p-5 bg-card border border-border rounded-xl">
+                <div key={item.num} className="group relative p-5 bg-card border border-border rounded-xl">
                   <div className="flex items-start gap-4">
                     <span className="font-heading text-2xl font-bold text-primary">{item.num}</span>
                     <div>
@@ -328,6 +333,7 @@ export default function Groups() {
                       <p className="font-body text-sm text-muted-foreground">{item.desc}</p>
                     </div>
                   </div>
+                  <HostHint question={hostQuestion(lang, item.title)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />
                 </div>
               ))}
             </div>

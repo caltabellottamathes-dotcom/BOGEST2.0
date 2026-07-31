@@ -1058,7 +1058,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: videoReady ? 1 : 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={onSkip} />
       <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={videoReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 24 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
         transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
@@ -1236,6 +1236,13 @@ export default function DigitalHost() {
     window.addEventListener('bogest:open-host', handler);
     return () => window.removeEventListener('bogest:open-host', handler);
   }, [phase, lang]);
+
+  // Hide floating widgets (welcome video, ElevenLabs) while the entry pop-up
+  // is on screen so the blurred hero is the only thing behind it.
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: phase === 'entry' } }));
+    document.body.classList.toggle('bogest-entry-active', phase === 'entry');
+  }, [phase]);
 
   // ─── Beeldbank photo handoff (from the ElevenLabs voice agent) ───────────────
   // The voice widget can't render images, so when a visitor asks it to show a

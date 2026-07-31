@@ -8,13 +8,13 @@ import HomeTitle from '@/components/home/HomeTitle';
 import HostHint from '@/components/HostHint';
 import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
-const MONTH_NAMES = {
+export const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
   fr: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
   en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
 };
 
-const SECTION_LABELS = {
+export const SECTION_LABELS = {
   nl: { title: 'De Maandselectie van onze Chef.', accent: 'Chef' },
   fr: { title: 'La sélection du mois de notre Chef.', accent: 'Chef' },
   en: { title: "Our Chef's monthly selection.", accent: 'Chef' },
@@ -26,7 +26,7 @@ const MENU_LABELS = {
   en: 'Full menu',
 };
 
-const SUGGESTIONS = {
+export const SUGGESTIONS = {
   nl: [
     { id: 's1', tag: 'Vis — Seizoen', name: 'Kabeljauw met witte asperges', desc: 'Gebakken kabeljauw met dagverse witte asperges, puree, fijne ravioli gevuld met asperge-crème afgewerkt met zilte groenten en een luchtige hollandaise — verrijkt met reductie van kreeft.', price: '€49,50', image: 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/e9ee6ba3f_Cod_with_white_asparagus_dish_202607211718.jpg' },
     { id: 's2', tag: 'Gevogelte — Suggestie', name: 'Poulet Noir — Asperges', desc: 'Suprème van langzaam gegaarde hoevekip, boterzacht en vol van smaak. Een verfijnde jus van cognac en tijm met dagverse witte asperges als perfecte seizoenscombinatie.', price: '€46,00', image: 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/46bf2cc7f_Poulet_Noir_Asperges_dish_photo_202607211720.jpg' },
@@ -53,7 +53,7 @@ const SUGGESTIONS = {
   ],
 };
 
-function SuggestionCard({ item }) {
+export function SuggestionCard({ item }) {
   const [expanded, setExpanded] = useState(false);
   const { lang } = useLang();
   const { siteImg } = useSiteImages();
@@ -62,13 +62,15 @@ function SuggestionCard({ item }) {
   const readLess = lang === 'nl' ? 'Lees minder' : lang === 'fr' ? 'Lire moins' : 'Read less';
 
   return (
-    <div className="flex-shrink-0 w-[320px] md:w-[360px] group">
+    <div className="flex-shrink-0 w-[320px] md:w-[360px] group relative">
+      <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="top-4 left-1/2 -translate-x-1/2" />
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}
           alt={item.name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           style={{ filter: 'saturate(0.82) brightness(0.95)' }}
+          loading="lazy" decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
         <div className="absolute top-4 left-4">
@@ -81,7 +83,6 @@ function SuggestionCard({ item }) {
             {item.price}
           </span>
         </div>
-        <HostHint question={hostQuestion(lang, item.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
       </div>
       <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
         {item.name}

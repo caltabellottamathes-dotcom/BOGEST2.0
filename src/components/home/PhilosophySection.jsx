@@ -5,6 +5,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import BogestLogo from '@/components/BogestLogo';
 import HomeTitle from '@/components/home/HomeTitle';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const PILLARS_DATA = {
   nl: [
@@ -155,6 +157,7 @@ export default function PhilosophySection() {
               return (
                 <div
                   key={pillar.num}
+                  className="group"
                   ref={el => panelRefs.current[i] = el}
                   style={{
                     position: 'absolute',
@@ -210,7 +213,7 @@ export default function PhilosophySection() {
                             src={siteImg('philosophy.' + i)}
                             alt={pillar.title}
                             className="w-full h-full object-cover"
-                            style={{ filter: 'saturate(0.85) brightness(0.92)' }} />
+                            style={{ filter: 'saturate(0.85) brightness(0.92)' }} loading="lazy" decoding="async" />
                           
                           {/* Gold accent corner — top-left */}
                           <div className="absolute top-3 left-3 w-10 h-10 border-t border-l border-primary/40 rounded-tl-lg" />
@@ -272,6 +275,7 @@ export default function PhilosophySection() {
 
                     </div>
                   </div>
+                  <HostHint question={hostQuestion(lang, pillar.title)} label={hostHintLabel(lang)} className="bottom-6 left-1/2 -translate-x-1/2" />
                 </div>);
 
             })}

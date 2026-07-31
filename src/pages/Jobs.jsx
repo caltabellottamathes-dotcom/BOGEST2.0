@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import PanelHero from '@/components/PanelHero';
+import HostHint from '@/components/HostHint';
+import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 // Actuele vacatures — overgenomen van bogest.be/joinus
 const openings = [
@@ -206,7 +208,7 @@ function JobCard({ job, onSelect, isSelected }) {
 }
 
 export default function Jobs() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [selected, setSelected] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', motivation: '' });
   const [success, setSuccess] = useState(false);
@@ -233,7 +235,10 @@ export default function Jobs() {
             <div className="space-y-3">
               {openings.map((job, i) => (
                 <SectionReveal key={job.title} delay={i * 0.08}>
-                  <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} />
+                  <div className="group relative">
+                    <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} />
+                    <HostHint question={hostQuestion(lang, job.title)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />
+                  </div>
                 </SectionReveal>
               ))}
             </div>

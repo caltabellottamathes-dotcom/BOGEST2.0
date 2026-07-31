@@ -20,7 +20,8 @@ export default function FloatingVideo() {
   const [active, setActive] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
+  const [blinking, setBlinking] = useState(false);
   const shift = usePanelShift();
 
   useEffect(() => {
@@ -39,6 +40,16 @@ export default function FloatingVideo() {
     const handler = (e) => setHidden(e.detail?.open === true);
     window.addEventListener('bogest:popup-visibility', handler);
     return () => window.removeEventListener('bogest:popup-visibility', handler);
+  }, []);
+
+  // Occasionally pulse a gold border on the closed card, like the host button.
+  useEffect(() => {
+    let onT;
+    const iv = setInterval(() => {
+      setBlinking(true);
+      onT = setTimeout(() => setBlinking(false), 1400);
+    }, 9000);
+    return () => { clearInterval(iv); clearTimeout(onT); };
   }, []);
 
   if (hidden) return null;
@@ -88,8 +99,12 @@ export default function FloatingVideo() {
           height: base,
           transformOrigin: 'bottom right',
           transform: `scale(${scale})`,
-          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1)',
+          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease',
           pointerEvents: 'auto',
+          border: (!active && blinking) ? '1.5px solid hsl(var(--primary))' : '1.5px solid transparent',
+          boxShadow: (!active && blinking)
+            ? '0 0 22px hsl(var(--primary) / 0.55), 0 8px 32px rgba(0,0,0,0.45)'
+            : '0 8px 32px rgba(0,0,0,0.45)',
         }}
       >
         {/* Idle looping video — visible only when the card is not active */}

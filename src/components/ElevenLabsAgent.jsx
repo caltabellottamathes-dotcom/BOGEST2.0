@@ -21,7 +21,7 @@ import {
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
-  const [hidden, setHidden] = useState(false);
+  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
 
   useEffect(() => {
     const handler = (e) => setHidden(e.detail?.open === true);

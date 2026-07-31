@@ -35,6 +35,7 @@ export default function LocationsPreview() {
                       alt={loc.name}
                       className="absolute inset-0 w-full h-full object-cover"
                       style={{ filter: 'grayscale(1) brightness(0.55) opacity(0.45)' }}
+                      loading="lazy" decoding="async"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/50 to-background/40" />
                     <span className="absolute top-4 left-4 font-heading text-2xl font-bold text-muted-foreground/40">
@@ -59,34 +60,37 @@ export default function LocationsPreview() {
                     </div>
                   </div>
                 ) : (
-                  <Link
-                    to={`/locations/${loc.slug}`}
-                    className="group relative block overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/5] border border-border/50 hover:border-primary/40 transition-colors duration-500"
-                  >
-                    <img
-                      src={siteImg('location.' + loc.slug) || loc.image}
-                      alt={loc.name}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      style={{ filter: 'saturate(0.85) brightness(0.9)' }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent transition-all duration-500 group-hover:from-black/90" />
-                    <span className="absolute top-4 left-4 font-heading text-2xl font-bold text-white/25">
-                      {loc.number}
-                    </span>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                      <div className="flex items-center gap-1.5 mb-1.5">
-                        <MapPin className="w-3 h-3 text-primary" />
-                        <span className="font-body text-[10px] tracking-[0.2em] uppercase text-primary/90">
-                          {loc.city}
-                        </span>
+                  <div className="group relative">
+                    <Link
+                      to={`/locations/${loc.slug}`}
+                      className="relative block overflow-hidden rounded-2xl aspect-[3/4] sm:aspect-[4/5] border border-border/50 hover:border-primary/40 transition-colors duration-500"
+                    >
+                      <img
+                        src={siteImg('location.' + loc.slug) || loc.image}
+                        alt={loc.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        style={{ filter: 'saturate(0.85) brightness(0.9)' }}
+                        loading="lazy" decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent transition-all duration-500 group-hover:from-black/90" />
+                      <span className="absolute top-4 left-4 font-heading text-2xl font-bold text-white/25">
+                        {loc.number}
+                      </span>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                        <div className="flex items-center gap-1.5 mb-1.5">
+                          <MapPin className="w-3 h-3 text-primary" />
+                          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-primary/90">
+                            {loc.city}
+                          </span>
+                        </div>
+                        <h3 className="font-heading text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                          {loc.name}
+                          <ArrowUpRight className="w-4 h-4 opacity-0 -translate-y-0.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" />
+                        </h3>
                       </div>
-                      <h3 className="font-heading text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                        {loc.name}
-                        <ArrowUpRight className="w-4 h-4 opacity-0 -translate-y-0.5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300" />
-                      </h3>
-                    </div>
-                    <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 scale-95 group-hover:scale-100 pointer-events-none group-hover:pointer-events-auto" />
-                  </Link>
+                    </Link>
+                    <HostHint question={hostQuestion(lang, loc.name)} label={hostHintLabel(lang)} className="bottom-full mb-3 left-1/2 -translate-x-1/2" />
+                  </div>
                 )}
               </SectionReveal>
             );
