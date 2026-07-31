@@ -2,29 +2,38 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, CalendarDays } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
-import { useSiteImages } from '@/lib/SiteImageContext';
 
-const FALLBACK_IMG = 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798149-17KHS8RDD2FJIZI179ZQ/EF6D9D08-F3ED-41E2-9392-96AB73DEF2E6.jpeg';
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
-// Compact, wide reservation CTA — aligned with the menu width above, short,
-// with the floating glass card overlapping the edge (Ons-verhaal layering).
-export default function ReserveCtaSection({ positionKey = 'reserve' }) {
+// Compacte reserverings-CTA — de langwerpige foto is vervangen door een
+// transparant glasmorphism-vlak met de bull-ghost (zoals Lommel in /locations).
+// De zwevende glazen kaart behoudt de 1:1-verhouding met OrderCtaSection.
+export default function ReserveCtaSection() {
   const { t } = useLang();
-  const { siteImg } = useSiteImages();
-  const bg = siteImg(positionKey) || FALLBACK_IMG;
   return (
     <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
       <div className="relative">
-        <div className="overflow-hidden rounded-2xl h-[200px] md:h-[260px]">
-          <img src={bg} alt="" aria-hidden="true" className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent pointer-events-none" />
+        {/* Glasmorphism-banner met bull-ghost */}
+        <div
+          className="relative overflow-hidden rounded-2xl h-[200px] md:h-[260px] border border-border/50"
+          style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px) saturate(140%)', WebkitBackdropFilter: 'blur(20px) saturate(140%)' }}
+        >
+          <img
+            src={BULL_MARK}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="absolute pointer-events-none select-none"
+            style={{ height: '220%', width: 'auto', bottom: '-70%', right: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
+          />
         </div>
 
-        <div className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
-          style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}>
+        <div
+          className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
+          style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}
+        >
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-              style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
               <CalendarDays className="w-4 h-4 text-primary" />
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">Bogèst</span>

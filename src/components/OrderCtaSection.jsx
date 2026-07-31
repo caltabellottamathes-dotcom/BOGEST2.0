@@ -1,20 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import { useSiteImages } from '@/lib/SiteImageContext';
 
-const FALLBACK_IMG = 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798149-17KHS8RDD2FJIZI179ZQ/EF6D9D08-F3ED-41E2-9392-96AB73DEF2E6.jpeg';
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
 /**
  * OrderCtaSection — hét referentiesysteem voor "Bestel nu"-CTA's.
- * De zwevende glazen kaart is 1:1 ReserveCtaSection (/menu):zelfde
- * verhoudingen, positie, glasant, en dezelfde opbouw (icoon + "Bogèst" +
- * titel + ondertitel + knop met cirkel-pijl). Het enige verschil: de
- * paginateksten zweven links over de foto (omdat er een 3e partij aan te
- * pas komt — bogest-online / ZenChef).
+ * De langwerpige foto is vervangen door een transparant glasmorphism-vlak
+ * met de bull-ghost (zoals Lommel in /locations). De zwevende glazen kaart
+ * blijft 1:1 ReserveCtaSection (/menu).
  */
 export default function OrderCtaSection({
-  positionKey,
   eyebrow,
   title,
   titleAccent,
@@ -28,9 +24,6 @@ export default function OrderCtaSection({
   icon: Icon = ArrowRight,
   cardEyebrow = 'Bogèst',
 }) {
-  const { siteImg } = useSiteImages();
-  const bg = (positionKey ? siteImg(positionKey) : null) || FALLBACK_IMG;
-
   const CtaLink = ({ children }) => {
     if (href) return <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3">{children}</a>;
     if (to) return <Link to={to} className="group inline-flex items-center gap-3">{children}</Link>;
@@ -40,14 +33,24 @@ export default function OrderCtaSection({
   return (
     <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
       <div className="relative">
-        <div className="relative overflow-hidden rounded-2xl h-[200px] md:h-[260px]">
-          <img src={bg} alt="" aria-hidden className="w-full h-full object-cover" loading="lazy" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(95deg, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.42) 48%, rgba(0,0,0,0.10) 100%)' }} />
+        {/* Glasmorphism-banner met bull-ghost */}
+        <div
+          className="relative overflow-hidden rounded-2xl h-[200px] md:h-[260px] border border-border/50"
+          style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px) saturate(140%)', WebkitBackdropFilter: 'blur(20px) saturate(140%)' }}
+        >
+          <img
+            src={BULL_MARK}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className="absolute pointer-events-none select-none"
+            style={{ height: '220%', width: 'auto', bottom: '-70%', right: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
+          />
 
-          {/* Tekst links — zweeft over de foto */}
-          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[13rem] lg:max-w-xs z-10 text-white" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}>
+          {/* Tekst links */}
+          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[13rem] lg:max-w-xs z-10">
             {eyebrow && <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{eyebrow}</p>}
-            <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight">
+            <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
               {title}
               {titleAccent && (
                 <>
@@ -56,7 +59,7 @@ export default function OrderCtaSection({
               )}
               <span className="text-primary">.</span>
             </h2>
-            {desc && <p className="font-body text-xs md:text-sm text-white/80 leading-relaxed mt-2 line-clamp-3">{desc}</p>}
+            {desc && <p className="font-body text-xs md:text-sm text-muted-foreground leading-relaxed mt-2 line-clamp-3">{desc}</p>}
           </div>
         </div>
 
