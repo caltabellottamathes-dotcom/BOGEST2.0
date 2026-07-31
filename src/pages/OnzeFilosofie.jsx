@@ -1,7 +1,7 @@
 import React from 'react';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
-import AboutSubNav from '@/components/about/AboutSubNav';
+import SubPageNav from '@/components/SubPageNav';
 import StoryChapter from '@/components/about/StoryChapter';
 import ReserveCtaSection from '@/components/ReserveCtaSection';
 import { useLang } from '@/lib/LangContext';
@@ -29,7 +29,7 @@ export default function OnzeFilosofie() {
       />
 
       <PanelContent>
-        <AboutSubNav nextTo="/about/instagram" nextLabel="Achter de schermen" />
+        <SubPageNav nextTo="/about/instagram" nextLabel="Achter de schermen" />
 
         {/* Header */}
         <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">

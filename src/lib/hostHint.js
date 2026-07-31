@@ -13,6 +13,12 @@ export function hostHintLabel(lang) {
   return 'Vraag het aan Bogèst!';
 }
 
+export function spaceQuestion(lang, space, city) {
+  if (lang === 'fr') return `Pouvez-vous me raconter quelque chose de spécial à propos de ${space} chez Bogèst ${city} ?`;
+  if (lang === 'en') return `Can you tell me something special about the ${space} at Bogèst ${city}?`;
+  return `Kan u me iets bijzonders vertellen over de ${space} van Bogèst ${city}?`;
+}
+
 export function askHost(question) {
   window.dispatchEvent(new CustomEvent('bogest:open-host', { detail: { question } }));
 }

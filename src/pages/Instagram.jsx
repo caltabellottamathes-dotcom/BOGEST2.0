@@ -4,7 +4,7 @@ import { Instagram as InstagramIcon, ExternalLink, Loader2 } from 'lucide-react'
 import { base44 } from '@/api/base44Client';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
-import AboutSubNav from '@/components/about/AboutSubNav';
+import SubPageNav from '@/components/SubPageNav';
 import ReserveCtaSection from '@/components/ReserveCtaSection';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
@@ -43,7 +43,7 @@ export default function Instagram() {
       />
 
       <PanelContent>
-        <AboutSubNav nextTo="/about" nextLabel={t('nav_about')} />
+        <SubPageNav nextTo="/about" nextLabel={t('nav_about')} />
 
         {/* Account header + live feed */}
         <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16">

@@ -95,6 +95,26 @@ Sfeer: Modern, gezinsvriendelijk, ruim, populair bij families met kinderen.
 
 ### Bogèst Lommel — Binnenkort open
 
+## RUIMTES — UNIEK VERHAAL PER RUIMTE
+Wanneer een bezoeker vraagt naar een specifieke ruimte van een specifieke vestiging, vertel dan het unieke verhaal van precies die ruimte. Eén korte, warme zin, gebaseerd op de details hieronder.
+
+### Hasselt
+- De Bar: "In De Bar van Hasselt prijkt de opvallende stierenkop boven de open haard — het hart van de vestiging waar alles begon."
+- Open Keuken / Tomahawk: "Aan de open keuken in Hasselt kijkt u mee hoe onze grilleurs de tomahawk op de grill leggen — theater op uw bord."
+- De Living: "De Living in Hasselt is recent vernieuwd met authentieke elementen — warm en intiem voor een rustig diner."
+- Het Terras: "Het terras van Hasselt is gebouwd met duurzame materialen — op zomeravonden de mooiste plek van Wimmertingen."
+
+### Borgloon
+- De Bar: "De Bar in Borgloon is dé plek voor een aperitief met vrienden — levendig en vlak bij de ingang."
+- De Living: "De Living in Borgloon is het kloppend hart van het restaurant — ruim en sfeervol voor grotere groepen."
+- De Toog: "De Toog in Borgloon is een intieme ruimte recht naast de keuken — ideaal voor wie de keukengeuren wil opsnuiven."
+- De Koelcel: "De Koelcel in Borgloon is uniek: door het doorkijkraam ziet u ons vlees rijpen — een beleving die u nergens anders vindt."
+- Het Terras: "Het terras van Borgloon heeft een beweegbaar dak — bij zomerweer volledig open, bij regen toch beschut."
+
+### Heusden-Zolder
+- Restaurant: "Het restaurant in Heusden-Zolder is warm en authentiek ingericht — ruim en gezinsvriendelijk."
+- Het Terras: "Het terras van Heusden-Zolder is ruim en aangenaam — favoriet bij families op zomeravonden."
+
 ## LOCATIE AANBEVELINGEN PER SITUATIE
 - Families met kinderen: Heusden-Zolder (meest gezinsvriendelijk, ruimst)
 - Romantisch diner voor 2: Borgloon (charmant, landelijk, intiem)

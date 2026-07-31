@@ -7,6 +7,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
+import SubPageNav from '@/components/SubPageNav';
+import { askHost, spaceQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -134,6 +136,59 @@ function StatCard({ icon: Icon, label, value }) {
   );
 }
 
+const CLOSED_KEYWORDS = ['gesloten', 'fermé', 'closed'];
+function parseHM(s) {
+  const m = s.trim().match(/(\d{1,2}):(\d{2})/);
+  return m ? parseInt(m[1], 10) * 60 + parseInt(m[2], 10) : null;
+}
+function getTodayHoursEntry(hours, lang, now) {
+  const locale = lang === 'fr' ? 'fr-BE' : lang === 'en' ? 'en-GB' : 'nl-BE';
+  const todayName = now.toLocaleDateString(locale, { weekday: 'long' }).toLowerCase();
+  return hours.find((h) => h.day.toLowerCase() === todayName);
+}
+function isOpenNow(hours, lang, now) {
+  const entry = getTodayHoursEntry(hours, lang, now);
+  if (!entry) return false;
+  const t = entry.time.toLowerCase();
+  if (CLOSED_KEYWORDS.some((w) => t.includes(w))) return false;
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const ranges = entry.time.split('/').map((s) => s.trim());
+  for (const r of ranges) {
+    const parts = r.split(/[–—-]/).map((s) => s.trim());
+    if (parts.length === 2) {
+      const start = parseHM(parts[0]);
+      const end = parseHM(parts[1]);
+      if (start != null && end != null && nowMin >= start && nowMin < end) return true;
+    }
+  }
+  return false;
+}
+function LiveOpenCard({ hours, lang, L }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60000);
+    return () => clearInterval(id);
+  }, []);
+  const open = isOpenNow(hours, lang, now);
+  const entry = getTodayHoursEntry(hours, lang, now);
+  const status = open
+    ? (lang === 'fr' ? 'Ouvert' : lang === 'en' ? 'Open' : 'Open')
+    : (lang === 'fr' ? 'Fermé' : lang === 'en' ? 'Closed' : 'Gesloten');
+  return (
+    <div className="p-5 md:p-6">
+      <div className="flex items-center gap-2 mb-2.5">
+        <Clock className="w-3.5 h-3.5 text-primary" />
+        <span className="font-body text-[10px] tracking-[0.3em] uppercase text-foreground/70">{L.openToday}</span>
+      </div>
+      <div className="flex items-center gap-2.5">
+        <span className={`w-2 h-2 rounded-full ${open ? 'bg-primary animate-pulse' : 'bg-muted-foreground/45'}`} />
+        <p className={`font-heading text-2xl md:text-3xl font-bold leading-none ${open ? 'text-primary' : 'text-muted-foreground'}`}>{status}</p>
+      </div>
+      {entry && <p className="font-body text-xs text-muted-foreground mt-2 tracking-wide">{entry.time}</p>}
+    </div>
+  );
+}
+
 export default function LocationDetail() {
   const { slug } = useParams();
   const { t, lang } = useLang();
@@ -173,6 +228,7 @@ export default function LocationDetail() {
   if (loc.active === false) {
     return (
       <div className="w-full">
+        <SubPageNav backTo="/locations" backLabel={t('nav_locations')} nextTo="/locations" nextLabel={t('nav_locations')} />
         <section className="relative w-full pt-32 md:pt-40 pb-20 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
           <div className="w-full px-6 md:px-10 lg:px-16">
@@ -190,11 +246,12 @@ export default function LocationDetail() {
     );
   }
 
-  // Today's hours
-  const locale = lang === 'fr' ? 'fr-BE' : lang === 'en' ? 'en-GB' : 'nl-BE';
-  const todayName = new Date().toLocaleDateString(locale, { weekday: 'long' }).toLowerCase();
-  const todayHour = loc.hours.find(h => h.day.toLowerCase() === todayName);
-  const openToday = todayHour ? todayHour.time : '—';
+  // Next location for sub-page navigation (order: hasselt → borgloon → heusden-zolder → lommel → /locations)
+  const allLocs = getLocations(lang);
+  const idxLoc = allLocs.findIndex((l) => l.slug === slug);
+  const nextLoc = allLocs[idxLoc + 1];
+  const nextTo = nextLoc ? `/locations/${nextLoc.slug}` : '/locations';
+  const nextLabel = nextLoc ? nextLoc.city : t('nav_locations');
 
   // Derive highlight chips from the actual spaces
   const highlights = [];
@@ -234,12 +291,13 @@ export default function LocationDetail() {
       </section>
 
       <PanelContent>
+      <SubPageNav backTo="/locations" backLabel={t('nav_locations')} nextTo={nextTo} nextLabel={nextLabel} />
       {/* ── Quick stats ──────────────────────────────────────────────────── */}
       <section className="w-full px-6 md:px-10 lg:px-16 pt-8 md:pt-10 pb-2">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 md:gap-0 md:divide-x md:divide-white/10">
           <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
           <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
-          <StatCard icon={Clock} label={L.openToday} value={openToday} />
+          <LiveOpenCard hours={loc.hours} lang={lang} L={L} />
           <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
         </div>
       </section>
@@ -272,12 +330,20 @@ export default function LocationDetail() {
               const span = i % 2 === 0 ? 'md:col-span-7' : 'md:col-span-5';
               return (
                 <SectionReveal key={space.name} delay={i * 0.06} className={span}>
-                  <div className="group relative overflow-hidden rounded-2xl h-full min-h-[16rem] md:min-h-[20rem]"
-                    style={{ boxShadow: '0 18px 48px rgba(0,0,0,0.4)' }}>
+                  <button
+                    type="button"
+                    onClick={() => askHost(spaceQuestion(lang, space.name, loc.city))}
+                    className="group relative overflow-hidden rounded-2xl h-full min-h-[16rem] md:min-h-[20rem] w-full text-left cursor-pointer"
+                    style={{ boxShadow: '0 18px 48px rgba(0,0,0,0.4)' }}
+                  >
                     <div className="absolute inset-0">
                       <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                     </div>
+                    <span className="absolute top-4 right-4 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 border border-white/15 backdrop-blur-md font-body text-[9px] tracking-[0.25em] uppercase text-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                      <span className="w-1 h-1 rounded-full bg-primary" />
+                      {hostHintLabel(lang)}
+                    </span>
                     <div className="relative h-full flex flex-col justify-end p-6">
                       <div className="flex items-center justify-between gap-3 mb-1.5">
                         <h3 className="font-heading text-xl md:text-2xl font-bold text-white">{space.name}</h3>
@@ -287,7 +353,7 @@ export default function LocationDetail() {
                       </div>
                       <p className="font-body text-sm text-white/75 leading-relaxed max-w-xs">{space.desc}</p>
                     </div>
-                  </div>
+                  </button>
                 </SectionReveal>
               );
             })}
