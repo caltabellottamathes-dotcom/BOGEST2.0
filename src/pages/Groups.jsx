@@ -11,6 +11,8 @@ import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 import { base44 } from '@/api/base44Client';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 export default function Groups() {
   const { t, lang } = useLang();
   const [form, setForm] = useState({ name: '', email: '', phone: '', guests: '', location: '', date: '', notes: '' });
@@ -54,6 +56,10 @@ export default function Groups() {
       <GroupsConceptSection />
 
       <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
+        <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-8%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
+          <div className="relative z-10 p-5 md:p-7">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-14">
           <SectionReveal>
             <div className="flex items-center gap-3 mb-3">
@@ -73,21 +79,21 @@ export default function Groups() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <Input placeholder={t('grp_name')} value={form.name} onChange={e => set('name', e.target.value)} required className="bg-card border-border font-body" />
-                  <Input type="email" placeholder={t('grp_email')} value={form.email} onChange={e => set('email', e.target.value)} required className="bg-card border-border font-body" />
+                  <Input placeholder={t('grp_name')} value={form.name} onChange={e => set('name', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
+                  <Input type="email" placeholder={t('grp_email')} value={form.email} onChange={e => set('email', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Input placeholder={t('grp_phone')} value={form.phone} onChange={e => set('phone', e.target.value)} required className="bg-card border-border font-body" />
-                  <Input placeholder={t('grp_guests')} value={form.guests} onChange={e => set('guests', e.target.value)} required className="bg-card border-border font-body" />
+                  <Input placeholder={t('grp_phone')} value={form.phone} onChange={e => set('phone', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
+                  <Input placeholder={t('grp_guests')} value={form.guests} onChange={e => set('guests', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
                 </div>
-                <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} className="bg-card border-border font-body" />
+                <Input type="date" value={form.date} onChange={e => set('date', e.target.value)} className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
                 <select value={form.location} onChange={e => set('location', e.target.value)}
-                  className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                  className="w-full rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md px-3 py-2.5 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
                   <option value="">{t('grp_location_choose')}</option>
                   {['Hasselt', 'Borgloon', 'Heusden-Zolder', 'Lommel'].map(l => <option key={l} value={l}>{l}</option>)}
                 </select>
                 <textarea placeholder={t('grp_notes')} value={form.notes} onChange={e => set('notes', e.target.value)} rows={4}
-                  className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
+                  className="w-full rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                 <Button type="submit" disabled={loading}
                   className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">
                   {loading ? t('grp_sending') : t('btn_send_request')}
@@ -112,6 +118,8 @@ export default function Groups() {
               ))}
             </div>
           </SectionReveal>
+        </div>
+          </div>
         </div>
       </section>
       </PanelContent>

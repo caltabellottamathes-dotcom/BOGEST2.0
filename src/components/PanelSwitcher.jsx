@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 /**
  * PanelSwitcher — hét referentiepatroon voor interactieve info-secties:
  * een beeldkaart aan één kant + selecteerbare pijlers met een wisselende
@@ -22,8 +24,11 @@ export default function PanelSwitcher({
   const current = items[active];
 
   return (
-    <section className={`w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
-      <div className="max-w-5xl grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
+    <section className={`relative overflow-hidden w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
+      {/* Gelaagde warme gradient + ghostbull — terugkerend motief */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.14) 0%, transparent 60%)' }} />
+      <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '26rem', width: 'auto', bottom: '-4rem', right: '-8%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
+      <div className="relative z-10 max-w-5xl grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-12 items-center">
         {/* Beeldkaart */}
         <div className={`md:col-span-5 order-1 ${mirror ? 'md:order-2' : ''}`}>
           <AnimatePresence mode="wait">

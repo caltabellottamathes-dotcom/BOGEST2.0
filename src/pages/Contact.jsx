@@ -77,17 +77,17 @@ export default function Contact() {
                   value={form.location}
                   onChange={(e) => set('location', e.target.value)}
                   required
-                  className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md px-3 py-2.5 text-sm font-body text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="" disabled>{t('con_choose_location')}</option>
                   {locations.map((loc) => (
                     <option key={loc.slug} value={loc.slug}>{loc.name}</option>
                   ))}
                 </select>
-                <Input placeholder={t('con_name')} value={form.name} onChange={(e) => set('name', e.target.value)} required className="bg-card border-border font-body" />
-                <Input type="email" placeholder={t('con_email')} value={form.email} onChange={(e) => set('email', e.target.value)} required className="bg-card border-border font-body" />
+                <Input placeholder={t('con_name')} value={form.name} onChange={(e) => set('name', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
+                <Input type="email" placeholder={t('con_email')} value={form.email} onChange={(e) => set('email', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
                 <textarea placeholder={t('con_message')} value={form.message} onChange={(e) => set('message', e.target.value)} rows={5} required
-              className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
+              className="w-full rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                 {error && <p className="font-body text-sm text-destructive">{error}</p>}
                 <Button type="submit" disabled={loading}
               className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">

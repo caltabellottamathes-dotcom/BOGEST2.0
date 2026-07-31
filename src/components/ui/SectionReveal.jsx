@@ -1,10 +1,7 @@
-import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import React from 'react';
+import { motion } from 'framer-motion';
 
 export default function SectionReveal({ children, className = '', delay = 0, direction = 'up', hover = false, ...rest }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-40px' });
-
   const variants = {
     up: { initial: { opacity: 0, y: 14 }, animate: { opacity: 1, y: 0 } },
     left: { initial: { opacity: 0, x: -20 }, animate: { opacity: 1, x: 0 } },
@@ -16,9 +13,9 @@ export default function SectionReveal({ children, className = '', delay = 0, dir
 
   return (
     <motion.div
-      ref={ref}
       initial={v.initial}
-      animate={inView ? v.animate : v.initial}
+      whileInView={v.animate}
+      viewport={{ once: true, margin: '-40px' }}
       transition={{ duration: 0.45, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
       whileHover={hover ? { scale: 1.02 } : undefined}

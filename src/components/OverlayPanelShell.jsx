@@ -28,17 +28,20 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 pointer-events-auto"
             style={{ background: isLight ? 'rgba(0,0,0,0.30)' : 'rgba(0,0,0,0.55)' }}
           />
 
           {/* Panel */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={{
+              closed: { x: '100%', transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] } },
+              open: { x: 0, transition: { duration: 0.42, ease: [0.32, 0.72, 0, 1] } },
+            }}
             className="relative pointer-events-auto flex flex-col w-full"
             style={{
               height: `calc(100vh - ${navHeight}px)`,
@@ -50,6 +53,8 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
               borderLeft: isLight ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
               borderRadius: '24px 0 0 0',
               boxShadow: isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)',
+              willChange: 'transform',
+              transform: 'translateZ(0)',
             }}
           >
             {/* Close button — always top-left, above content */}

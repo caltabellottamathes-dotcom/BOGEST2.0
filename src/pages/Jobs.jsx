@@ -314,11 +314,11 @@ export default function Jobs() {
                 {!selected && <p className="font-body text-sm text-muted-foreground mb-6">{t('job_apply_desc')}</p>}
                 {selected && <p className="font-body text-sm text-primary mb-6">{selected.location} · {selected.type}</p>}
                 <form onSubmit={handleApply} className="space-y-4">
-                  <Input placeholder={t('job_full_name')} value={form.name} onChange={e => set('name', e.target.value)} required className="bg-card border-border font-body" />
-                  <Input type="email" placeholder={t('job_email')} value={form.email} onChange={e => set('email', e.target.value)} required className="bg-card border-border font-body" />
-                  <Input placeholder={t('job_phone')} value={form.phone} onChange={e => set('phone', e.target.value)} className="bg-card border-border font-body" />
+                  <Input placeholder={t('job_full_name')} value={form.name} onChange={e => set('name', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
+                  <Input type="email" placeholder={t('job_email')} value={form.email} onChange={e => set('email', e.target.value)} required className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
+                  <Input placeholder={t('job_phone')} value={form.phone} onChange={e => set('phone', e.target.value)} className="bg-white/[0.04] border-white/10 backdrop-blur-md font-body" />
                   <textarea placeholder={t('job_motivation')} value={form.motivation} onChange={e => set('motivation', e.target.value)} rows={5}
-                    className="w-full rounded-lg border border-border bg-card px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
+                    className="w-full rounded-lg border border-white/10 bg-white/[0.04] backdrop-blur-md px-3 py-2.5 text-sm font-body text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring resize-none" />
                   <Button type="submit" disabled={loading}
                     className="bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full px-8 py-3 h-auto transition-all duration-300">
                     {loading ? t('job_sending') : t('job_send')}
