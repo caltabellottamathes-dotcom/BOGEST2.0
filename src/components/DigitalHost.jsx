@@ -11,7 +11,6 @@ import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import MarkdownText from '@/components/digital-host/MarkdownText';
-import ChatKeyboard from '@/components/digital-host/ChatKeyboard';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 import { usePanelShift } from '@/hooks/usePanelShift';
 
@@ -1018,8 +1017,16 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    el.muted = true;
-    el.play().catch(() => {});
+    // Unmuted intro video — play with sound. If the browser blocks unmuted
+    // autoplay (no prior gesture), play muted for motion and unmute on the
+    // first tap so the guest hears sound the moment they interact.
+    el.muted = false;
+    el.play().catch(() => {
+      el.muted = true;
+      el.play().catch(() => {});
+      const unmute = () => { el.muted = false; el.play().catch(() => {}); window.removeEventListener('pointerdown', unmute); };
+      window.addEventListener('pointerdown', unmute, { passive: true });
+    });
     return () => { try { videoRef.current?.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
@@ -1072,7 +1079,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay muted playsInline
+              autoPlay playsInline
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}
@@ -1287,11 +1294,27 @@ export default function DigitalHost() {
     return () => window.removeEventListener('bogest:show-beeldbank', handler);
   }, [lang]);
 
-  // Entry flow
+  // Entry flow — the pop-up enters when the welcome video's first frame is
+  // loaded (no fixed timer). A detached <video> preloads the first frame; the
+  // EntryPopup's own video then plays immediately from cache (unmuted).
   useEffect(() => {
     if (entryShownRef.current) return;
-    const t = setTimeout(() => { entryShownRef.current = true; setPhase('entry'); sounds.open(); }, 800);
-    return () => clearTimeout(t);
+    let done = false;
+    const enter = () => {
+      if (done) return; done = true;
+      entryShownRef.current = true;
+      sounds.open();
+      setPhase('entry');
+    };
+    const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches;
+    const src = isMob ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL;
+    const v = document.createElement('video');
+    v.preload = 'auto'; v.muted = true; v.playsInline = true; v.src = src;
+    v.addEventListener('loadeddata', enter, { once: true });
+    try { v.load(); } catch {}
+    // Fallback: enter after 2.8s even if the first frame isn't ready.
+    const fallback = setTimeout(enter, 2800);
+    return () => { clearTimeout(fallback); v.removeEventListener('loadeddata', enter); };
   }, []);
 
   // Popup visibility is handled in the consolidated effect above.
@@ -1350,17 +1373,27 @@ export default function DigitalHost() {
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, isLoading]);
   useEffect(() => { if (phase === 'chat' && !isMobile) setTimeout(() => inputRef.current?.focus(), 350); }, [phase]);
 
-  // Custom on-screen keyboard (mobile) — blocks the native keyboard so the
-  // chat keeps its design. The chat panel lifts to sit above it when open.
-  const [customKbOpen, setCustomKbOpen] = useState(false);
-  const [kbHeight, setKbHeight] = useState(232);
-  useEffect(() => { if (phase !== 'chat') setCustomKbOpen(false); }, [phase]);
-  // Slide the ElevenLabs widget + welcome video off-screen while the mobile
+  // Native mobile keyboard — the chat panel slides up and rests on top of it
+  // like another panel. Detected via the visual viewport (no custom keyboard).
+  const [nativeKb, setNativeKb] = useState(0);
+  useEffect(() => {
+    if (!isMobile) { setNativeKb(0); return; }
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const onResize = () => {
+      const kb = window.innerHeight - vv.height - vv.pageTop;
+      setNativeKb(kb > 60 ? kb : 0);
+    };
+    vv.addEventListener('resize', onResize);
+    vv.addEventListener('scroll', onResize, { passive: true });
+    return () => { vv.removeEventListener('resize', onResize); vv.removeEventListener('scroll', onResize); };
+  }, [isMobile]);
+  // Slide the ElevenLabs widget + welcome video off-screen while the native
   // keyboard is open, and back in when it closes.
   useEffect(() => {
-    document.body.classList.toggle('bogest-kb-open', customKbOpen);
-    window.dispatchEvent(new CustomEvent('bogest:keyboard-visibility', { detail: { open: customKbOpen } }));
-  }, [customKbOpen]);
+    document.body.classList.toggle('bogest-kb-open', nativeKb > 0);
+    window.dispatchEvent(new CustomEvent('bogest:keyboard-visibility', { detail: { open: nativeKb > 0 } }));
+  }, [nativeKb]);
   // Opening the mobile menu (footer) closes the chat so the menu is unobstructed.
   useEffect(() => {
     const handler = () => { if (phase === 'chat') setPhase('minimized'); };
@@ -1740,9 +1773,9 @@ export default function DigitalHost() {
                 md:w-[480px] md:h-[640px]"
               style={{
                 ...glassStyle,
-                /* Mobile: rest at the bottom; lift above the custom keyboard when open */
-                bottom: customKbOpen ? `${kbHeight}px` : '0px',
-                height: customKbOpen ? 'min(56dvh, 420px)' : 'min(72dvh, 560px)',
+                /* Mobile: rest at the bottom; slide up to sit on the native keyboard */
+                bottom: nativeKb > 0 ? `${nativeKb}px` : '0px',
+                height: nativeKb > 0 ? `calc(100dvh - ${nativeKb}px - 8px)` : 'min(72dvh, 560px)',
                 /* Tablet+ override: floating panel raised to clear the ElevenLabs orb */
                 ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '80px', right: '96px' } : {}),
                 boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
@@ -1804,10 +1837,6 @@ export default function DigitalHost() {
                   <input
                     ref={inputRef}
                     value={input}
-                    readOnly={isMobile}
-                    inputMode={isMobile ? 'none' : 'text'}
-                    onFocus={isMobile ? () => setCustomKbOpen(true) : undefined}
-                    onClick={isMobile ? () => setCustomKbOpen(true) : undefined}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                     placeholder={s.placeholder}
@@ -1827,21 +1856,7 @@ export default function DigitalHost() {
                 </p>
               </div>
             </motion.div>
-            {isMobile && (
-              <AnimatePresence>
-                {customKbOpen && (
-                  <ChatKeyboard
-                    isDark={isDark}
-                    onHeight={setKbHeight}
-                    sendDisabled={!input.trim() || isLoading}
-                    onKey={(ch) => setInput((prev) => prev + ch)}
-                    onBackspace={() => setInput((prev) => prev.slice(0, -1))}
-                    onSend={() => sendMessage()}
-                    onClose={() => setCustomKbOpen(false)}
-                  />
-                )}
-              </AnimatePresence>
-            )}
+            {/* The native mobile keyboard slides the chat panel up — no custom keyboard. */}
           </>
         )}
       </AnimatePresence>

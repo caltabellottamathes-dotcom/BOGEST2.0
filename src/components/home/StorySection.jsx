@@ -15,7 +15,7 @@ export default function StorySection() {
     <section id="verhaal" className="relative w-full py-14 md:py-20 overflow-hidden">
       {/* Layered warm gradient + ghosted bull — recurring panel motif */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
-      <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '22rem', width: 'auto', top: '-3rem', right: '-4%', opacity: 0.06, filter: 'grayscale(1) brightness(2.4)' }} />
+      <img src={BULL_MARK} alt="" aria-hidden loading="lazy" decoding="async" draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '22rem', width: 'auto', top: '-3rem', right: '-4%', opacity: 0.06, filter: 'grayscale(1) brightness(2.4)' }} />
       <div className="relative w-full px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <SectionReveal direction="left">
@@ -25,6 +25,8 @@ export default function StorySection() {
                 <img
                   src={siteImg('story')}
                   alt="Bogèst"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover hover:scale-105 transition-all duration-700"
                   style={{ filter: 'saturate(0.82) brightness(0.95)' }}
                 />

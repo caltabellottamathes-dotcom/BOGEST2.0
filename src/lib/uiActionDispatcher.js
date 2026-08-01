@@ -1,16 +1,12 @@
 import { websiteAction } from './websiteDispatcher';
 
 /**
- * UI Action Layer (Section 5) — the single contract between the Base44
- * text-chat agent (VraagHetBogest) and the website front end.
+ * UI Action Layer — the contract between the Base44 text-chat agent
+ * (VraagHetBogest / "Digital Host") and the website front end.
  *
- * The agent emits [UIACTION:type|arg1|arg2|...] tags in its chat replies.
- * The Digital Host parses them and calls dispatchUIAction({ type, args }).
- *
- * Navigation / panel actions route to the existing websiteAction dispatcher.
- * Visual media actions (openGallery, displaySocialPosts, displayImages,
- * displayCarousel, displayReviews, displayMaps, openModal, showNotification)
- * dispatch a `bogest:ui-action` CustomEvent that <UIActionOverlay /> renders.
+ * The digital host NEVER opens pop-ups to show something — it only
+ * automatically navigates to the relevant page. Every action resolves to a
+ * page navigation (or an in-page scroll/highlight).
  */
 export async function dispatchUIAction({ type, args = [] }) {
   if (!type) return { success: false, message: 'Missing UI action type' };
@@ -33,30 +29,32 @@ export async function dispatchUIAction({ type, args = [] }) {
     case 'highlight':
       return websiteAction({ action: 'highlight', target: a[0], options: { duration: a[1] ? Number(a[1]) : undefined } });
 
-    case 'openReservation': {
-      await websiteAction({ action: 'open', target: 'reservation' });
-      window.dispatchEvent(new CustomEvent('bogest:reservation-prefill', { detail: { location: a[0], date: a[1], partySize: a[2] } }));
-      return { success: true };
-    }
+    // The digital host only navigates — never opens a panel/pop-up.
+    case 'openReservation':
+      return websiteAction({ action: 'navigate', target: '/reserve' });
 
     case 'openContact':
-      return websiteAction({ action: 'open', target: 'contact-form' });
+      return websiteAction({ action: 'navigate', target: '/contact' });
 
     case 'openGiftCards':
-      return websiteAction({ action: 'open', target: 'gift-cards' });
+      return websiteAction({ action: 'navigate', target: '/gift-cards' });
 
-    // Visual / media renderers → handled by <UIActionOverlay />
     case 'openGallery':
     case 'displaySocialPosts':
     case 'displayImages':
     case 'displayCarousel':
+      return websiteAction({ action: 'navigate', target: a[0] || '/instagram' });
+
     case 'displayReviews':
+      return websiteAction({ action: 'navigate', target: a[0] || '/' });
+
     case 'displayMaps':
+      return websiteAction({ action: 'navigate', target: a[0] || '/locations' });
+
+    // Explicit pop-up actions are intentionally no-ops — the host navigates only.
     case 'openModal':
-    case 'showNotification': {
-      window.dispatchEvent(new CustomEvent('bogest:ui-action', { detail: { type, args: a } }));
+    case 'showNotification':
       return { success: true };
-    }
 
     default:
       return { success: false, message: `Unknown UI action: ${type}` };
