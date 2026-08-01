@@ -11,13 +11,22 @@ const IMG = {
   chef: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg',
 };
 
+// Intro title for the Traiteur panel — matches the Cadeaupakketten section
+// (title + accent + lead rendered by PanelSwitcher).
+const STORY_TITLE = {
+  nl: { title: 'Onze keuken', accent: 'thuis', lead: 'Spare ribs, stoofvlees, bouletten — de échte Bogèst-klassiekers, vakkundig bereid en klaar om af te halen bij uw vestiging.' },
+  fr: { title: 'Notre cuisine', accent: 'à la maison', lead: 'Spare ribs, carbonnade, boulettes — les vrais classiques de Bogèst, préparés avec soin et prêts à emporter.' },
+  en: { title: 'Our kitchen', accent: 'at home', lead: 'Spare ribs, beef stew, boulettes — the real Bogèst classics, skillfully prepared and ready to pick up.' },
+};
+
 /**
  * TakeawayStorySection — gespiegelde PanelSwitcher (inhoud links, beeld
- * rechts), dezelfde visuele taal als Cadeaupakketten eronder. Geen h2: de
- * titel staat in de PanelHero.
+ * rechts), dezelfde visuele taal als Cadeaupakketten eronder. Inclusief een
+ * intro-titel, net als de cadeaupakketten-sectie.
  */
 export default function TakeawayStorySection() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const tr = STORY_TITLE[lang] || STORY_TITLE.nl;
   const items = [
     { icon: ShoppingBag, title: t('ta_h1_title'), body: t('ta_h1_body'), img: IMG.classics },
     { icon: MapPin, title: t('ta_h2_title'), body: t('ta_h2_body'), img: IMG.location },
@@ -30,6 +39,9 @@ export default function TakeawayStorySection() {
       items={items}
       label={t('nav_takeaway')}
       icon={ShoppingBag}
+      title={tr.title}
+      titleAccent={tr.accent}
+      lead={tr.lead}
       mirror
     />
   );

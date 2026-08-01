@@ -1018,9 +1018,8 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    el.muted = false;
-    const p = el.play();
-    if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
+    el.muted = true;
+    el.play().catch(() => {});
     return () => { try { videoRef.current?.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
@@ -1073,7 +1072,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay playsInline
+              autoPlay muted playsInline
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}

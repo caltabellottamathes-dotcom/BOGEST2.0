@@ -6,12 +6,17 @@ import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 export default function StorySection() {
   const { t } = useLang();
   const { siteImg } = useSiteImages();
   return (
-    <section id="verhaal" className="w-full py-14 md:py-20">
-      <div className="w-full px-6 md:px-10 lg:px-16">
+    <section id="verhaal" className="relative w-full py-14 md:py-20 overflow-hidden">
+      {/* Layered warm gradient + ghosted bull — recurring panel motif */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
+      <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '22rem', width: 'auto', top: '-3rem', right: '-4%', opacity: 0.06, filter: 'grayscale(1) brightness(2.4)' }} />
+      <div className="relative w-full px-6 md:px-10 lg:px-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <SectionReveal direction="left">
             <div className="relative">

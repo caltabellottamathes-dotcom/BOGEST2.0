@@ -7,6 +7,8 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
 import { askHost, hostQuestion } from '@/lib/hostHint';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 export const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
   fr: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -141,8 +143,11 @@ export default function SeasonalSection() {
   };
 
   return (
-    <section id="suggesties" className="w-full py-14 md:py-20">
-      <div className="w-full px-6 md:px-10 lg:px-16">
+    <section id="suggesties" className="relative w-full py-14 md:py-20 overflow-hidden">
+      {/* Layered warm gradient + ghosted bull — recurring panel motif */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
+      <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '24rem', width: 'auto', top: '-3rem', right: '-5%', opacity: 0.06, filter: 'grayscale(1) brightness(2.4)' }} />
+      <div className="relative w-full px-6 md:px-10 lg:px-16">
         {/* Header */}
         <motion.div
           ref={ref}
