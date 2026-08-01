@@ -10,6 +10,7 @@ import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
+import MarkdownText from '@/components/digital-host/MarkdownText';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 import { usePanelShift } from '@/hooks/usePanelShift';
 
@@ -933,11 +934,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
       <LogoAvatar size="sm" online={false} isDark={isDark} />
       <div className="flex-1 min-w-0">
         <div className="px-4 py-3.5 rounded-2xl rounded-tl-md" style={{ background: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.035)', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.06)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
-          {content && (
-            <p className="font-body text-sm leading-relaxed whitespace-pre-line" style={{ color: isDark ? 'rgba(255,255,255,0.92)' : 'hsl(var(--foreground))' }}>
-              {content}
-            </p>
-          )}
+          {content && <MarkdownText content={content} isDark={isDark} />}
           {cards?.map((c, i) => <RecommendationCard key={i} item={c} isDark={isDark} />)}
           {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} url={p.url} />)}
           {instagrams?.map((p, i) => <InstagramCard key={i} post={p} />)}
@@ -1017,15 +1014,13 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   const isReturning = visitorMemory && visitorMemory.visits > 1;
 
   const videoRef = useRef(null);
-  const [videoReady, setVideoReady] = useState(false);
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
     el.muted = false;
     const p = el.play();
     if (p && typeof p.catch === 'function') p.catch(() => { el.muted = true; el.play(); });
-    const fallback = setTimeout(() => setVideoReady(true), 2200);
-    return () => { clearTimeout(fallback); try { videoRef.current?.pause(); } catch {} };
+    return () => { try { videoRef.current?.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1064,10 +1059,10 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={() => { pauseVideo(); onSkip(); }} />
-      <motion.div initial={{ opacity: 0, scale: 0.92, y: 24 }} animate={videoReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.92, y: 24 }} exit={{ opacity: 0, scale: 0.92, y: 24 }}
-        transition={{ duration: 0.5, ease: [0.55, 0, 1, 0.45] }}
+      <motion.div initial={{ opacity: 0, scale: 0.96, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
           style={{ maxWidth: 680, maxHeight: '88vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
@@ -1078,8 +1073,6 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline
-              onLoadedData={() => setVideoReady(true)}
-              onError={() => setVideoReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}
@@ -1171,6 +1164,7 @@ export default function DigitalHost() {
   const responsePendingRef = useRef(false);
   const makeGreetingRef = useRef(() => '');
   const inlineMediaRef = useRef({});
+  const dispatchedKeysRef = useRef(new Set());
   const proactiveTouchY = useRef(0);
   const proactiveSwiped = useRef(false);
 
@@ -1246,10 +1240,23 @@ export default function DigitalHost() {
   }, [phase, lang]);
 
   // Hide floating widgets (welcome video, ElevenLabs) while the entry pop-up
-  // is on screen so the blurred hero is the only thing behind it.
+  // is on screen. Widgets only reappear AFTER the popup's exit animation
+  // finishes, so the video card never shows mid-transition.
+  const prevPhaseRef = useRef('idle');
   useEffect(() => {
-    window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: phase === 'entry' } }));
-    document.body.classList.toggle('bogest-entry-active', phase === 'entry');
+    const prev = prevPhaseRef.current;
+    if (phase === 'entry') {
+      window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: true } }));
+      document.body.classList.add('bogest-entry-active');
+    } else if (prev === 'entry') {
+      document.body.classList.remove('bogest-entry-active');
+      const t = setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: false } }));
+      }, 340);
+      prevPhaseRef.current = phase;
+      return () => clearTimeout(t);
+    }
+    prevPhaseRef.current = phase;
   }, [phase]);
 
   // ─── Beeldbank photo handoff (from the ElevenLabs voice agent) ───────────────
@@ -1286,14 +1293,11 @@ export default function DigitalHost() {
   // Entry flow
   useEffect(() => {
     if (entryShownRef.current) return;
-    const t = setTimeout(() => { entryShownRef.current = true; setPhase('entry'); sounds.open(); }, 1200);
+    const t = setTimeout(() => { entryShownRef.current = true; setPhase('entry'); sounds.open(); }, 800);
     return () => clearTimeout(t);
   }, []);
 
-  // Hide the floating video card + ElevenLabs widget while the entry popup is open
-  useEffect(() => {
-    window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: phase === 'entry' } }));
-  }, [phase]);
+  // Popup visibility is handled in the consolidated effect above.
 
   // Proactive inactivity messages
   const scheduleProactive = () => {
@@ -1427,6 +1431,18 @@ export default function DigitalHost() {
         setIsLoading(false);
         sounds.receive();
       }
+      // Automatic, proactive navigation — when the agent emits UIACTION tags
+      // (openPage, scroll, highlight, openReservation, …) the host fires them
+      // immediately so the site responds while the reply is shown in the chat.
+      if (last?.role === 'assistant' && last?.uiActions?.length) {
+        const key = last._key;
+        if (key && !dispatchedKeysRef.current.has(key)) {
+          dispatchedKeysRef.current.add(key);
+          last.uiActions.forEach((a, i) => {
+            setTimeout(() => { try { dispatchUIAction(a); } catch {} }, 300 + i * 350);
+          });
+        }
+      }
       // Auto-fetch real archive/Instagram images for openGallery/displaySocialPosts
       // and resolve any [PHOTO:desc|loc] tags without a real url — all shown
       // inline, attached to the agent message and persisted by message key.
@@ -1457,9 +1473,9 @@ export default function DigitalHost() {
     setIsLoading(true);
     responsePendingRef.current = true;
 
-    // The digital host presents navigation as action buttons in the chat —
-    // it does not auto-open panels/pages. (Only the text host; the ElevenLabs
-    // voice widget still drives the site itself.)
+    // The digital host auto-navigates the site from the UIACTION tags the agent
+    // emits in its reply (see the subscription handler above). Action buttons
+    // remain in the chat so the visitor can re-trigger a navigation manually.
 
     // Show greeting locally if no conversation yet and no messages
     if (!conversationRef.current && messages.length === 0) {
@@ -1529,7 +1545,7 @@ export default function DigitalHost() {
     background: 'rgba(255,255,255,0.08)',
     backdropFilter: 'blur(40px) saturate(160%)',
     WebkitBackdropFilter: 'blur(40px) saturate(160%)',
-    border: '1px solid rgba(255,255,255,0.16)',
+    border: isDark ? '1px solid rgba(255,255,255,0.14)' : '1px solid hsl(78 35% 28% / 0.25)',
   };
 
   return (
@@ -1687,13 +1703,13 @@ export default function DigitalHost() {
             {/* Mobile backdrop */}
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
+              transition={{ duration: 0.2 }}
               className="fixed inset-0 z-[79] bg-black/40 backdrop-blur-sm sm:hidden"
               onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } setPhase('minimized'); }}
             />
             <motion.div
-              initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: 24 }}
-              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: 16 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               className="fixed z-[80] flex flex-col overflow-hidden
                 /* Mobile: full-width bottom sheet, fixed height so keyboard pushes content up naturally */
                 bottom-0 left-0 right-0 rounded-t-[24px]
@@ -1707,7 +1723,7 @@ export default function DigitalHost() {
                 bottom: kbOffset > 0 ? `${kbOffset}px` : undefined,
                 height: kbOffset > 0 ? `${Math.min((typeof window !== 'undefined' && window.visualViewport?.height || 520) * 0.85, 500)}px` : 'min(72dvh, 520px)',
                 /* Tablet+ override */
-                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '24px', right: '96px' } : {}),
+                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '56px', right: '96px' } : {}),
                 boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >

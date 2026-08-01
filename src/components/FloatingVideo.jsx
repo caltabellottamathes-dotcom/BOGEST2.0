@@ -20,7 +20,8 @@ export default function FloatingVideo() {
   const [active, setActive] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [hidden, setHidden] = useState(() => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
+  const [hidden, setHidden] = useState(true);
+  const [revealed, setRevealed] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const shift = usePanelShift();
 
@@ -41,6 +42,13 @@ export default function FloatingVideo() {
     window.addEventListener('bogest:popup-visibility', handler);
     return () => window.removeEventListener('bogest:popup-visibility', handler);
   }, []);
+
+  // Fade/scale the card in smoothly once it's allowed to show.
+  useEffect(() => {
+    if (hidden) { setRevealed(false); return; }
+    const t = setTimeout(() => setRevealed(true), 20);
+    return () => clearTimeout(t);
+  }, [hidden]);
 
   // Occasionally pulse a gold border on the closed card, like the host button.
   useEffect(() => {
@@ -99,7 +107,8 @@ export default function FloatingVideo() {
           height: base,
           transformOrigin: 'bottom right',
           transform: `scale(${scale})`,
-          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease',
+          transition: 'transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease, border-color 0.4s ease, opacity 0.45s ease',
+          opacity: revealed ? 1 : 0,
           pointerEvents: 'auto',
           border: (!active && blinking) ? '1.5px solid hsl(var(--primary))' : '1.5px solid transparent',
           boxShadow: (!active && blinking)
