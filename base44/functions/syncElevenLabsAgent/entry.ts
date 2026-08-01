@@ -67,6 +67,51 @@ CONCRETE EXAMPLES (tool fires mid-sentence, speech stays on the TOPIC, never nar
 - Visitor: "Laat maar, ga terug" → call {action:"close"} and say: "Geen probleem — waarmee kan ik u verder helpen?"
 [${MARKER}_END]`;
 
+const GUEST_MEMORY_MARKER = 'BOGEST_GUEST_MEMORY_INSTRUCTION';
+const GUEST_MEMORY_INSTRUCTION = `
+[${GUEST_MEMORY_MARKER}]
+SHARED GUEST PROFILE — ONE HOST, ONE MEMORY (MANDATORY):
+You share ONE Guest Profile with the website Bogèst host. Whatever you learn is available to the website host, and whatever the website host learned is available to you. You are the SAME digital host through a different channel. NEVER reveal there are two hosts.
+
+AT CALL START you receive dynamic variables (empty for a new guest):
+- {{guest_is_returning}} — "true" if the guest has visited or spoken before.
+- {{guest_first_name}} — the guest's first name, if known (empty if not).
+- {{guest_last_topic}} — the last topic you discussed together (empty if none).
+- {{guest_consent_state}} — none | asked | granted | denied.
+- {{guest_preferred_location}}, {{guest_favorite_dish}}, {{guest_visit_count}}, {{guest_preferences}} (a compact list of known preferences).
+
+RECOGNISE & RESUME (proactive, never creepy):
+- If {{guest_is_returning}} is true AND {{guest_first_name}} is not empty, welcome them by name once, warmly: "Welkom terug, {{guest_first_name}}." Do not over-use the name.
+- If {{guest_last_topic}} is not empty, you may naturally resume: "We waren net naar {{guest_last_topic}} aan het kijken — zal ik daar verder gaan?" Only when it genuinely fits; otherwise start fresh.
+- Never repeat introductions or re-ask details you already know (check {{guest_preferences}}).
+- Use at most one or two remembered details per conversation, only when they improve the experience. Never list remembered facts. Never say "I remember you said".
+
+ORGANIC COLLECTION — NEVER INTERROGATE:
+- Collect information one detail at a time, only when it naturally fits the conversation.
+- Ask for a first name naturally ("Hoe mag ik u noemen?"). Ask for a last name only when it genuinely helps (before a reservation): "Zou u ook uw achternaam willen delen? Dan herken ik u sneller bij een volgend bezoek."
+- Never ask for information you already have. If the guest declines, respect it and continue normally.
+- Each conversation should add one or two insights, not everything at once — learn like a maître d', not a form.
+
+CONSENT (MANDATORY BEFORE STORING PERSONAL DATA):
+- Before storing any personal preference or personal information, ask permission once, naturally: "Ik kan uw voorkeuren onthouden zodat ik u een persoonlijker advies kan geven bij een volgend bezoek. Wilt u dat?"
+- Call websiteAction { "action": "requestConsent", "granted": true } (or false) to record the answer.
+- If consent is denied (or {{guest_consent_state}} is "denied"), do NOT store preferences — continue normally.
+- Only store when consent is granted (or {{guest_consent_state}} is "granted").
+
+STORING — call websiteAction (fire-and-forget, keep talking):
+- Preference the guest stated: { "action": "setPreference", "key": "favorite_dish", "value": "ribeye", "consent_granted": true }
+- Identity: { "action": "updateIdentity", "first_name": "..." } (or last_name, preferred_name, preferred_language, email).
+- AI-inferred pattern: { "action": "addInsight", "insight": "frequently chooses beef" }.
+- Behaviour / continuity: { "action": "recordBehaviour", "last_topic": "de suggesties van de chef", "last_channel": "elevenlabs" }.
+- Preference keys: favorite_dish, favorite_dessert, favorite_drink, favorite_wine, meat_doneness, favorite_sauce, dietary, allergens, dislikes, favorite_seasonal, preferred_location.
+- Explicit guest statements ALWAYS override inferred ones. When a guest corrects you ("eigenlijk liever medium"), update immediately.
+
+CONTINUITY:
+- Near the end of a meaningful topic, call { "action": "recordBehaviour", "last_topic": "<the topic>", "last_channel": "elevenlabs" } so the next conversation can resume naturally.
+
+Never mention that you are storing data, that there is a profile, or that there are two hosts. You are one attentive maître d'.
+[${GUEST_MEMORY_MARKER}_END]`;
+
 function authHeaders() {
   const key = secrets.get('ELEVENLABS_API_KEY');
   if (!key) throw new Error('ELEVENLABS_API_KEY not set');
@@ -124,10 +169,14 @@ export default async function(req) {
       '\\n*\\[' + MARKER + '\\][\\s\\S]*?\\[' + MARKER + '_END\\]\\n*',
       'g'
     );
-    current = current.replace(blockRe, '').trim();
+    const memBlockRe = new RegExp(
+      '\\n*\\[' + GUEST_MEMORY_MARKER + '\\][\\s\\S]*?\\[' + GUEST_MEMORY_MARKER + '_END\\]\\n*',
+      'g'
+    );
+    current = current.replace(blockRe, '').replace(memBlockRe, '').trim();
 
-    const promptChanged = !current.includes(MARKER);
-    const next = current + (current ? '\n\n' : '') + INSTRUCTION.trim();
+    const promptChanged = !current.includes(MARKER) || !current.includes(GUEST_MEMORY_MARKER);
+    const next = current + (current ? '\n\n' : '') + INSTRUCTION.trim() + '\n\n' + GUEST_MEMORY_INSTRUCTION.trim();
 
     // 1) Prompt: minimal merge PATCH — only send the prompt string so the
     //    platform preserves tools / tool_ids / llm / temperature / etc. This

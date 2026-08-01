@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { base44 } from '@/api/base44Client';
 // Ensures all website actions are registered and window.websiteAction is set.
 import '@/lib/websiteActions';
 import { minimizeElevenLabsWidget } from '@/lib/elevenLabsWidget';
@@ -7,17 +8,34 @@ import {
   startWebsiteSyncEngine,
 } from '@/lib/websiteSyncEngine';
 
+// Shared, persistent visitor id — the SAME id the website Digital Host uses,
+// so both hosts read/write the same Guest Profile through memoryTools.
+function getVisitorId() {
+  try {
+    let id = localStorage.getItem('bogest-visitor-id');
+    if (!id) {
+      id = 'v_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+      localStorage.setItem('bogest-visitor-id', id);
+    }
+    return id;
+  } catch {
+    return 'v_anon_' + Date.now().toString(36);
+  }
+}
+
+// websiteAction actions that route to the shared Guest Profile (memoryTools)
+// instead of the website navigation engine. Fire-and-forget writes — the
+// voice host keeps talking while the profile is updated in the background.
+const MEMORY_ACTIONS = new Set([
+  'requestConsent', 'setPreference', 'updateIdentity',
+  'addInsight', 'recordBehaviour', 'forget', 'getGuestProfile',
+]);
+
 /**
- * ElevenLabs Conversational AI Widget — rebuilt around a single, reliable
- * trigger: the agent calls the "websiteAction" CLIENT TOOL the instant it
- * touches a topic. The tool is fire-and-forget (expects_response: false on
- * the ElevenLabs tool config), so the host keeps talking while the page
- * navigates / scrolls / highlights silently in the background.
- *
- * There is NO transcript listening. The earlier onMessage-based proactivity
- * fought the tool path and was unreliable on the embed widget (especially
- * mobile) — it has been removed. Proactivity now comes from the agent's own
- * tool call, driven by its system prompt.
+ * ElevenLabs Conversational AI Widget. At call start it injects the shared
+ * Guest Profile as dynamic variables (so the voice host recognises returning
+ * guests and resumes context), and routes memory writes through the same
+ * memoryTools API the website host uses — one guest, one profile, one memory.
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
@@ -32,8 +50,6 @@ export default function ElevenLabsAgent() {
   }, []);
 
   useEffect(() => {
-    // Inject the widget embed script once — deferred until the browser is idle
-    // so the external fetch never blocks the site's first paint.
     const injectScript = () => {
       if (document.querySelector('script[data-elevenlabs-loaded="true"]')) return;
       const script = document.createElement('script');
@@ -52,22 +68,49 @@ export default function ElevenLabsAgent() {
     const el = widgetRef.current;
     if (!el) return;
 
-    // "call" fires when a conversation is about to start. We hook the
-    // conversation config to register the websiteAction client tool and reset
-    // the sync dedup state for the fresh conversation.
-    const onCall = (event) => {
+    const onCall = async (event) => {
       if (!event?.detail?.config) return;
       startWebsiteSyncEngine();
       const cfg = event.detail.config;
 
+      // Inject the shared Guest Profile as dynamic variables so the voice host
+      // recognises returning guests and resumes context.
+      try {
+        const visitorId = getVisitorId();
+        const res = await base44.functions.invoke('memoryTools', { action: 'getGuestProfile', visitor_id: visitorId });
+        const p = res?.data?.profile || {};
+        const prefs = res?.data?.preferences || [];
+        cfg.dynamic_variables = {
+          guest_first_name: p.first_name || p.preferred_name || '',
+          guest_is_returning: res?.data?.is_returning ? 'true' : 'false',
+          guest_last_topic: p.last_topic || '',
+          guest_last_channel: p.last_channel || '',
+          guest_consent_state: p.consent_state || 'none',
+          guest_preferred_location: p.preferred_location || '',
+          guest_favorite_dish: p.favorite_dish || '',
+          guest_visit_count: String(p.visit_count || 0),
+          guest_preferences: prefs.map((x) => `${x.key}=${x.value}`).slice(0, 15).join('|'),
+          guest_visitor_id: visitorId,
+        };
+      } catch { /* fail silently — voice host still works without persistence */ }
+
       cfg.clientTools = {
         websiteAction: async (params = {}) => {
+          const a = String(params.action || 'go').toLowerCase();
+
+          // Memory actions → shared Guest Profile (memoryTools). Fire-and-forget;
+          // never collapse the widget for these.
+          if (MEMORY_ACTIONS.has(a)) {
+            try {
+              const r = await base44.functions.invoke('memoryTools', { ...params, visitor_id: getVisitorId() });
+              return r?.data || { ok: true };
+            } catch {
+              return { ok: false };
+            }
+          }
+
           const result = await handleWebsiteActionToolCall(params);
-          // After a content action succeeds, collapse the widget so the
-          // visitor sees what just opened. The agent keeps speaking while
-          // minimized. Skip for actions that don't take the visitor anywhere.
           if (result?.success) {
-            const a = String(params.action || 'go').toLowerCase();
             if (a !== 'close' && a !== 'search' && a !== 'showbeeldbankphoto' && a !== 'showphoto') {
               setTimeout(() => {
                 try { minimizeElevenLabsWidget(); } catch { /* ignore */ }

@@ -4,11 +4,23 @@
   "properties": {
     "visitor_id": {
       "type": "string",
-      "description": "Anonymous browser-local unique ID (generated client-side)"
+      "description": "Anonymous browser-local unique ID \u2014 shared across all AI hosts (website + voice)"
     },
-    "name": {
+    "first_name": {
       "type": "string",
-      "description": "Visitor's first name, if shared during conversation"
+      "description": "Guest's first name, if shared during conversation"
+    },
+    "last_name": {
+      "type": "string",
+      "description": "Guest's last name, if shared (usually only when relevant, e.g. before a reservation)"
+    },
+    "preferred_name": {
+      "type": "string",
+      "description": "How the guest prefers to be addressed"
+    },
+    "preferred_language": {
+      "type": "string",
+      "description": "Preferred conversation language (nl|fr|en)"
     },
     "email": {
       "type": "string",
@@ -23,6 +35,14 @@
       ],
       "description": "Preferred restaurant location"
     },
+    "preferred_time": {
+      "type": "string",
+      "description": "Preferred visiting time (e.g. weekend evenings, Sunday lunch)"
+    },
+    "typical_party_size": {
+      "type": "number",
+      "description": "Typical party size"
+    },
     "favorite_dish": {
       "type": "string",
       "description": "Mentioned favorite dish or category"
@@ -30,6 +50,22 @@
     "allergies": {
       "type": "string",
       "description": "Known allergies or dietary restrictions"
+    },
+    "consent_state": {
+      "type": "string",
+      "enum": [
+        "none",
+        "asked",
+        "granted",
+        "denied"
+      ],
+      "default": "none",
+      "description": "Personalisation consent state \u2014 no preferences stored until 'granted'"
+    },
+    "consent_asked_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When consent was last asked"
     },
     "visit_count": {
       "type": "number",
@@ -51,9 +87,64 @@
       "format": "date-time",
       "description": "Last conversation timestamp"
     },
+    "last_channel": {
+      "type": "string",
+      "description": "Which host the guest last spoke to (base44|elevenlabs)"
+    },
+    "last_topic": {
+      "type": "string",
+      "description": "Last topic discussed \u2014 used for conversation continuity on the next interaction"
+    },
+    "reservation_history": {
+      "type": "array",
+      "description": "Recent reservations",
+      "items": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "guests": {
+            "type": "number"
+          },
+          "at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "ai_insights": {
+      "type": "array",
+      "description": "AI-inferred preferences with confidence \u2014 editable, auto-updated as behaviour repeats",
+      "items": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number"
+          },
+          "source": {
+            "type": "string"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
     "notes": {
       "type": "string",
-      "description": "Free-form notes extracted from conversations"
+      "description": "Short hospitality notes (birthdays, anniversary, bringing children/dog, favourite table, accessibility needs)"
     }
   },
   "required": [

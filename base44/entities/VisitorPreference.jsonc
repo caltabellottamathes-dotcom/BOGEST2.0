@@ -8,7 +8,7 @@
     },
     "key": {
       "type": "string",
-      "description": "Preference key, e.g. favorite_dish, preferred_location, dietary, allergens"
+      "description": "Preference key, e.g. favorite_dish, favorite_dessert, favorite_drink, favorite_wine, meat_doneness, favorite_sauce, dietary, allergens, dislikes, favorite_seasonal"
     },
     "value": {
       "type": "string",
@@ -22,12 +22,31 @@
         "marketing",
         "reservations"
       ],
-      "description": "Consent category governing storage of this field (Section 9.3)"
+      "description": "Consent category governing storage of this field"
     },
     "consent_granted": {
       "type": "boolean",
       "default": false,
       "description": "Whether the visitor opted in to storing this preference category"
+    },
+    "inferred": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if AI-inferred from behaviour; false if the guest stated it explicitly. Explicit always overrides inferred."
+    },
+    "confidence": {
+      "type": "number",
+      "default": 1,
+      "description": "0-1 confidence. Explicit guest statements = 1; inferred grows with repetition up to 0.95"
+    },
+    "times_observed": {
+      "type": "number",
+      "default": 1,
+      "description": "How many times this preference was observed or stated"
+    },
+    "source_channel": {
+      "type": "string",
+      "description": "Which host captured it (base44|elevenlabs)"
     },
     "retention_until": {
       "type": "string",
@@ -36,7 +55,7 @@
     },
     "source": {
       "type": "string",
-      "description": "Where the preference was captured (chat, popup, settings)"
+      "description": "Where the preference was captured (chat, voice, popup, settings)"
     }
   },
   "required": [
