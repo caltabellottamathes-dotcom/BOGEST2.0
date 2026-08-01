@@ -6,11 +6,13 @@ import { getLocations } from '@/lib/data';
 import ReservationPanel from '@/components/reserve/ReservationPanel';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
+import { useSiteImages } from '@/lib/SiteImageContext';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
 export default function Reserve() {
   const { t, lang } = useLang();
+  const { siteImg } = useSiteImages();
   const LOCATIONS_DATA = getLocations(lang);
   const [selected, setSelected] = useState(null);
 
@@ -60,7 +62,7 @@ export default function Reserve() {
                     className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl text-left ${isActive ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}
                   >
                     <div className="relative h-32 md:h-36 overflow-hidden">
-                      <img src={loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                      <img src={siteImg('location.' + loc.slug) || loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
                       <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.78) 0%, rgba(26,24,20,0.1) 60%)' }} />
                       <span className="absolute left-4 top-3 font-heading font-bold text-white/35 text-2xl leading-none select-none">{loc.number}</span>
                       <h4 className="absolute left-4 right-4 bottom-3 font-heading text-base md:text-lg font-bold text-white">{loc.name}<span className="text-primary">.</span></h4>

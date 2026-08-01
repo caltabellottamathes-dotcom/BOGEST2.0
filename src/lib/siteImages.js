@@ -15,6 +15,8 @@ export const SITE_PAGES = [
   { key: 'spaces', label: 'Restaurant & ruimtes' },
   { key: 'groups', label: 'Groepen & events' },
   { key: 'about', label: 'Over ons' },
+  { key: 'onzefilosofie', label: 'Onze filosofie' },
+  { key: 'instagram', label: 'Instagram' },
   { key: 'onsverhaal', label: 'Ons verhaal' },
   { key: 'contact', label: 'Contact' },
   { key: 'reserve', label: 'Reserveren' },
@@ -27,11 +29,11 @@ export const SITE_IMAGE_POSITIONS = [
   // ── Home ────────────────────────────────────────────────────────────────
   { key: 'hero', label: 'Hero achtergrond', pages: ['home'], default: 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg' },
   { key: 'story', label: 'Ons verhaal — interieur', pages: ['home'], default: `${SQ}/1756906798133-O44CER8WRTZ0YVM5E8TK/living.jpeg` },
-  { key: 'philosophy.0', label: 'Filosofie 01 — Onze Formule', pages: ['home'], default: `${SQ}/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg` },
-  { key: 'philosophy.1', label: 'Filosofie 02 — Vleesambacht', pages: ['home'], default: `${SQ}/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg` },
-  { key: 'philosophy.2', label: 'Filosofie 03 — Kip, Vis & Veggie', pages: ['home'], default: `${SQ}/426ec0ed-f1b6-4eb0-90d5-ad7cea634e7c/7B0C379C-A65C-400B-83D7-C140E27E6ABF_1_201_a.jpeg` },
-  { key: 'philosophy.3', label: 'Filosofie 04 — Onze Wijnen', pages: ['home'], default: `${SQ}/1756906798027-ZPXKAMZNVCSV6440QX6W/402597853_796945305777335_8211882432551808857_n.jpg` },
-  { key: 'philosophy.4', label: 'Filosofie 05 — De Sfeer', pages: ['home'], default: `${SQ}/1756906798126-DFOS1XY5Y0NOWCQVE23M/96368874_542981379699687_4859956873555607552_n.jpg` },
+  { key: 'philosophy.0', label: 'Filosofie 01 — Onze Formule', pages: ['home', 'onzefilosofie'], default: `${SQ}/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg` },
+  { key: 'philosophy.1', label: 'Filosofie 02 — Vleesambacht', pages: ['home', 'onzefilosofie'], default: `${SQ}/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg` },
+  { key: 'philosophy.2', label: 'Filosofie 03 — Kip, Vis & Veggie', pages: ['home', 'onzefilosofie'], default: `${SQ}/426ec0ed-f1b6-4eb0-90d5-ad7cea634e7c/7B0C379C-A65C-400B-83D7-C140E27E6ABF_1_201_a.jpeg` },
+  { key: 'philosophy.3', label: 'Filosofie 04 — Onze Wijnen', pages: ['home', 'onzefilosofie'], default: `${SQ}/1756906798027-ZPXKAMZNVCSV6440QX6W/402597853_796945305777335_8211882432551808857_n.jpg` },
+  { key: 'philosophy.4', label: 'Filosofie 05 — De Sfeer', pages: ['home', 'onzefilosofie'], default: `${SQ}/1756906798126-DFOS1XY5Y0NOWCQVE23M/96368874_542981379699687_4859956873555607552_n.jpg` },
   { key: 'seasonal.0', label: 'Seizoensuggestie 1 — Kabeljauw', pages: ['home'], default: 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/e9ee6ba3f_Cod_with_white_asparagus_dish_202607211718.jpg' },
   { key: 'seasonal.1', label: 'Seizoenssuggestie 2 — Poulet Noir', pages: ['home'], default: 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/46bf2cc7f_Poulet_Noir_Asperges_dish_photo_202607211720.jpg' },
   { key: 'seasonal.2', label: 'Seizoenssuggestie 3 — Asperges Vlaamse wijze', pages: ['home'], default: 'https://media.base44.com/images/public/6a2318ef2d33f7eb2ee9283c/882b3ba9c_Asparagus_Flemish_style_logo_2K_202607211720.jpg' },
@@ -84,6 +86,17 @@ export const SITE_IMAGE_POSITIONS = [
   { key: 'takeaway.hero', label: 'Afhalen — hero', pages: ['takeaway'], default: `${SQ}/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg` },
   { key: 'giftcards.hero', label: 'Cadeaubonnen — hero', pages: ['giftcards'], default: `${SQ}/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg` },
   { key: 'jobs.hero', label: 'Vacatures — hero', pages: ['jobs'], default: `${SQ}/1756906802744-PRS75L0LKF5TIBCFBON6/koelcel.jpg` },
+
+  // ── Onze filosofie (/about/onze-filosofie) ────────────────────────────────
+  { key: 'philosophy.hero', label: 'Onze filosofie — hero', pages: ['onzefilosofie'], default: `${SQ}/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg` },
+
+  // ── Instagram / Achter de schermen (/about/instagram) ────────────────────
+  { key: 'instagram.hero', label: 'Instagram — hero', pages: ['instagram'], default: `${SQ}/1756906819071-DNNEJIY9OY0UDSFSMKYI/IMG_4186.jpg` },
+
+  // ── Cadeaubonnen — highlights (GiftCardsHighlights) ───────────────────────
+  { key: 'giftcards.highlight.0', label: 'Cadeaubonnen — highlight 1', pages: ['giftcards'], default: `${SQ}/1756906792564-LXWK1DRHFSE5N4CODE8U/cadeaubon.jpeg` },
+  { key: 'giftcards.highlight.1', label: 'Cadeaubonnen — highlight 2', pages: ['giftcards'], default: `${SQ}/1b9991fd-fc43-405b-acb6-a86317aaf9f1/5757bb8f-abdc-43e6-9219-e4e103f1a2e0.jpeg` },
+  { key: 'giftcards.highlight.2', label: 'Cadeaubonnen — highlight 3', pages: ['giftcards'], default: `${SQ}/b7c2edca-9db5-43c2-b109-4cc33197dfbe/veranda+hasselt.jpeg` },
 ];
 
 export const SITE_IMAGE_DEFAULTS = Object.fromEntries(

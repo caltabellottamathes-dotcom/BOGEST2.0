@@ -39,6 +39,7 @@ export default function Instagram() {
         title="Achter de schermen"
         titleAccent="Bogèst"
         subtitle="Een blik achter de schermen — sfeerbeelden, gerechten en momenten, live vanuit onze account."
+        positionKey="instagram.hero"
         bgImage={HERO_FALLBACK}
       />
 
