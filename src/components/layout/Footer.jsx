@@ -4,20 +4,29 @@ import { motion } from 'framer-motion';
 import { MapPin, Phone, ArrowUpRight, X } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useLang } from '@/lib/LangContext';
+import { LANGUAGES } from '@/lib/i18n';
 import { useTheme } from '@/lib/ThemeContext';
 import { getLocations } from '@/lib/data';
 
 // Brand logo is now the BogestLogo text wordmark
 
 export default function Footer() {
-  const { t, lang } = useLang();
+  const { t, lang, changeLang } = useLang();
   const { theme } = useTheme();
   const LOCATIONS_DATA = getLocations(lang);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const [pinned, setPinned] = useState(false);
+
+  useEffect(() => {
+    const openFooter = () => { setPinned(true); setVisible(true); setDismissed(false); };
+    window.addEventListener('bogest:open-footer', openFooter);
+    return () => window.removeEventListener('bogest:open-footer', openFooter);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
+      if (pinned) return;
       const isHomePage = window.location.pathname === '/';
       if (!isHomePage) { setVisible(false); return; }
 
@@ -37,7 +46,7 @@ export default function Footer() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [dismissed]);
+  }, [dismissed, pinned]);
 
   // After a manual close, the footer can be brought back by swiping up from
   // the bottom part of the page (mobile).
@@ -64,6 +73,8 @@ export default function Footer() {
     };
   }, []);
 
+  const closeFooter = () => { setVisible(false); setPinned(false); setDismissed(true); };
+
   const quickLinks = [
     { label: t('nav_menu'), path: '/menu' },
     { label: t('nav_reserve'), path: '/reserve' },
@@ -85,7 +96,7 @@ export default function Footer() {
       initial={{ y: '100%' }}
       animate={{ y: visible ? 0 : '100%' }}
       transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="fixed bottom-0 left-0 right-0 z-40 flex flex-col"
+      className="fixed bottom-0 left-0 right-0 z-[90] flex flex-col"
       style={{
         background: theme === 'light' ? 'hsl(var(--background) / 0.30)' : 'rgba(255,255,255,0.06)',
         backdropFilter: 'blur(24px) saturate(150%)',
@@ -99,7 +110,7 @@ export default function Footer() {
     >
       {/* Close button */}
       <button
-        onClick={() => { setVisible(false); setDismissed(true); }}
+        onClick={closeFooter}
         className="absolute top-4 right-5 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-200 bg-black/[0.06] border border-black/10 hover:bg-black/10 dark:bg-white/[0.07] dark:border-white/10 z-10"
       >
         <X className="w-3.5 h-3.5 text-foreground/40" />
@@ -132,7 +143,7 @@ export default function Footer() {
             <h4 className="font-body text-[10px] tracking-[0.25em] uppercase text-primary mb-2">{t('footer_quick_links')}</h4>
             <div className="flex flex-col gap-1.5">
               {quickLinks.map(link => (
-                <Link key={link.path} to={link.path}
+                <Link key={link.path} to={link.path} onClick={closeFooter}
                   className="group inline-flex items-center gap-1 font-body text-sm text-foreground/60 hover:text-primary transition-colors duration-300">
                   {link.label}
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -146,7 +157,7 @@ export default function Footer() {
             <h4 className="font-body text-[10px] tracking-[0.25em] uppercase text-primary mb-2">{t('footer_legal')}</h4>
             <div className="flex flex-col gap-1.5">
               {legalLinks.map(link => (
-                <Link key={link.path} to={link.path}
+                <Link key={link.path} to={link.path} onClick={closeFooter}
                   className="group inline-flex items-center gap-1 font-body text-sm text-foreground/60 hover:text-primary transition-colors duration-300">
                   {link.label}
                   <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -160,7 +171,7 @@ export default function Footer() {
             <h4 className="font-body text-[10px] tracking-[0.25em] uppercase text-primary mb-2">{t('nav_locations')}</h4>
             <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-3">
               {LOCATIONS_DATA.map(loc => (
-                <Link key={loc.slug} to={loc.phone ? `/locations/${loc.slug}` : '#'}
+                <Link key={loc.slug} to={loc.phone ? `/locations/${loc.slug}` : '#'} onClick={closeFooter}
                   className={`group ${!loc.phone ? 'cursor-default' : ''}`}>
                   <h5 className="font-heading text-sm font-semibold text-foreground mb-1 group-hover:text-primary transition-colors duration-300">
                     {loc.city}
@@ -184,6 +195,23 @@ export default function Footer() {
               ))}
             </div>
           </div>
+        </div>
+
+        <div className="md:hidden flex items-center justify-center gap-3 mb-4">
+          {LANGUAGES.map(l => (
+            <button
+              key={l.code}
+              onClick={() => changeLang(l.code)}
+              className="font-body text-[10px] tracking-widest uppercase px-3.5 py-1.5 rounded-full transition-colors duration-300"
+              style={{
+                color: lang === l.code ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
+                border: lang === l.code ? '1px solid hsl(var(--primary) / 0.55)' : '1px solid hsl(var(--border))',
+                background: lang === l.code ? 'hsl(var(--primary) / 0.10)' : 'transparent',
+              }}
+            >
+              {l.code}
+            </button>
+          ))}
         </div>
 
         <div className="border-t border-border/40 pt-4 flex flex-col md:flex-row items-center justify-between gap-3">

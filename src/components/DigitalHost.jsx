@@ -11,6 +11,7 @@ import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import MarkdownText from '@/components/digital-host/MarkdownText';
+import ChatKeyboard from '@/components/digital-host/ChatKeyboard';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 import { usePanelShift } from '@/hooks/usePanelShift';
 
@@ -1344,19 +1345,19 @@ export default function DigitalHost() {
   }, [phase]);
 
   useEffect(() => { messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, isLoading]);
-  useEffect(() => { if (phase === 'chat') setTimeout(() => inputRef.current?.focus(), 350); }, [phase]);
+  useEffect(() => { if (phase === 'chat' && !isMobile) setTimeout(() => inputRef.current?.focus(), 350); }, [phase]);
 
-  // Track mobile keyboard via Visual Viewport API
-  const [kbOffset, setKbOffset] = useState(0);
+  // Custom on-screen keyboard (mobile) — blocks the native keyboard so the
+  // chat keeps its design. The chat panel lifts to sit above it when open.
+  const [customKbOpen, setCustomKbOpen] = useState(false);
+  const [kbHeight, setKbHeight] = useState(232);
+  useEffect(() => { if (phase !== 'chat') setCustomKbOpen(false); }, [phase]);
+  // Opening the mobile menu (footer) closes the chat so the menu is unobstructed.
   useEffect(() => {
-    if (typeof window === 'undefined' || !window.visualViewport) return;
-    const vv = window.visualViewport;
-    const update = () => setKbOffset(Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
-    update();
-    vv.addEventListener('resize', update);
-    vv.addEventListener('scroll', update);
-    return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
-  }, []);
+    const handler = () => { if (phase === 'chat') setPhase('minimized'); };
+    window.addEventListener('bogest:open-footer', handler);
+    return () => window.removeEventListener('bogest:open-footer', handler);
+  }, [phase]);
 
   // Reset conversation history when language changes
   useEffect(() => {
@@ -1439,7 +1440,7 @@ export default function DigitalHost() {
         if (key && !dispatchedKeysRef.current.has(key)) {
           dispatchedKeysRef.current.add(key);
           last.uiActions.forEach((a, i) => {
-            setTimeout(() => { try { dispatchUIAction(a); } catch {} }, 300 + i * 350);
+            setTimeout(() => { try { dispatchUIAction(a); } catch {} }, 100 + i * 140);
           });
         }
       }
@@ -1652,7 +1653,7 @@ export default function DigitalHost() {
               onClick={() => openChat()}
               onMouseEnter={() => setFabExpanded(true)}
               onMouseLeave={() => setFabExpanded(false)}
-              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
+              className="fixed top-20 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
               style={{
                 /* Circle: 56px mobile, 64px desktop. Pill when expanded */
                 width: fabExpanded ? 'auto' : undefined,
@@ -1719,11 +1720,11 @@ export default function DigitalHost() {
                 md:w-[480px] md:h-[640px]"
               style={{
                 ...glassStyle,
-                /* Mobile: move panel up when keyboard opens, shrink to fit visible area */
-                bottom: kbOffset > 0 ? `${kbOffset}px` : undefined,
-                height: kbOffset > 0 ? `${Math.min((typeof window !== 'undefined' && window.visualViewport?.height || 520) * 0.85, 500)}px` : 'min(72dvh, 520px)',
-                /* Tablet+ override */
-                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '56px', right: '96px' } : {}),
+                /* Mobile: rest at the bottom; lift above the custom keyboard when open */
+                bottom: customKbOpen ? `${kbHeight}px` : '0px',
+                height: customKbOpen ? 'min(56dvh, 420px)' : 'min(72dvh, 560px)',
+                /* Tablet+ override: floating panel raised to clear the ElevenLabs orb */
+                ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '80px', right: '96px' } : {}),
                 boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >
@@ -1783,6 +1784,10 @@ export default function DigitalHost() {
                   <input
                     ref={inputRef}
                     value={input}
+                    readOnly={isMobile}
+                    inputMode={isMobile ? 'none' : 'text'}
+                    onFocus={isMobile ? () => setCustomKbOpen(true) : undefined}
+                    onClick={isMobile ? () => setCustomKbOpen(true) : undefined}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
                     placeholder={s.placeholder}
@@ -1802,6 +1807,21 @@ export default function DigitalHost() {
                 </p>
               </div>
             </motion.div>
+            {isMobile && (
+              <AnimatePresence>
+                {customKbOpen && (
+                  <ChatKeyboard
+                    isDark={isDark}
+                    onHeight={setKbHeight}
+                    sendDisabled={!input.trim() || isLoading}
+                    onKey={(ch) => setInput((prev) => prev + ch)}
+                    onBackspace={() => setInput((prev) => prev.slice(0, -1))}
+                    onSend={() => sendMessage()}
+                    onClose={() => setCustomKbOpen(false)}
+                  />
+                )}
+              </AnimatePresence>
+            )}
           </>
         )}
       </AnimatePresence>

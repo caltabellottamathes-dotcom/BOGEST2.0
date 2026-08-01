@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ChevronDown, ArrowRight } from 'lucide-react';
+import { Menu, ChevronDown } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
@@ -174,82 +174,19 @@ export default function Navbar() {
 
             {/* Mobile menu button */}
               <button
-                onClick={() => setMobileOpen(!mobileOpen)}
+                onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
                 className={`lg:hidden p-2.5 rounded-xl transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-50 ${
                   isTransparent ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-secondary'
                 }`}
-                aria-label={mobileOpen ? 'Menu sluiten' : 'Menu openen'}
+                aria-label="Menu openen"
               >
-                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                <Menu className="w-5 h-5" />
               </button>
           </div>
         </nav>
       </motion.header>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-      {mobileOpen && (
-      <>
-      {/* Backdrop */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.3 }}
-        className="fixed inset-0 z-[59] bg-black/20 backdrop-blur-md"
-        onClick={() => setMobileOpen(false)}
-      />
-      <motion.div
-        initial={{ opacity: 0, x: '100%' }}
-        animate={{ opacity: 1, x: 0 }}
-        exit={{ opacity: 0, x: '100%' }}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed top-16 right-4 bottom-4 z-[61] w-72 sm:w-80 flex flex-col rounded-2xl overflow-hidden md:top-20"
-        style={{
-          background: theme === 'dark' ? 'rgba(10,10,10,0.45)' : 'rgba(255,255,255,0.15)',
-          backdropFilter: 'blur(32px)',
-          WebkitBackdropFilter: 'blur(32px)',
-          border: theme === 'dark' ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(255,255,255,0.25)',
-        }}
-      >
-        <nav className="flex-1 flex flex-col justify-start px-6 gap-0.5 overflow-y-auto py-6 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-          {navLinks.map((link, i) => (
-            <Link
-              key={link.path}
-              to={link.path}
-              onClick={() => setMobileOpen(false)}
-              className="block font-heading text-sm font-medium tracking-wider uppercase transition-colors duration-200 hover:text-primary py-2.5"
-              style={{ color: location.pathname === link.path ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.90)' : 'hsl(var(--foreground))') }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="px-6 pb-3">
-          <Link to="/reserve" onClick={() => setMobileOpen(false)}
-            className="flex items-center justify-center gap-2 w-full px-6 py-3.5 bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase rounded-full transition-all duration-300 hover:bg-primary/90">
-            {t('nav_reserve')}
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-        </div>
-
-        <div className="px-6 pb-6 flex items-center gap-3 border-t pt-4" style={{ borderColor: theme === 'dark' ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.12)' }}>
-          {LANGUAGES.map(l => (
-            <button
-              key={l.code}
-              onClick={() => { changeLang(l.code); }}
-              className="font-body text-xs tracking-widest uppercase transition-colors duration-300 py-1.5 px-2.5 min-h-[36px]"
-              style={{ color: lang === l.code ? 'hsl(var(--primary))' : (theme === 'light' ? 'rgba(255,255,255,0.6)' : 'hsl(var(--muted-foreground))'), fontWeight: lang === l.code ? 600 : 400 }}
-            >
-              {l.code}
-            </button>
-          ))}
-        </div>
-      </motion.div>
-      </>
-      )}
-      </AnimatePresence>
+      {/* Mobile menu is now the footer — opened via bogest:open-footer */}
     </>
   );
 }
