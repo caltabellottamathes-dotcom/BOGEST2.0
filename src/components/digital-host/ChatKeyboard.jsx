@@ -4,9 +4,8 @@ import { Delete, ChevronDown, ChevronUp, Send } from 'lucide-react';
 
 // A bespoke on-screen keyboard for the Digital Host chat on mobile. It blocks
 // the native phone keyboard (the input is readOnly) so the chat keeps its
-// glassmorphism design instead of being pushed around by the OS keyboard.
-// Layout: QWERTY letters, a numbers/symbols layer, shift, space, backspace and
-// a gold send key — styled to match the Bogèst chat panel.
+// glassmorphism design. Rendered as a floating, rounded blurry-glass panel
+// that slides up over the chat, matching the Bogèst panel language.
 
 const ROWS_LETTERS = [
   ['q','w','e','r','t','y','u','i','o','p'],
@@ -94,29 +93,34 @@ export default function ChatKeyboard({ isDark, onKey, onBackspace, onSend, onClo
     <motion.div
       ref={rootRef}
       initial={{ y: '100%' }} animate={{ y: 0 }} exit={{ y: '100%' }}
-      transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
       className="fixed bottom-0 left-0 right-0 z-[81] px-2 pt-2"
-      style={{
-        paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
-        background: isDark ? 'rgba(10,10,10,0.82)' : 'rgba(254,252,248,0.90)',
-        backdropFilter: 'blur(24px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-        borderTop: isDark ? '1px solid rgba(255,255,255,0.14)' : '1px solid hsl(78 35% 28% / 0.25)',
-        boxShadow: '0 -12px 40px rgba(0,0,0,0.35)',
-      }}
+      style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom))', pointerEvents: 'none' }}
     >
-      <div className="flex justify-end mb-1.5">
-        <button onClick={onClose} aria-label="Sluit toetsenbord" className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
-          style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)', color: keyColor }}>
-          <ChevronDown className="w-4 h-4" />
-        </button>
-      </div>
-      <div className="flex flex-col gap-1.5">
-        {rows.map((row, ri) => (
-          <div key={ri} className="flex gap-1.5">
-            {row.map((k, i) => renderKey(k, i))}
-          </div>
-        ))}
+      <div
+        className="rounded-[1.75rem] overflow-hidden"
+        style={{
+          pointerEvents: 'auto',
+          background: isDark ? 'rgba(10,10,10,0.74)' : 'rgba(254,252,248,0.82)',
+          backdropFilter: 'blur(28px) saturate(160%)',
+          WebkitBackdropFilter: 'blur(28px) saturate(160%)',
+          border: isDark ? '1px solid rgba(255,255,255,0.16)' : '1px solid hsl(78 35% 28% / 0.25)',
+          boxShadow: '0 -16px 50px rgba(0,0,0,0.40)',
+        }}
+      >
+        <div className="flex justify-end pt-1.5 pr-1.5 mb-1">
+          <button onClick={onClose} aria-label="Sluit toetsenbord" className="w-7 h-7 rounded-full flex items-center justify-center transition-colors"
+            style={{ background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)', color: keyColor }}>
+            <ChevronDown className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="flex flex-col gap-1.5 px-1.5 pb-2">
+          {rows.map((row, ri) => (
+            <div key={ri} className="flex gap-1.5">
+              {row.map((k, i) => renderKey(k, i))}
+            </div>
+          ))}
+        </div>
       </div>
     </motion.div>
   );

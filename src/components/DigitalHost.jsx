@@ -1230,9 +1230,6 @@ export default function DigitalHost() {
       const question = e?.detail?.question;
       if (question) { openChat(question); return; }
       sessionStorage.setItem('bogest-host-seen', '1');
-      const heroGreeting = makeGreetingRef.current();
-      greetingRef.current = heroGreeting;
-      setMessages([{ role: 'assistant', content: heroGreeting, actions: [] }]);
       sounds.open();
       setPhase('chat');
     };
@@ -1309,6 +1306,13 @@ export default function DigitalHost() {
     inactivityRef.current = setTimeout(() => {
       // Build a varied pool: fun facts + conversational invites + weather-aware messages
       const pool = [...(s.proactive_facts || []), ...(s.proactive_invites || [])];
+      // Personalised reminders (one copy each — selective, not every cycle) so
+      // returning guests feel recognised in the proactive bubbles.
+      const p = visitorProfile;
+      if (p?.name) pool.push({ msg: `Welkom terug, ${p.name}. Fijn u weer te zien — waarmee kan ik u vandaag helpen?`, actions: [] });
+      if (p?.favorite_dish) pool.push({ msg: `Zin in ${p.favorite_dish} weer? Ik kan meteen een tafel zoeken.`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
+      if (p?.preferred_location) pool.push({ msg: `Uw favoriete vestiging is ${DUTCH_LOC_LABEL[p.preferred_location] || p.preferred_location}. Zal ik daar een tafel zoeken?`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
+      if (p?.allergies) pool.push({ msg: `Voor de zekerheid: u gaf ooit aan dat u ${p.allergies} hebt — ik geef het graag door aan de keuken als u reserveert.`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
       const w = weatherRef.current;
       if (w) {
         const weatherMsg = pickWeatherProactive(s, w);
@@ -1352,6 +1356,12 @@ export default function DigitalHost() {
   const [customKbOpen, setCustomKbOpen] = useState(false);
   const [kbHeight, setKbHeight] = useState(232);
   useEffect(() => { if (phase !== 'chat') setCustomKbOpen(false); }, [phase]);
+  // Slide the ElevenLabs widget + welcome video off-screen while the mobile
+  // keyboard is open, and back in when it closes.
+  useEffect(() => {
+    document.body.classList.toggle('bogest-kb-open', customKbOpen);
+    window.dispatchEvent(new CustomEvent('bogest:keyboard-visibility', { detail: { open: customKbOpen } }));
+  }, [customKbOpen]);
   // Opening the mobile menu (footer) closes the chat so the menu is unobstructed.
   useEffect(() => {
     const handler = () => { if (phase === 'chat') setPhase('minimized'); };
@@ -1478,13 +1488,6 @@ export default function DigitalHost() {
     // emits in its reply (see the subscription handler above). Action buttons
     // remain in the chat so the visitor can re-trigger a navigation manually.
 
-    // Show greeting locally if no conversation yet and no messages
-    if (!conversationRef.current && messages.length === 0) {
-      const g = buildPersonalGreeting();
-      greetingRef.current = g;
-      setMessages([{ role: 'assistant', content: g, actions: [] }]);
-    }
-
     try {
       const conv = await ensureConversation();
       const profileStr = visitorProfile
@@ -1503,12 +1506,7 @@ export default function DigitalHost() {
   const openChat = (preload = null) => {
     setProactiveMsg(null);
     sessionStorage.setItem('bogest-host-seen', '1');
-    if (!preload && messages.length === 0) {
-      historyRef.current = [];
-      const g = buildPersonalGreeting();
-      greetingRef.current = g;
-      setMessages([{ role: 'assistant', content: g, actions: [] }]);
-    }
+    // The chat opens empty — no automatic greeting; the guest speaks first.
     sounds.open(); setPhase('chat');
     if (preload) setTimeout(() => sendMessage(preload), 80);
   };
@@ -1653,7 +1651,7 @@ export default function DigitalHost() {
               onClick={() => openChat()}
               onMouseEnter={() => setFabExpanded(true)}
               onMouseLeave={() => setFabExpanded(false)}
-              className="fixed top-20 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
+              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
               style={{
                 /* Circle: 56px mobile, 64px desktop. Pill when expanded */
                 width: fabExpanded ? 'auto' : undefined,
@@ -1692,6 +1690,29 @@ export default function DigitalHost() {
                 <p className="font-body text-[9px] tracking-[0.15em] uppercase text-muted-foreground leading-none mb-0.5">{s.fab_label}</p>
                 <p className="font-heading text-xs font-semibold text-foreground leading-tight">{s.fab_cta}</p>
               </motion.div>
+            </motion.button>
+
+            {/* Mobile navigation label — vertical "Navigatie" under the host button; opens the footer as the mobile menu */}
+            <motion.button
+              initial={{ opacity: 0 }} animate={{ opacity: 1, x: shift }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
+              aria-label="Navigatie"
+              className="fixed top-[76px] right-4 sm:top-[84px] sm:right-6 lg:hidden z-[80] flex items-center justify-center"
+            >
+              <span
+                className="font-body text-[10px] tracking-[0.4em] uppercase text-foreground/70 hover:text-primary transition-colors duration-300 px-1.5 py-2.5 rounded-full"
+                style={{
+                  writingMode: 'vertical-rl',
+                  transform: 'rotate(180deg)',
+                  background: isDark ? 'rgba(10,10,10,0.55)' : 'rgba(254,252,248,0.70)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
+                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid hsl(78 35% 28% / 0.22)',
+                }}
+              >
+                Navigatie
+              </span>
             </motion.button>
           </>
         )}
@@ -1760,7 +1781,7 @@ export default function DigitalHost() {
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
                     : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => {}} />
                 ))}
-                {messages.length === 1 && pageChips.length > 0 && (
+                {messages.length <= 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">
                     {pageChips.map((c, i) => <Chip key={i} label={c} onClick={sendMessage} isDark={isDark} />)}
                   </div>

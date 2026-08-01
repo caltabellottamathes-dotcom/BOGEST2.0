@@ -182,6 +182,16 @@ body.bogest-panel-open div[class*="convai"] {
   }
 }
 
+/* Slide the ElevenLabs widget off-screen while the mobile chat keyboard is open */
+body.bogest-kb-open elevenlabs-convai,
+body.bogest-kb-open div[id*="elevenlabs"],
+body.bogest-kb-open div[class*="elevenlabs"],
+body.bogest-kb-open div[id*="convai"],
+body.bogest-kb-open div[class*="convai"] {
+  transform: translateX(120vw) !important;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
 /* Floating host hint — gentle bob */
 @keyframes bogest-hint-float {
   0%, 100% { transform: translateY(0); }

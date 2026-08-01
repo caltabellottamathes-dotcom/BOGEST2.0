@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, ChevronDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
@@ -172,16 +172,6 @@ export default function Navbar() {
               {t('nav_reserve')}
             </Link>
 
-            {/* Mobile menu button */}
-              <button
-                onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
-                className={`lg:hidden p-2.5 rounded-xl transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center relative z-50 ${
-                  isTransparent ? 'text-white hover:bg-white/10' : 'text-foreground hover:bg-secondary'
-                }`}
-                aria-label="Menu openen"
-              >
-                <Menu className="w-5 h-5" />
-              </button>
           </div>
         </nav>
       </motion.header>
