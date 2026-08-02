@@ -53,7 +53,7 @@ export default function HeroSection() {
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
-          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/6bb24abbe_Bogest_Intro_.mp4"
+          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ea197f17e_Bogest_Intro_New_KL.mp4"
           poster={siteImg('hero')}
           data-bb-key="hero"
           data-bb-label="Hero achtergrond"
@@ -63,9 +63,6 @@ export default function HeroSection() {
           playsInline
           preload="auto"
         />
-        {/* Overlays — transparent at the top, deep at the bottom for legibility */}
-        <div className={`absolute inset-0 pointer-events-none ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-transparent to-black/95' : 'bg-gradient-to-b from-transparent via-transparent to-black'}`} />
-        <div className={`absolute inset-0 pointer-events-none ${theme === 'light' ? 'bg-gradient-to-r from-black/45 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/55 via-black/25 to-transparent'}`} />
       </div>
 
       {/* Hero content — sits above the fixed video and scrolls normally.
@@ -111,7 +108,7 @@ export default function HeroSection() {
               >
                 {t('hero_line1_outlined')}
               </span>
-              <span className="font-heading font-bold text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-white">
+              <span className="font-heading font-bold text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-white" style={{ textShadow: '0 2px 26px rgba(0,0,0,0.45)' }}>
                 {t('hero_line1_filled')}
               </span>
             </motion.div>
@@ -123,7 +120,7 @@ export default function HeroSection() {
               transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-wrap items-baseline gap-3 md:gap-5 leading-none mt-1"
             >
-              <span className="font-heading font-bold italic text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-primary">
+              <span className="font-heading font-bold italic text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-primary" style={{ textShadow: '0 2px 22px rgba(0,0,0,0.45)' }}>
                 {theme === 'light' ? 'SMAAK' : t('hero_line2')}
               </span>
             </motion.div>

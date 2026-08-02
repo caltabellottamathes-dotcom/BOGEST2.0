@@ -15,8 +15,12 @@ export default function Home() {
     <>
       <IntroPopup />
       <HeroSection />
-      {/* Opaque layer — slides up over the fixed hero video as you scroll */}
-      <div className="relative z-10 bg-background">
+      {/* Content layer — slides up over the fixed hero video. The backdrop
+          fades from transparent (video visible) to the solid page background,
+          so the gradient transition is attached to the content and slides over
+          the video with it — premium on mobile and desktop. */}
+      <div className="relative z-10">
+        <div aria-hidden className="absolute inset-0 -z-10 pointer-events-none bg-background" style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 40vh)', maskImage: 'linear-gradient(to bottom, transparent, black 40vh)', transform: 'translateZ(0)' }} />
         <StatsSection />
         <StorySection />
         <LocationsPreview />
