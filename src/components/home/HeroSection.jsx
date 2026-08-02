@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
@@ -10,17 +10,16 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
 
 export default function HeroSection() {
-  const [offsetY, setOffsetY] = useState(0);
   const [pastHero, setPastHero] = useState(false);
   const { t } = useLang();
   const { theme } = useTheme();
   const { siteImg } = useSiteImages();
+  const { scrollY } = useScroll();
+  const maxShift = typeof window !== 'undefined' ? window.innerHeight * 0.15 : 120;
+  const y = useSpring(useTransform(scrollY, (v) => Math.min(v * 0.25, maxShift)), { stiffness: 100, damping: 30, mass: 0.5 });
 
   useEffect(() => {
-    const handleScroll = () => {
-      setOffsetY(window.scrollY);
-      setPastHero(window.scrollY > window.innerHeight * 0.3);
-    };
+    const handleScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.3);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -33,9 +32,9 @@ export default function HeroSection() {
   return (
     <section className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
       {/* BG with parallax — desaturated */}
-      <div
+      <motion.div
         className="absolute inset-0 w-full h-[115%]"
-        style={{ transform: `translateY(${Math.min(offsetY * 0.25, window.innerHeight * 0.15)}px)` }}
+        style={{ y, willChange: 'transform' }}
       >
         <img
           src={siteImg('hero')}
@@ -48,7 +47,7 @@ export default function HeroSection() {
             imageRendering: 'auto',
           }}
         />
-      </div>
+      </motion.div>
 
       {/* Overlays */}
       <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-black/15 to-black/75' : 'bg-gradient-to-b from-transparent via-black/10 to-black/85'}`} />

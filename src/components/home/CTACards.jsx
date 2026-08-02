@@ -64,12 +64,6 @@ export default function CTACards() {
             className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:max-w-sm rounded-2xl p-5 md:p-6"
             style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}
           >
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
-                <CalendarDays className="w-4 h-4 text-primary" />
-              </div>
-              <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">Bogèst</span>
-            </div>
             <div className="space-y-1">
               {cards.map((card, i) => {
                 const Icon = card.icon;

@@ -24,6 +24,7 @@ export default function FloatingVideo() {
   const [revealed, setRevealed] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const shift = usePanelShift();
 
   useEffect(() => {
@@ -49,6 +50,13 @@ export default function FloatingVideo() {
     const handler = (e) => setKbOpen(e.detail?.open === true);
     window.addEventListener('bogest:keyboard-visibility', handler);
     return () => window.removeEventListener('bogest:keyboard-visibility', handler);
+  }, []);
+
+  // Slide the video card out of frame while the mobile chat panel is open.
+  useEffect(() => {
+    const handler = (e) => setChatOpen(e.detail?.open === true);
+    window.addEventListener('bogest:chat-visibility', handler);
+    return () => window.removeEventListener('bogest:chat-visibility', handler);
   }, []);
 
   // Fade/scale the card in smoothly once it's allowed to show.
@@ -103,7 +111,7 @@ export default function FloatingVideo() {
       style={{
         bottom: 96,
         pointerEvents: 'none',
-        transform: `translateX(${shift + (kbOpen ? 600 : 0)}px)`,
+        transform: `translateX(${shift + ((kbOpen || chatOpen) ? 600 : 0)}px)`,
         transition: 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >

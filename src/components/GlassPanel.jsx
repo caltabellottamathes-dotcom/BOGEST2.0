@@ -15,12 +15,12 @@ function GlassPanelSurface() {
       className="absolute inset-0 pointer-events-none"
       style={{
         borderRadius: '24px 0 0 0',
-        background: 'rgba(255,255,255,0.06)',
-        backdropFilter: 'blur(24px) saturate(150%)',
-        WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-        borderTop: '1px solid rgba(255,255,255,0.14)',
-        borderLeft: '1px solid rgba(255,255,255,0.14)',
-        boxShadow: '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)',
+        background: 'rgba(255,255,255,0.08)',
+        backdropFilter: 'blur(40px) saturate(160%)',
+        WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+        borderTop: '1px solid rgba(255,255,255,0.16)',
+        borderLeft: '1px solid rgba(255,255,255,0.16)',
+        boxShadow: '0 -30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(231,205,112,0.10), inset 0 1px 0 rgba(255,255,255,0.10)',
       }}
     />
   );

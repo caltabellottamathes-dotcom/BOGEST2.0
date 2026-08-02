@@ -1394,6 +1394,14 @@ export default function DigitalHost() {
     document.body.classList.toggle('bogest-kb-open', nativeKb > 0);
     window.dispatchEvent(new CustomEvent('bogest:keyboard-visibility', { detail: { open: nativeKb > 0 } }));
   }, [nativeKb]);
+
+  // On mobile, slide the ElevenLabs widget + floating video out of frame while
+  // the chat is open, and back in when it closes.
+  useEffect(() => {
+    const open = phase === 'chat' && isMobile;
+    document.body.classList.toggle('bogest-chat-open', open);
+    window.dispatchEvent(new CustomEvent('bogest:chat-visibility', { detail: { open } }));
+  }, [phase, isMobile]);
   // Opening the mobile menu (footer) closes the chat so the menu is unobstructed.
   useEffect(() => {
     const handler = () => { if (phase === 'chat') setPhase('minimized'); };

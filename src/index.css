@@ -182,12 +182,17 @@ body.bogest-panel-open div[class*="convai"] {
   }
 }
 
-/* Slide the ElevenLabs widget off-screen while the mobile chat keyboard is open */
+/* Slide the ElevenLabs widget off-screen while the mobile chat or keyboard is open */
 body.bogest-kb-open elevenlabs-convai,
 body.bogest-kb-open div[id*="elevenlabs"],
 body.bogest-kb-open div[class*="elevenlabs"],
 body.bogest-kb-open div[id*="convai"],
-body.bogest-kb-open div[class*="convai"] {
+body.bogest-kb-open div[class*="convai"],
+body.bogest-chat-open elevenlabs-convai,
+body.bogest-chat-open div[id*="elevenlabs"],
+body.bogest-chat-open div[class*="elevenlabs"],
+body.bogest-chat-open div[id*="convai"],
+body.bogest-chat-open div[class*="convai"] {
   transform: translateX(120vw) !important;
   transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
