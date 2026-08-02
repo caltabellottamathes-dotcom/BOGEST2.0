@@ -1017,14 +1017,17 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    // Start muted so the video is guaranteed to autoplay from frame one — it
-    // plays smoothly in sync with the pop-up entrance (no black flash). The
-    // guest hears sound the moment they first interact with the page.
-    el.muted = true;
-    el.play().catch(() => {});
-    const unmute = () => { try { el.muted = false; el.play().catch(() => {}); } catch {} window.removeEventListener('pointerdown', unmute); };
-    window.addEventListener('pointerdown', unmute, { passive: true });
-    return () => { window.removeEventListener('pointerdown', unmute); try { videoRef.current?.pause(); } catch {} };
+    // Unmuted intro video — play with sound. If the browser blocks unmuted
+    // autoplay (no prior gesture), play muted for motion and unmute on the
+    // first tap so the guest hears sound the moment they interact.
+    el.muted = false;
+    el.play().catch(() => {
+      el.muted = true;
+      el.play().catch(() => {});
+      const unmute = () => { try { el.muted = false; el.play().catch(() => {}); } catch {} window.removeEventListener('pointerdown', unmute); };
+      window.addEventListener('pointerdown', unmute, { passive: true });
+    });
+    return () => { try { videoRef.current?.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1076,7 +1079,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay muted playsInline preload="auto"
+              autoPlay playsInline preload="auto"
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}

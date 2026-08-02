@@ -10,6 +10,7 @@ const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404
 
 export default function HeroSection() {
   const [pastHero, setPastHero] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const { t } = useLang();
   const { theme } = useTheme();
 
@@ -37,9 +38,12 @@ export default function HeroSection() {
       }
     };
     sync();
+    if (v.readyState >= 2) setVideoReady(true);
+    const onReady = () => setVideoReady(true);
+    v.addEventListener('loadeddata', onReady);
     const obs = new MutationObserver(sync);
     obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => obs.disconnect();
+    return () => { obs.disconnect(); v.removeEventListener('loadeddata', onReady); };
   }, []);
 
   return (
@@ -58,6 +62,7 @@ export default function HeroSection() {
           playsInline
           preload="auto"
           onCanPlay={(e) => { e.currentTarget.play().catch(() => {}); }}
+          style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.8s ease' }}
         />
       </div>
 

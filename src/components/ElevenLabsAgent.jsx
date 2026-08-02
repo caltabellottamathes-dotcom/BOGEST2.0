@@ -39,9 +39,7 @@ const MEMORY_ACTIONS = new Set([
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
-  const [hidden, setHidden] = useState(
-    () => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active')
-  );
+  const [hidden, setHidden] = useState(true);
 
   useEffect(() => {
     const handler = (e) => setHidden(e.detail?.open === true);
