@@ -39,6 +39,7 @@ const MEMORY_ACTIONS = new Set([
  */
 export default function ElevenLabsAgent() {
   const widgetRef = useRef(null);
+  const profileRef = useRef(null);
   const [hidden, setHidden] = useState(
     () => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active')
   );
@@ -47,6 +48,16 @@ export default function ElevenLabsAgent() {
     const handler = (e) => setHidden(e.detail?.open === true);
     window.addEventListener('bogest:popup-visibility', handler);
     return () => window.removeEventListener('bogest:popup-visibility', handler);
+  }, []);
+
+  // Pre-fetch the shared Guest Profile once, BEFORE any call starts. The
+  // widget's "call" event reads the config SYNCHRONOUSLY — awaiting inside the
+  // handler would register client tools too late and break all navigation. The
+  // cached profile is injected as dynamic variables the instant a call begins.
+  useEffect(() => {
+    base44.functions.invoke('memoryTools', { action: 'getGuestProfile', visitor_id: getVisitorId() })
+      .then((res) => { profileRef.current = res?.data || null; })
+      .catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -68,32 +79,17 @@ export default function ElevenLabsAgent() {
     const el = widgetRef.current;
     if (!el) return;
 
-    const onCall = async (event) => {
+    // The widget reads event.detail.config SYNCHRONOUSLY when a call starts, so
+    // the websiteAction client tool MUST be registered before any await in this
+    // handler — otherwise the session starts without the tool and navigation
+    // silently never fires. Guest-profile dynamic variables are injected from
+    // the pre-fetched cache so a returning guest is recognised immediately.
+    const onCall = (event) => {
       if (!event?.detail?.config) return;
       startWebsiteSyncEngine();
       const cfg = event.detail.config;
 
-      // Inject the shared Guest Profile as dynamic variables so the voice host
-      // recognises returning guests and resumes context.
-      try {
-        const visitorId = getVisitorId();
-        const res = await base44.functions.invoke('memoryTools', { action: 'getGuestProfile', visitor_id: visitorId });
-        const p = res?.data?.profile || {};
-        const prefs = res?.data?.preferences || [];
-        cfg.dynamic_variables = {
-          guest_first_name: p.first_name || p.preferred_name || '',
-          guest_is_returning: res?.data?.is_returning ? 'true' : 'false',
-          guest_last_topic: p.last_topic || '',
-          guest_last_channel: p.last_channel || '',
-          guest_consent_state: p.consent_state || 'none',
-          guest_preferred_location: p.preferred_location || '',
-          guest_favorite_dish: p.favorite_dish || '',
-          guest_visit_count: String(p.visit_count || 0),
-          guest_preferences: prefs.map((x) => `${x.key}=${x.value}`).slice(0, 15).join('|'),
-          guest_visitor_id: visitorId,
-        };
-      } catch { /* fail silently — voice host still works without persistence */ }
-
+      // 1) Register the websiteAction client tool SYNCHRONOUSLY.
       cfg.clientTools = {
         websiteAction: async (params = {}) => {
           const a = String(params.action || 'go').toLowerCase();
@@ -120,6 +116,26 @@ export default function ElevenLabsAgent() {
           return result;
         },
       };
+
+      // 2) Inject the shared Guest Profile as dynamic variables from the
+      //    pre-fetched cache (synchronous, so it applies to this call).
+      try {
+        const data = profileRef.current || {};
+        const p = data.profile || {};
+        const prefs = data.preferences || [];
+        cfg.dynamic_variables = {
+          guest_first_name: p.first_name || p.preferred_name || '',
+          guest_is_returning: data.is_returning ? 'true' : 'false',
+          guest_last_topic: p.last_topic || '',
+          guest_last_channel: p.last_channel || '',
+          guest_consent_state: p.consent_state || 'none',
+          guest_preferred_location: p.preferred_location || '',
+          guest_favorite_dish: p.favorite_dish || '',
+          guest_visit_count: String(p.visit_count || 0),
+          guest_preferences: prefs.map((x) => `${x.key}=${x.value}`).slice(0, 15).join('|'),
+          guest_visitor_id: getVisitorId(),
+        };
+      } catch { /* fail silently — voice host still works without persistence */ }
     };
     el.addEventListener('elevenlabs-convai:call', onCall);
 
