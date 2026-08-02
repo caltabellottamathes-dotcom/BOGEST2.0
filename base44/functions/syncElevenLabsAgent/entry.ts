@@ -112,6 +112,17 @@ CONTINUITY:
 Never mention that you are storing data, that there is a profile, or that there are two hosts. You are one attentive maître d'.
 [${GUEST_MEMORY_MARKER}_END]`;
 
+const LANGUAGE_MARKER = 'BOGEST_LANGUAGE_INSTRUCTION';
+const LANGUAGE_INSTRUCTION = `
+[${LANGUAGE_MARKER}]
+LANGUAGE — VOICE MODE SPEAKS DUTCH AND ENGLISH ONLY (MANDATORY):
+Detect the language the visitor is speaking the instant they start talking.
+- Dutch (Nederlands) → reply in Dutch (beleefde vorm: u/uw — NOOIT ge/gij).
+- English → reply in English.
+- ANY OTHER language (French, German, Spanish, Italian, Arabic, Polish, Turkish, Mandarin, …) → SWITCH TO ENGLISH IMMEDIATELY on the first such turn. In one or two warm, short sentences apologise and explain, then redirect to the written chat. Say something like: "I'm sorry — in voice I can only speak Dutch and English for now. To continue in your own language, please use the written chat on the website — just tap the chat and type, and I'll help you there in your language."
+After that redirect, if the visitor keeps talking in voice, keep helping them in English (never attempt a language other than Dutch or English). Never refuse coldly or stay silent. The apology + redirect to the written chat is mandatory on the first non-Dutch, non-English turn; do not repeat it every turn afterwards unless they switch language again.
+[${LANGUAGE_MARKER}_END]`;
+
 function authHeaders() {
   const key = secrets.get('ELEVENLABS_API_KEY');
   if (!key) throw new Error('ELEVENLABS_API_KEY not set');
@@ -156,6 +167,7 @@ export default async function(req) {
         websiteActionId: wFull?.id || null,
         singleTool,
         hasInstruction: typeof p.prompt === 'string' && p.prompt.includes('BOGEST_WEBSITE_NAVIGATION_INSTRUCTION'),
+        hasLanguageInstruction: typeof p.prompt === 'string' && p.prompt.includes('BOGEST_LANGUAGE_INSTRUCTION'),
       });
     }
 
@@ -173,10 +185,14 @@ export default async function(req) {
       '\\n*\\[' + GUEST_MEMORY_MARKER + '\\][\\s\\S]*?\\[' + GUEST_MEMORY_MARKER + '_END\\]\\n*',
       'g'
     );
-    current = current.replace(blockRe, '').replace(memBlockRe, '').trim();
+    const langBlockRe = new RegExp(
+      '\\n*\\[' + LANGUAGE_MARKER + '\\][\\s\\S]*?\\[' + LANGUAGE_MARKER + '_END\\]\\n*',
+      'g'
+    );
+    current = current.replace(blockRe, '').replace(memBlockRe, '').replace(langBlockRe, '').trim();
 
-    const promptChanged = !current.includes(MARKER) || !current.includes(GUEST_MEMORY_MARKER);
-    const next = current + (current ? '\n\n' : '') + INSTRUCTION.trim() + '\n\n' + GUEST_MEMORY_INSTRUCTION.trim();
+    const promptChanged = !current.includes(MARKER) || !current.includes(GUEST_MEMORY_MARKER) || !current.includes(LANGUAGE_MARKER);
+    const next = current + (current ? '\n\n' : '') + INSTRUCTION.trim() + '\n\n' + GUEST_MEMORY_INSTRUCTION.trim() + '\n\n' + LANGUAGE_INSTRUCTION.trim();
 
     // 1) Prompt: minimal merge PATCH — only send the prompt string so the
     //    platform preserves tools / tool_ids / llm / temperature / etc. This

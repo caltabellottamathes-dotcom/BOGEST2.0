@@ -17,8 +17,8 @@ export default function PanelHero({ label, title, titleAccent, subtitle, childre
         <div className="absolute inset-0 z-0">
           <img src={bg} data-bb-key={positionKey || undefined} data-bb-label={label} alt="" className="w-full h-full object-cover" loading="lazy" />
           {/* Zachte warme overlay — soft yellow → grey, niet zwart-geel */}
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.80) 0%, rgba(26,24,20,0.28) 45%, rgba(40,38,33,0.08) 100%)' }} />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(26,24,20,0.42) 0%, transparent 55%)' }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.80) 0%, rgba(26,24,20,0.28) 45%, rgba(40,38,33,0.08) 100%)' }} />
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to right, rgba(26,24,20,0.42) 0%, transparent 55%)' }} />
         </div>
       ) : (
         <div className="absolute inset-0 z-0" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.50) 0%, rgba(44,42,36,0.26) 45%, rgba(30,29,26,0.08) 100%)' }} />

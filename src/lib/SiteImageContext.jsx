@@ -78,24 +78,27 @@ export function SiteImagesProvider({ children }) {
   // system; the picker UI ([data-bb-ui]) is excluded. The original src is
   // recorded in a data-bb-src attribute so re-editing keeps a stable key.
   useEffect(() => {
+    if (!srcOverrides || !Object.keys(srcOverrides).length) return;
+    let raf = 0;
     const apply = () => {
-      const map = srcOverrides;
-      if (!map || !Object.keys(map).length) return;
-      const imgs = document.querySelectorAll('img:not([data-bb-key])');
-      imgs.forEach((img) => {
-        if (img.closest('[data-bb-ui]')) return;
-        const original = img.getAttribute('data-bb-src') || img.src;
-        const target = map[original];
-        if (target && img.src !== target.image_url) {
-          if (!img.getAttribute('data-bb-src')) img.setAttribute('data-bb-src', img.src);
-          img.setAttribute('src', target.image_url);
-        }
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const imgs = document.querySelectorAll('img:not([data-bb-key])');
+        imgs.forEach((img) => {
+          if (img.closest('[data-bb-ui]')) return;
+          const original = img.getAttribute('data-bb-src') || img.src;
+          const target = srcOverrides[original];
+          if (target && img.src !== target.image_url) {
+            if (!img.getAttribute('data-bb-src')) img.setAttribute('data-bb-src', img.src);
+            img.setAttribute('src', target.image_url);
+          }
+        });
       });
     };
     apply();
-    const obs = new MutationObserver(() => apply());
+    const obs = new MutationObserver(apply);
     obs.observe(document.body, { subtree: true, childList: true, attributes: ['src'] });
-    return () => obs.disconnect();
+    return () => { cancelAnimationFrame(raf); obs.disconnect(); };
   }, [srcOverrides]);
 
   const value = useMemo(
