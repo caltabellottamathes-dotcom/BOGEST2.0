@@ -70,7 +70,7 @@ export default function GroupsConceptSection() {
           {/* Featured foto + formule */}
           <div className="md:col-span-5">
             <div className="relative rounded-2xl overflow-hidden shadow-xl min-h-[300px] md:h-full">
-              <img src={siteImg('location.' + loc.id) || loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+              <img src={siteImg('location.' + loc.id) || loc.image} data-bb-key={`location.${loc.id}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }} />
               <div className="absolute left-5 right-5 bottom-5">
                 <h3 className="font-heading text-2xl font-bold text-white leading-tight mb-2">{loc.name}<span className="text-primary">.</span></h3>
@@ -97,7 +97,7 @@ export default function GroupsConceptSection() {
                 return (
                   <div key={s.name} className="group/space flex items-center gap-4 py-4 border-b border-border/40 last:border-0">
                     <div className="relative w-14 h-14 rounded-xl overflow-hidden flex-shrink-0">
-                      <img src={siteImg('space.' + loc.id + '.' + i) || s.image} alt={s.name} className="w-full h-full object-cover transition-transform duration-500 group-hover/space:scale-110" loading="lazy" />
+                      <img src={siteImg('space.' + loc.id + '.' + i) || s.image} data-bb-key={`space.${loc.id}.${i}`} data-bb-label={s.name} alt={s.name} className="w-full h-full object-cover transition-transform duration-500 group-hover/space:scale-110" loading="lazy" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-3 mb-1">

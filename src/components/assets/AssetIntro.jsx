@@ -4,33 +4,30 @@ import { ASSET_VIEWS } from '@/lib/assetViews';
 
 export default function AssetIntro({ onView, onAdmin, count }) {
   return (
-    <div className="min-h-screen pt-24 pb-16 px-4 md:px-8 lg:px-12 flex items-center">
+    <div className="min-h-screen pt-28 md:pt-36 pb-24 px-6 md:px-10 lg:px-16 flex items-center">
       <div className="max-w-3xl mx-auto w-full">
-        <div className="flex items-center gap-2 text-primary mb-5">
+        <div className="flex items-center gap-2.5 text-primary mb-8">
           <Images className="w-4 h-4" />
           <span className="font-body text-[10px] tracking-[0.3em] uppercase">Bogèst · Beeldbank</span>
         </div>
 
-        <h1 className="font-heading text-5xl md:text-6xl font-bold text-foreground leading-[1.05] mb-6">
-          Het universele<br />beeldarchief
+        <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold text-foreground leading-[1.02] mb-8 tracking-tight">
+          Het universeel<br />beeldarchief<span className="text-primary">.</span>
         </h1>
 
-        <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-4">
-          Een zelfstandig groeiend archief van alle Bogèst-beelden. Beelden worden automatisch
-          verzameld op de eigen website, Tripadvisor, Facebook en Instagram, voorzien van een
-          perceptuele hash om dubbelingen te herkennen, en door AI ingedeeld per categorie en locatie.
+        <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed max-w-2xl mb-5">
+          Een zelfstandig groeiend archief van alle Bogèst-beelden — verzameld op de eigen website,
+          Tripadvisor, Facebook en Instagram, ontdubbeld via een perceptuele hash en door AI ingedeeld
+          per categorie en locatie.
         </p>
-        <p className="font-body text-sm text-muted-foreground/80 leading-relaxed max-w-2xl mb-10">
+        <p className="font-body text-sm text-muted-foreground/80 leading-relaxed max-w-2xl mb-12">
           U bepaalt wat relevant blijft: pas beschrijvingen aan, wijs beelden toe aan collecties voor
           gebruik op de website, of verwijder wat niet past.
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-10">
+        <div className="flex flex-wrap gap-2.5 mb-12">
           {ASSET_VIEWS.filter((v) => v.key !== 'all').map((v) => (
-            <span
-              key={v.key}
-              className="px-3.5 py-1.5 rounded-full border border-border text-xs font-body text-foreground/60 bg-card/30"
-            >
+            <span key={v.key} className="px-4 py-1.5 rounded-full border border-border text-xs font-body text-foreground/55 bg-card/20">
               {v.label}
             </span>
           ))}
@@ -39,7 +36,7 @@ export default function AssetIntro({ onView, onAdmin, count }) {
         <div className="flex flex-col sm:flex-row gap-3">
           <button
             onClick={onView}
-            className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-body text-sm font-medium hover:opacity-90 transition-opacity"
+            className="group inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-primary text-primary-foreground font-body text-sm font-medium hover:opacity-90 transition-opacity"
           >
             Bekijk het archief
             <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
@@ -47,23 +44,17 @@ export default function AssetIntro({ onView, onAdmin, count }) {
           </button>
           <button
             onClick={onAdmin}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl border border-border bg-card/50 hover:bg-muted transition-colors font-body text-sm text-foreground"
+            className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border border-border bg-card/40 hover:bg-muted transition-colors font-body text-sm text-foreground"
           >
             <SlidersHorizontal className="w-4 h-4 text-primary" />
             Beheer &amp; vul aan
           </button>
         </div>
 
-        <div className="flex items-center gap-5 mt-12 text-muted-foreground/50">
-          <span className="inline-flex items-center gap-1.5 font-body text-xs">
-            <Sparkles className="w-3.5 h-3.5" /> AI-categorisering
-          </span>
-          <span className="inline-flex items-center gap-1.5 font-body text-xs">
-            <Layers className="w-3.5 h-3.5" /> Dubbelingendetectie
-          </span>
-          <span className="inline-flex items-center gap-1.5 font-body text-xs">
-            <Shield className="w-3.5 h-3.5" /> Alleen voor beheerders
-          </span>
+        <div className="flex flex-wrap items-center gap-x-7 gap-y-3 mt-16 text-muted-foreground/50">
+          <span className="inline-flex items-center gap-2 font-body text-xs"><Sparkles className="w-3.5 h-3.5" /> AI-categorisering</span>
+          <span className="inline-flex items-center gap-2 font-body text-xs"><Layers className="w-3.5 h-3.5" /> Dubbelingendetectie</span>
+          <span className="inline-flex items-center gap-2 font-body text-xs"><Shield className="w-3.5 h-3.5" /> Alleen voor beheerders</span>
         </div>
       </div>
     </div>

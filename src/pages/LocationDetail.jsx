@@ -266,7 +266,7 @@ export default function LocationDetail() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative w-full overflow-hidden">
         <div className="relative h-[46vh] min-h-[360px] w-full">
-          <img src={siteImg('location.' + slug) || loc.image} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
+          <img src={siteImg('location.' + slug) || loc.image} data-bb-key={`location.${slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 3%, hsl(var(--background) / 0.32) 45%, rgba(0,0,0,0.5) 100%)' }} />
           {/* Ghosted city name bleeding off the right edge */}
           <span aria-hidden className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 font-heading italic font-bold text-white/[0.06] select-none pointer-events-none leading-none" style={{ fontSize: 'clamp(8rem, 26vw, 20rem)' }}>{loc.city}</span>
@@ -337,7 +337,7 @@ export default function LocationDetail() {
                     style={{ boxShadow: '0 18px 48px rgba(0,0,0,0.4)' }}
                   >
                     <div className="absolute inset-0">
-                      <img src={siteImg('space.' + slug + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
+                      <img src={siteImg('space.' + slug + '.' + i) || space.image} data-bb-key={`space.${slug}.${i}`} data-bb-label={`${loc.city} — ${space.name}`} alt={space.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
                     </div>
                     <span className="absolute top-4 right-4 z-20 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-black/40 border border-white/15 backdrop-blur-md font-body text-[9px] tracking-[0.25em] uppercase text-white/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">

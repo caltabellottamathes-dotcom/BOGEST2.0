@@ -67,6 +67,8 @@ export function SuggestionCard({ item, showFade = true }) {
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}
+          data-bb-key={`seasonal.${seasonalIdx}`}
+          data-bb-label={`Seizoensuggestie ${seasonalIdx + 1}`}
           alt={item.name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           style={{ filter: 'saturate(0.82) brightness(0.95)' }}

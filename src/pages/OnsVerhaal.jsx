@@ -52,6 +52,7 @@ export default function OnsVerhaal() {
               body={s.body}
               image={s.image}
               index={i}
+              bbKey={`onsverhaal.story.${i}`}
             />
           ))}
         </section>

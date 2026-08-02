@@ -113,7 +113,7 @@ export default function Assets() {
     <div className="min-h-screen md:pt-16">
       <div className="md:flex">
         {/* Sidebar */}
-        <aside className="md:w-64 md:flex-shrink-0 md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-y-auto border-b md:border-b-0 md:border-r border-border bg-background/50 backdrop-blur p-4 md:p-5 flex flex-col gap-5">
+        <aside className="md:w-72 md:flex-shrink-0 md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-y-auto border-b md:border-b-0 md:border-r border-border/70 bg-background/60 backdrop-blur p-5 md:p-6 flex flex-col gap-7 bogest-scroll">
           <div className="flex items-start justify-between gap-2">
             <div>
               <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary block mb-1">Bogèst</span>
@@ -132,7 +132,7 @@ export default function Assets() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Zoek beelden…"
-              className="w-full pl-9 pr-8 py-2.5 rounded-lg bg-card/60 border border-border focus:outline-none focus:border-primary text-sm"
+              className="w-full pl-9 pr-8 py-3 rounded-xl bg-card/40 border border-border focus:outline-none focus:border-primary text-sm"
             />
             {search && (
               <button onClick={() => setSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
@@ -154,7 +154,7 @@ export default function Assets() {
                   <button
                     key={v.key}
                     onClick={() => setActiveView(v.key)}
-                    className={`flex items-center justify-between gap-2 whitespace-nowrap px-3 py-2 rounded-lg text-sm transition-colors ${active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted'}`}
+                    className={`flex items-center justify-between gap-2 whitespace-nowrap px-3.5 py-2 rounded-xl text-sm transition-colors ${active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-muted/60'}`}
                   >
                     <span>{v.label}</span>
                     <span className={`text-xs ${active ? 'opacity-70' : 'opacity-50'}`}>{count}</span>
@@ -175,7 +175,7 @@ export default function Assets() {
                   <button
                     key={l.key}
                     onClick={() => setActiveLoc(l.key)}
-                    className={`flex items-center justify-between gap-2 whitespace-nowrap px-3 py-2 rounded-lg text-sm transition-colors border ${active ? 'bg-primary/15 text-primary border-primary/30' : 'text-muted-foreground hover:bg-muted border-transparent'}`}
+                    className={`flex items-center justify-between gap-2 whitespace-nowrap px-3.5 py-2 rounded-xl text-sm transition-colors border ${active ? 'bg-primary/15 text-primary border-primary/30' : 'text-muted-foreground hover:bg-muted/60 border-transparent'}`}
                   >
                     <span>{l.label}</span>
                     <span className="text-xs opacity-50">{count}</span>
@@ -190,7 +190,7 @@ export default function Assets() {
             <button onClick={runDedupe} disabled={deduping} className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-border text-sm hover:bg-muted disabled:opacity-50 transition-colors">
               {deduping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Layers className="w-4 h-4 text-primary" />} Ontdubbel
             </button>
-            <button onClick={() => setShowAdmin(true)} className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm hover:opacity-90 transition-opacity">
+            <button onClick={() => setShowAdmin(true)} className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm hover:opacity-90 transition-opacity">
               <SlidersHorizontal className="w-4 h-4" /> Beheer
             </button>
             {dedupMsg && <p className="font-body text-xs text-primary text-center">{dedupMsg}</p>}
@@ -198,7 +198,7 @@ export default function Assets() {
         </aside>
 
         {/* Main gallery */}
-        <main className="flex-1 p-4 md:p-8 min-w-0">
+        <main className="flex-1 p-6 md:p-10 min-w-0">
           <div className="flex items-center justify-between mb-5 gap-3">
             <p className="font-body text-sm text-muted-foreground truncate">
               {filtered.length} beelden{activeView !== 'all' && ` · ${activeViewLabel}`}{activeLoc !== 'all' && ` · ${activeLocLabel}`}
@@ -222,7 +222,7 @@ export default function Assets() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 md:gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-5">
               {filtered.map((a) => (
                 <AssetCard key={a.id} asset={a} onClick={setDetailAsset} />
               ))}

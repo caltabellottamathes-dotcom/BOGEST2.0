@@ -58,6 +58,8 @@ export default function AboutCardGrid() {
           <div className="relative overflow-hidden rounded-2xl border border-border/50 aspect-[3/4] shadow-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:z-40">
             <img
               src={siteImg(c.img)}
+              data-bb-key={c.img}
+              data-bb-label={c.title}
               alt={c.title}
               className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
               style={{ filter: 'saturate(0.88) brightness(0.94)' }}

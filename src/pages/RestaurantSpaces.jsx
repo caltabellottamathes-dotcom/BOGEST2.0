@@ -127,7 +127,7 @@ export default function RestaurantSpaces() {
               <div className="rounded-2xl overflow-hidden border border-border hover:border-primary/30 transition-colors"
                 style={{ background: 'rgba(255,255,255,0.02)' }}>
                 <div className="h-48 overflow-hidden">
-                  <img src={siteImg('space.' + location + '.' + i) || space.image} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
+                  <img src={siteImg('space.' + location + '.' + i) || space.image} data-bb-key={`space.${location}.${i}`} data-bb-label={space.name} alt={space.name} className="w-full h-full object-cover hover:scale-105 transition-transform duration-700" />
                 </div>
                 <div className="p-5 md:p-6">
                   <div className="flex items-center justify-between mb-2">

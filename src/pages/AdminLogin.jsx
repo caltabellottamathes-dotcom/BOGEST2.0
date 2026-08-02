@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, Check } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ export default function AdminLogin() {
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [remember, setRemember] = useState(() => localStorage.getItem('bogest-admin-remember') === '1');
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -21,7 +22,8 @@ export default function AdminLogin() {
     setError('');
     setTimeout(() => {
       if (username === ADMIN_USER && password === ADMIN_PASS) {
-        sessionStorage.setItem('bogest-admin-auth', '1');
+        if (remember) { localStorage.setItem('bogest-admin-auth', '1'); localStorage.setItem('bogest-admin-remember', '1'); sessionStorage.removeItem('bogest-admin-auth'); }
+        else { sessionStorage.setItem('bogest-admin-auth', '1'); localStorage.removeItem('bogest-admin-auth'); localStorage.removeItem('bogest-admin-remember'); }
         const redirect = new URLSearchParams(window.location.search).get('redirect');
         navigate(redirect || '/admin');
       } else {
@@ -96,6 +98,18 @@ export default function AdminLogin() {
                 {error}
               </motion.p>
             )}
+
+            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+              <button
+                type="button"
+                onClick={() => setRemember((r) => !r)}
+                className={`w-4 h-4 rounded border flex items-center justify-center transition-colors duration-200 ${remember ? 'bg-primary border-primary' : 'border-border bg-background/60'}`}
+                aria-pressed={remember}
+              >
+                {remember && <Check className="w-3 h-3 text-primary-foreground" />}
+              </button>
+              <span className="font-body text-xs text-muted-foreground">Onthoud mij</span>
+            </label>
 
             <button
               type="submit"

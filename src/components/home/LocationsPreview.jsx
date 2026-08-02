@@ -48,7 +48,7 @@ export default function LocationsPreview() {
               >
                 {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}
                 <div className="md:hidden group relative overflow-hidden rounded-2xl aspect-[4/3] shadow-2xl">
-                  <img src={img} alt={loc.name} className="absolute inset-0 w-full h-full object-cover"
+                  <img src={img} data-bb-key={`location.${loc.slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover"
                     style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.88) brightness(0.9)' }}
                     loading="lazy" decoding="async" />
                   {!inactive && <LocationVideo slug={loc.slug} />}
@@ -83,7 +83,7 @@ export default function LocationsPreview() {
                 <div className="hidden md:grid md:grid-cols-12 gap-6 md:gap-10 items-center">
                   <div className={`md:col-span-7 ${imageLeft ? '' : 'md:order-2'}`}>
                     <div className="group relative overflow-hidden rounded-2xl aspect-[16/10] shadow-2xl">
-                      <img src={img} alt={loc.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      <img src={img} data-bb-key={`location.${loc.slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.85) brightness(0.9)' }}
                         loading="lazy" decoding="async" />
                       {!inactive && <LocationVideo slug={loc.slug} />}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Search, Loader2, RotateCcw, Pencil, Check, ImageIcon } from 'lucide-react';
+import { X, Search, Loader2, RotateCcw, Pencil, Check, ImageIcon, LogOut } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import { useLang } from '@/lib/LangContext';
@@ -19,7 +19,7 @@ import { translations } from '@/lib/i18n';
  * siteTextApi (override laadt door in LangContext.t()).
  */
 export default function BeeldbankEditor() {
-  const isAdmin = typeof window !== 'undefined' && sessionStorage.getItem('bogest-admin-auth') === '1';
+  const isAdmin = typeof window !== 'undefined' && (sessionStorage.getItem('bogest-admin-auth') === '1' || localStorage.getItem('bogest-admin-auth') === '1');
   const [editMode, setEditMode] = useState(false);
   const [picker, setPicker] = useState(null); // { key, label }
   const [assets, setAssets] = useState([]);
@@ -151,7 +151,7 @@ export default function BeeldbankEditor() {
   return (
     <>
       {/* Floating toggle — bottom-left, away from the ElevenLabs orb & footer */}
-      <div data-bb-ui className="fixed bottom-5 left-5 z-[99998]">
+      <div data-bb-ui className="fixed bottom-5 left-5 z-[99998] flex items-center gap-2">
         <button
           onClick={() => setEditMode((v) => !v)}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-body text-[11px] tracking-[0.25em] uppercase transition-all duration-300"
@@ -165,6 +165,18 @@ export default function BeeldbankEditor() {
         >
           {editMode ? <Check className="w-3.5 h-3.5" /> : <Pencil className="w-3.5 h-3.5" />}
           {editMode ? 'Klaar' : 'Beeldbank-modus'}
+        </button>
+        <button
+          onClick={() => { try { sessionStorage.removeItem('bogest-admin-auth'); localStorage.removeItem('bogest-admin-auth'); } catch {} window.location.reload(); }}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-body text-[11px] tracking-[0.25em] uppercase transition-all duration-300 hover:border-[rgba(200,163,89,0.50)]"
+          style={{
+            background: 'rgba(26,24,20,0.72)',
+            color: 'rgba(255,255,255,0.72)',
+            border: '1px solid rgba(255,255,255,0.16)',
+            backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+          }}
+        >
+          <LogOut className="w-3.5 h-3.5" /> Afsluiten
         </button>
       </div>
 

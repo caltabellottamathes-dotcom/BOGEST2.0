@@ -6,7 +6,7 @@ import SectionReveal from '@/components/ui/SectionReveal';
  * Onze Filosofie). Alternërend beeld/tekst, compakte line-spacing, ghost-numeral,
  * goud-hoekaccenten en een zwevende revelatie. Eén ontwerp, overal gelijk.
  */
-export default function StoryChapter({ num, total, title, subtitle, body, image, index }) {
+export default function StoryChapter({ num, total, title, subtitle, body, image, index, bbKey }) {
   const flip = index % 2 === 1;
   return (
     <div className="w-full px-6 md:px-10 lg:px-16 py-10 md:py-14 border-t border-border/40">
@@ -17,6 +17,8 @@ export default function StoryChapter({ num, total, title, subtitle, body, image,
             <div className="relative overflow-hidden rounded-2xl aspect-[4/3] border border-border/40 shadow-2xl group">
               <img
                 src={image}
+                data-bb-key={bbKey}
+                data-bb-label={`Ons verhaal — ${num}`}
                 alt={title}
                 className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-105"
                 style={{ filter: 'saturate(0.85) brightness(0.94)' }}
