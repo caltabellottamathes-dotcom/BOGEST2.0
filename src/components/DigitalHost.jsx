@@ -1148,6 +1148,7 @@ export default function DigitalHost() {
 
   const [weather, setWeather] = useState(null);
   const [proactiveMsg, setProactiveMsg] = useState(null);
+  const [pageBehind, setPageBehind] = useState(false);
   const [pastHero, setPastHero] = useState(false);
   const [blinking, setBlinking] = useState(false);
   const [fabExpanded, setFabExpanded] = useState(false);
@@ -1213,11 +1214,18 @@ export default function DigitalHost() {
     return () => window.removeEventListener('bogest:hero-scroll', handler);
   }, []);
 
-  // On mobile, minimize the chat when a website panel opens so the panel is
-  // visible and the host button stays reachable (it doesn't slide off-screen).
+  // On mobile, when the digital host opens a website panel, dismiss the
+  // keyboard but keep the chat visible — the opened page renders behind the
+  // chat (chat sits at a higher z-index), so the guest keeps talking while the
+  // site responds. The dimming backdrop is hidden so the page stays visible.
   useEffect(() => {
     const handler = (e) => {
-      if (e.detail?.open && isMobile && phase === 'chat') setPhase('minimized');
+      if (e.detail?.open && isMobile && phase === 'chat') {
+        try { inputRef.current?.blur(); } catch {}
+        setPageBehind(true);
+      } else if (!e.detail?.open) {
+        setPageBehind(false);
+      }
     };
     window.addEventListener('bogest:panel-visibility', handler);
     return () => window.removeEventListener('bogest:panel-visibility', handler);
@@ -1319,38 +1327,58 @@ export default function DigitalHost() {
 
   // Popup visibility is handled in the consolidated effect above.
 
-  // Proactive inactivity messages
+  // Proactive bubbles — less frequent, irregular cadence, and tied to what the
+  // visitor is actually doing (current page, weather, returning-guest profile).
+  const PROACTIVE_PAGE_KEYWORDS = {
+    '/menu': ['menu', 'gerecht', 'vlees', 'ribeye', 'filet', 'marmering', 'saus', 'grill', 'stoof', 'côte', 'spare', 'maillard', 'godina', 'wijn', 'orange', 'entremisu', 'belgisch witblauw'],
+    '/locations': ['vestig', 'hasselt', 'borgloon', 'heusden', 'locatie', 'terras', 'gezins', 'romantisch', 'sfeer'],
+    '/reserve': ['reserveer', 'reserver', 'terras', 'tafel', 'lunch', 'diner'],
+    '/gift-cards': ['cadeau', 'gift', 'bon'],
+    '/about': ['verhaal', 'beau geste', 'filosofie', 'belgisch witblauw', 'ambacht', 'grilleurs', 'huiswijnen', 'godina'],
+    '/takeaway': ['afhalen', 'takeaway', 'catering', 'spare', 'menu'],
+    '/contact': ['contact', 'vestig', 'park'],
+  };
   const scheduleProactive = () => {
     clearTimeout(inactivityRef.current);
     if (phase === 'chat') return;
-    // First trigger after 12s, subsequent after 20s
-    const delay = proactiveIndexRef.current === 0 ? 3500 : 30000;
+    // First nudge after ~14s of inactivity; later nudges come at an irregular
+    // 55–95s rhythm so the host never feels like a metronome.
+    const delay = proactiveIndexRef.current === 0 ? 14000 : (55000 + Math.floor(Math.random() * 40000));
     inactivityRef.current = setTimeout(() => {
-      // Build a varied pool: fun facts + conversational invites + weather-aware messages
-      const pool = [...(s.proactive_facts || []), ...(s.proactive_invites || [])];
-      // Personalised reminders (one copy each — selective, not every cycle) so
-      // returning guests feel recognised in the proactive bubbles.
-      const p = visitorProfile;
-      if (p?.name) pool.push({ msg: `Welkom terug, ${p.name}. Fijn u weer te zien — waarmee kan ik u vandaag helpen?`, actions: [] });
-      if (p?.favorite_dish) pool.push({ msg: `Zin in ${p.favorite_dish} weer? Ik kan meteen een tafel zoeken.`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
-      if (p?.preferred_location) pool.push({ msg: `Uw favoriete vestiging is ${DUTCH_LOC_LABEL[p.preferred_location] || p.preferred_location}. Zal ik daar een tafel zoeken?`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
-      if (p?.allergies) pool.push({ msg: `Voor de zekerheid: u gaf ooit aan dat u ${p.allergies} hebt — ik geef het graag door aan de keuken als u reserveert.`, actions: [{ label: 'Reserveer', url: '/reserve' }] });
+      // Occasionally (≈1 in 4) skip a cycle — keeps the pattern feeling human.
+      if (Math.random() < 0.25) { proactiveIndexRef.current++; scheduleProactiveRef.current(); return; }
+      const general = [...(s.proactive_facts || []), ...(s.proactive_invites || [])];
+      // Page-relevant subset — bubbles that mention what's on screen right now.
+      const kws = PROACTIVE_PAGE_KEYWORDS[location.pathname];
+      const relevant = kws ? general.filter((f) => {
+        const m = (f.msg || '').toLowerCase();
+        return kws.some((k) => m.includes(k));
+      }) : [];
+      // Weather-aware nudges, heavier when the weather is decisive.
       const w = weatherRef.current;
-      if (w) {
-        const weatherMsg = pickWeatherProactive(s, w);
-        if (weatherMsg) {
-          const weight = (w.isWarm || w.isRainy || w.isCold) ? 5 : 2;
-          for (let i = 0; i < weight; i++) pool.push(weatherMsg);
-        }
+      const weatherMsg = w ? pickWeatherProactive(s, w) : null;
+      const weatherPool = weatherMsg ? Array((w.isWarm || w.isRainy || w.isCold) ? 4 : 2).fill(weatherMsg) : [];
+      // Personalised reminders for returning guests.
+      const p = visitorProfile;
+      const personal = [];
+      if (p?.name) personal.push({ msg: `Welkom terug, ${p.name}. Fijn u weer te zien — waarmee kan ik u vandaag helpen?` });
+      if (p?.favorite_dish) personal.push({ msg: `Zin in ${p.favorite_dish} weer? Ik kan meteen een tafel zoeken.` });
+      // 65% page-relevant when available, 35% general/weather/personal mix.
+      let pick;
+      if (relevant.length && Math.random() < 0.65) {
+        pick = relevant[Math.floor(Math.random() * relevant.length)];
+      } else {
+        const mixed = [...general, ...weatherPool, ...personal];
+        pick = mixed[Math.floor(Math.random() * mixed.length)];
       }
-      const pick = pool[Math.floor(Math.random() * pool.length)];
       proactiveIndexRef.current++;
       setProactiveMsg(pick);
-      // Auto-hide after 14s then reschedule
+      // Auto-hide after an irregular 11–17s, then reschedule.
+      const hideIn = 11000 + Math.floor(Math.random() * 6000);
       proactiveRef.current = setTimeout(() => {
         setProactiveMsg(null);
         scheduleProactiveRef.current();
-      }, 12000);
+      }, hideIn);
     }, delay);
   };
   scheduleProactiveRef.current = scheduleProactive;
@@ -1401,6 +1429,7 @@ export default function DigitalHost() {
     const open = phase === 'chat' && isMobile;
     document.body.classList.toggle('bogest-chat-open', open);
     window.dispatchEvent(new CustomEvent('bogest:chat-visibility', { detail: { open } }));
+    if (phase !== 'chat') setPageBehind(false);
   }, [phase, isMobile]);
   // Opening the mobile menu (footer) closes the chat so the menu is unobstructed.
   useEffect(() => {
@@ -1625,13 +1654,6 @@ export default function DigitalHost() {
                       <div className="flex-1 min-w-0">
                         <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-0.5" style={{ color: 'rgba(200,163,89,0.90)' }}>Bogèst</p>
                         <p className="font-body text-[13px] leading-snug" style={{ color: 'rgba(255,255,255,0.95)' }}>{proactiveMsg.msg}</p>
-                        {proactiveMsg.actions?.length > 0 && (
-                          <div className="flex flex-wrap gap-1.5 mt-2">
-                            {proactiveMsg.actions.map((a, i) => (
-                              <ProactiveActionButton key={i} label={a.label} url={a.url} onClick={() => setProactiveMsg(null)} />
-                            ))}
-                          </div>
-                        )}
                       </div>
                       <button onClick={e => { e.stopPropagation(); setProactiveMsg(null); }}
                         className="flex-shrink-0 -mr-1 w-6 h-6 rounded-full flex items-center justify-center transition-colors"
@@ -1661,14 +1683,8 @@ export default function DigitalHost() {
                         style={{ color: 'rgba(255,255,255,0.75)' }}>
                         <X className="w-2.5 h-2.5" />
                       </button>
+                      <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-1" style={{ color: 'rgba(200,163,89,0.90)' }}>Bogèst</p>
                       <p className="font-body text-[13px] leading-relaxed pr-4" style={{ color: 'rgba(255,255,255,0.97)' }}>{proactiveMsg.msg}</p>
-                      {proactiveMsg.actions?.length > 0 && (
-                        <div className="flex flex-wrap gap-1.5 mt-2.5">
-                          {proactiveMsg.actions.map((a, i) => (
-                            <ProactiveActionButton key={i} label={a.label} url={a.url} onClick={() => setProactiveMsg(null)} />
-                          ))}
-                        </div>
-                      )}
                     </div>
                     <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 rotate-45"
                       style={{
@@ -1762,13 +1778,16 @@ export default function DigitalHost() {
       <AnimatePresence>
         {phase === 'chat' && (
           <>
-            {/* Mobile backdrop */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 z-[79] bg-black/40 backdrop-blur-sm sm:hidden"
-              onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } setPhase('minimized'); }}
-            />
+            {/* Mobile backdrop — hidden when a website panel is open behind the
+                chat, so the opened page stays visible underneath the chat. */}
+            {!pageBehind && (
+              <motion.div
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="fixed inset-0 z-[79] bg-black/40 backdrop-blur-sm sm:hidden"
+                onClick={() => { if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; } setPhase('minimized'); }}
+              />
+            )}
             <motion.div
               initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, x: shift, y: 0 }} exit={{ opacity: 0, y: 16 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}

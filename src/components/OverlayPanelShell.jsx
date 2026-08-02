@@ -17,9 +17,16 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
   // Toggle the panel-open body flag (pauses the hero video + slides the
   // ElevenLabs widget aside) while this widget overlay is open.
   useEffect(() => {
-    if (isOpen) document.body.classList.add('bogest-panel-open');
-    else document.body.classList.remove('bogest-panel-open');
-    return () => document.body.classList.remove('bogest-panel-open');
+    if (isOpen) {
+      document.body.classList.add('bogest-panel-open', 'bogest-overlay-open');
+    } else {
+      document.body.classList.remove('bogest-panel-open', 'bogest-overlay-open');
+    }
+    window.dispatchEvent(new CustomEvent('bogest:overlay-panel-visibility', { detail: { open: isOpen } }));
+    return () => {
+      document.body.classList.remove('bogest-panel-open', 'bogest-overlay-open');
+      window.dispatchEvent(new CustomEvent('bogest:overlay-panel-visibility', { detail: { open: false } }));
+    };
   }, [isOpen]);
 
   return (

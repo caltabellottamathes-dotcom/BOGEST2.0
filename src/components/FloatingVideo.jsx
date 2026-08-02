@@ -25,6 +25,7 @@ export default function FloatingVideo() {
   const [blinking, setBlinking] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const shift = usePanelShift();
 
   useEffect(() => {
@@ -57,6 +58,14 @@ export default function FloatingVideo() {
     const handler = (e) => setChatOpen(e.detail?.open === true);
     window.addEventListener('bogest:chat-visibility', handler);
     return () => window.removeEventListener('bogest:chat-visibility', handler);
+  }, []);
+
+  // Slide the video card off-screen on mobile while a widget overlay panel
+  // (reserve / giftcard) is open; it returns when the panel closes.
+  useEffect(() => {
+    const handler = (e) => setOverlayOpen(e.detail?.open === true);
+    window.addEventListener('bogest:overlay-panel-visibility', handler);
+    return () => window.removeEventListener('bogest:overlay-panel-visibility', handler);
   }, []);
 
   // Fade/scale the card in smoothly once it's allowed to show.
@@ -102,16 +111,16 @@ export default function FloatingVideo() {
     setPlaying(false);
   };
 
-  const base = isDesktop ? 172 : 132;
+  const base = isDesktop ? 172 : 112;
   const scale = active ? (isDesktop ? 2.6 : 1.9) : 1;
 
   return (
     <div
       className="fixed right-4 sm:right-5 z-[100001]"
       style={{
-        bottom: 96,
+        bottom: 84,
         pointerEvents: 'none',
-        transform: `translateX(${shift + ((kbOpen || chatOpen) ? 600 : 0)}px)`,
+        transform: `translateX(${shift + ((kbOpen || chatOpen) ? 600 : 0) + ((!isDesktop && overlayOpen) ? 700 : 0)}px)`,
         transition: 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >

@@ -205,7 +205,7 @@ video::-internal-media-controls-overlay-cast-button { display: none !important; 
 
 /* Slightly shrink the ElevenLabs widget orb on mobile */
 @media (max-width: 639px) {
-  elevenlabs-convai { transform: scale(0.9); transform-origin: bottom right; }
+  elevenlabs-convai { transform: scale(0.82); transform-origin: bottom right; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 }
 
 /* Slide the ElevenLabs widget aside when a glass panel opens — synced with the panel animation */
@@ -226,6 +226,19 @@ body.bogest-panel-open div[class*="convai"] {
     /* Mobile panels are full-screen — keep the widget orb visible above the
        panel so the visitor can keep talking / navigating. */
     transform: none !important;
+  }
+}
+
+/* Slide the ElevenLabs widget off-screen while a widget overlay panel
+   (reserve / giftcard) is open on mobile — the panel covers the right edge. */
+@media (max-width: 639px) {
+  body.bogest-overlay-open elevenlabs-convai,
+  body.bogest-overlay-open div[id*="elevenlabs"],
+  body.bogest-overlay-open div[class*="elevenlabs"],
+  body.bogest-overlay-open div[id*="convai"],
+  body.bogest-overlay-open div[class*="convai"] {
+    transform: translateX(120vw) !important;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
   }
 }
 
