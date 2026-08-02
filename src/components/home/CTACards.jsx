@@ -46,7 +46,7 @@ export default function CTACards() {
               decoding="async"
               draggable={false}
               className="absolute pointer-events-none select-none"
-              style={{ height: '220%', width: 'auto', bottom: '-70%', right: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
+              style={{ height: '220%', width: 'auto', bottom: '-70%', left: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
             />
             <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
               <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{t('home_cta_label')}</p>
