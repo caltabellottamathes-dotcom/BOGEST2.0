@@ -71,27 +71,12 @@ export default function ElevenLabsAgent() {
       startWebsiteSyncEngine();
       const cfg = event.detail.config;
 
-      // Inject the shared Guest Profile as dynamic variables so the voice host
-      // recognises returning guests and resumes context.
-      try {
-        const visitorId = getVisitorId();
-        const res = await base44.functions.invoke('memoryTools', { action: 'getGuestProfile', visitor_id: visitorId });
-        const p = res?.data?.profile || {};
-        const prefs = res?.data?.preferences || [];
-        cfg.dynamic_variables = {
-          guest_first_name: p.first_name || p.preferred_name || '',
-          guest_is_returning: res?.data?.is_returning ? 'true' : 'false',
-          guest_last_topic: p.last_topic || '',
-          guest_last_channel: p.last_channel || '',
-          guest_consent_state: p.consent_state || 'none',
-          guest_preferred_location: p.preferred_location || '',
-          guest_favorite_dish: p.favorite_dish || '',
-          guest_visit_count: String(p.visit_count || 0),
-          guest_preferences: prefs.map((x) => `${x.key}=${x.value}`).slice(0, 15).join('|'),
-          guest_visitor_id: visitorId,
-        };
-      } catch { /* fail silently — voice host still works without persistence */ }
-
+      // ── 1. Register client tools SYNCHRONOUSLY, FIRST. ──────────────────
+      // The agent can invoke "websiteAction" the instant it touches a topic —
+      // sometimes within the first second of the call. If we awaited the
+      // guest-profile fetch below BEFORE registering the tool, an early tool
+      // call (or a slow/hanging fetch) would find no registered handler and
+      // silently do nothing. Tools must be live before anything async runs.
       cfg.clientTools = {
         websiteAction: async (params = {}) => {
           const a = String(params.action || 'go').toLowerCase();
@@ -118,6 +103,29 @@ export default function ElevenLabsAgent() {
           return result;
         },
       };
+
+      // ── 2. Inject the shared Guest Profile as dynamic variables (best-effort). ──
+      // This is cosmetic (greeting name / returning-guest context) and must NEVER
+      // block tool availability. It runs after clientTools are already live, and
+      // any failure is swallowed — the voice host works without persistence.
+      try {
+        const visitorId = getVisitorId();
+        const res = await base44.functions.invoke('memoryTools', { action: 'getGuestProfile', visitor_id: visitorId });
+        const p = res?.data?.profile || {};
+        const prefs = res?.data?.preferences || [];
+        cfg.dynamic_variables = {
+          guest_first_name: p.first_name || p.preferred_name || '',
+          guest_is_returning: res?.data?.is_returning ? 'true' : 'false',
+          guest_last_topic: p.last_topic || '',
+          guest_last_channel: p.last_channel || '',
+          guest_consent_state: p.consent_state || 'none',
+          guest_preferred_location: p.preferred_location || '',
+          guest_favorite_dish: p.favorite_dish || '',
+          guest_visit_count: String(p.visit_count || 0),
+          guest_preferences: prefs.map((x) => `${x.key}=${x.value}`).slice(0, 15).join('|'),
+          guest_visitor_id: visitorId,
+        };
+      } catch { /* fail silently — voice host still works without persistence */ }
     };
     el.addEventListener('elevenlabs-convai:call', onCall);
 
