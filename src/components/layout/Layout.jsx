@@ -9,6 +9,7 @@ import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import FloatingVideo from '@/components/FloatingVideo';
 import UIActionOverlay from '@/components/UIActionOverlay';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
+import BeeldbankEditor from '@/components/BeeldbankEditor';
 import { SiteImagesProvider } from '@/lib/SiteImageContext';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
@@ -107,6 +108,9 @@ export default function Layout() {
 
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />
+
+      {/* Beeldbank in-place editor — only renders when logged in as Beeldbank admin */}
+      {!isAssets && <BeeldbankEditor />}
     </div>
     </SiteImagesProvider>
   );

@@ -58,6 +58,11 @@ export default function PhilosophySection() {
   const glassBorder = isLight ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.10)';
   const glassShadow = isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)';
 
+  // Footer-matching glass — applied only to the FIRST sticky panel.
+  const footerBg = isLight ? 'hsl(var(--background) / 0.30)' : 'rgba(255,255,255,0.06)';
+  const footerBorder = isLight ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.14)';
+  const footerShadow = isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)';
+
   useEffect(() => {
     const onScroll = () => {
       if (rafRef.current) return;
@@ -166,12 +171,12 @@ export default function PhilosophySection() {
                     right: 0,
                     height: isMobile ? '86%' : '78%',
                     zIndex: 10 + i,
-                    background: glassBg,
-                    backdropFilter: isMobile ? 'blur(14px)' : 'blur(20px)',
-                    WebkitBackdropFilter: isMobile ? 'blur(14px)' : 'blur(20px)',
-                    borderTop: glassBorder,
+                    background: i === 0 ? footerBg : glassBg,
+                    backdropFilter: i === 0 ? 'blur(24px) saturate(150%)' : (isMobile ? 'blur(14px)' : 'blur(20px)'),
+                    WebkitBackdropFilter: i === 0 ? 'blur(24px) saturate(150%)' : (isMobile ? 'blur(14px)' : 'blur(20px)'),
+                    borderTop: i === 0 ? footerBorder : glassBorder,
                     borderRadius: '24px 24px 0 0',
-                    boxShadow: glassShadow,
+                    boxShadow: i === 0 ? footerShadow : glassShadow,
                     overflow: 'hidden',
                     transform: `translate3d(0, ${initOffset}%, 0)`,
                     willChange: 'transform',
@@ -217,6 +222,8 @@ export default function PhilosophySection() {
                           
                           <img
                             src={siteImg('philosophy.' + i)}
+                            data-bb-key={`philosophy.${i}`}
+                            data-bb-label={`Filosofie ${pillar.num}`}
                             alt={pillar.title}
                             className="w-full h-full object-cover"
                             style={{ filter: 'saturate(0.85) brightness(0.92)' }} loading="lazy" decoding="async" />

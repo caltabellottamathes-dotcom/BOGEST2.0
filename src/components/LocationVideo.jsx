@@ -1,9 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 const LOCATION_VIDEOS = {
-  hasselt: 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/aea67e9ce_Hasselt_Vid.mp4',
+  hasselt: 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/b32eef6cb_Hasselt_Vid_New.mp4',
   borgloon: 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/68b498a4a_Borgloon_Vid.mp4',
-  'heusden-zolder': 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/9ffcd4dc5_Heusden_Vid.mp4',
+  'heusden-zolder': 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/193f4a2a7_Heusden_Vid_New.mp4',
 };
 
 // Muted looping location video that plays automatically when its card scrolls

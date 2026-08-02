@@ -1,0 +1,23 @@
+{
+  "name": "SiteTextOverride",
+  "type": "object",
+  "properties": {
+    "key": {
+      "type": "string",
+      "description": "i18n key being overridden (matches a translations[key] entry)"
+    },
+    "lang": {
+      "type": "string",
+      "description": "Language code (nl | fr | en)"
+    },
+    "value": {
+      "type": "string",
+      "description": "Overridden text shown in place of the dictionary value"
+    }
+  },
+  "required": [
+    "key",
+    "lang",
+    "value"
+  ]
+}

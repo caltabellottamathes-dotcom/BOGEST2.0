@@ -29,15 +29,19 @@ export default function HeroSection() {
   return (
     <section className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
       {/* Fixed background — stays in place while the page content slides over it */}
-      <div
-        className="hero-fixed-bg absolute inset-0"
-        style={{
-          backgroundImage: `url(${siteImg('hero')})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-          backgroundRepeat: 'no-repeat',
-        }}
+      {/* Hero video (Grill) — muted, looping. The old hero image is kept safe as
+          the video poster (and remains the 'hero' Beeldbank position). */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/15b3e20c1_Grill_vid.mp4"
+        poster={siteImg('hero')}
+        data-bb-key="hero"
+        data-bb-label="Hero achtergrond"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
       />
 
       {/* Overlays */}

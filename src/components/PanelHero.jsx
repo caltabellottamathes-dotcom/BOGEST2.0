@@ -15,7 +15,7 @@ export default function PanelHero({ label, title, titleAccent, subtitle, childre
     <section className="relative w-full pt-24 md:pt-36 pb-24 md:pb-32 px-6 md:px-12 lg:px-16 overflow-hidden">
       {bg ? (
         <div className="absolute inset-0 z-0">
-          <img src={bg} alt="" className="w-full h-full object-cover" loading="lazy" />
+          <img src={bg} data-bb-key={positionKey || undefined} data-bb-label={label} alt="" className="w-full h-full object-cover" loading="lazy" />
           {/* Zachte warme overlay — soft yellow → grey, niet zwart-geel */}
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.80) 0%, rgba(26,24,20,0.28) 45%, rgba(40,38,33,0.08) 100%)' }} />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, rgba(26,24,20,0.42) 0%, transparent 55%)' }} />
