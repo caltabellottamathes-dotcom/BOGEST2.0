@@ -16,7 +16,7 @@ import { routeTopic } from '@/lib/websiteSyncRouter';
 let lastTargetId = null;
 let lastTargetAt = 0;
 const DEDUP_MS = 3500;
-const NAV_RENDER_MS = 280;
+const NAV_RENDER_MS = 450;
 
 function resetDedupIfStale() {
   if (lastTargetId && Date.now() - lastTargetAt > DEDUP_MS) lastTargetId = null;

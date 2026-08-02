@@ -30,8 +30,11 @@ export function scrollIntoContainerView(el, { behavior = 'smooth' } = {}) {
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
   if (reduceMotion) behavior = 'auto';
   const isMobile = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 640px)').matches;
-  const bias = isMobile ? 64 : 0; // clear the floating orb on mobile
+  // On mobile, bias the target up so the highlighted element clears the
+  // floating voice orb (bottom-right) and the fixed navbar.
+  const bias = isMobile ? 96 : 0;
 
+  // Find nearest scrollable ancestor.
   let node = el.parentElement;
   let scroller = null;
   while (node) {
@@ -43,7 +46,21 @@ export function scrollIntoContainerView(el, { behavior = 'smooth' } = {}) {
     node = node.parentElement;
   }
   if (scroller) {
-    const top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    // Use transform-independent offset accumulation so the scroll lands
+    // correctly even while a glass panel is mid-slide-in — getBoundingClientRect
+    // would be off during the transform animation, causing the scroll to miss
+    // on desktop (and occasionally on mobile).
+    let top = 0;
+    let cur = el;
+    while (cur && cur !== scroller) {
+      top += cur.offsetTop;
+      cur = cur.offsetParent;
+    }
+    if (cur !== scroller) {
+      // offsetParent chain didn't reach the scroller (fixed/transform parents)
+      // — fall back to the rect-based calculation.
+      top = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top + scroller.scrollTop;
+    }
     const target = top - scroller.clientHeight / 2 + el.offsetHeight / 2 - bias;
     scroller.scrollTo({ top: Math.max(0, target), behavior });
   } else {
