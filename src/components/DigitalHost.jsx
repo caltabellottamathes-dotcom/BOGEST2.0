@@ -1017,17 +1017,14 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    // Unmuted intro video — play with sound. If the browser blocks unmuted
-    // autoplay (no prior gesture), play muted for motion and unmute on the
-    // first tap so the guest hears sound the moment they interact.
-    el.muted = false;
-    el.play().catch(() => {
-      el.muted = true;
-      el.play().catch(() => {});
-      const unmute = () => { el.muted = false; el.play().catch(() => {}); window.removeEventListener('pointerdown', unmute); };
-      window.addEventListener('pointerdown', unmute, { passive: true });
-    });
-    return () => { try { videoRef.current?.pause(); } catch {} };
+    // Start muted so the video is guaranteed to autoplay from frame one — it
+    // plays smoothly in sync with the pop-up entrance (no black flash). The
+    // guest hears sound the moment they first interact with the page.
+    el.muted = true;
+    el.play().catch(() => {});
+    const unmute = () => { try { el.muted = false; el.play().catch(() => {}); } catch {} window.removeEventListener('pointerdown', unmute); };
+    window.addEventListener('pointerdown', unmute, { passive: true });
+    return () => { window.removeEventListener('pointerdown', unmute); try { videoRef.current?.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1066,10 +1063,10 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
 
   return (
     <>
-      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.22 }}
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={() => { pauseVideo(); onSkip(); }} />
-      <motion.div initial={{ opacity: 0, scale: 0.96, y: 16 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+      <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
           style={{ maxWidth: 680, maxHeight: '88vh', ...panelStyle, boxShadow: isDark ? '0 32px 80px rgba(0,0,0,0.70)' : '0 32px 80px rgba(0,0,0,0.18)' }}>
@@ -1079,7 +1076,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay playsInline
+              autoPlay muted playsInline preload="auto"
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}

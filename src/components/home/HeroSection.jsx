@@ -57,6 +57,7 @@ export default function HeroSection() {
           loop
           playsInline
           preload="auto"
+          onCanPlay={(e) => { e.currentTarget.play().catch(() => {}); }}
         />
       </div>
 

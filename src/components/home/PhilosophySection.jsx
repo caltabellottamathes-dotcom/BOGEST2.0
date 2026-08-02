@@ -87,18 +87,6 @@ export default function PhilosophySection() {
           const panel = panelRefs.current[i];
           if (panel) panel.style.transform = `translate3d(0, ${offset}%, 0)`;
 
-          const img = imgRefs.current[i];
-          if (img) {
-            const isVisible = offset < 50;
-            if (isMobile) {
-              // Mobile: opacity-only, no transform — avoids expensive repaints
-              img.style.opacity = isVisible ? '1' : '0';
-            } else {
-              const imgX = (i % 2 === 0 ? -1 : 1) * 120;
-              img.style.transform = isVisible ? 'translate3d(0, 0, 0)' : `translate3d(${imgX}px, 0, 0)`;
-              img.style.opacity = isVisible ? '1' : '0';
-            }
-          }
         }
       });
     };
@@ -158,7 +146,6 @@ export default function PhilosophySection() {
             {pillars.map((pillar, i) => {
               const imageLeft = i % 2 === 0;
               const initOffset = i === 0 ? 0 : 100;
-              const initImgX = imageLeft ? -120 : 120;
               return (
                 <div
                   key={pillar.num}
@@ -210,14 +197,10 @@ export default function PhilosophySection() {
                         {/* chapter numeral moved to the text column as a graphic anchor */}
                         {/* Image with refined frame — slides in from its side */}
                         <div
-                          ref={el => imgRefs.current[i] = el}
                           className="relative overflow-hidden rounded-2xl w-full aspect-[16/10] md:aspect-[3/4] max-h-[150px] md:max-h-full"
                           style={{
                             boxShadow: isMobile ? 'none' : (isLight ? '0 16px 56px rgba(0,0,0,0.16)' : '0 16px 56px rgba(0,0,0,0.55)'),
-                            border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(200, 163, 89, 0.22)',
-                            transform: isMobile ? 'translate3d(0, 0, 0)' : (i === 0 ? 'translate3d(0, 0, 0)' : `translate3d(${initImgX}px, 0, 0)`),
-                            opacity: i === 0 ? 1 : 0,
-                            transition: isMobile ? 'opacity 0.3s ease' : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease'
+                            border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(200, 163, 89, 0.22)'
                           }}>
                           
                           <img
