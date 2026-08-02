@@ -4,6 +4,7 @@ import { Check } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { getLocations } from '@/lib/data';
 import ReservationPanel from '@/components/reserve/ReservationPanel';
+import LocationVideo from '@/components/LocationVideo';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
 import { useSiteImages } from '@/lib/SiteImageContext';
@@ -38,42 +39,45 @@ export default function Reserve() {
       <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} positionKey="reserve.hero" />
 
       <PanelContent>
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
+      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-14 pb-24">
         {/* Gelaagd glas — warme gradient + ghostbull */}
-        <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
+        <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.16) 0%, rgba(44,42,36,0.04) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
           <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-8%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
 
-          <div className="relative z-10 p-5 md:p-8">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="relative z-10 p-6 md:p-10">
+            <div className="flex items-center gap-3 mb-3">
               <span className="h-px w-10 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('res_location')}</span>
             </div>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-3">{t('res_title')}<span className="text-primary">.</span></h2>
-            <p className="font-body text-sm text-muted-foreground mb-10 max-w-xl">{t('res_subtitle')}</p>
+            <p className="font-body text-sm text-muted-foreground mb-10 max-w-xl leading-relaxed">{t('res_subtitle')}</p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
               {bookable.map((loc) => {
                 const isActive = selected === loc.slug;
                 return (
                   <button
                     key={loc.slug}
                     onClick={() => setSelected(loc.slug)}
-                    className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl text-left ${isActive ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}
+                    className={`group relative rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl text-left ${isActive ? 'border-primary ring-1 ring-primary/40' : 'border-border hover:border-primary/40'}`}
                   >
-                    <div className="relative h-32 md:h-36 overflow-hidden">
-                      <img src={siteImg('location.' + loc.slug) || loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.78) 0%, rgba(26,24,20,0.1) 60%)' }} />
-                      <span className="absolute left-4 top-3 font-heading font-bold text-white/35 text-2xl leading-none select-none">{loc.number}</span>
-                      <h4 className="absolute left-4 right-4 bottom-3 font-heading text-base md:text-lg font-bold text-white">{loc.name}<span className="text-primary">.</span></h4>
+                    <div className="relative aspect-[4/5] overflow-hidden">
+                      <img src={siteImg('location.' + loc.slug) || loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" decoding="async" />
+                      {!isActive && <LocationVideo slug={loc.slug} />}
+                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.85) 0%, rgba(26,24,20,0.08) 58%)' }} />
+                      <span className="absolute left-4 top-4 font-heading font-bold text-white/30 text-3xl leading-none select-none">{loc.number}</span>
                       {isActive && (
-                        <span className="absolute right-3 top-3 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <Check className="w-3.5 h-3.5 text-primary-foreground" />
+                        <span className="absolute right-3 top-3 w-7 h-7 rounded-full bg-primary flex items-center justify-center">
+                          <Check className="w-4 h-4 text-primary-foreground" />
                         </span>
                       )}
-                    </div>
-                    <div className="p-4 bg-white/[0.04] backdrop-blur-md">
-                      <p className="font-body text-xs text-muted-foreground">{loc.city}</p>
+                      <div className="absolute left-5 right-5 bottom-5">
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="h-px w-6 bg-primary/70" />
+                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary/90">{loc.city}</span>
+                        </div>
+                        <h4 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight">{loc.name}<span className="text-primary">.</span></h4>
+                      </div>
                     </div>
                   </button>
                 );

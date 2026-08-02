@@ -9,7 +9,10 @@ export default function ReservationPanel({ isOpen, onClose, zenchefId, locationN
 
   const header = (
     <>
-      <div className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0" style={{ background: 'hsl(var(--primary) / 0.12)' }}>
+      <div
+        className="flex items-center justify-center w-10 h-10 rounded-full flex-shrink-0"
+        style={{ background: 'hsl(var(--primary) / 0.14)', border: '1px solid rgba(231,205,112,0.30)' }}
+      >
         <Calendar className="text-primary" style={{ width: 18, height: 18 }} />
       </div>
       <div className="flex-1 min-w-0">
@@ -24,7 +27,13 @@ export default function ReservationPanel({ isOpen, onClose, zenchefId, locationN
   return (
     <OverlayPanelShell isOpen={isOpen && !!zenchefId} onClose={onClose} header={header} scrollable={false}>
       <div className="flex-1 min-h-0 flex flex-col p-4 md:p-6">
-        <ZenchefEmbed zenchefId={zenchefId} fillHeight />
+        {/* White widget framed as a card on the warm panel — feels integrated */}
+        <div
+          className="flex-1 min-h-0 rounded-2xl overflow-hidden"
+          style={{ background: '#ffffff', border: '1px solid rgba(231,205,112,0.20)', boxShadow: '0 12px 40px rgba(0,0,0,0.40)' }}
+        >
+          <ZenchefEmbed zenchefId={zenchefId} fillHeight />
+        </div>
       </div>
     </OverlayPanelShell>
   );

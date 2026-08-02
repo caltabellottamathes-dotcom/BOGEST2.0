@@ -203,6 +203,11 @@ body.bogest-chat-open div[class*="convai"] {
   50% { transform: translateY(-4px); }
 }
 
+/* Hero fixed background — on mobile, fixed attachment is janky, so fall back to scroll */
+@media (max-width: 639px) {
+  .hero-fixed-bg { background-attachment: scroll !important; }
+}
+
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }

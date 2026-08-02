@@ -1,6 +1,6 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
@@ -14,12 +14,6 @@ export default function HeroSection() {
   const { t } = useLang();
   const { theme } = useTheme();
   const { siteImg } = useSiteImages();
-  const heroRef = useRef(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  // Opposite-layer parallax: as the page scrolls up, the hero bg slides DOWN.
-  // shift > hero height keeps the bg moving down (net) while staying covered.
-  const shift = (typeof window !== 'undefined' ? window.innerHeight : 800) * 1.5;
-  const y = useSpring(useTransform(scrollYProgress, [0, 1], [0, shift]), { stiffness: 100, damping: 30, mass: 0.5 });
 
   useEffect(() => {
     const handleScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.3);
@@ -33,24 +27,18 @@ export default function HeroSection() {
   }, [pastHero]);
 
   return (
-    <section ref={heroRef} className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-      {/* BG with parallax — desaturated */}
-      <motion.div
-        className="absolute left-0 w-full h-[200%]"
-        style={{ top: '-50%', y, willChange: 'transform' }}
-      >
-        <img
-          src={siteImg('hero')}
-          alt="Bogèst"
-          className="w-full h-full object-cover"
-          fetchpriority="high"
-          decoding="async"
-          style={{
-            filter: theme === 'light' ? 'saturate(0.80) brightness(0.88)' : 'saturate(0.55) brightness(0.85)',
-            imageRendering: 'auto',
-          }}
-        />
-      </motion.div>
+    <section className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+      {/* Fixed background — stays in place while the page content slides over it */}
+      <div
+        className="hero-fixed-bg absolute inset-0"
+        style={{
+          backgroundImage: `url(${siteImg('hero')})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
       {/* Overlays */}
       <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-black/15 to-black/75' : 'bg-gradient-to-b from-transparent via-black/10 to-black/85'}`} />
