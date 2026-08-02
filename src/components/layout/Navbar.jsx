@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Sun, Moon } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
@@ -14,7 +14,7 @@ export default function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
-  const { theme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
   const { lang, t, changeLang } = useLang();
   const location = useLocation();
   const navigate = useNavigate();
@@ -159,6 +159,17 @@ export default function Navbar() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Theme toggle */}
+            <button
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Schakel naar licht' : 'Schakel naar donker'}
+              className={`hidden md:flex items-center justify-center w-8 h-8 rounded-md transition-colors duration-300 ${
+                isTransparent ? 'text-white/60 hover:text-white' : 'text-primary/70 hover:text-primary'
+              }`}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
 
             {/* Reserve CTA */}
             <Link

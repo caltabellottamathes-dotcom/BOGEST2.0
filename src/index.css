@@ -10,52 +10,45 @@
     --font-body: 'Inter', sans-serif;
     --font-logo: 'Cormorant Garamond', serif;
 
-    /* Light mode — warm editorial */
-    --background: 40 18% 97%;
-    --foreground: 25 8% 12%;
-    --card: 38 14% 94%;
-    --card-foreground: 25 8% 12%;
-    --popover: 38 14% 94%;
-    --popover-foreground: 25 8% 12%;
+    /* Light mode — charcoal grey with olive green accents */
+    --background: 38 8% 22%;
+    --foreground: 40 16% 92%;
+    --card: 38 8% 26%;
+    --card-foreground: 40 16% 92%;
+    --popover: 38 8% 26%;
+    --popover-foreground: 40 16% 92%;
 
-    /* Avocado olive green — light mode */
-    --primary: 80 32% 36%;
-    --primary-foreground: 40 18% 97%;
+    /* Olive green — the accent */
+    --primary: 88 32% 52%;
+    --primary-foreground: 38 10% 12%;
 
-    --secondary: 80 18% 90%;
-    --secondary-foreground: 25 8% 18%;
-    --muted: 80 10% 91%;
-    --muted-foreground: 25 5% 48%;
-    --accent: 80 32% 36%;
-    --accent-foreground: 40 18% 97%;
-    --destructive: 0 72% 51%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 80 12% 86%;
-    --input: 80 12% 86%;
-    --ring: 80 32% 36%;
+    --secondary: 38 8% 28%;
+    --secondary-foreground: 40 16% 88%;
+    --muted: 38 8% 25%;
+    --muted-foreground: 40 8% 66%;
+    --accent: 88 32% 52%;
+    --accent-foreground: 38 10% 12%;
+    --destructive: 0 50% 52%;
+    --destructive-foreground: 40 16% 95%;
+    --border: 38 7% 32%;
+    --input: 38 7% 32%;
+    --ring: 88 32% 52%;
 
-    --chart-1: 80 32% 36%;
-    --chart-2: 355 40% 30%;
-    --chart-3: 25 40% 55%;
-    --chart-4: 200 30% 40%;
-    --chart-5: 50 40% 55%;
+    --chart-1: 88 32% 52%;
+    --chart-2: 355 35% 52%;
+    --chart-3: 25 35% 55%;
+    --chart-4: 200 28% 52%;
+    --chart-5: 50 35% 55%;
     --radius: 0.5rem;
 
-    --sidebar-background: 40 18% 97%;
-    --sidebar-foreground: 25 8% 12%;
-    --sidebar-primary: 80 32% 36%;
-    --sidebar-primary-foreground: 40 18% 97%;
-    --sidebar-accent: 80 18% 90%;
-    --sidebar-accent-foreground: 25 8% 12%;
-    --sidebar-border: 80 12% 86%;
-    --sidebar-ring: 80 32% 36%;
-  }
-
-  /* Light mode — richer avocado accents */
-  .light {
-    --primary: 80 35% 33%;
-    --accent: 80 35% 33%;
-    --ring: 80 35% 33%;
+    --sidebar-background: 38 8% 20%;
+    --sidebar-foreground: 40 16% 92%;
+    --sidebar-primary: 88 32% 52%;
+    --sidebar-primary-foreground: 38 10% 12%;
+    --sidebar-accent: 38 8% 26%;
+    --sidebar-accent-foreground: 40 16% 92%;
+    --sidebar-border: 38 7% 30%;
+    --sidebar-ring: 88 32% 52%;
   }
 
   .dark {

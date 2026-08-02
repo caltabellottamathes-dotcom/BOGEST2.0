@@ -43,6 +43,16 @@
     <meta name="theme-color" content="#4d5e24" />
     <meta name="msapplication-TileColor" content="#4d5e24" />
 
+    <!-- No-flash theme: apply stored theme before first paint -->
+    <script>
+      (function () {
+        try {
+          if (localStorage.getItem('bogest-theme') === 'light') document.documentElement.classList.remove('dark');
+          else document.documentElement.classList.add('dark');
+        } catch (e) { document.documentElement.classList.add('dark'); }
+      })();
+    </script>
+
     <!-- Performance hints -->
     <link rel="preconnect" href="https://images.squarespace-cdn.com" crossorigin />
     <link rel="dns-prefetch" href="https://images.squarespace-cdn.com" />
