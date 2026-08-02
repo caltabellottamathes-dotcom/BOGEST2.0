@@ -41,7 +41,7 @@ export default function HeroSection() {
       />
 
       {/* Overlays */}
-      <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-black/25 to-black/85' : 'bg-gradient-to-b from-transparent via-black/25 to-black/92'}`} />
+      <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-transparent to-black/85' : 'bg-gradient-to-b from-transparent via-transparent to-black/92'}`} />
       <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-r from-black/45 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/55 via-black/25 to-transparent'}`} />
 
       {/* Content */}

@@ -26,7 +26,7 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 pointer-events-auto"
-            style={{ background: 'rgba(10,8,4,0.62)' }}
+            style={{ background: 'transparent' }}
           />
 
           {/* Panel */}
