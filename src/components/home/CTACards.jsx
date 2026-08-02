@@ -69,7 +69,7 @@ export default function CTACards() {
                 const Icon = card.icon;
                 return (
                   <Link key={i} to={card.path} className="group/item flex items-center gap-4 -mx-2 px-2 py-3 rounded-xl hover:bg-white/[0.06] transition-colors duration-300">
-                    <span className="w-10 h-10 rounded-xl flex items-center justify-center text-primary flex-shrink-0" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.30)' }}>
+                    <span className="w-10 h-10 rounded-xl flex items-center justify-center text-primary flex-shrink-0" style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.30)' }}>
                       <Icon style={{ width: 17, height: 17 }} />
                     </span>
                     <div className="flex-1 min-w-0">

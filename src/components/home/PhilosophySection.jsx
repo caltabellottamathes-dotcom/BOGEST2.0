@@ -214,7 +214,7 @@ export default function PhilosophySection() {
                           className="relative overflow-hidden rounded-2xl w-full aspect-[16/10] md:aspect-[3/4] max-h-[150px] md:max-h-full"
                           style={{
                             boxShadow: isMobile ? 'none' : (isLight ? '0 16px 56px rgba(0,0,0,0.16)' : '0 16px 56px rgba(0,0,0,0.55)'),
-                            border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(231, 205, 112, 0.22)',
+                            border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(200, 163, 89, 0.22)',
                             transform: isMobile ? 'translate3d(0, 0, 0)' : (i === 0 ? 'translate3d(0, 0, 0)' : `translate3d(${initImgX}px, 0, 0)`),
                             opacity: i === 0 ? 1 : 0,
                             transition: isMobile ? 'opacity 0.3s ease' : 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease'

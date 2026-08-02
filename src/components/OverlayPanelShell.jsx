@@ -45,8 +45,8 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
               background: 'rgba(26,24,20,0.82)',
               backdropFilter: 'blur(40px) saturate(150%)',
               WebkitBackdropFilter: 'blur(40px) saturate(150%)',
-              borderTop: '1px solid rgba(231,205,112,0.18)',
-              borderLeft: '1px solid rgba(231,205,112,0.10)',
+              borderTop: '1px solid rgba(200,163,89,0.18)',
+              borderLeft: '1px solid rgba(200,163,89,0.10)',
               borderRadius: '24px 0 0 0',
               boxShadow: '0 -24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
               willChange: 'transform',
@@ -65,7 +65,7 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
               className="absolute top-5 left-4 z-50 w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95"
               style={{
                 background: 'rgba(255,255,255,0.08)',
-                border: '1px solid rgba(231,205,112,0.25)',
+                border: '1px solid rgba(200,163,89,0.25)',
                 backdropFilter: 'blur(12px)',
                 WebkitBackdropFilter: 'blur(12px)',
               }}

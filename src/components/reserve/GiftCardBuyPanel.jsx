@@ -22,7 +22,7 @@ export default function GiftCardBuyPanel({ isOpen, onClose }) {
     <>
       <div
         className="flex items-center justify-center w-11 h-11 rounded-full flex-shrink-0"
-        style={{ background: 'hsl(var(--primary) / 0.16)', border: '1px solid rgba(231,205,112,0.35)' }}
+        style={{ background: 'hsl(var(--primary) / 0.16)', border: '1px solid rgba(200,163,89,0.35)' }}
       >
         <Gift className="text-primary" style={{ width: 20, height: 20 }} />
       </div>
@@ -40,10 +40,10 @@ export default function GiftCardBuyPanel({ isOpen, onClose }) {
         <div className="flex-shrink-0 mb-4 md:mb-5">
           <p className="font-heading text-base md:text-lg text-foreground leading-snug max-w-md">{c.intro}</p>
           <div className="flex flex-wrap gap-2 mt-3">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-muted-foreground" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(231,205,112,0.18)' }}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-muted-foreground" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(200,163,89,0.18)' }}>
               <span className="w-1 h-1 rounded-full bg-primary" />{c.tagDigital}
             </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-muted-foreground" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(231,205,112,0.18)' }}>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-[0.2em] uppercase text-muted-foreground" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(200,163,89,0.18)' }}>
               <span className="w-1 h-1 rounded-full bg-primary" />{c.tagPhysical}
             </span>
           </div>
@@ -52,7 +52,7 @@ export default function GiftCardBuyPanel({ isOpen, onClose }) {
         {/* White widget framed as a card on the warm panel — feels integrated */}
         <div
           className="flex-1 min-h-0 rounded-2xl overflow-hidden flex flex-col"
-          style={{ background: '#ffffff', border: '1px solid rgba(231,205,112,0.20)', boxShadow: '0 12px 40px rgba(0,0,0,0.40)' }}
+          style={{ background: '#ffffff', border: '1px solid rgba(200,163,89,0.20)', boxShadow: '0 12px 40px rgba(0,0,0,0.40)' }}
         >
           <ZenchefGiftCardEmbed fillHeight />
         </div>

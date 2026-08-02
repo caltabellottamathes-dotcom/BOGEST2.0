@@ -6,7 +6,7 @@ export default function RecommendationCard({ item, isDark }) {
   if (!item) return null;
 
   const cardBg = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(74,83,32,0.05)';
-  const cardBorder = isDark ? 'rgba(231,205,112,0.18)' : 'rgba(74,83,32,0.22)';
+  const cardBorder = isDark ? 'rgba(200,163,89,0.18)' : 'rgba(74,83,32,0.22)';
 
   // Use category-based placeholder images
   const CATEGORY_IMAGES = {
@@ -39,7 +39,7 @@ export default function RecommendationCard({ item, isDark }) {
             </p>
             {item.price != null && (
               <span className="font-body text-xs font-semibold flex-shrink-0"
-                style={{ color: isDark ? 'rgba(231,205,112,0.95)' : 'rgba(107,122,63,0.95)' }}>
+                style={{ color: isDark ? 'rgba(200,163,89,0.95)' : 'rgba(107,122,63,0.95)' }}>
                 €{item.price}
               </span>
             )}
@@ -52,7 +52,7 @@ export default function RecommendationCard({ item, isDark }) {
           )}
           {item.pairing && (
             <p className="font-body text-[10px] mt-1 flex items-center gap-1"
-              style={{ color: isDark ? 'rgba(231,205,112,0.75)' : 'rgba(107,122,63,0.75)' }}>
+              style={{ color: isDark ? 'rgba(200,163,89,0.75)' : 'rgba(107,122,63,0.75)' }}>
               <span className="tracking-wide">🍷</span>
               <span className="line-clamp-1">{item.pairing}</span>
             </p>
@@ -63,7 +63,7 @@ export default function RecommendationCard({ item, isDark }) {
         <div className="px-3 pb-2 flex gap-1.5">
           {item.is_popular && (
             <span className="font-body text-[9px] tracking-wide uppercase px-1.5 py-0.5 rounded-full"
-              style={{ background: isDark ? 'rgba(231,205,112,0.15)' : 'rgba(107,122,63,0.15)', color: isDark ? 'rgba(231,205,112,0.85)' : 'rgba(107,122,63,0.85)' }}>
+              style={{ background: isDark ? 'rgba(200,163,89,0.15)' : 'rgba(107,122,63,0.15)', color: isDark ? 'rgba(200,163,89,0.85)' : 'rgba(107,122,63,0.85)' }}>
               Populair
             </span>
           )}

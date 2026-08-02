@@ -34,7 +34,7 @@ function titleFor(type, args) {
 function Spinner() {
   return (
     <div className="flex items-center justify-center py-16">
-      <div className="w-7 h-7 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(231,205,112,0.25)', borderTopColor: 'hsl(var(--primary))' }} />
+      <div className="w-7 h-7 border-2 rounded-full animate-spin" style={{ borderColor: 'rgba(200,163,89,0.25)', borderTopColor: 'hsl(var(--primary))' }} />
     </div>
   );
 }
@@ -96,7 +96,7 @@ function renderBody(type, args, items, locInfo) {
     const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(locInfo.name + ' ' + locInfo.address)}`;
     return (
       <div className="text-center py-2">
-        <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.15)', border: '1px solid rgba(231,205,112,0.35)' }}>
+        <div className="w-14 h-14 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: 'rgba(200,163,89,0.15)', border: '1px solid rgba(200,163,89,0.35)' }}>
           <MapPin className="w-6 h-6 text-primary" />
         </div>
         <p className="font-heading text-lg font-bold mb-1" style={{ color: 'rgba(255,240,200,0.97)' }}>{locInfo.name}</p>
@@ -164,7 +164,7 @@ export default function UIActionOverlay() {
     return (
       <AnimatePresence>
         <motion.div initial={{ opacity: 0, y: -28 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -28 }} transition={{ duration: 0.3 }} className="fixed top-4 left-1/2 -translate-x-1/2 z-[100003] px-4 w-auto max-w-[92vw]">
-          <div className="flex items-center gap-3 px-5 py-3 rounded-2xl" style={{ background: severity === 'error' ? 'rgba(170,40,30,0.92)' : 'rgba(12,10,6,0.85)', backdropFilter: 'blur(22px) saturate(160%)', WebkitBackdropFilter: 'blur(22px) saturate(160%)', border: '1px solid ' + (severity === 'error' ? 'rgba(255,130,120,0.5)' : 'rgba(231,205,112,0.4)'), boxShadow: '0 12px 32px rgba(0,0,0,0.45)' }}>
+          <div className="flex items-center gap-3 px-5 py-3 rounded-2xl" style={{ background: severity === 'error' ? 'rgba(170,40,30,0.92)' : 'rgba(12,10,6,0.85)', backdropFilter: 'blur(22px) saturate(160%)', WebkitBackdropFilter: 'blur(22px) saturate(160%)', border: '1px solid ' + (severity === 'error' ? 'rgba(255,130,120,0.5)' : 'rgba(200,163,89,0.4)'), boxShadow: '0 12px 32px rgba(0,0,0,0.45)' }}>
             <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: severity === 'error' ? '#ff8a80' : 'hsl(var(--primary))' }} />
             <p className="font-body text-sm" style={{ color: 'rgba(255,255,255,0.96)' }}>{args[0]}</p>
             <button onClick={close} className="ml-1 text-white/60 hover:text-white"><X className="w-4 h-4" /></button>
@@ -181,8 +181,8 @@ export default function UIActionOverlay() {
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={close} className="fixed inset-0 z-[100003] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.72)', backdropFilter: 'blur(6px)' }}>
-        <motion.div initial={{ opacity: 0, scale: 0.94, y: 18 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 18 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} onClick={(e) => e.stopPropagation()} className="relative w-full rounded-[20px] overflow-hidden flex flex-col" style={{ maxWidth: isMap ? 460 : 720, maxHeight: '86vh', background: 'rgba(12,10,6,0.94)', backdropFilter: 'blur(28px)', border: '1px solid rgba(231,205,112,0.25)', boxShadow: '0 24px 64px rgba(0,0,0,0.6)' }}>
-          <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: '1px solid rgba(231,205,112,0.18)' }}>
+        <motion.div initial={{ opacity: 0, scale: 0.94, y: 18 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.94, y: 18 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }} onClick={(e) => e.stopPropagation()} className="relative w-full rounded-[20px] overflow-hidden flex flex-col" style={{ maxWidth: isMap ? 460 : 720, maxHeight: '86vh', background: 'rgba(12,10,6,0.94)', backdropFilter: 'blur(28px)', border: '1px solid rgba(200,163,89,0.25)', boxShadow: '0 24px 64px rgba(0,0,0,0.6)' }}>
+          <div className="flex items-center justify-between px-5 py-4 flex-shrink-0" style={{ borderBottom: '1px solid rgba(200,163,89,0.18)' }}>
             <h3 className="font-heading text-lg font-bold" style={{ color: 'rgba(255,240,200,0.97)' }}>{titleFor(type, args)}</h3>
             <button onClick={close} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.7)' }}><X className="w-4 h-4" /></button>
           </div>

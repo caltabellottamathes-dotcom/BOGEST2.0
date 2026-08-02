@@ -69,7 +69,7 @@ export default function BeeldbankEditor() {
 
       const oldText = t.textContent.trim();
       t.setAttribute('contenteditable', 'true');
-      t.style.outline = '2px solid hsl(47 73% 67%)';
+      t.style.outline = '2px solid hsl(40 50% 57%)';
       t.style.outlineOffset = '2px';
       t.focus();
       try {
@@ -107,8 +107,8 @@ export default function BeeldbankEditor() {
     const style = document.createElement('style');
     style.id = 'bb-edit-style';
     style.textContent = `
-      [data-bb-key] { cursor: pointer !important; outline: 2px dashed hsl(47 73% 67% / 0.85) !important; outline-offset: 3px; }
-      [data-bb-key]::after { content: 'Wissel'; position:absolute; top:8px; left:8px; font:600 9px/1 Inter,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#1a1812; background:hsl(47 73% 67%); padding:3px 7px; border-radius:6px; z-index:99999; pointer-events:none; }
+      [data-bb-key] { cursor: pointer !important; outline: 2px dashed hsl(40 50% 57% / 0.85) !important; outline-offset: 3px; }
+      [data-bb-key]::after { content: 'Wissel'; position:absolute; top:8px; left:8px; font:600 9px/1 Inter,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#1a1812; background:hsl(40 50% 57%); padding:3px 7px; border-radius:6px; z-index:99999; pointer-events:none; }
     `;
     document.head.appendChild(style);
 
@@ -156,9 +156,9 @@ export default function BeeldbankEditor() {
           onClick={() => setEditMode((v) => !v)}
           className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full font-body text-[11px] tracking-[0.25em] uppercase transition-all duration-300"
           style={{
-            background: editMode ? 'hsl(47 73% 67%)' : 'rgba(26,24,20,0.72)',
+            background: editMode ? 'hsl(40 50% 57%)' : 'rgba(26,24,20,0.72)',
             color: editMode ? '#1a1812' : 'rgba(255,255,255,0.92)',
-            border: editMode ? '1px solid hsl(47 73% 67%)' : '1px solid rgba(231,205,112,0.30)',
+            border: editMode ? '1px solid hsl(40 50% 57%)' : '1px solid rgba(200,163,89,0.30)',
             backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
             boxShadow: '0 10px 30px rgba(0,0,0,0.35)',
           }}
@@ -177,7 +177,7 @@ export default function BeeldbankEditor() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className="fixed top-20 md:top-24 left-1/2 -translate-x-1/2 z-[99998] px-4 py-2 rounded-full"
-            style={{ background: 'rgba(26,24,20,0.78)', border: '1px solid rgba(231,205,112,0.30)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+            style={{ background: 'rgba(26,24,20,0.78)', border: '1px solid rgba(200,163,89,0.30)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
           >
             <p className="font-body text-[10px] tracking-[0.2em] uppercase text-white/85 whitespace-nowrap">
               Klik een beeld om te wisselen · klik tekst om te bewerken
@@ -195,7 +195,7 @@ export default function BeeldbankEditor() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
             className="fixed bottom-20 left-5 z-[99998] px-4 py-2 rounded-full"
-            style={{ background: 'hsl(47 73% 67%)', color: '#1a1812' }}
+            style={{ background: 'hsl(40 50% 57%)', color: '#1a1812' }}
           >
             <p className="font-body text-[10px] tracking-[0.2em] uppercase font-semibold">{toast}</p>
           </motion.div>
@@ -221,7 +221,7 @@ export default function BeeldbankEditor() {
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-4xl max-h-[85vh] flex flex-col rounded-2xl overflow-hidden"
-              style={{ background: 'hsl(25 6% 9%)', border: '1px solid rgba(231,205,112,0.22)', boxShadow: '0 30px 80px rgba(0,0,0,0.6)' }}
+              style={{ background: 'hsl(25 6% 9%)', border: '1px solid rgba(200,163,89,0.22)', boxShadow: '0 30px 80px rgba(0,0,0,0.6)' }}
             >
               {/* Header */}
               <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>

@@ -781,7 +781,7 @@ function LogoAvatar({ size = 'sm', online = true }) {
   return (
     <div className="relative flex-shrink-0" style={{ width: px, height: px }}>
       <div className="w-full h-full rounded-full overflow-hidden"
-        style={{ border: '1.5px solid rgba(231,205,112,0.45)' }}>
+        style={{ border: '1.5px solid rgba(200,163,89,0.45)' }}>
         <img src={HOST_PHOTO_URL} alt="Bogèst gastheer" className="w-full h-full object-cover" />
       </div>
       {online && (
@@ -876,7 +876,7 @@ function InstagramCard({ post }) {
   return (
     <a href={post.permalink || '#'} target="_blank" rel="noopener noreferrer"
       className="block rounded-xl overflow-hidden mt-2 transition-transform duration-200 hover:scale-[1.02]"
-      style={{ border: '1px solid rgba(231,205,112,0.30)' }}>
+      style={{ border: '1px solid rgba(200,163,89,0.30)' }}>
       <div className="w-full h-40" style={{ background: 'rgba(255,255,255,0.06)' }}>
         <img src={post.media_url} alt={post.caption || 'Instagram'} className="w-full h-40 object-cover" loading="eager" decoding="async" fetchpriority="high" />
       </div>
@@ -962,7 +962,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
 function UserBubble({ content, isDark }) {
   return (
     <div className="flex justify-end">
-      <div className="max-w-[78%] px-4 py-2.5 rounded-2xl rounded-tr-md" style={{ background: isDark ? 'rgba(231,205,112,0.16)' : 'rgba(107,122,63,0.14)', border: '1px solid ' + (isDark ? 'rgba(231,205,112,0.34)' : 'rgba(107,122,63,0.30)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
+      <div className="max-w-[78%] px-4 py-2.5 rounded-2xl rounded-tr-md" style={{ background: isDark ? 'rgba(200,163,89,0.16)' : 'rgba(107,122,63,0.14)', border: '1px solid ' + (isDark ? 'rgba(200,163,89,0.34)' : 'rgba(107,122,63,0.30)'), backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
         <p className="font-body text-sm leading-relaxed" style={{ color: isDark ? 'rgba(255,255,255,0.95)' : 'hsl(var(--foreground))' }}>{content}</p>
       </div>
     </div>
@@ -984,7 +984,7 @@ function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
   const isGhost = variant === 'ghost';
   let style;
   if (isPrimary) {
-    style = { background: isDark ? 'rgba(231,205,112,0.14)' : 'rgba(107,122,63,0.10)', border: '1px solid rgba(231,205,112,0.50)' };
+    style = { background: isDark ? 'rgba(200,163,89,0.14)' : 'rgba(107,122,63,0.10)', border: '1px solid rgba(200,163,89,0.50)' };
   } else if (isGhost) {
     style = { background: 'transparent', border: '1px solid ' + (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(74,83,32,0.18)') };
   } else {
@@ -995,7 +995,7 @@ function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
       className="group w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.015] cursor-pointer text-left"
       style={style}>
       <span className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors"
-        style={{ background: isPrimary ? 'rgba(231,205,112,0.20)' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.035)', border: isPrimary ? '1px solid rgba(231,205,112,0.35)' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(74,83,32,0.14)' }}>
+        style={{ background: isPrimary ? 'rgba(200,163,89,0.20)' : isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.035)', border: isPrimary ? '1px solid rgba(200,163,89,0.35)' : isDark ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(74,83,32,0.14)' }}>
         <Icon className="w-4 h-4 text-primary" strokeWidth={1.75} />
       </span>
       <span className="flex-1 min-w-0">
@@ -1104,7 +1104,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               <h2 className="font-heading text-2xl font-bold text-foreground leading-tight">{s.entry_headline}</h2>
               <p className="font-body text-sm text-muted-foreground mt-1.5">{s.entry_sub}</p>
             </div>
-            <div className="h-px w-10 mb-5" style={{ background: isDark ? 'rgba(231,205,112,0.45)' : 'rgba(107,122,63,0.40)' }} />
+            <div className="h-px w-10 mb-5" style={{ background: isDark ? 'rgba(200,163,89,0.45)' : 'rgba(107,122,63,0.40)' }} />
 
             <p className="font-body text-sm text-foreground/80 leading-relaxed mb-6 whitespace-pre-line">{fullIntro}</p>
 
@@ -1623,7 +1623,7 @@ export default function DigitalHost() {
                       }}>
                       <span className="flex-shrink-0 mt-1.5 w-2 h-2 rounded-full bg-primary" />
                       <div className="flex-1 min-w-0">
-                        <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-0.5" style={{ color: 'rgba(231,205,112,0.90)' }}>Bogèst</p>
+                        <p className="font-body text-[9px] tracking-[0.22em] uppercase font-semibold mb-0.5" style={{ color: 'rgba(200,163,89,0.90)' }}>Bogèst</p>
                         <p className="font-body text-[13px] leading-snug" style={{ color: 'rgba(255,255,255,0.95)' }}>{proactiveMsg.msg}</p>
                         {proactiveMsg.actions?.length > 0 && (
                           <div className="flex flex-wrap gap-1.5 mt-2">
@@ -1786,7 +1786,7 @@ export default function DigitalHost() {
                 height: nativeKb > 0 ? `calc(100dvh - ${nativeKb}px - 8px)` : 'min(72dvh, 560px)',
                 /* Tablet+ override: floating panel raised to clear the ElevenLabs orb */
                 ...(typeof window !== 'undefined' && window.innerWidth >= 640 ? { width: 'min(calc(100vw - 48px), 440px)', height: 'min(80vh, 600px)', bottom: '80px', right: '96px' } : {}),
-                boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(231,205,112,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
+                boxShadow: isDark ? '0 28px 72px rgba(80,50,0,0.60), 0 0 0 1px rgba(200,163,89,0.15)' : '0 28px 72px rgba(0,0,0,0.20), 0 0 0 1px rgba(74,83,32,0.10)',
               }}
             >
               {/* Background watermark removed */}
@@ -1800,7 +1800,7 @@ export default function DigitalHost() {
                   <LogoAvatar size="md" online isDark={isDark} />
                   <div>
                     <p className="font-heading text-sm font-bold leading-none" style={{ color: isDark ? 'rgba(255,240,180,0.97)' : 'rgba(40,50,15,0.95)' }}>{s.title}</p>
-                    <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: isDark ? 'rgba(231,205,112,0.80)' : 'rgba(107,122,63,0.80)' }}>
+                    <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: isDark ? 'rgba(200,163,89,0.80)' : 'rgba(107,122,63,0.80)' }}>
                       {weather ? `${weather.desc}, ${weather.temp}°C` : s.assistant}
                     </p>
                   </div>
@@ -1851,7 +1851,7 @@ export default function DigitalHost() {
                     disabled={isLoading}
                     enterKeyHint="send"
                     className={`flex-1 bg-transparent font-body text-sm outline-none min-w-0 disabled:opacity-40 ${isDark ? 'placeholder:text-amber-200/40' : 'placeholder:text-muted-foreground/40'}`}
-                    style={{ color: 'rgba(255,255,255,0.95)', caretColor: 'rgba(231,205,112,0.9)', fontSize: '16px' }}
+                    style={{ color: 'rgba(255,255,255,0.95)', caretColor: 'rgba(200,163,89,0.9)', fontSize: '16px' }}
                   />
                   <button onClick={() => sendMessage()} disabled={!input.trim() || isLoading}
                     className="w-8 h-8 rounded-full bg-primary/15 border border-primary/40 backdrop-blur-md flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:bg-primary/25 disabled:opacity-25 disabled:cursor-not-allowed">

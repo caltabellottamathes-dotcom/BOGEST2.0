@@ -75,7 +75,7 @@ export default function OrderCtaSection({
           }}
         >
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(231,205,112,0.14)', border: '1px solid rgba(231,205,112,0.35)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.35)' }}>
               <Icon className="w-4 h-4 text-primary" />
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">{cardEyebrow}</span>

@@ -32,7 +32,7 @@ export default function GiftCardsFeature() {
         {/* Groot beeld met goud-hairline kader + titel overlay */}
         <div
           className="lg:col-span-7 relative rounded-2xl overflow-hidden min-h-[20rem] md:min-h-[24rem]"
-          style={{ border: '1px solid rgba(231,205,112,0.18)' }}
+          style={{ border: '1px solid rgba(200,163,89,0.18)' }}
         >
           <img src={mainImg} data-bb-key="giftcards.highlight.0" data-bb-label="Cadeaubonnen — highlight 1" alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.86) 0%, rgba(26,24,20,0.05) 58%)' }} />

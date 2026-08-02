@@ -20,7 +20,7 @@ function GlassPanelSurface() {
         WebkitBackdropFilter: 'blur(40px) saturate(160%)',
         borderTop: '1px solid rgba(255,255,255,0.16)',
         borderLeft: '1px solid rgba(255,255,255,0.16)',
-        boxShadow: '0 -30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(231,205,112,0.10), inset 0 1px 0 rgba(255,255,255,0.10)',
+        boxShadow: '0 -30px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(200,163,89,0.10), inset 0 1px 0 rgba(255,255,255,0.10)',
       }}
     />
   );
