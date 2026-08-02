@@ -1,249 +1,78 @@
 import React from 'react';
 import { useLang } from '@/lib/LangContext';
+import LegalPage from '@/components/LegalPage';
 
 const privacyContent = {
   nl: {
-    title: 'Privacybeleid',
+    title: 'Privacyverklaring',
+    intro: 'Bogèst hecht grote waarde aan de bescherming van jouw persoonsgegevens en jouw privacy. Deze verklaring legt uit welke gegevens wij verwerken, met welk doel, op grond waarvan, en welke rechten je hebt. De verklaring is van toepassing op de website van Bogèst, inclusief de AI Digital Host die via tekst en spraak met bezoekers communiceert.',
+    updated: 'Laatst bijgewerkt: augustus 2026',
     sections: [
-      {
-        num: '1',
-        title: 'Algemeen',
-        content: 'Bogèst hecht veel belang aan de bescherming van jouw persoonsgegevens en privacy. In dit privacybeleid leggen wij uit welke gegevens wij verzamelen, waarom wij deze verzamelen en hoe wij hiermee omgaan. Door gebruik te maken van onze website ga je akkoord met dit privacybeleid.'
-      },
-      {
-        num: '2',
-        title: 'Welke gegevens verzamelen wij?',
-        content: 'Wij kunnen volgende persoonsgegevens verzamelen:',
-        list: ['Naam', 'E-mailadres', 'Telefoonnummer', 'Reservatiegegevens', 'Bestelgegevens', 'Facturatiegegevens', 'Eventuele informatie die je vrijwillig invult via contact- of reservatieformulieren'],
-        list2title: 'Daarnaast kan onze website automatisch bepaalde technische gegevens verzamelen, zoals:',
-        list2: ['IP-adres', 'Browsergegevens', 'Apparaatinformatie', 'Cookies en gebruiksgegevens']
-      },
-      {
-        num: '3',
-        title: 'Waarom verzamelen wij deze gegevens?',
-        content: 'Wij gebruiken persoonsgegevens uitsluitend voor:',
-        list: ['Het verwerken van reservaties', 'Het verwerken van takeaway bestellingen', 'Het verwerken van cadeaubon aankopen', 'Klantenservice en communicatie', 'Het verbeteren van onze website en dienstverlening', 'Wettelijke verplichtingen', 'Beveiliging en fraudepreventie']
-      },
-      {
-        num: '4',
-        title: 'Betalingen',
-        content: 'Online betalingen verlopen via beveiligde betaalproviders. Bogèst bewaart geen volledige betaalkaartgegevens.'
-      },
-      {
-        num: '5',
-        title: 'Cookies',
-        content: 'Onze website maakt gebruik van cookies om de website correct te laten functioneren en de gebruikservaring te verbeteren. Cookies kunnen gebruikt worden voor: Basisfunctionaliteiten van de website, Taalvoorkeuren, Statistieken en analyse, Verbetering van prestaties en gebruikservaring. Je kan cookies beheren of uitschakelen via de instellingen van jouw browser.'
-      },
-      {
-        num: '6',
-        title: 'Bewaartermijn',
-        content: 'Persoonsgegevens worden niet langer bewaard dan noodzakelijk voor de doeleinden waarvoor ze verzameld werden of zolang wettelijk vereist.'
-      },
-      {
-        num: '7',
-        title: 'Delen van gegevens',
-        content: 'Bogèst verkoopt geen persoonsgegevens aan derden. Gegevens kunnen enkel gedeeld worden met externe partners indien dit noodzakelijk is voor: Reservatiesystemen, Betaalverwerking, Hosting en technische ondersteuning, Wettelijke verplichtingen. Deze partners verwerken gegevens steeds op een veilige en vertrouwelijke manier.'
-      },
-      {
-        num: '8',
-        title: 'Beveiliging',
-        content: 'Wij nemen passende technische en organisatorische maatregelen om persoonsgegevens te beschermen tegen verlies, misbruik of ongeoorloofde toegang.'
-      },
-      {
-        num: '9',
-        title: 'Jouw rechten',
-        content: 'Je hebt steeds het recht om: Jouw gegevens in te kijken, Jouw gegevens te laten aanpassen, Jouw gegevens te laten verwijderen, Bezwaar te maken tegen verwerking, Toestemming in te trekken. Voor vragen of verzoeken kan je contact opnemen via de contactgegevens op onze website.'
-      },
-      {
-        num: '10',
-        title: 'Wijzigingen',
-        content: 'Bogèst behoudt zich het recht voor om dit privacybeleid op elk moment aan te passen. De meest recente versie is steeds beschikbaar op deze website.'
-      },
-      {
-        num: '11',
-        title: 'Contact',
-        content: 'Voor vragen rond privacy of gegevensverwerking kan je contact opnemen via de contactpagina van Bogèst.'
-      }
-    ]
+      { num: '1', title: 'Verwerkingsverantwoordelijke', content: 'De verwerkingsverantwoordelijke voor de verwerking van jouw persoonsgegevens is Bogèst. Voor vragen of verzoeken in het kader van privacy kan je contact opnemen via de contactpagina op deze website. De volledige bedrijfsgegevens (ondernemingsnummer, adres en contactgegevens) zijn op te vragen via die contactpagina.' },
+      { num: '2', title: 'Welke gegevens wij verwerken', content: 'Wij kunnen de volgende persoonsgegevens verwerken:', list: ['Naam', 'E-mailadres', 'Telefoonnummer', 'Reservatie-, bestel- en factuurgegevens', 'Vrijwillig verstrekte informatie, zoals allergieën, voorkeuren of notities', 'IP-adres en technische verbindingsgegevens', 'Browser- en apparaatinformatie'], list2title: 'Tijdens contact met de AI Digital Host verwerken wij bovendien:', list2: ['Ingevoerde chatberichten', 'Gesproken audio via de microfoon', 'Transcripties van gesprekken', 'Stemcommando\'s en de context van het gesprek'] },
+      { num: '3', title: 'AI Digital Host', content: 'Onze website bevat een AI Digital Host die bezoekers helpt via tekst en spraak met vragen, de menukaart, restaurantinformatie, het begeleiden van reserveringen en algemene klantenservice. De AI-host gebruikt een Large Language Model (LLM) en, voor gesproken gesprekken, de spraaktechnologie van ElevenLabs. Tekstberichten en, bij spraak, audiodata worden verwerkt om jouw vraag te begrijpen en een antwoord te formuleren. Lees hierover ook onze AI-disclaimer.' },
+      { num: '4', title: 'Doeleinden van de verwerking', content: 'Wij verwerken persoonsgegevens uitsluitend voor:', list: ['Het verwerken en begeleiden van reserveringen', 'Het verwerken van bestellingen en cadeaubonaankopen', 'Klantenservice en persoonlijke hulp via de AI-host', 'Het beantwoorden van jouw vragen', 'Het verbeteren van onze website en dienstverlening', 'Beveiliging en fraudepreventie', 'Het voldoen aan wettelijke verplichtingen'] },
+      { num: '5', title: 'Rechtsgrondslagen (AVG/GDPR)', content: 'Wij verwerken gegevens op basis van de volgende rechtsgrondslagen:', list: ['Toestemming — bijvoorbeeld voor het opnemen van gesproken audio en het gebruik van de AI-host', 'Uitvoering van een overeenkomst — voor reserveringen, bestellingen en cadeaubonnen', 'Gerechtvaardigd belang — voor beveiliging, fraudepreventie en dienstverbetering', 'Wettelijke verplichting — voor boekhouding en fiscale regels'] },
+      { num: '6', title: 'Bewaartermijnen', content: 'Wij bewaren persoonsgegevens niet langer dan noodzakelijk voor de doeleinden waarvoor ze verzameld zijn of zolang wettelijk vereist. Reservatie- en bestelgegevens worden bewaard volgens de wettelijke boekhoudkundige termijnen. Chatberichten en transcripties van de AI-host worden bewaard gedurende de termijn die nodig is voor de dienstverlening en klantenservice. Gesproken audio wordt enkel verwerkt voor de uitvoering van het gesprek en wordt niet langer bewaard dan nodig, tenzij je hiervoor uitdrukkelijk toestemming hebt gegeven. De exacte termijnen kunnen opgevraagd worden via de contactpagina.' },
+      { num: '7', title: 'Doorgifte aan derden en verwerkers', content: 'Bogèst verkoopt geen persoonsgegevens aan derden. Voor de werking van de website en de AI-host maken wij gebruik van derden die als verwerker of als afzonderlijke verwerkingsverantwoordelijke optreden:', list: ['Wix — website-hosting en platform', 'Base44 — bouw- en backendplatform, inclusief de AI Digital Host', 'ElevenLabs — spraakherkenning en steminteractie', 'De gekoppelde Large Language Model-provider (LLM)', 'Stripe — beveiligde online betalingen', 'Zenchef — reservatie- en reviewsysteem'], content2: 'Met deze partijen zijn, voor zover relevant, verwerkersovereenkomsten of passende waarborgen afgesloten.' },
+      { num: '8', title: 'Doorgifte buiten de EER', content: 'Sommige verwerkers, zoals ElevenLabs of de LLM-provider, kunnen gegevens verwerken buiten de Europese Economische Ruimte. Voor zover dit het geval is, zorgen wij voor passende waarborgen, zoals standaardcontractbepalingen, om een passend beschermingsniveau voor jouw gegevens te waarborgen.' },
+      { num: '9', title: 'Betalingen', content: 'Online betalingen verlopen via beveiligde betaalproviders, zoals Stripe. Bogèst bewaart geen volledige betaalkaartgegevens.' },
+      { num: '10', title: 'Cookies en lokale opslag', content: 'Onze website maakt gebruik van cookies en vergelijkbare technieken, waaronder lokale opslag. Details daarover vind je in ons cookiebeleid.' },
+      { num: '11', title: 'Beveiliging', content: 'Wij nemen passende technische en organisatorische maatregelen om persoonsgegevens te beschermen tegen verlies, misbruik en ongeoorloofde toegang.' },
+      { num: '12', title: 'Jouw rechten', content: 'Op grond van de Algemene Verordening Gegevensbescherming (AVG) heb je de volgende rechten:', list: ['Recht op inzage van je gegevens', 'Recht op rectificatie van onjuiste gegevens', 'Recht op verwijdering (‘recht op vergetelheid’)', 'Recht op beperking van de verwerking', 'Recht van bezwaar tegen de verwerking', 'Recht op gegevensoverdraagbaarheid', 'Recht om je toestemming in te trekken', 'Recht om een klacht in te dienen bij de Gegevensbeschermingsautoriteit'] },
+      { num: '13', title: 'Kinderen', content: 'Deze website is niet gericht op kinderen jonger dan zestien jaar. Wij verzamelen niet bewust persoonsgegevens van kinderen.' },
+      { num: '14', title: 'Wijzigingen', content: 'Bogèst behoudt zich het recht voor om deze privacyverklaring op elk moment aan te passen. De meest recente versie is steeds beschikbaar op deze website.' },
+      { num: '15', title: 'Contact en privacyverzoeken', content: 'Voor vragen of verzoeken in het kader van privacy kan je contact opnemen via de contactpagina van Bogèst. Voor een formele aanvraag in het kader van de AVG kan je een bericht sturen met als onderwerp ‘Privacyverzoek’.' },
+    ],
   },
   en: {
     title: 'Privacy Policy',
+    intro: 'Bogèst attaches great importance to the protection of your personal data and your privacy. This policy explains what data we process, for what purpose, on what basis, and what rights you have. It applies to the Bogèst website, including the AI Digital Host that communicates with visitors via text and voice.',
+    updated: 'Last updated: August 2026',
     sections: [
-      {
-        num: '1',
-        title: 'General',
-        content: 'Bogèst places great importance on the protection of your personal data and privacy. In this privacy policy, we explain what data we collect, why we collect it, and how we handle it. By using our website, you agree to this privacy policy.'
-      },
-      {
-        num: '2',
-        title: 'What data do we collect?',
-        content: 'We may collect the following personal data:',
-        list: ['Name', 'Email address', 'Phone number', 'Reservation data', 'Order data', 'Billing data', 'Any information you voluntarily provide via contact or reservation forms'],
-        list2title: 'Additionally, our website may automatically collect certain technical data, such as:',
-        list2: ['IP address', 'Browser data', 'Device information', 'Cookies and usage data']
-      },
-      {
-        num: '3',
-        title: 'Why do we collect this data?',
-        content: 'We use personal data exclusively for:',
-        list: ['Processing reservations', 'Processing takeaway orders', 'Processing gift card purchases', 'Customer service and communication', 'Improving our website and services', 'Legal obligations', 'Security and fraud prevention']
-      },
-      {
-        num: '4',
-        title: 'Payments',
-        content: 'Online payments are processed through secure payment providers. Bogèst does not store complete payment card data.'
-      },
-      {
-        num: '5',
-        title: 'Cookies',
-        content: 'Our website uses cookies to ensure it functions correctly and to improve user experience. Cookies may be used for: Basic website functionality, Language preferences, Analytics and statistics, Performance and user experience improvements. You can manage or disable cookies through your browser settings.'
-      },
-      {
-        num: '6',
-        title: 'Retention Period',
-        content: 'Personal data is retained only as long as necessary for the purposes for which it was collected or as legally required.'
-      },
-      {
-        num: '7',
-        title: 'Sharing Data',
-        content: 'Bogèst does not sell personal data to third parties. Data may only be shared with external partners when necessary for: Reservation systems, Payment processing, Hosting and technical support, Legal obligations. These partners always process data safely and confidentially.'
-      },
-      {
-        num: '8',
-        title: 'Security',
-        content: 'We take appropriate technical and organizational measures to protect personal data against loss, misuse, or unauthorized access.'
-      },
-      {
-        num: '9',
-        title: 'Your Rights',
-        content: 'You always have the right to: View your data, Have your data corrected, Have your data deleted, Object to processing, Withdraw consent. For questions or requests, please contact us via the contact information on our website.'
-      },
-      {
-        num: '10',
-        title: 'Changes',
-        content: 'Bogèst reserves the right to modify this privacy policy at any time. The most current version is always available on this website.'
-      },
-      {
-        num: '11',
-        title: 'Contact',
-        content: 'For questions regarding privacy or data processing, please contact us via Bogèst\'s contact page.'
-      }
-    ]
+      { num: '1', title: 'Data Controller', content: 'The data controller responsible for the processing of your personal data is Bogèst. For questions or requests regarding privacy, you can contact us via the contact page on this website. Full company details (enterprise number, address and contact details) can be requested via that contact page.' },
+      { num: '2', title: 'Data we process', content: 'We may process the following personal data:', list: ['Name', 'Email address', 'Phone number', 'Reservation, order and billing data', 'Information you voluntarily provide, such as allergies, preferences or notes', 'IP address and technical connection data', 'Browser and device information'], list2title: 'During contact with the AI Digital Host we additionally process:', list2: ['Entered chat messages', 'Spoken audio via the microphone', 'Transcripts of conversations', 'Voice commands and the context of the conversation'] },
+      { num: '3', title: 'AI Digital Host', content: 'Our website features an AI Digital Host that helps visitors via text and voice with questions, the menu, restaurant information, guiding reservations and general customer service. The AI host uses a Large Language Model (LLM) and, for spoken conversations, the voice technology of ElevenLabs. Text messages and, for voice, audio data are processed to understand your question and formulate an answer. Please also read our AI disclaimer.' },
+      { num: '4', title: 'Purposes of processing', content: 'We process personal data exclusively for:', list: ['Processing and guiding reservations', 'Processing orders and gift card purchases', 'Customer service and personal assistance via the AI host', 'Answering your questions', 'Improving our website and services', 'Security and fraud prevention', 'Meeting legal obligations'] },
+      { num: '5', title: 'Legal bases (GDPR)', content: 'We process data on the following legal bases:', list: ['Consent — for example for recording spoken audio and using the AI host', 'Performance of a contract — for reservations, orders and gift cards', 'Legitimate interest — for security, fraud prevention and service improvement', 'Legal obligation — for accounting and fiscal rules'] },
+      { num: '6', title: 'Retention periods', content: 'We do not retain personal data for longer than necessary for the purposes for which it was collected or as legally required. Reservation and order data are retained according to legal accounting periods. Chat messages and transcripts of the AI host are retained for as long as needed for the service and customer support. Spoken audio is only processed for the duration of the conversation and is not retained longer than necessary, unless you have explicitly consented to this. The exact periods can be requested via the contact page.' },
+      { num: '7', title: 'Sharing with third parties and processors', content: 'Bogèst does not sell personal data to third parties. For the operation of the website and the AI host, we use third parties that act as processors or as separate controllers:', list: ['Wix — website hosting and platform', 'Base44 — build and backend platform, including the AI Digital Host', 'ElevenLabs — speech recognition and voice interaction', 'The connected Large Language Model provider (LLM)', 'Stripe — secure online payments', 'Zenchef — reservation and review system'], content2: 'Where relevant, data processing agreements or appropriate safeguards have been concluded with these parties.' },
+      { num: '8', title: 'Transfers outside the EEA', content: 'Some processors, such as ElevenLabs or the LLM provider, may process data outside the European Economic Area. Where this is the case, we ensure appropriate safeguards, such as standard contractual clauses, to guarantee an adequate level of protection for your data.' },
+      { num: '9', title: 'Payments', content: 'Online payments are processed through secure payment providers, such as Stripe. Bogèst does not store complete payment card data.' },
+      { num: '10', title: 'Cookies and local storage', content: 'Our website uses cookies and similar technologies, including local storage. Details can be found in our cookie policy.' },
+      { num: '11', title: 'Security', content: 'We take appropriate technical and organisational measures to protect personal data against loss, misuse and unauthorised access.' },
+      { num: '12', title: 'Your rights', content: 'Under the General Data Protection Regulation (GDPR) you have the following rights:', list: ['Right to access your data', 'Right to rectification of incorrect data', 'Right to erasure (‘right to be forgotten’)', 'Right to restriction of processing', 'Right to object to processing', 'Right to data portability', 'Right to withdraw your consent', 'Right to lodge a complaint with the data protection authority'] },
+      { num: '13', title: 'Children', content: 'This website is not directed at children under sixteen. We do not knowingly collect personal data from children.' },
+      { num: '14', title: 'Changes', content: 'Bogèst reserves the right to modify this privacy policy at any time. The most recent version is always available on this website.' },
+      { num: '15', title: 'Contact and privacy requests', content: 'For questions or requests regarding privacy, you can contact us via the Bogèst contact page. For a formal GDPR request you can send a message with the subject ‘Privacy request’.' },
+    ],
   },
   fr: {
     title: 'Politique de Confidentialité',
+    intro: 'Bogèst attache une grande importance à la protection de vos données personnelles et à votre confidentialité. Cette politique explique quelles données nous traitons, à quelle fin, sur quelle base et quels sont vos droits. Elle s’applique au site web de Bogèst, y compris à l’hôte digital IA qui communique avec les visiteurs par texte et par voix.',
+    updated: 'Dernière mise à jour : août 2026',
     sections: [
-      {
-        num: '1',
-        title: 'Général',
-        content: 'Bogèst attache une grande importance à la protection de vos données personnelles et à votre confidentialité. Dans cette politique de confidentialité, nous expliquons quelles données nous collectons, pourquoi nous les collectons et comment nous les traitons. En utilisant notre site web, vous acceptez cette politique de confidentialité.'
-      },
-      {
-        num: '2',
-        title: 'Quelles données collectons-nous?',
-        content: 'Nous pouvons collecter les données personnelles suivantes:',
-        list: ['Nom', 'Adresse e-mail', 'Numéro de téléphone', 'Données de réservation', 'Données de commande', 'Données de facturation', 'Toute information que vous fournissez volontairement via des formulaires de contact ou de réservation'],
-        list2title: 'De plus, notre site web peut automatiquement collecter certaines données techniques, telles que:',
-        list2: ['Adresse IP', 'Données du navigateur', 'Informations sur l\'appareil', 'Cookies et données d\'utilisation']
-      },
-      {
-        num: '3',
-        title: 'Pourquoi collectons-nous ces données?',
-        content: 'Nous utilisons les données personnelles exclusivement pour:',
-        list: ['Traiter les réservations', 'Traiter les commandes à emporter', 'Traiter les achats de chèques-cadeaux', 'Service client et communication', 'Améliorer notre site web et nos services', 'Obligations légales', 'Sécurité et prévention de la fraude']
-      },
-      {
-        num: '4',
-        title: 'Paiements',
-        content: 'Les paiements en ligne sont traités par des fournisseurs de paiement sécurisés. Bogèst ne conserve pas les données complètes de cartes de paiement.'
-      },
-      {
-        num: '5',
-        title: 'Cookies',
-        content: 'Notre site web utilise des cookies pour assurer son bon fonctionnement et améliorer l\'expérience utilisateur. Les cookies peuvent être utilisés pour: Fonctionnalités de base du site web, Préférences de langue, Analyses et statistiques, Amélioration des performances et de l\'expérience utilisateur. Vous pouvez gérer ou désactiver les cookies via les paramètres de votre navigateur.'
-      },
-      {
-        num: '6',
-        title: 'Période de Conservation',
-        content: 'Les données personnelles sont conservées uniquement aussi longtemps que nécessaire pour les fins pour lesquelles elles ont été collectées ou selon ce qui est légalement exigé.'
-      },
-      {
-        num: '7',
-        title: 'Partage de Données',
-        content: 'Bogèst ne vend pas de données personnelles à des tiers. Les données ne peuvent être partagées avec des partenaires externes que si cela est nécessaire pour: Systèmes de réservation, Traitement des paiements, Hébergement et support technique, Obligations légales. Ces partenaires traitent toujours les données de manière sûre et confidentielle.'
-      },
-      {
-        num: '8',
-        title: 'Sécurité',
-        content: 'Nous prenons des mesures techniques et organisationnelles appropriées pour protéger les données personnelles contre la perte, l\'abus ou l\'accès non autorisé.'
-      },
-      {
-        num: '9',
-        title: 'Vos Droits',
-        content: 'Vous avez toujours le droit de: Consulter vos données, Faire corriger vos données, Faire supprimer vos données, Vous opposer au traitement, Retirer votre consentement. Pour des questions ou des demandes, veuillez nous contacter via les coordonnées sur notre site web.'
-      },
-      {
-        num: '10',
-        title: 'Modifications',
-        content: 'Bogèst se réserve le droit de modifier cette politique de confidentialité à tout moment. La version la plus récente est toujours disponible sur ce site web.'
-      },
-      {
-        num: '11',
-        title: 'Contact',
-        content: 'Pour des questions concernant la confidentialité ou le traitement des données, veuillez nous contacter via la page de contact de Bogèst.'
-      }
-    ]
-  }
+      { num: '1', title: 'Responsable du Traitement', content: 'Le responsable du traitement de vos données personnelles est Bogèst. Pour toute question ou demande relative à la confidentialité, vous pouvez nous contacter via la page de contact de ce site. Les coordonnées complètes de l’entreprise (numéro d’entreprise, adresse et coordonnées) peuvent être demandées via cette page de contact.' },
+      { num: '2', title: 'Données que nous traitons', content: 'Nous pouvons traiter les données personnelles suivantes :', list: ['Nom', 'Adresse e-mail', 'Numéro de téléphone', 'Données de réservation, de commande et de facturation', 'Informations fournies volontairement, telles qu’allergies, préférences ou notes', 'Adresse IP et données de connexion techniques', 'Données du navigateur et de l’appareil'], list2title: 'Lors des contacts avec l’hôte digital IA, nous traitons en outre :', list2: ['Messages de chat saisis', 'Audio parlé via le microphone', 'Transcriptions des conversations', 'Commandes vocales et le contexte de la conversation'] },
+      { num: '3', title: 'Hôte Digital IA', content: 'Notre site web dispose d’un hôte digital IA qui aide les visiteurs par texte et par voix pour les questions, la carte, les informations sur les restaurants, l’accompagnement des réservations et le service client général. L’hôte IA utilise un grand modèle de langage (LLM) et, pour les conversations parlées, la technologie vocale d’ElevenLabs. Les messages texte et, pour la voix, les données audio sont traités pour comprendre votre question et formuler une réponse. Veuillez également lire notre avertissement IA.' },
+      { num: '4', title: 'Finalités du Traitement', content: 'Nous traitons les données personnelles exclusivement pour :', list: ['Traiter et accompagner les réservations', 'Traiter les commandes et les achats de chèques-cadeaux', 'Service client et assistance personnalisée via l’hôte IA', 'Répondre à vos questions', 'Améliorer notre site web et nos services', 'Sécurité et prévention des fraudes', 'Répondre aux obligations légales'] },
+      { num: '5', title: 'Bases Légales (RGPD)', content: 'Nous traitons les données sur les bases légales suivantes :', list: ['Consentement — par exemple pour l’enregistrement de l’audio parlé et l’utilisation de l’hôte IA', 'Exécution d’un contrat — pour les réservations, commandes et chèques-cadeaux', 'Intérêt légitime — pour la sécurité, la prévention des fraudes et l’amélioration du service', 'Obligation légale — pour la comptabilité et les règles fiscales'] },
+      { num: '6', title: 'Durées de Conservation', content: 'Nous ne conservons pas les données personnelles plus longtemps que nécessaire aux fins pour lesquelles elles ont été collectées ou selon ce qui est légalement requis. Les données de réservation et de commande sont conservées selon les périodes comptables légales. Les messages de chat et les transcriptions de l’hôte IA sont conservés aussi longtemps que nécessaire au service et au support client. L’audio parlé n’est traité que pour la durée de la conversation et n’est pas conservé plus longtemps que nécessaire, sauf consentement explicite de votre part. Les durées exactes peuvent être demandées via la page de contact.' },
+      { num: '7', title: 'Partage avec des Tiers et Sous-traitants', content: 'Bogèst ne vend pas de données personnelles à des tiers. Pour le fonctionnement du site web et de l’hôte IA, nous faisons appel à des tiers agissant comme sous-traitants ou responsables distincts :', list: ['Wix — hébergement et plateforme du site', 'Base44 — plateforme de construction et backend, y compris l’hôte digital IA', 'ElevenLabs — reconnaissance vocale et interaction vocale', 'Le fournisseur du grand modèle de langage (LLM)', 'Stripe — paiements en ligne sécurisés', 'Zenchef — système de réservation et d’avis'], content2: 'Dans la mesure du pertinent, des accords de sous-traitance ou des garanties appropriées ont été conclus avec ces parties.' },
+      { num: '8', title: 'Transferts hors de l’EEE', content: 'Certains sous-traitants, comme ElevenLabs ou le fournisseur du LLM, peuvent traiter des données en dehors de l’Espace Économique Européen. Le cas échéant, nous mettons en place des garanties appropriées, telles que les clauses contractuelles types, afin d’assurer un niveau de protection adéquat de vos données.' },
+      { num: '9', title: 'Paiements', content: 'Les paiements en ligne sont traités par des prestataires de paiement sécurisés, tels que Stripe. Bogèst ne conserve pas les données complètes des cartes de paiement.' },
+      { num: '10', title: 'Cookies et Stockage Local', content: 'Notre site web utilise des cookies et des techniques similaires, y compris le stockage local. Vous trouverez les détails dans notre politique de cookies.' },
+      { num: '11', title: 'Sécurité', content: 'Nous prenons des mesures techniques et organisationnelles appropriées pour protéger les données personnelles contre la perte, l’abus et l’accès non autorisé.' },
+      { num: '12', title: 'Vos Droits', content: 'Conformément au Règlement Général sur la Protection des Données (RGPD), vous disposez des droits suivants :', list: ['Droit d’accès à vos données', 'Droit de rectification des données incorrectes', 'Droit à l’effacement (« droit à l’oubli »)', 'Droit à la limitation du traitement', 'Droit d’opposition au traitement', 'Droit à la portabilité des données', 'Droit de retirer votre consentement', 'Droit d’introduire une plainte auprès de l’autorité de protection des données'] },
+      { num: '13', title: 'Enfants', content: 'Ce site web ne s’adresse pas aux enfants de moins de seize ans. Nous ne collectons pas sciemment de données personnelles d’enfants.' },
+      { num: '14', title: 'Modifications', content: 'Bogèst se réserve le droit de modifier cette politique de confidentialité à tout moment. La version la plus récente est toujours disponible sur ce site web.' },
+      { num: '15', title: 'Contact et Demandes de Confidentialité', content: 'Pour toute question ou demande relative à la confidentialité, vous pouvez nous contacter via la page de contact de Bogèst. Pour une demande formelle au titre du RGPD, vous pouvez envoyer un message avec pour objet « Demande de confidentialité ».' },
+    ],
+  },
 };
 
 export default function Privacy() {
   const { lang } = useLang();
   const content = privacyContent[lang] || privacyContent.nl;
-
-  return (
-    <div className="w-full">
-      <section className="w-full pt-32 md:pt-40 pb-12 px-6 md:px-10 lg:px-16">
-        <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">Juridisch</span>
-        <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground">{content.title}</h1>
-      </section>
-
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24 max-w-4xl">
-        <div className="space-y-8">
-          {content.sections.map((section) => (
-            <div key={section.num} className="space-y-3">
-              <h2 className="font-heading text-lg md:text-xl font-bold text-foreground">
-                {section.num}. {section.title}
-              </h2>
-              <p className="font-body text-base text-muted-foreground leading-relaxed">
-                {section.content}
-              </p>
-              {section.list && (
-                <ul className="font-body text-base text-muted-foreground space-y-2 ml-4">
-                  {section.list.map((item, i) => (
-                    <li key={i} className="list-disc">
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {section.list2title && (
-                <>
-                  <p className="font-body text-base text-muted-foreground leading-relaxed mt-3">
-                    {section.list2title}
-                  </p>
-                  <ul className="font-body text-base text-muted-foreground space-y-2 ml-4">
-                    {section.list2.map((item, i) => (
-                      <li key={i} className="list-disc">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
-  );
+  return <LegalPage content={content} />;
 }

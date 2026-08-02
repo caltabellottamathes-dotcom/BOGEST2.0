@@ -28,6 +28,8 @@ import Groups from '@/pages/Groups';
 import Jobs from '@/pages/Jobs';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
+import CookiePolicy from '@/pages/CookiePolicy';
+import AiDisclaimer from '@/pages/AiDisclaimer';
 import YellowPreview from '@/pages/YellowPreview';
 import BurgundyPreview from '@/pages/BurgundyPreview';
 import PowderBluePreview from '@/pages/PowderBluePreview';
@@ -75,6 +77,8 @@ const AuthenticatedApp = () => {
         <Route path="/jobs" element={<Jobs />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
+        <Route path="/ai-disclaimer" element={<AiDisclaimer />} />
         <Route path="/yellow-preview" element={<YellowPreview />} />
         <Route path="/burgundy-preview" element={<BurgundyPreview />} />
         <Route path="/powder-blue-preview" element={<PowderBluePreview />} />

@@ -23,7 +23,7 @@ export default function Home() {
         {/* Shadow gradient — attached to the content, slides up over the fixed
             hero video. Dark high behind the hero text (like the sections cast a
             shadow over the video), fading seamlessly into the page background. */}
-        <div aria-hidden className="absolute inset-x-0 -top-[100vh] h-[100vh] pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 35%, hsl(var(--background)) 100%)', transform: 'translateZ(0)' }} />
+        <div aria-hidden className="absolute inset-x-0 -top-[70vh] h-[70vh] pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 50%, hsl(var(--background)) 100%)', transform: 'translateZ(0)' }} />
         <StatsSection />
         <StorySection />
         <LocationsPreview />

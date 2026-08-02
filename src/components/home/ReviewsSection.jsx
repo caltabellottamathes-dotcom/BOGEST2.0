@@ -10,10 +10,10 @@ import HomeTitle from '@/components/home/HomeTitle';
 const FALLBACK_REVIEWS = [
   { name: 'Sophie V.', location: 'Hasselt', rating: 5, text: 'Absolute topervaring! Het vlees was ongelooflijk mals en de sfeer in de hoeve is gewoon prachtig. We komen zeker terug!', date: 'April 2026', source: 'Google' },
   { name: 'Marc & Elien', location: 'Borgloon', rating: 5, text: 'De Belgisch Wit Blauw was perfect bereid — botermals en heerlijk van smaak. Het voorgerecht en dessert incluis maakt dit een ongeëvenaarde prijs-kwaliteit verhouding.', date: 'Maart 2026', source: 'Google' },
-  { name: 'Thomas K.', location: 'Heusden-Zolder', rating: 5, text: 'Al jaren trouwe klant bij Bogèst en we worden nooit teleurgesteld. Heerlijk eten, authentieke sfeer en vriendelijk personeel. Een aanrader voor iedereen!', date: 'Mei 2026', source: 'TripAdvisor' },
+  { name: 'Thomas K.', location: 'Heusden-Zolder', rating: 5, text: 'Al jaren trouwe klant bij Bogèst en we worden nooit teleurgesteld. Heerlijk eten, authentieke sfeer en vriendelijk personeel. Een aanrader voor iedereen!', date: 'Mei 2026', source: 'Tripadvisor' },
   { name: 'Isabelle D.', location: 'Borgloon', rating: 5, text: 'De combinatie van de prachtige hoeve en het sublieme eten maakt Bogèst tot een bijzonder adres in Limburg. De huiswijn is een absolute topper!', date: 'Februari 2026', source: 'Google' },
-  { name: 'Pieter & Ann', location: 'Hasselt', rating: 5, text: 'Onze verjaardagstafel was perfect verzorgd. Vriendelijk team, heerlijk eten en een sfeer die het extra speciaal maakt. Dankjewel Bogèst!', date: 'Mei 2026', source: 'Google' },
-  { name: 'Laura M.', location: 'Heusden-Zolder', rating: 4, text: 'Geweldige beleving van begin tot eind. De spare ribs zijn een must-try. Zeker één van de beste restaurants in Limburg.', date: 'April 2026', source: 'TripAdvisor' },
+  { name: 'Pieter & Ann', location: 'Hasselt', rating: 5, text: 'Onze verjaardagstafel was perfect verzorgd. Vriendelijk team, heerlijk eten en een sfeer die het extra speciaal maakt. Dankjewel Bogèst!', date: 'Mei 2026', source: 'Tripadvisor' },
+  { name: 'Laura M.', location: 'Heusden-Zolder', rating: 4, text: 'Geweldige beleving van begin tot eind. De spare ribs zijn een must-try. Zeker één van de beste restaurants in Limburg.', date: 'April 2026', source: 'Zenchef' },
 ];
 
 function Stars({ count }) {
@@ -23,6 +23,18 @@ function Stars({ count }) {
         <Star key={i} className={`w-3.5 h-3.5 ${i < count ? 'text-primary fill-primary' : 'text-border'}`} />
       ))}
     </div>
+  );
+}
+
+// Compact pill that makes the review's origin platform unambiguous.
+function SourceBadge({ source }) {
+  if (!source) return null;
+  const label = source.charAt(0).toUpperCase() + source.slice(1);
+  return (
+    <span className="inline-flex items-center gap-1.5 font-body text-[9px] tracking-[0.18em] uppercase text-primary/85 border border-primary/30 rounded-full px-2 py-0.5">
+      <span className="w-1 h-1 rounded-full bg-primary/70" />
+      {label}
+    </span>
   );
 }
 
@@ -36,9 +48,8 @@ function formatDate(dateStr) {
   }
 }
 
-// Editorial reviews — one oversized italic pull-quote anchors the page, two
-// supporting quotes sit smaller to the right of a hairline. Replaces the flat
-// 3-column card grid.
+// Editorial reviews — one oversized italic pull-quote anchors the page, with
+// supporting quotes shown alongside. Each review clearly states its platform.
 export default function ReviewsSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
@@ -47,12 +58,18 @@ export default function ReviewsSection() {
   const [showAll, setShowAll] = useState(false);
   const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
   const isMobile = useIsMobile();
-  const perPage = isMobile ? 1 : 3;
+  const perPage = isMobile ? 2 : 4;
   const pages = Math.ceil(reviews.length / perPage);
   const safePage = Math.min(page, pages - 1);
   const visible = reviews.slice(safePage * perPage, safePage * perPage + perPage);
   const featured = visible[0];
   const supporting = visible.slice(1);
+
+  const sourcesLine = lang === 'fr'
+    ? 'Avis vérifiés collectés via Google, Tripadvisor et Zenchef'
+    : lang === 'en'
+      ? 'Verified reviews collected via Google, Tripadvisor and Zenchef'
+      : 'Geverifieerde reviews verzameld via Google, Tripadvisor en Zenchef';
 
   const loadReviews = () => {
     base44.entities.ZenchefReview.list('-date', 100)
@@ -105,6 +122,10 @@ export default function ReviewsSection() {
               <Stars count={5} />
               <span className="font-body text-sm text-muted-foreground">{t('home_reviews_rating')}</span>
             </div>
+            <div className="flex items-center gap-2 mt-3">
+              <span className="h-px w-6 bg-primary/40" />
+              <span className="font-body text-[10px] tracking-[0.22em] uppercase text-muted-foreground/80">{sourcesLine}</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={safePage === 0}
@@ -137,6 +158,7 @@ export default function ReviewsSection() {
                 <p className="font-heading text-base font-semibold text-foreground">{featured.name}</p>
                 <span className="font-body text-xs text-muted-foreground">{featured.location}{featured.date ? ` · ${featured.date}` : ''}</span>
                 <Stars count={featured.rating} />
+                <SourceBadge source={featured.source} />
               </div>
             </div>
 
@@ -148,8 +170,11 @@ export default function ReviewsSection() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.15 + i * 0.12 }}
                 >
-                  <Stars count={r.rating} />
-                  <p className="font-body text-sm text-muted-foreground leading-relaxed mt-2.5 line-clamp-3">“{r.text}”</p>
+                  <div className="flex items-center gap-2 mb-2.5">
+                    <Stars count={r.rating} />
+                    <SourceBadge source={r.source} />
+                  </div>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">“{r.text}”</p>
                   <p className="font-heading text-sm font-semibold text-foreground mt-2.5">
                     {r.name} <span className="font-body text-xs text-muted-foreground font-normal">· {r.location}</span>
                   </p>
@@ -186,9 +211,10 @@ export default function ReviewsSection() {
                 <span className="font-heading italic text-primary text-3xl leading-none select-none">“</span>
                 <div>
                   <p className="font-body text-sm text-foreground/90 leading-relaxed italic mb-3">{review.text}</p>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-3">
                     <p className="font-heading text-sm font-semibold text-foreground">{review.name}</p>
                     <Stars count={review.rating} />
+                    <SourceBadge source={review.source} />
                     <span className="font-body text-xs text-muted-foreground">{review.location}{review.date ? ` · ${review.date}` : ''}</span>
                   </div>
                 </div>

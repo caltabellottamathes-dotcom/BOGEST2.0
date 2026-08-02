@@ -84,9 +84,13 @@ export default function Footer() {
     { label: t('nav_contact'), path: '/contact' },
   ];
 
+  const cookiesLabel = lang === 'fr' ? 'Cookies' : lang === 'en' ? 'Cookies' : 'Cookiebeleid';
+  const aiLabel = lang === 'fr' ? 'Avertissement IA' : lang === 'en' ? 'AI Disclaimer' : 'AI-disclaimer';
   const legalLinks = [
     { label: t('footer_privacy'), path: '/privacy' },
     { label: t('footer_terms'), path: '/terms' },
+    { label: cookiesLabel, path: '/cookies' },
+    { label: aiLabel, path: '/ai-disclaimer' },
     { label: t('nav_jobs'), path: '/jobs' },
     { label: t('nav_about'), path: '/about' },
   ];
