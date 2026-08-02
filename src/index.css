@@ -208,6 +208,13 @@ body.bogest-chat-open div[class*="convai"] {
   .hero-fixed-bg { background-attachment: scroll !important; }
 }
 
+/* Styled scrollbar — thin, gold, matches the Bogèst palette. Applied via .bogest-scroll on scrollable layers. */
+.bogest-scroll { scrollbar-width: thin; scrollbar-color: hsl(var(--primary) / 0.45) transparent; }
+.bogest-scroll::-webkit-scrollbar { width: 6px; height: 6px; display: block; }
+.bogest-scroll::-webkit-scrollbar-track { background: transparent; }
+.bogest-scroll::-webkit-scrollbar-thumb { background: hsl(var(--primary) / 0.40); border-radius: 9999px; }
+.bogest-scroll::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.65); }
+
 /* Hide all scrollbars site-wide while keeping scroll functionality */
 ::-webkit-scrollbar { width: 0; height: 0; display: none; }
 * { scrollbar-width: none; -ms-overflow-style: none; }

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { Check } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { getLocations } from '@/lib/data';
@@ -11,8 +10,15 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
+const RESERVE_COPY = {
+  nl: { heroTitle: 'Een tafel', heroAccent: 'die op u wacht', heroSubtitle: 'Drie hoeves in Limburg, elk met hun eigen sfeer. Tik op een vestiging om meteen uw tafel vast te leggen.', heading: 'Waar mag de tafel staan?', hint: 'Tik op een vestiging — de agenda opent meteen.' },
+  fr: { heroTitle: 'Une table', heroAccent: 'qui vous attend', heroSubtitle: 'Trois fermes en Limbourg, chacune avec son atmosphère. Touchez un établissement pour réserver votre table.', heading: 'Où souhaitez-vous vous asseoir ?', hint: "Touchez un établissement — l'agenda s'ouvre aussitôt." },
+  en: { heroTitle: 'A table', heroAccent: 'waiting for you', heroSubtitle: 'Three farmhouses in Limburg, each with its own atmosphere. Tap a location to book your table right away.', heading: 'Where shall we set the table?', hint: 'Tap a location — the booking calendar opens at once.' },
+};
+
 export default function Reserve() {
   const { t, lang } = useLang();
+  const rc = RESERVE_COPY[lang] || RESERVE_COPY.nl;
   const { siteImg } = useSiteImages();
   const LOCATIONS_DATA = getLocations(lang);
   const [selected, setSelected] = useState(null);
@@ -36,7 +42,7 @@ export default function Reserve() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('res_label')} title={t('res_title')} titleAccent="uw tafel wacht" subtitle={t('res_subtitle')} positionKey="reserve.hero" />
+      <PanelHero label={t('res_label')} title={rc.heroTitle} titleAccent={rc.heroAccent} subtitle={rc.heroSubtitle} positionKey="reserve.hero" />
 
       <PanelContent>
       <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-14 pb-24">
@@ -46,11 +52,11 @@ export default function Reserve() {
           <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-8%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
 
           <div className="relative z-10 p-6 md:p-10">
-            <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center gap-3 mb-5">
               <span className="h-px w-10 bg-primary" />
-              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('res_location')}</span>
+              <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{bookable.map(l => l.city).join(' · ')}</span>
             </div>
-            <p className="font-body text-sm text-muted-foreground mb-10 max-w-xl leading-relaxed">{t('res_subtitle')}</p>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-10">{rc.heading}<span className="text-primary">.</span></h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
               {bookable.map((loc) => {
@@ -84,19 +90,7 @@ export default function Reserve() {
               })}
             </div>
 
-            <AnimatePresence mode="wait">
-              {!selectedLoc && (
-                <motion.div
-                  key="prompt"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="font-body text-sm text-muted-foreground py-8"
-                >
-                  {t('res_select_prompt')}
-                </motion.div>
-              )}
-            </AnimatePresence>
+            <p className="font-body text-xs text-muted-foreground mt-8 tracking-wide">{rc.hint}</p>
           </div>
         </div>
       </section>

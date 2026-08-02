@@ -84,7 +84,7 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
             )}
 
             {/* Content */}
-            <div className={`relative z-10 flex-1 min-h-0 ${scrollable ? 'overflow-y-auto' : 'overflow-hidden flex flex-col'}`}>
+            <div className={`relative z-10 flex-1 min-h-0 bogest-scroll ${scrollable ? 'overflow-y-auto' : 'overflow-hidden flex flex-col'}`}>
               {children}
             </div>
           </motion.div>

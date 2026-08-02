@@ -31,7 +31,7 @@ export default function GiftCardBuyPanel({ isOpen, onClose }) {
       <div className="flex-1 min-h-0 flex flex-col p-4 md:p-6">
         {/* White widget framed as a card on the warm panel — feels integrated */}
         <div
-          className="flex-1 min-h-0 rounded-2xl overflow-hidden"
+          className="flex-1 min-h-0 rounded-2xl overflow-hidden flex flex-col"
           style={{ background: '#ffffff', border: '1px solid rgba(231,205,112,0.20)', boxShadow: '0 12px 40px rgba(0,0,0,0.40)' }}
         >
           <ZenchefGiftCardEmbed fillHeight />

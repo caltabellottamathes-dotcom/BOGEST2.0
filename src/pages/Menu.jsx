@@ -9,6 +9,7 @@ import HostHint from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 import { SuggestionCard, SUGGESTIONS, MONTH_NAMES, SECTION_LABELS } from '@/components/home/SeasonalSection';
 import ReserveCtaSection from '@/components/ReserveCtaSection';
+import KidsMenu from '@/components/menu/KidsMenu';
 
 function PageHero() {
   const { t } = useLang();
@@ -190,7 +191,7 @@ export default function Menu() {
       </div>
 
       <div className="w-full px-6 md:px-10 lg:px-16 pb-10">
-        {MENU_DATA.map((cat, idx) => <CategoryRow key={cat.id} cat={cat} idx={idx} />)}
+        {MENU_DATA.map((cat, idx) => cat.id === 'kinderen' ? <KidsMenu key={cat.id} idx={idx} /> : <CategoryRow key={cat.id} cat={cat} idx={idx} />)}
       </div>
 
       <ReserveCtaSection />
