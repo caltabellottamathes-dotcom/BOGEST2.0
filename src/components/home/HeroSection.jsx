@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -14,9 +14,12 @@ export default function HeroSection() {
   const { t } = useLang();
   const { theme } = useTheme();
   const { siteImg } = useSiteImages();
-  const { scrollY } = useScroll();
-  const maxShift = typeof window !== 'undefined' ? window.innerHeight * 0.15 : 120;
-  const y = useSpring(useTransform(scrollY, (v) => Math.min(v * 0.25, maxShift)), { stiffness: 100, damping: 30, mass: 0.5 });
+  const heroRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  // Opposite-layer parallax: as the page scrolls up, the hero bg slides DOWN.
+  // shift > hero height keeps the bg moving down (net) while staying covered.
+  const shift = (typeof window !== 'undefined' ? window.innerHeight : 800) * 1.5;
+  const y = useSpring(useTransform(scrollYProgress, [0, 1], [0, shift]), { stiffness: 100, damping: 30, mass: 0.5 });
 
   useEffect(() => {
     const handleScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.3);
@@ -30,11 +33,11 @@ export default function HeroSection() {
   }, [pastHero]);
 
   return (
-    <section className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+    <section ref={heroRef} className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
       {/* BG with parallax — desaturated */}
       <motion.div
-        className="absolute inset-0 w-full h-[115%]"
-        style={{ y, willChange: 'transform' }}
+        className="absolute left-0 w-full h-[200%]"
+        style={{ top: '-50%', y, willChange: 'transform' }}
       >
         <img
           src={siteImg('hero')}

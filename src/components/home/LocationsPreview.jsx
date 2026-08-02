@@ -8,6 +8,7 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import HintBubble from '@/components/HintBubble';
 import { hostQuestion } from '@/lib/hostHint';
 import HomeTitle from '@/components/home/HomeTitle';
+import LocationVideo from '@/components/LocationVideo';
 
 // "Altijd een Bogèst dichtbij" — desktop keeps the alternating editorial
 // rows (image 7 / text 5) pulled together with a slight overlap. Mobile
@@ -46,10 +47,11 @@ export default function LocationsPreview() {
                 style={{ zIndex: 10 + i }}
               >
                 {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}
-                <div className="md:hidden relative overflow-hidden rounded-2xl aspect-[4/3] shadow-2xl">
+                <div className="md:hidden group relative overflow-hidden rounded-2xl aspect-[4/3] shadow-2xl">
                   <img src={img} alt={loc.name} className="absolute inset-0 w-full h-full object-cover"
                     style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.88) brightness(0.9)' }}
                     loading="lazy" decoding="async" />
+                  {!inactive && <LocationVideo slug={loc.slug} />}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
                   <span className={`absolute top-4 ${alignRight ? 'right-4' : 'left-4'} font-heading font-bold leading-none text-4xl ${inactive ? 'text-white/20' : 'text-white/30'}`}>{loc.number}</span>
                   {inactive && (
@@ -84,6 +86,7 @@ export default function LocationsPreview() {
                       <img src={img} alt={loc.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.85) brightness(0.9)' }}
                         loading="lazy" decoding="async" />
+                      {!inactive && <LocationVideo slug={loc.slug} />}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                       <span className={`absolute top-4 left-4 font-heading font-bold leading-none ${inactive ? 'text-white/20' : 'text-white/30'}`}>{loc.number}</span>
                       {inactive && (

@@ -4,7 +4,7 @@ import { useLang } from '@/lib/LangContext';
 import PanelSwitcher from '@/components/PanelSwitcher';
 
 const IMG = {
-  classics: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793828-46U4HY2BWRCMXLZD9G2VW/313432687_792246775522672_788010508288086563_n.jpg',
+  classics: 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg',
   location: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/b7c2edca-9db5-43c2-b109-4cc33197dfbe/veranda+hasselt.jpeg',
   pickup: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798052-P24QWA3M58JWMGOWHVBD/399841843_793829846088881_1062638734165438461_n.jpg',
   formula: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg',

@@ -6,6 +6,7 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
+import LocationVideo from '@/components/LocationVideo';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -32,6 +33,7 @@ export default function Locations() {
                       <img src={siteImg('location.' + loc.slug) || loc.image} alt={loc.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         style={inactive ? { filter: 'grayscale(1) brightness(0.55)' } : { filter: 'saturate(0.88) brightness(0.94)' } } />
+                      {!inactive && <LocationVideo slug={loc.slug} />}
                       <span className="absolute top-5 left-5 font-heading text-7xl font-bold text-white/15 leading-none">{loc.number}</span>
                       {inactive && <div className="absolute inset-0 bg-black/40" />}
                     </Link>
