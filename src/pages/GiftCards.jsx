@@ -5,7 +5,7 @@ import GiftCardBuyPanel from '@/components/reserve/GiftCardBuyPanel';
 import GiftCardCheckPanel from '@/components/reserve/GiftCardCheckPanel';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
-import GiftCardsHighlights from '@/components/GiftCardsHighlights';
+import GiftCardsFeature from '@/components/GiftCardsFeature';
 import OrderCtaSection from '@/components/OrderCtaSection';
 
 export default function GiftCards() {
@@ -29,7 +29,7 @@ export default function GiftCards() {
 
       <PanelContent>
       {/* ── Highlights ───────────────────────────────────────── */}
-      <GiftCardsHighlights />
+      <GiftCardsFeature />
 
       {/* ── Bestel nu — referentiesysteem (asymmetrische zwevende glazen CTA-kaart) ─ */}
       <OrderCtaSection

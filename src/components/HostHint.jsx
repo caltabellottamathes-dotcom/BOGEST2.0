@@ -53,7 +53,7 @@ export default function HostHint({ question, label = FULL, className = '', varia
   return (
     <button type="button" onClick={onClick}
       className={`group/hint inline-flex items-center pointer-events-none group-hover:pointer-events-auto opacity-0 translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 ease-out ${className}`}>
-      <span className="inline-flex items-center gap-2 pl-3.5 pr-4 py-2 rounded-full bg-[rgba(26,24,20,0.55)] backdrop-blur-md border border-[rgba(231,205,112,0.28)] transition-colors duration-300 group-hover/hint:border-[rgba(231,205,112,0.50)]" style={{ boxShadow: '0 8px 28px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+      <span className="inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 transition-colors duration-300 group-hover/hint:border-white/30 group-hover/hint:bg-black/45">
         <GlassMark label={label} />
       </span>
     </button>
@@ -64,7 +64,7 @@ export function HintLine({ question, label = FULL, className = '' }) {
   return (
     <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(question); }}
       className={`group/hint inline-flex items-center transition-transform duration-300 hover:-translate-y-0.5 ${className}`}>
-      <span className="inline-flex items-center gap-2 pl-3.5 pr-4 py-2 rounded-full bg-[rgba(26,24,20,0.55)] backdrop-blur-md border border-[rgba(231,205,112,0.28)] transition-colors duration-300 group-hover/hint:border-[rgba(231,205,112,0.50)]" style={{ boxShadow: '0 8px 28px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.05)' }}>
+      <span className="inline-flex items-center gap-2 pl-3 pr-3.5 py-1.5 rounded-full bg-black/35 backdrop-blur-md border border-white/15 transition-colors duration-300 group-hover/hint:border-white/30 group-hover/hint:bg-black/45">
         <GlassMark label={label} />
       </span>
     </button>
