@@ -26,7 +26,7 @@ export default function BeeldbankEditor() {
   const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState('');
   const [toast, setToast] = useState('');
-  const { setOverride, clearOverride } = useSiteImages();
+  const { setOverride, clearOverride, setSrcOverride, clearSrcOverride } = useSiteImages();
   const { lang, reloadTextOverrides } = useLang();
   const reverseRef = useRef({});
 
@@ -55,10 +55,17 @@ export default function BeeldbankEditor() {
       e.preventDefault();
       e.stopPropagation();
 
-      // Image with a position key → open picker.
-      const imgEl = t.closest('[data-bb-key]');
-      if (imgEl) {
-        setPicker({ key: imgEl.getAttribute('data-bb-key'), label: imgEl.getAttribute('data-bb-label') || imgEl.getAttribute('data-bb-key') });
+      // Tagged image (data-bb-key) → position-key override.
+      const tagged = t.closest('[data-bb-key]');
+      if (tagged) {
+        setPicker({ key: tagged.getAttribute('data-bb-key'), label: tagged.getAttribute('data-bb-label') || tagged.getAttribute('data-bb-key') });
+        return;
+      }
+
+      // Untagged image → src-based override (covers every panel card image).
+      const rawImg = t.closest('img');
+      if (rawImg && !rawImg.closest('[data-bb-ui]')) {
+        setPicker({ key: null, label: rawImg.getAttribute('data-bb-label') || 'Afbeelding', src: rawImg.getAttribute('data-bb-src') || rawImg.src });
         return;
       }
 
@@ -109,6 +116,8 @@ export default function BeeldbankEditor() {
     style.textContent = `
       [data-bb-key] { cursor: pointer !important; outline: 2px dashed hsl(var(--primary) / 0.85) !important; outline-offset: 3px; }
       [data-bb-key]::after { content: 'Wissel'; position:absolute; top:8px; left:8px; font:600 9px/1 Inter,sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#1a1812; background:hsl(var(--primary)); padding:3px 7px; border-radius:6px; z-index:99999; pointer-events:none; }
+      img:not([data-bb-key]) { cursor: pointer !important; outline: 2px dashed hsl(var(--primary) / 0.7) !important; outline-offset: 3px; }
+      [data-bb-ui] img { outline: none !important; cursor: default !important; }
     `;
     document.head.appendChild(style);
 
@@ -133,12 +142,20 @@ export default function BeeldbankEditor() {
   if (!isAdmin) return null;
 
   const pick = (asset) => {
-    setOverride(picker.key, asset.image_url, asset.id);
+    if (picker.src) {
+      setSrcOverride(picker.src, asset.image_url, asset.id);
+    } else {
+      setOverride(picker.key, asset.image_url, asset.id);
+    }
     setPicker(null);
     flash('Beeld vervangen');
   };
   const reset = () => {
-    clearOverride(picker.key);
+    if (picker.src) {
+      clearSrcOverride(picker.src);
+    } else {
+      clearOverride(picker.key);
+    }
     setPicker(null);
     flash('Terug naar standaardbeeld');
   };

@@ -4,7 +4,7 @@
   "properties": {
     "position_key": {
       "type": "string",
-      "description": "Stable key matching a SITE_IMAGE_POSITIONS entry (e.g. 'hero', 'signature.0', 'location.hasselt')"
+      "description": "Stable key matching a SITE_IMAGE_POSITIONS entry (e.g. 'hero', 'signature.0', 'location.hasselt'). For src-based overrides of untagged images, this is 'src:<source_url>'."
     },
     "image_url": {
       "type": "string",
@@ -13,6 +13,10 @@
     "asset_id": {
       "type": "string",
       "description": "AssetArchive id of the chosen Beeldbank photo"
+    },
+    "source_url": {
+      "type": "string",
+      "description": "For src-based overrides of untagged images: the original image URL the override replaces. Empty for position-key overrides."
     }
   },
   "required": [

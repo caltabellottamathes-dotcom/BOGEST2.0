@@ -30,6 +30,7 @@ export default async function (req: Request): Promise<Response> {
           position_key: o.position_key,
           image_url: o.image_url,
           asset_id: o.asset_id,
+          source_url: o.source_url,
         })),
       });
     }
@@ -53,6 +54,29 @@ export default async function (req: Request): Promise<Response> {
     if (action === 'clear') {
       const { position_key } = body;
       if (!position_key) return Response.json({ error: 'position_key required' }, { status: 400 });
+      await base44.asServiceRole.entities.SiteImageOverride.deleteMany({ position_key });
+      return Response.json({ ok: true });
+    }
+
+    if (action === 'setBySrc') {
+      const { source_url, image_url, asset_id } = body;
+      if (!source_url || !image_url) {
+        return Response.json({ error: 'source_url & image_url required' }, { status: 400 });
+      }
+      const position_key = `src:${source_url}`;
+      const existing = await base44.asServiceRole.entities.SiteImageOverride.filter({ position_key });
+      if (existing && existing.length) {
+        const updated = await base44.asServiceRole.entities.SiteImageOverride.update(existing[0].id, { image_url, asset_id, source_url });
+        return Response.json({ override: updated });
+      }
+      const created = await base44.asServiceRole.entities.SiteImageOverride.create({ position_key, image_url, asset_id, source_url });
+      return Response.json({ override: created });
+    }
+
+    if (action === 'clearBySrc') {
+      const { source_url } = body;
+      if (!source_url) return Response.json({ error: 'source_url required' }, { status: 400 });
+      const position_key = `src:${source_url}`;
       await base44.asServiceRole.entities.SiteImageOverride.deleteMany({ position_key });
       return Response.json({ ok: true });
     }
