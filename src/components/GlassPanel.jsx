@@ -58,6 +58,14 @@ export default function GlassPanelWrapper({ children }) {
     }
   }, [location.pathname, isPanel]);
 
+  // Toggle the panel-open body flag so the hero video pauses and the
+  // ElevenLabs widget slides aside while a glass panel is open.
+  useEffect(() => {
+    if (isPanel) document.body.classList.add('bogest-panel-open');
+    else document.body.classList.remove('bogest-panel-open');
+    return () => document.body.classList.remove('bogest-panel-open');
+  }, [isPanel]);
+
   return (
     <>
       {/* Backdrop — dims the site behind the panel; stays put across panel-to-panel nav */}

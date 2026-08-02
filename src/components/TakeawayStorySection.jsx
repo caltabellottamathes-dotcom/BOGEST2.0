@@ -28,11 +28,11 @@ export default function TakeawayStorySection() {
   const { t, lang } = useLang();
   const tr = STORY_TITLE[lang] || STORY_TITLE.nl;
   const items = [
-    { icon: ShoppingBag, title: t('ta_h1_title'), body: t('ta_h1_body'), img: IMG.classics },
-    { icon: MapPin, title: t('ta_h2_title'), body: t('ta_h2_body'), img: IMG.location },
-    { icon: Clock, title: t('ta_h3_title'), body: t('ta_h3_body'), img: IMG.pickup },
-    { icon: Info, title: t('ta_home_p2_title'), body: t('ta_home_p2'), img: IMG.formula },
-    { icon: ChefHat, title: t('ta_home_p3_title'), body: t('ta_home_p3'), img: IMG.chef },
+    { icon: ShoppingBag, title: t('ta_h1_title'), body: t('ta_h1_body'), img: IMG.classics, bbKey: 'takeaway.story.0', bbLabel: 'Traiteur — klassiekers' },
+    { icon: MapPin, title: t('ta_h2_title'), body: t('ta_h2_body'), img: IMG.location, bbKey: 'takeaway.story.1', bbLabel: 'Traiteur — locatie' },
+    { icon: Clock, title: t('ta_h3_title'), body: t('ta_h3_body'), img: IMG.pickup, bbKey: 'takeaway.story.2', bbLabel: 'Traiteur — afhalen' },
+    { icon: Info, title: t('ta_home_p2_title'), body: t('ta_home_p2'), img: IMG.formula, bbKey: 'takeaway.story.3', bbLabel: 'Traiteur — formule' },
+    { icon: ChefHat, title: t('ta_home_p3_title'), body: t('ta_home_p3'), img: IMG.chef, bbKey: 'takeaway.story.4', bbLabel: 'Traiteur — chef' },
   ];
   return (
     <PanelSwitcher

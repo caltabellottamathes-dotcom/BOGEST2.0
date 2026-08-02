@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -13,6 +13,14 @@ const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e
 export default function OverlayPanelShell({ isOpen, onClose, children, header, maxWidth = 'min(90vw, 920px)', scrollable = true }) {
   const isMobile = useIsMobile();
   const navHeight = isMobile ? 64 : 80;
+
+  // Toggle the panel-open body flag (pauses the hero video + slides the
+  // ElevenLabs widget aside) while this widget overlay is open.
+  useEffect(() => {
+    if (isOpen) document.body.classList.add('bogest-panel-open');
+    else document.body.classList.remove('bogest-panel-open');
+    return () => document.body.classList.remove('bogest-panel-open');
+  }, [isOpen]);
 
   return (
     <AnimatePresence>

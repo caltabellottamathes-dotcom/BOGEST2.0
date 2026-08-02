@@ -71,8 +71,8 @@ export default function GroupsConceptSection() {
           <div className="md:col-span-5">
             <div className="relative rounded-2xl overflow-hidden shadow-xl min-h-[300px] md:h-full">
               <img src={siteImg('location.' + loc.id) || loc.image} data-bb-key={`location.${loc.id}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
-              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }} />
-              <div className="absolute left-5 right-5 bottom-5">
+              <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.80) 0%, rgba(0,0,0,0.15) 55%, transparent 100%)' }} />
+              <div className="absolute left-5 right-5 bottom-5 pointer-events-none">
                 <h3 className="font-heading text-2xl font-bold text-white leading-tight mb-2">{loc.name}<span className="text-primary">.</span></h3>
                 <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/70 mb-3">{loc.tagline}</p>
                 {loc.formula && (

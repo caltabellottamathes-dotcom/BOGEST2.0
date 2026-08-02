@@ -13,9 +13,9 @@ const PKG_IMG = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17
 export default function TakeawayGiftPackagesSection() {
   const { t } = useLang();
   const items = [
-    { icon: Wine, title: t('ta_gp_wine_t'), body: t('ta_gp_wine_d'), img: PKG_IMG },
-    { icon: Martini, title: t('ta_gp_gin_t'), body: t('ta_gp_gin_d'), img: PKG_IMG },
-    { icon: Sparkles, title: t('ta_gp_custom_t'), body: t('ta_gp_custom_d'), img: PKG_IMG },
+    { icon: Wine, title: t('ta_gp_wine_t'), body: t('ta_gp_wine_d'), img: PKG_IMG, bbKey: 'takeaway.pkg.0', bbLabel: 'Cadeaupakket — Wijn' },
+    { icon: Martini, title: t('ta_gp_gin_t'), body: t('ta_gp_gin_d'), img: PKG_IMG, bbKey: 'takeaway.pkg.1', bbLabel: 'Cadeaupakket — Gin' },
+    { icon: Sparkles, title: t('ta_gp_custom_t'), body: t('ta_gp_custom_d'), img: PKG_IMG, bbKey: 'takeaway.pkg.2', bbLabel: 'Cadeaupakket — Op maat' },
   ];
   return (
     <PanelSwitcher

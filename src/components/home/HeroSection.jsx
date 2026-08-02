@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
@@ -26,6 +26,24 @@ export default function HeroSection() {
     window.dispatchEvent(new CustomEvent('bogest:hero-scroll', { detail: { pastHero } }));
   }, [pastHero]);
 
+  // Pause the hero video while a glass panel is open; resume when it closes.
+  const videoRef = useRef(null);
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    const sync = () => {
+      if (document.body.classList.contains('bogest-panel-open')) {
+        v.pause();
+      } else {
+        v.play().catch(() => {});
+      }
+    };
+    sync();
+    const obs = new MutationObserver(sync);
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    return () => obs.disconnect();
+  }, []);
+
   return (
     <>
       {/* Fixed background — the hero video stays pinned to the viewport while
@@ -33,8 +51,9 @@ export default function HeroSection() {
           Beeldbank data-bb-key so admins can still swap it. */}
       <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden>
         <video
+          ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
-          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/15b3e20c1_Grill_vid.mp4"
+          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/6bb24abbe_Bogest_Intro_.mp4"
           poster={siteImg('hero')}
           data-bb-key="hero"
           data-bb-label="Hero achtergrond"

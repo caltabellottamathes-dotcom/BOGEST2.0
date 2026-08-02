@@ -35,8 +35,8 @@ export default function GiftCardsFeature() {
           style={{ border: '1px solid rgba(200,163,89,0.18)' }}
         >
           <img src={mainImg} data-bb-key="giftcards.highlight.0" data-bb-label="Cadeaubonnen — highlight 1" alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.86) 0%, rgba(26,24,20,0.05) 58%)' }} />
-          <div className="absolute left-6 right-6 bottom-6">
+          <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.86) 0%, rgba(26,24,20,0.05) 58%)' }} />
+          <div className="absolute left-6 right-6 bottom-6 pointer-events-none">
             <div className="flex items-center gap-2 mb-3">
               <span className="h-px w-8 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{t('gc_panel_label')}</span>
