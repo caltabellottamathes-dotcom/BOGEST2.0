@@ -27,29 +27,33 @@ export default function HeroSection() {
   }, [pastHero]);
 
   return (
-    <section className="relative w-full h-[100svh] min-h-[500px] overflow-hidden" style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-      {/* Fixed background — stays in place while the page content slides over it */}
-      {/* Hero video (Grill) — muted, looping. The old hero image is kept safe as
-          the video poster (and remains the 'hero' Beeldbank position). */}
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/15b3e20c1_Grill_vid.mp4"
-        poster={siteImg('hero')}
-        data-bb-key="hero"
-        data-bb-label="Hero achtergrond"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="auto"
-      />
+    <>
+      {/* Fixed background — the hero video stays pinned to the viewport while
+          the rest of the homepage slides up over it. The video keeps its
+          Beeldbank data-bb-key so admins can still swap it. */}
+      <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden>
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/15b3e20c1_Grill_vid.mp4"
+          poster={siteImg('hero')}
+          data-bb-key="hero"
+          data-bb-label="Hero achtergrond"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+        />
+        {/* Overlays — transparent at the top, deep at the bottom for legibility */}
+        <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-transparent to-black/95' : 'bg-gradient-to-b from-transparent via-transparent to-black'}`} />
+        <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-r from-black/45 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/55 via-black/25 to-transparent'}`} />
+      </div>
 
-      {/* Overlays */}
-      <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-b from-transparent via-transparent to-black/95' : 'bg-gradient-to-b from-transparent via-transparent to-black'}`} />
-      <div className={`absolute inset-0 ${theme === 'light' ? 'bg-gradient-to-r from-black/45 via-black/20 to-transparent' : 'bg-gradient-to-r from-black/55 via-black/25 to-transparent'}`} />
-
-      {/* Content */}
-      <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10">
+      {/* Hero content — sits above the fixed video and scrolls normally.
+          pointer-events-none on the shell lets clicks reach the fixed video
+          (for Beeldbank); interactive elements re-enable pointer events. */}
+      <section className="relative z-10 w-full h-[100svh] min-h-[500px] pointer-events-none" style={{ overflowX: 'hidden' }}>
+        <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -125,13 +129,13 @@ export default function HeroSection() {
           >
             <Link
               to="/reserve"
-              className="group inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 bg-primary text-primary-foreground font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500"
+              className="group inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 bg-primary text-primary-foreground font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500 pointer-events-auto"
             >
               {t('hero_cta_reserve')}
             </Link>
             <Link
               to="/menu"
-              className="inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 border border-white/25 text-white font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:border-white/50 hover:bg-white/5 transition-all duration-500"
+              className="inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 border border-white/25 text-white font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:border-white/50 hover:bg-white/5 transition-all duration-500 pointer-events-auto"
             >
               {t('hero_cta_menu')}
             </Link>
@@ -145,14 +149,15 @@ export default function HeroSection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 2, duration: 1 }}
           onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-          className="flex absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer"
+          className="flex absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer pointer-events-auto"
         >
           <span className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30">{t('hero_scroll')}</span>
           <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
             <ChevronDown className="w-4 h-4 text-white/30" />
           </motion.div>
         </motion.button>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

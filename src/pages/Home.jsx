@@ -15,14 +15,17 @@ export default function Home() {
     <>
       <IntroPopup />
       <HeroSection />
-      <StatsSection />
-      <StorySection />
-      <LocationsPreview />
-      <PhilosophySection />
-      <SeasonalSection />
-      <ReviewsSection />
-      <CTACards />
-      <HomeClosing />
+      {/* Opaque layer — slides up over the fixed hero video as you scroll */}
+      <div className="relative z-10 bg-background">
+        <StatsSection />
+        <StorySection />
+        <LocationsPreview />
+        <PhilosophySection />
+        <SeasonalSection />
+        <ReviewsSection />
+        <CTACards />
+        <HomeClosing />
+      </div>
     </>
   );
 }
