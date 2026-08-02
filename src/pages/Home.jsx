@@ -19,8 +19,11 @@ export default function Home() {
           fades from transparent (video visible) to the solid page background,
           so the gradient transition is attached to the content and slides over
           the video with it — premium on mobile and desktop. */}
-      <div className="relative z-10">
-        <div aria-hidden className="absolute inset-0 -z-10 pointer-events-none bg-background" style={{ WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 40vh)', maskImage: 'linear-gradient(to bottom, transparent, black 40vh)', transform: 'translateZ(0)' }} />
+      <div className="relative z-10 bg-background">
+        {/* Shadow gradient — attached to the content, slides up over the fixed
+            hero video. Dark high behind the hero text (like the sections cast a
+            shadow over the video), fading seamlessly into the page background. */}
+        <div aria-hidden className="absolute inset-x-0 -top-[100vh] h-[100vh] pointer-events-none" style={{ background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.82) 35%, hsl(var(--background)) 100%)', transform: 'translateZ(0)' }} />
         <StatsSection />
         <StorySection />
         <LocationsPreview />

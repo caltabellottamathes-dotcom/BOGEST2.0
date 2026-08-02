@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
-import { useSiteImages } from '@/lib/SiteImageContext';
 
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
@@ -13,7 +12,6 @@ export default function HeroSection() {
   const [pastHero, setPastHero] = useState(false);
   const { t } = useLang();
   const { theme } = useTheme();
-  const { siteImg } = useSiteImages();
 
   useEffect(() => {
     const handleScroll = () => setPastHero(window.scrollY > window.innerHeight * 0.3);
@@ -49,14 +47,11 @@ export default function HeroSection() {
       {/* Fixed background — the hero video stays pinned to the viewport while
           the rest of the homepage slides up over it. The video keeps its
           Beeldbank data-bb-key so admins can still swap it. */}
-      <div className="fixed inset-0 z-0 overflow-hidden" aria-hidden>
+      <div className="fixed inset-0 z-0 overflow-hidden bg-black" aria-hidden>
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
           src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ea197f17e_Bogest_Intro_New_KL.mp4"
-          poster={siteImg('hero')}
-          data-bb-key="hero"
-          data-bb-label="Hero achtergrond"
           autoPlay
           muted
           loop
@@ -68,7 +63,7 @@ export default function HeroSection() {
       {/* Hero content — sits above the fixed video and scrolls normally.
           pointer-events-none on the shell lets clicks reach the fixed video
           (for Beeldbank); interactive elements re-enable pointer events. */}
-      <section className="relative z-10 w-full h-[100svh] min-h-[500px] pointer-events-none" style={{ overflowX: 'hidden' }}>
+      <section className="relative z-20 w-full h-[100svh] min-h-[500px] pointer-events-none" style={{ overflowX: 'hidden' }}>
         <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
