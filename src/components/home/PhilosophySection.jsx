@@ -35,10 +35,10 @@ export const LABELS = {
     label: 'Onze belofte en filosofie',
     title: 'Achter elk gerecht',
     accent: 'een verhaal.',
-    lead: "Bogèst is de nieuwe naam van d'Entrecôte. Verder is er niets veranderd. De eigenaren, het team, het menu en onze formule zijn nog altijd precies zoals u ze kent. De naam is geïnspireerd op het Franse Beau Geste, oftewel \"een mooi gebaar\". Een naam die past bij hoe wij onze gasten willen ontvangen: met aandacht, vakmanschap en oprechte gastvrijheid. Kwaliteit en kwantiteit voor een eerlijke prijs. Dat was altijd al onze belofte en dat blijft het.",
+    lead: 'Bogèst begon met één gedachte: genieten zonder verrassingen. Rond die belofte groeide een huis van ambacht — waar grilleurs, wijnen en drie authentieke hoeves samen één verhaal vertellen.',
     chapters: [
-      { num: '01', title: 'Ons Verhaal', subtitle: 'Drie hoeves, één familie', body: 'Wat begon als een bescheiden grillrestaurant groeide uit tot drie geliefde hoeves — in Hasselt, Borgloon en Heusden-Zolder. Drie plekken, dezelfde warmte, dezelfde passie voor vleesambacht en gastvrijheid.' },
-      { num: '02', title: 'Onze Filosofie', subtitle: 'De formule, de ambacht', body: 'Eén prijs, een compleet diner: voorgerecht, hoofdgerecht en dessert. Geen verrassingen op de rekening — alleen op het bord. Achter die eenvoud staat een keuken die elk detail kent.' },
+      { num: '01', title: 'Ons Verhaal', subtitle: 'Drie hoeves, één familie', body: 'Wat begon als een bescheiden grillrestaurant groeide uit tot drie geliefde hoeves — in Hasselt, Borgloon en Heusden-Zolder. Drie plekken, dezelfde warmte, dezelfde passie voor vleesambacht en gastvrijheid.', link: { label: 'Ontdek ons verhaal', to: '/about/ons-verhaal' } },
+      { num: '02', title: 'Onze Filosofie', subtitle: 'De formule, de ambacht', body: 'Eén prijs, een compleet diner: voorgerecht, hoofdgerecht en dessert. Geen verrassingen op de rekening — alleen op het bord. Achter die eenvoud staat een keuken die elk detail kent.', link: { label: 'Ontdek onze filosofie', to: '/about/onze-filosofie' } },
       { num: '03', title: 'Achter de schermen', subtitle: 'Onze wereld, live', body: 'Sfeerbeelden, gerechten en momenten uit keuken en zalen — wij delen ze dagelijks op Instagram en Facebook. Een blik achter de schermen, terwijl het gebeurt.', link: { label: 'Bekijk achter de schermen', to: '/about/instagram' } },
     ],
     finalCta: 'Ontdek ons verhaal',
@@ -47,10 +47,10 @@ export const LABELS = {
     label: 'Notre promesse et philosophie',
     title: 'Derrière chaque plat',
     accent: 'une histoire.',
-    lead: "Bogèst est le nouveau nom de d'Entrecôte. Pour le reste, rien n'a changé. Les propriétaires, l'équipe, la carte et notre formule restent exactement comme vous les connaissez. Le nom s'inspire du français Beau Geste, c'est-à-dire « un beau geste ». Un nom qui correspond à la façon dont nous voulons recevoir nos invités : avec attention, savoir-faire et hospitalité sincère. Qualité et quantité à un prix juste. C'était toujours notre promesse, et ça l'est encore.",
+    lead: "Bogèst est né d'une idée : profiter sans surprises. Autour de cette promesse s'est bâti une maison d'artisanat — où grillards, vins et trois fermes authentiques racontent une seule histoire.",
     chapters: [
-      { num: '01', title: 'Notre Histoire', subtitle: 'Trois fermes, une famille', body: "Ce qui a commencé comme un modeste restaurant-grill est devenu trois fermes bien-aimées — à Hasselt, Borgloon et Heusden-Zolder. Trois lieux, la même chaleur, la même passion pour l'art de la viande et l'hospitalité." },
-      { num: '02', title: 'Notre Philosophie', subtitle: "La formule, l'artisanat", body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail." },
+      { num: '01', title: 'Notre Histoire', subtitle: 'Trois fermes, une famille', body: "Ce qui a commencé comme un modeste restaurant-grill est devenu trois fermes bien-aimées — à Hasselt, Borgloon et Heusden-Zolder. Trois lieux, la même chaleur, la même passion pour l'art de la viande et l'hospitalité.", link: { label: 'Découvrir notre histoire', to: '/about/ons-verhaal' } },
+      { num: '02', title: 'Notre Philosophie', subtitle: "La formule, l'artisanat", body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail.", link: { label: 'Découvrir notre philosophie', to: '/about/onze-filosofie' } },
       { num: '03', title: 'Dans les coulisses', subtitle: 'Notre univers, en direct', body: "Ambiances, plats et moments de la cuisine et des salles — nous les partageons chaque jour sur Instagram et Facebook. Un regard dans les coulisses, au fil de l'instant.", link: { label: 'Voir les coulisses', to: '/about/instagram' } },
     ],
     finalCta: 'Découvrez notre histoire',
@@ -59,10 +59,10 @@ export const LABELS = {
     label: 'Our promise and philosophy',
     title: 'Behind every dish',
     accent: 'a story.',
-    lead: "Bogèst is the new name of d'Entrecôte. Nothing else has changed. The owners, the team, the menu and our formula remain exactly as you know them. The name is inspired by the French Beau Geste, meaning \"a beautiful gesture\". A name that fits how we want to receive our guests: with attention, craftsmanship and sincere hospitality. Quality and quantity at an honest price. That was always our promise, and it still is.",
+    lead: 'Bogèst began with one thought: enjoyment without surprises. Around that promise grew a house of craft — where grillers, wines and three authentic farmhouses tell a single story.',
     chapters: [
-      { num: '01', title: 'Our Story', subtitle: 'Three farmhouses, one family', body: 'What began as a modest grill restaurant grew into three beloved farmhouses — in Hasselt, Borgloon and Heusden-Zolder. Three places, the same warmth, the same passion for the craft of meat and hospitality.' },
-      { num: '02', title: 'Our Philosophy', subtitle: 'The formula, the craft', body: 'One price, a complete dinner: starter, main and dessert. No surprises on the bill — only on the plate. Behind that simplicity stands a kitchen that knows every detail.' },
+      { num: '01', title: 'Our Story', subtitle: 'Three farmhouses, one family', body: 'What began as a modest grill restaurant grew into three beloved farmhouses — in Hasselt, Borgloon and Heusden-Zolder. Three places, the same warmth, the same passion for the craft of meat and hospitality.', link: { label: 'Discover our story', to: '/about/ons-verhaal' } },
+      { num: '02', title: 'Our Philosophy', subtitle: 'The formula, the craft', body: 'One price, a complete dinner: starter, main and dessert. No surprises on the bill — only on the plate. Behind that simplicity stands a kitchen that knows every detail.', link: { label: 'Discover our philosophy', to: '/about/onze-filosofie' } },
       { num: '03', title: 'Behind the scenes', subtitle: 'Our world, live', body: 'Atmosphere, dishes and moments from the kitchen and the dining rooms — we share them daily on Instagram and Facebook. A look behind the scenes, as it happens.', link: { label: 'See behind the scenes', to: '/about/instagram' } },
     ],
     finalCta: 'Discover our story',
@@ -94,7 +94,7 @@ export default function PhilosophySection() {
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{labels.label}</span>
           </div>
           <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7 max-w-[16ch]" />
-          <p className="font-body text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
+          <p className="font-body text-base text-muted-foreground leading-relaxed max-w-2xl">
             {labels.lead}
           </p>
         </SectionReveal>
@@ -130,19 +130,6 @@ export default function PhilosophySection() {
             </SectionReveal>
           ))}
         </div>
-
-        {/* CTA into the Over Ons panel */}
-        <SectionReveal direction="up" delay={0.2}>
-          <div className="mt-16 pt-8 border-t border-border/60">
-            <Link
-              to="/about"
-              className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
-            >
-              {labels.finalCta}
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
-          </div>
-        </SectionReveal>
 
       </div>
     </section>

@@ -14,6 +14,10 @@ const FALLBACK_REVIEWS = [
   { name: 'Isabelle D.', location: 'Borgloon', rating: 5, text: 'De combinatie van de prachtige hoeve en het sublieme eten maakt Bogèst tot een bijzonder adres in Limburg. De huiswijn is een absolute topper!', date: 'Februari 2026', source: 'Google' },
   { name: 'Pieter & Ann', location: 'Hasselt', rating: 5, text: 'Onze verjaardagstafel was perfect verzorgd. Vriendelijk team, heerlijk eten en een sfeer die het extra speciaal maakt. Dankjewel Bogèst!', date: 'Mei 2026', source: 'Tripadvisor' },
   { name: 'Laura M.', location: 'Heusden-Zolder', rating: 4, text: 'Geweldige beleving van begin tot eind. De spare ribs zijn een must-try. Zeker één van de beste restaurants in Limburg.', date: 'April 2026', source: 'Zenchef' },
+  { name: 'Jeroen D.', location: 'Hasselt', rating: 5, text: 'De tomahawk aan tafel was een spektakel op zich. Mals, goed gekruid en met de Malbec erbij een perfecte combinatie.', date: 'Juni 2026', source: 'Tripadvisor' },
+  { name: 'Familie Peeters', location: 'Borgloon', rating: 5, text: 'Met een grote groep gegeten in een private ruimte. Vriendelijk personeel, alles vlot geregeld en het vlees was weer van topniveau.', date: 'Juni 2026', source: 'Google' },
+  { name: 'Anouk R.', location: 'Heusden-Zolder', rating: 5, text: 'De vegetarische opties waren een verrassing — origineel en vol smaak. Ook de orange wine is een echte aanrader.', date: 'Mei 2026', source: 'Zenchef' },
+  { name: 'Karel & Sofie', location: 'Hasselt', rating: 5, text: 'Een onvergetelijke avond. De open keuken, de geur van de grill en de oprechte gastvrijheid maken Bogèst uniek in Limburg.', date: 'Juli 2026', source: 'Google' },
 ];
 
 function Stars({ count }) {
@@ -98,6 +102,13 @@ export default function ReviewsSection() {
     });
     return () => { try { unsubscribe(); } catch {} };
   }, []);
+
+  // Auto-rotate through the review pages
+  useEffect(() => {
+    if (showAll || pages <= 1) return;
+    const id = setInterval(() => setPage(p => (p + 1) % pages), 6000);
+    return () => clearInterval(id);
+  }, [showAll, pages]);
 
   return (
     <section id="ervaringen" className="w-full pt-16 md:pt-24 pb-20 relative overflow-hidden">

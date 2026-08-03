@@ -186,6 +186,18 @@ elevenlabs-convai::part(textarea):focus {
   outline: none !important;
 }
 
+/* Hide the "Powered by" attribution badge the widget shows beneath the orb/panel */
+elevenlabs-convai::part(footer),
+elevenlabs-convai::part(branding),
+elevenlabs-convai::part(watermark),
+elevenlabs-convai::part(attribution),
+elevenlabs-convai::part(credit),
+elevenlabs-convai::part(powered-by),
+elevenlabs-convai::part(disclaimer),
+elevenlabs-convai::part(badge) {
+  display: none !important;
+}
+
 /* The ElevenLabs widget is positioned via its `placement` attribute on the
    <elevenlabs-convai> element (see ElevenLabsAgent.jsx). Do NOT force
    position/bottom/left here — that detaches the orb from the host and hides it. */

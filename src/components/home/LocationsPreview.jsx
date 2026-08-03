@@ -62,9 +62,9 @@ export default function LocationsPreview() {
                         style={{ background: 'rgba(12,11,9,0.42)', backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)', border: '1px solid rgba(255,255,255,0.14)' }}>
                         <div className="flex items-center gap-2.5 mb-1">
                           <span className="h-px w-6 bg-primary/80" />
-                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
                         </div>
-                        <h3 className="font-heading text-xl font-bold text-white leading-tight">Bogèst<span className="text-primary">.</span></h3>
+                        <h3 className="font-heading text-xl font-bold text-white leading-tight">{loc.city}</h3>
                         <p className="font-body text-[11px] text-white/65 leading-tight mt-1">{t('loc_coming_soon')}</p>
                       </div>
                     </div>
@@ -82,9 +82,9 @@ export default function LocationsPreview() {
                         style={{ background: 'rgba(12,11,9,0.42)', backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)', border: '1px solid rgba(255,255,255,0.14)' }}>
                         <div className="flex items-center gap-2.5 mb-1">
                           <span className="h-px w-6 bg-primary/80" />
-                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
                         </div>
-                        <h3 className="font-heading text-xl font-bold text-white leading-tight">Bogèst<span className="text-primary">.</span></h3>
+                        <h3 className="font-heading text-xl font-bold text-white leading-tight">{loc.city}</h3>
                         <p className="font-body text-[11px] text-white/70 leading-tight mt-1">{loc.address}</p>
                       </div>
                     </div>
@@ -114,9 +114,9 @@ export default function LocationsPreview() {
                     <div className="flex items-center gap-3 mb-3">
                       <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
                       <span className="h-px w-8 bg-primary/40" />
-                      <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                      <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
                     </div>
-                    <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-1.5">{loc.name}</h3>
+                    <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-1.5">{loc.city}</h3>
                     {inactive ? (
                       <p className="font-body text-sm text-muted-foreground max-w-xs leading-relaxed">{loc.city}, {loc.region} — {t('loc_coming_soon')}.</p>
                     ) : (
