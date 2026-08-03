@@ -164,86 +164,80 @@ export default function PhilosophySection() {
             </SectionReveal>
           </div>
 
-          {/* Behind the scenes — highlighted social feature */}
+          {/* Behind the scenes — refined, quiet social feature */}
           <div className="lg:col-span-7">
             <SectionReveal direction="left" delay={0.15}>
-              <div className="relative rounded-2xl border border-border/60 bg-white/[0.03] backdrop-blur-md p-5 md:p-6 overflow-hidden">
-                {/* soft gold corner accent */}
-                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.12), transparent 70%)' }} />
-
-                {/* header */}
-                <div className="relative flex items-center justify-between mb-5">
+              <div className="lg:pl-10 lg:border-l lg:border-border/50">
+                {/* header — quiet, editorial */}
+                <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-11 h-11 rounded-full bg-primary/10 border border-primary/25 flex items-center justify-center flex-shrink-0">
-                      <InstagramIcon className="w-5 h-5 text-primary" />
-                    </div>
+                    <InstagramIcon className="w-4 h-4 text-primary/70" />
                     <div>
-                      <p className="font-heading text-base md:text-lg font-bold text-foreground leading-tight">{labels.behindLabel}</p>
-                      <p className="font-body text-[11px] text-muted-foreground mt-0.5">
+                      <p className="font-body text-[10px] tracking-[0.32em] uppercase text-muted-foreground">{labels.behindLabel}</p>
+                      <p className="font-heading text-sm text-foreground/85 mt-1">
                         @{username || 'bogesthasselt'}{!loading && posts.length > 0 ? ` · ${posts.length}` : ''}
                       </p>
                     </div>
                   </div>
                   <Link
                     to="/about/instagram"
-                    className="group inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.25em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+                    className="group inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
                     {labels.behindCta}
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
                   </Link>
                 </div>
 
-                {/* grid */}
+                {/* grid — quiet row of squares, gentle hover */}
                 {loading ? (
-                  <div className="flex items-center justify-center py-16">
-                    <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                  <div className="flex items-center justify-center py-14">
+                    <Loader2 className="w-5 h-5 animate-spin text-primary/50" />
                   </div>
                 ) : posts.length === 0 ? (
-                  <div className="flex flex-col items-center justify-center py-16 gap-3">
-                    <InstagramIcon className="w-10 h-10 text-muted-foreground/30" />
-                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                  <div className="flex items-center justify-center py-14">
+                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                      <InstagramIcon className="w-4 h-4" />
                       {labels.followInstagram}
                     </a>
                   </div>
                 ) : (
-                  <div className="relative grid grid-cols-3 gap-2 md:gap-2.5">
-                    {posts.map((post) => (
+                  <div className="grid grid-cols-4 gap-2">
+                    {posts.slice(0, 4).map((post) => (
                       <a
                         key={post.id || post.permalink}
                         href={post.permalink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group relative overflow-hidden rounded-lg aspect-square"
+                        className="group relative overflow-hidden rounded-md aspect-square"
                       >
                         <img
                           src={post.media_url}
                           alt={(post.caption || 'Instagram post').slice(0, 60)}
                           loading="lazy" decoding="async"
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/15 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <ExternalLink className="w-3 h-3 text-white" />
-                        </div>
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-500" />
+                        <ExternalLink className="absolute top-2 right-2 w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </a>
                     ))}
                   </div>
                 )}
 
-                {/* follow links */}
-                <div className="relative mt-5 flex flex-wrap items-center gap-3">
+                {/* follow line — minimal, premium */}
+                <div className="mt-6 flex items-center gap-5">
                   <a
                     href={instagramUrl}
                     target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary hover:text-primary-foreground transition-colors duration-300 font-body text-[10px] tracking-[0.2em] uppercase text-primary"
+                    className="inline-flex items-center gap-2 font-body text-[11px] tracking-[0.18em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
                     <InstagramIcon className="w-3.5 h-3.5" />
                     {labels.followInstagram}
                   </a>
+                  <span className="h-3 w-px bg-border/70" />
                   <a
                     href={FACEBOOK_URL}
                     target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-border hover:border-primary/40 transition-colors duration-300 font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground"
+                    className="inline-flex items-center gap-2 font-body text-[11px] tracking-[0.18em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
                   >
                     <FacebookIcon className="w-3.5 h-3.5" />
                     {labels.followFacebook}

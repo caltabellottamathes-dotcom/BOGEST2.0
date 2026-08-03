@@ -78,7 +78,7 @@ export default function GlassPanelWrapper({ children }) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className="fixed inset-0 z-30 pointer-events-auto"
-            style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.28)' : 'rgba(0,0,0,0.52)' }}
+            style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.16)' : 'rgba(0,0,0,0.38)' }}
             onClick={() => navigate('/')}
           />
         )}

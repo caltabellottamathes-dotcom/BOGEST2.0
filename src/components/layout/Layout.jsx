@@ -16,6 +16,7 @@ import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 export default function Layout() {
   const location = useLocation();
   const isPanel = isPanelPath(location.pathname);
+  const isHome = location.pathname === '/';
   const isAssets = location.pathname === '/assets';
   const frozenScrollRef = useRef(0);
   const [deferred, setDeferred] = useState(false);
@@ -73,23 +74,21 @@ export default function Layout() {
     <div className="min-h-screen flex flex-col bg-background" style={{ overflow: 'visible' }}>
       <Navbar />
 
-      {isPanel ? (
-        <>
-          {/* Real homepage frozen in background — exactly where the user left it,
-              gently blurred so the panel reads as the focal layer. */}
-          <main className="flex-1 pointer-events-none select-none" style={{ filter: 'blur(6px)', transition: 'filter 0.4s cubic-bezier(0.22,1,0.36,1)', willChange: 'filter', transform: 'translateZ(0)' }}>
-            <Home />
-          </main>
+      {/* The homepage stays mounted across home↔panel transitions so the hero
+          video never remounts (which would flash black while it reloads). The
+          video is blurred + paused via CSS / body flag when a panel is open. */}
+      <main
+        className={isPanel ? 'flex-1 pointer-events-none select-none' : 'flex-1'}
+        style={{ overflow: 'visible' }}
+      >
+        {isPanel || isHome ? <Home /> : <Outlet />}
+      </main>
 
-          {/* Glass panel slides over the frozen homepage — no overlay */}
-          <GlassPanelWrapper>
-            <Outlet />
-          </GlassPanelWrapper>
-        </>
-      ) : (
-        <main className="flex-1" style={{ overflow: 'visible' }}>
+      {/* Glass panel slides over the homepage */}
+      {isPanel && (
+        <GlassPanelWrapper>
           <Outlet />
-        </main>
+        </GlassPanelWrapper>
       )}
 
       {!isPanel && <Footer />}
