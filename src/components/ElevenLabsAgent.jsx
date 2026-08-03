@@ -85,7 +85,12 @@ export default function ElevenLabsAgent() {
           // never collapse the widget for these.
           if (MEMORY_ACTIONS.has(a)) {
             try {
-              const r = await base44.functions.invoke('memoryTools', { ...params, visitor_id: getVisitorId() });
+              const r = await base44.functions.invoke('memoryTools', {
+                ...params,
+                visitor_id: getVisitorId(),
+                source: params.source || 'voice',
+                source_channel: params.source_channel || 'elevenlabs',
+              });
               return r?.data || { ok: true };
             } catch {
               return { ok: false };
