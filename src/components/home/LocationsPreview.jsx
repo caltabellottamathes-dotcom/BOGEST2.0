@@ -43,7 +43,7 @@ export default function LocationsPreview() {
               <SectionReveal
                 key={loc.slug}
                 direction="up"
-                className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-24'}`}
+                className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-24'} ${i % 2 === 1 ? 'pl-6 md:pl-0' : ''}`}
                 style={{ zIndex: 10 + i }}
               >
                 {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}
@@ -53,7 +53,7 @@ export default function LocationsPreview() {
                     loading="lazy" decoding="async" />
                   {!inactive && <LocationVideo slug={loc.slug} />}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                  <span className={`absolute top-4 ${alignRight ? 'right-4' : 'left-4'} font-heading font-bold leading-none text-4xl ${inactive ? 'text-white/20' : 'text-white/30'}`}>{loc.number}</span>
+                  <span className={`absolute top-4 ${alignRight ? 'right-4' : 'left-4'} font-heading font-bold leading-none text-7xl ${inactive ? 'text-white/15' : 'text-white/20'}`}>{loc.number}</span>
                   {inactive && (
                     <span className={`absolute top-4 ${alignRight ? 'left-4' : 'right-4'} inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30`}>
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />

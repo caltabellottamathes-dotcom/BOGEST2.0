@@ -109,7 +109,7 @@ export default function PhilosophySection() {
               className={i === 0 ? 'lg:pr-10' : i === labels.chapters.length - 1 ? 'lg:pl-10' : 'lg:px-10'}
             >
               <div className="flex gap-5">
-                <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none">
+                <span className="font-heading text-7xl md:text-6xl font-bold text-primary/25 leading-none select-none -ml-1 md:ml-0">
                   {ch.num}
                 </span>
                 <div className="pt-1 min-w-0">
