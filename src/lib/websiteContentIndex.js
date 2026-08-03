@@ -48,7 +48,7 @@ const INDEX = [];
 INDEX.push(
   make('home', 'page', 'Home', ['home', 'start', 'homepage', 'welkom', 'accueil', 'accueil page', 'terug naar begin', 'naar begin', 'beginpagina'], '/', 'navigate', 'home', 'The homepage / start'),
   make('menu', 'page', 'Menu', ['menu', 'kaart', 'carte', 'the menu', 'full menu', 'speisekarte', 'menukaart', 'de kaart', 'wat staat op het menu', 'gerechten'], '/menu', 'navigate', 'menu', 'The full menu page'),
-  make('about', 'page', 'About / Story', ['about', 'over ons', 'verhaal', 'filosofie', 'philosophy', 'qui sommes nous', 'wie zijn wij', 'wie we zijn'], '/about', 'navigate', 'about', 'The about / philosophy overview page'),
+  make('about', 'page', 'About / Story', ['about', 'over ons', 'verhaal', 'filosofie', 'philosophy', 'qui sommes nous', 'wie zijn wij', 'wie we zijn', 'bogest', 'bogèst', 'over bogest', 'over het restaurant', 'about bogest', 'about the restaurant', 'vertel over', 'vertel me over', 'tell me about', 'de zaak', 'over de zaak', 'het restaurant', 'ons restaurant', 'wie is bogest', 'wat is bogest'], '/about', 'navigate', 'about', 'The about / philosophy overview page — opens when a visitor asks to learn about the restaurant or Bogèst'),
   make('about-ons-verhaal', 'page', 'Ons verhaal', ['ons verhaal', 'het verhaal', 'onze geschiedenis', 'our story', 'notre histoire', 'het verhaal van bogest', 'ons verhaal pagina'], '/about/ons-verhaal', 'navigate', '/about/ons-verhaal', 'The dedicated story page — ons verhaal'),
   make('about-onze-filosofie', 'page', 'Onze filosofie', ['onze filosofie', 'filosofie pagina', 'de filosofie', 'pijlers', 'our philosophy', 'notre philosophie', 'belofte', 'filosofie van bogest'], '/about/onze-filosofie', 'navigate', '/about/onze-filosofie', 'The philosophy page — pijlers van Bogèst (formule, ambacht, wijnen, sfeer)'),
   make('locations', 'page', 'Locations overview', ['locations', 'vestigingen', 'locaties', 'adresses', 'our locations', 'where', 'where are you', 'where are we', 'which cities', 'welke steden', 'waar zitten jullie', 'waar zijn jullie', 'adres', 'addresses', 'all locations', 'adressen'], '/locations', 'navigate', 'locations', 'Overview of ALL restaurants / where to find us / which cities'),
@@ -157,6 +157,10 @@ function norm(s) {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, ' ')
+    // Collapse the many spoken/written pronunciations of "Bogèst" so the
+    // router recognises the brand however the visitor says or spells it.
+    .replace(/\b(bojest|boguest|boghes|bokest|boghest|bogesth|bogestt|boghst|bokest|boguesth)\b/g, 'bogest')
+    .replace(/\bbo\s*gest\b/g, 'bogest')
     .trim();
 }
 
@@ -243,10 +247,10 @@ const SEMANTIC_CLUSTERS = [
   { id: 'contact', words: ['contact', 'contacteer', 'contactformulier', 'bericht', 'sturen', 'vraag', 'question', 'email', 'mail', 'phone', 'bellen', 'klacht', 'complaint', 'contact form', 'contact opnemen', 'een vraag', 'stuur een bericht'] },
   { id: 'groups', words: ['groep', 'groepen', 'group', 'groups', 'event', 'events', 'feest', 'feestje', 'party', 'verjaardag', 'anniversary', 'celebration', 'bedrijf', 'company', 'team', 'teamuitje', 'business', 'privé', 'private', 'private dining', 'groepsboeking', 'groepsreservatie', 'receptie', 'reception', 'met een groep', 'met de groep', 'communie', 'doopsel', 'huwelijk', 'wedding', 'trouwerij', 'met 20 personen', 'met twintig personen', 'grote groep'] },
   { id: 'jobs', words: ['job', 'jobs', 'vacature', 'vacatures', 'vacancy', 'career', 'careers', 'werk', 'werken', 'work', 'solliciteren', 'apply', 'hiring', 'werk bij', 'werken bij', 'job offer'] },
-  { id: 'about', words: ['over ons', 'geschiedenis', 'wie zijn wij', 'who are we', 'wie we zijn', 'wie zijn jullie', 'story', 'our story', 'notre histoire', 'missie', 'waarden', 'values', 'waarom bogest', 'bestaan', 'opgericht', 'arden', 'boffe', 'leniere'] },
+  { id: 'about', words: ['over ons', 'geschiedenis', 'wie zijn wij', 'who are we', 'wie we zijn', 'wie zijn jullie', 'story', 'our story', 'notre histoire', 'missie', 'waarden', 'values', 'waarom bogest', 'bestaan', 'opgericht', 'arden', 'boffe', 'leniere', 'bogest', 'restaurant', 'het restaurant', 'de zaak', 'over het restaurant', 'over bogest', 'over de zaak', 'about bogest', 'about the restaurant', 'vertel me over', 'vertel over', 'vertel me meer', 'meer over', 'tell me about', 'tell me more', 'wie is bogest', 'wat is bogest', 'ons restaurant', 'over het restaurant'] },
   { id: 'about-ons-verhaal', words: ['ons verhaal', 'het verhaal', 'onze geschiedenis', 'verhaal van bogest'] },
   { id: 'about-onze-filosofie', words: ['onze filosofie', 'filosofie pagina', 'de filosofie', 'pijlers', 'pillars', 'our philosophy', 'notre philosophie', 'belofte', 'filosofie van bogest', 'what makes us unique', 'wat ons uniek maakt'] },
-  { id: 'instagram', words: ['instagram', 'insta', 'social', 'socials', 'social media', 'foto', 'fotos', 'photo', 'photos', 'pictures', 'beeld', 'beelden', 'sfeerbeeld', 'sfeerbeelden', 'feed', 'posts'] },
+  { id: 'instagram', words: ['instagram', 'insta', 'social', 'socials', 'social media', 'foto', 'fotos', 'photo', 'photos', 'pictures', 'beeld', 'beelden', 'sfeerbeeld', 'sfeerbeelden', 'feed', 'posts', 'facebook', 'fb', 'facebook pagina', 'achter de schermen', 'behind the scenes', 'social media pagina'] },
   { id: 'home-story', words: ['verhaal'] },
   { id: 'home-philosophy', words: ['filosofie', 'philosophy', 'formule', 'specialiteit', 'wijnen', 'sfeer'] },
   { id: 'home-suggestions', words: ['suggesties', 'maandelijkse suggesties', 'monthly suggestions', 'specials', 'seizoenspecials', 'suggestions du mois', 'seizoen', 'seizoensgerecht', 'chef suggestie'] },

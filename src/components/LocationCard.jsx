@@ -50,37 +50,29 @@ export default function LocationCard({ loc, index }) {
               className="absolute pointer-events-none select-none hidden md:block"
               style={{ height: '150%', width: 'auto', bottom: '-60%', right: '-12%', opacity: 0.08, filter: 'grayscale(1) brightness(2.4)' }} />
             <div className="relative z-10 flex flex-col h-full">
-              <div className="flex items-center justify-between gap-3 mb-4">
-                <div className="flex items-center gap-3">
-                  <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
-                  <span className="h-px w-8 bg-primary/40" />
-                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
-                </div>
-                <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/60 hidden sm:block">Bogèst · {loc.city}</span>
-              </div>
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-4">{loc.name}<span className="text-primary">.</span></h3>
-              <div className="inline-flex items-center px-4 py-2 rounded-full border border-primary/30 bg-primary/5 w-fit mb-5">
-                <span className="font-body text-xs tracking-wide text-primary font-medium">{t('loc_coming_soon')}</span>
-              </div>
-              <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">{COMING_DESC[lang] || COMING_DESC.nl}</p>
-              <div className="mt-auto pt-6">
-                <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/60 sm:hidden">Bogèst · {loc.city}</span>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="rounded-2xl border border-border/50 bg-card/75 backdrop-blur-md p-6 md:p-8 shadow-2xl flex flex-col min-h-[280px] md:min-h-[320px]">
-            {/* Header row — spread full width */}
-            <div className="flex items-center justify-between gap-3 mb-4">
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 mb-4">
                 <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
                 <span className="h-px w-8 bg-primary/40" />
                 <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
               </div>
-              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/60 hidden sm:block">Bogèst · {loc.city}</span>
+              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-4">Bogèst<span className="text-primary">.</span></h3>
+              <div className="inline-flex items-center px-4 py-2 rounded-full border border-primary/30 bg-primary/5 w-fit mb-5">
+                <span className="font-body text-xs tracking-wide text-primary font-medium">{t('loc_coming_soon')}</span>
+              </div>
+              <p className="font-body text-sm text-muted-foreground leading-relaxed max-w-sm">{COMING_DESC[lang] || COMING_DESC.nl}</p>
+              <div className="mt-auto" />
+            </div>
+          </div>
+        ) : (
+          <div className="rounded-2xl border border-border/50 bg-card/75 backdrop-blur-md p-6 md:p-8 shadow-2xl flex flex-col min-h-[280px] md:min-h-[320px]">
+            {/* Header — city kicker + brand title (no name repetition) */}
+            <div className="flex items-center gap-3 mb-4">
+              <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
+              <span className="h-px w-8 bg-primary/40" />
+              <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
             </div>
             <Link to={`/locations/${loc.slug}`} className="group inline-flex items-center mb-6">
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">{loc.name}<span className="text-primary">.</span></h3>
+              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">Bogèst<span className="text-primary">.</span></h3>
             </Link>
 
             {/* Two-column — contact | hours, spread across the card width */}

@@ -30,7 +30,10 @@ const ROUTES = {
   contact: '/contact', contacteer: '/contact', contactformulier: '/contact',
   groups: '/groups', groepen: '/groups', groep: '/groups', events: '/groups',
   jobs: '/jobs', vacatures: '/jobs', vacature: '/jobs',
-  instagram: '/instagram', social: '/instagram',
+  instagram: '/about/instagram', social: '/about/instagram',
+  facebook: '/about/instagram', fb: '/about/instagram',
+  filosofie: '/about/onze-filosofie', 'onze-filosofie': '/about/onze-filosofie',
+  'ons-verhaal': '/about/ons-verhaal',
 };
 
 registerAction('navigate', async ({ target, options = {} }) => {
