@@ -71,15 +71,6 @@ export default function HeroSection() {
           pointer-events-none on the shell lets clicks reach the fixed video
           (for Beeldbank); interactive elements re-enable pointer events. */}
       <section className="relative z-20 w-full h-[100svh] min-h-[500px] pointer-events-none hero-content" style={{ overflowX: 'hidden' }}>
-        {/* Mobile-only editorial chrome — index chip + vertical rail, a magazine-cover signature */}
-        <div className="md:hidden absolute top-6 right-6 z-10 flex items-center gap-2 pointer-events-none">
-          <span className="font-body text-[9px] tracking-[0.35em] uppercase text-white/55">N° 01</span>
-          <span className="h-px w-6 bg-white/30" />
-          <span className="font-body text-[9px] tracking-[0.35em] uppercase text-primary/80">BOGÈST</span>
-        </div>
-        <div className="md:hidden absolute left-3 top-1/2 -translate-y-1/2 z-10 pointer-events-none" style={{ writingMode: 'vertical-rl' }}>
-          <span className="font-body text-[9px] tracking-[0.45em] uppercase text-white/40">EST. MMXVI · LIMBURG · BELGIË</span>
-        </div>
         <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -98,8 +89,7 @@ export default function HeroSection() {
           </div>
 
           {/* Eyebrow */}
-          <div className="flex items-center gap-3 mb-6">
-            <span aria-hidden className="h-px w-8 bg-primary/70" />
+          <div className="flex items-center gap-4 mb-6">
             <span className="font-body font-semibold text-[10px] tracking-[0.4em] uppercase text-white/80">
               {t('hero_eyebrow')}
             </span>
@@ -115,12 +105,12 @@ export default function HeroSection() {
               className="flex flex-wrap items-baseline gap-3 md:gap-5 leading-none"
             >
               <span
-                className="font-heading font-bold text-[16vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.84] tracking-tight"
+                className="font-heading font-bold text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight"
                 style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.85)', color: 'transparent' }}
               >
                 {t('hero_line1_outlined')}
               </span>
-              <span className="font-heading font-bold text-[16vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.84] tracking-tight text-white" style={{ textShadow: '0 2px 26px rgba(0,0,0,0.45)' }}>
+              <span className="font-heading font-bold text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-white" style={{ textShadow: '0 2px 26px rgba(0,0,0,0.45)' }}>
                 {t('hero_line1_filled')}
               </span>
             </motion.div>
@@ -132,7 +122,7 @@ export default function HeroSection() {
               transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="flex flex-wrap items-baseline gap-3 md:gap-5 leading-none mt-1"
             >
-              <span className="font-heading font-bold italic text-[16vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.84] tracking-tight text-primary" style={{ textShadow: '0 2px 22px rgba(0,0,0,0.45)' }}>
+              <span className="font-heading font-bold italic text-[14vw] sm:text-[11vw] md:text-[9vw] lg:text-[8vw] leading-[0.88] tracking-tight text-primary" style={{ textShadow: '0 2px 22px rgba(0,0,0,0.45)' }}>
                 {theme === 'light' ? 'SMAAK' : t('hero_line2')}
               </span>
             </motion.div>
@@ -147,14 +137,6 @@ export default function HeroSection() {
           >
             {t('hero_subtitle')}
           </motion.p>
-
-          {/* Mobile signature — a gold hairline that draws left-to-right, a quiet editorial flourish */}
-          <motion.div
-            className="md:hidden h-px bg-primary/60 origin-left mb-7"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.9, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          />
 
           {/* CTAs */}
           <motion.div
