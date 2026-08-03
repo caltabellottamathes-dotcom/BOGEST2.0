@@ -6,10 +6,12 @@ const LOCATION_VIDEOS = {
   'heusden-zolder': 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/193f4a2a7_Heusden_Vid_New.mp4',
 };
 
-// Muted looping location video that plays ONLY while the visitor hovers it
-// (desktop) or taps it (mobile). It pauses the moment the pointer leaves or
-// the card scrolls out of view, so the four location previews stay calm and
-// silent until the guest shows interest.
+// Muted looping location video that plays ONLY while the visitor hovers the
+// location card (desktop) or taps it (mobile). The hover listeners are bound
+// to the CARD (the video's parent) rather than the <video> itself, because a
+// gradient/text overlay sits on top of the video and would swallow pointer
+// events aimed at the element. The video pauses on pointer-leave and when the
+// card scrolls out of view.
 export default function LocationVideo({ slug }) {
   const ref = useRef(null);
   const [active, setActive] = useState(false);
@@ -18,19 +20,28 @@ export default function LocationVideo({ slug }) {
   useEffect(() => {
     const v = ref.current;
     if (!v || !src) return;
+    const card = v.parentElement;
+    if (!card) return;
+
+    const play = () => { setActive(true); v.play().catch(() => {}); };
+    const pause = () => { setActive(false); try { v.pause(); } catch {} };
+
+    card.addEventListener('mouseenter', play);
+    card.addEventListener('mouseleave', pause);
+    card.addEventListener('touchstart', play, { passive: true });
 
     // Pause whenever the card scrolls out of view.
     const io = new IntersectionObserver((entries) => {
-      entries.forEach((e) => {
-        if (!e.isIntersecting) {
-          setActive(false);
-          try { v.pause(); } catch {}
-        }
-      });
+      entries.forEach((e) => { if (!e.isIntersecting) pause(); });
     }, { threshold: 0.4 });
-    io.observe(v.parentElement || v);
+    io.observe(card);
 
-    return () => io.disconnect();
+    return () => {
+      card.removeEventListener('mouseenter', play);
+      card.removeEventListener('mouseleave', pause);
+      card.removeEventListener('touchstart', play);
+      io.disconnect();
+    };
   }, [src]);
 
   if (!src) return null;
@@ -42,9 +53,6 @@ export default function LocationVideo({ slug }) {
       loop
       playsInline
       preload="metadata"
-      onMouseEnter={(e) => { setActive(true); e.currentTarget.play().catch(() => {}); }}
-      onMouseLeave={(e) => { setActive(false); try { e.currentTarget.pause(); } catch {} }}
-      onTouchStart={(e) => { setActive(true); e.currentTarget.play().catch(() => {}); }}
       className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${active ? 'opacity-100' : 'opacity-0'}`}
     />
   );

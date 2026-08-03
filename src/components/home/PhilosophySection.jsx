@@ -35,76 +35,112 @@ export const LABELS = {
     label: 'Onze belofte en filosofie',
     title: 'Het gebaar achter Bogèst.',
     accent: 'Bogèst',
-    lead: 'Bogèst begon met een eenvoudige gedachte: een compleet diner genieten, zonder verrassingen op de rekening. Rond die belofte groeide een huis van ambacht — grilleurs die elk stuk vlees kennen, een kelder met zelfgekozen wijnen, en drie authentieke hoeves waar generaties samenkomen. Achter elk gerecht schuilt een verhaal van mensen, passie en streek. Dit is wie we zijn.',
+    lead: 'Bogèst begon met een eenvoudige gedachte: een compleet diner genieten, zonder verrassingen op de rekening. Rond die belofte groeide een huis van ambacht — grilleurs die elk stuk vlees kennen, een kelder met zelfgekozen wijnen, en drie authentieke hoeves waar generaties samenkomen. Achter elk gerecht schuilt een verhaal van mensen, passie en streek.',
     cta: 'Ontdek ons verhaal',
+    caption: 'Drie hoeves · één belofte',
   },
   fr: {
     label: 'Notre promesse et philosophie',
     title: 'Le geste derrière Bogèst.',
     accent: 'Bogèst',
-    lead: "Bogèst est né d'une idée simple : profiter d'un dîner complet, sans surprise sur l'addition. Autour de cette promesse s'est bâtie une maison d'artisanat — des grillards qui connaissent chaque pièce de viande, une cave de vins choisis par nos soins, et trois fermes authentiques où se réunissent les générations. Derrière chaque plat se cache une histoire de personnes, de passion et de territoire. C'est ce que nous sommes.",
+    lead: "Bogèst est né d'une idée simple : profiter d'un dîner complet, sans surprise sur l'addition. Autour de cette promesse s'est bâtie une maison d'artisanat — des grillards qui connaissent chaque pièce de viande, une cave de vins choisis par nos soins, et trois fermes authentiques où se réunissent les générations. Derrière chaque plat se cache une histoire de personnes, de passion et de territoire.",
     cta: 'Découvrez notre histoire',
+    caption: 'Trois fermes · une promesse',
   },
   en: {
     label: 'Our promise and philosophy',
     title: 'The gesture behind Bogèst.',
     accent: 'Bogèst',
-    lead: 'Bogèst began with a simple idea: enjoy a complete dinner, with no surprises on the bill. Around that promise grew a house of craft — grillers who know every cut of meat, a cellar of self-selected wines, and three authentic farmhouses where generations gather. Behind every dish lies a story of people, passion and region. This is who we are.',
+    lead: 'Bogèst began with a simple idea: enjoy a complete dinner, with no surprises on the bill. Around that promise grew a house of craft — grillers who know every cut of meat, a cellar of self-selected wines, and three authentic farmhouses where generations gather. Behind every dish lies a story of people, passion and region.',
     cta: 'Discover our story',
+    caption: 'Three farmhouses · one promise',
   },
 };
 
-const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
-
-// A calm, editorial introduction to the Over Ons panel — the story of Bogèst
-// in one quiet section, with a single image and a link onward. The complex
-// scroll-driven sticky panels were removed in favour of this readable intro.
+// A calm, editorial introduction to the Over Ons panel. Strong typography, a
+// single portrait image with a refined gold corner accent, and a hairline
+// that separates the text from the image on desktop — no watermark, no
+// scroll-driven panels; just the story of Bogèst, leading onward.
 export default function PhilosophySection() {
   const { lang } = useLang();
   const { siteImg } = useSiteImages();
   const labels = LABELS[lang] || LABELS.nl;
 
   return (
-    <section id="filosofie" className="relative w-full py-16 md:py-28 overflow-hidden">
-      {/* Ghosted bull watermark — recurring brand motif */}
-      <img src={BULL_MARK} alt="" aria-hidden loading="lazy" decoding="async" draggable={false}
-        className="absolute pointer-events-none select-none hidden md:block"
-        style={{ height: '34rem', width: 'auto', top: '-5rem', right: '-5%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
+    <section id="filosofie" className="relative w-full py-20 md:py-32 overflow-hidden">
+      {/* Subtle warm tonal layer for depth — no watermark */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.05) 0%, transparent 45%)' }} />
 
       <div className="relative w-full px-6 md:px-10 lg:px-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Text */}
-          <SectionReveal direction="right">
-            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-4 block">
-              {labels.label}
-            </span>
-            <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7" />
-            <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed mb-9 max-w-xl">
-              {labels.lead}
-            </p>
-            <Link to="/about" className="group inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">
-              {labels.cta}
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-            </Link>
-          </SectionReveal>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
-          {/* Image */}
-          <SectionReveal direction="left" delay={0.15}>
-            <div className="relative overflow-hidden rounded-2xl aspect-[16/10] shadow-2xl">
-              <img
-                src={siteImg('philosophy.0')}
-                data-bb-key="philosophy.0"
-                data-bb-label="Filosofie — Bogèst"
-                alt="Bogèst"
-                loading="lazy" decoding="async"
-                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                style={{ filter: 'saturate(0.85) brightness(0.92)' }}
-              />
-              <div className="absolute top-3 left-3 w-10 h-10 border-t border-l border-primary/40 rounded-tl-lg" />
-              <div className="absolute bottom-3 right-3 w-10 h-10 border-b border-r border-primary/40 rounded-br-lg" />
-            </div>
-          </SectionReveal>
+          {/* Text column */}
+          <div className="lg:col-span-7 lg:pr-12 lg:border-r lg:border-border/70">
+            <SectionReveal direction="up">
+              <div className="flex items-center gap-3 mb-7">
+                <span className="h-px w-10 bg-primary" />
+                <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">
+                  {labels.label}
+                </span>
+              </div>
+
+              <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-8" />
+
+              <div className="flex items-center gap-2 mb-7">
+                <div className="w-12 h-px bg-primary/50" />
+                <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+              </div>
+
+              <p className="font-body text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mb-10">
+                {labels.lead}
+              </p>
+
+              <Link
+                to="/about"
+                className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+              >
+                {labels.cta}
+                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                </span>
+              </Link>
+            </SectionReveal>
+          </div>
+
+          {/* Image column */}
+          <div className="lg:col-span-5">
+            <SectionReveal direction="left" delay={0.12}>
+              <figure className="relative">
+                <div
+                  className="relative overflow-hidden rounded-2xl aspect-[4/5] shadow-2xl"
+                  style={{ boxShadow: '0 28px 70px -24px rgba(0,0,0,0.45)' }}
+                >
+                  <img
+                    src={siteImg('philosophy.0')}
+                    data-bb-key="philosophy.0"
+                    data-bb-label="Filosofie — Bogèst"
+                    alt="Bogèst"
+                    loading="lazy" decoding="async"
+                    className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
+                    style={{ filter: 'saturate(0.85) brightness(0.92)' }}
+                  />
+                  {/* Soft tonal gradient for caption legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
+                  {/* Gold corner accents */}
+                  <div className="absolute top-4 left-4 w-12 h-12 border-t border-l border-primary/50 rounded-tl-lg" />
+                  <div className="absolute bottom-4 right-4 w-12 h-12 border-b border-r border-primary/50 rounded-br-lg" />
+                </div>
+
+                <figcaption className="mt-5 flex items-center gap-3">
+                  <span className="h-px w-7 bg-primary/50" />
+                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
+                    {labels.caption}
+                  </span>
+                </figcaption>
+              </figure>
+            </SectionReveal>
+          </div>
+
         </div>
       </div>
     </section>

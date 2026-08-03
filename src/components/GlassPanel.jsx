@@ -28,9 +28,9 @@ function GlassPanelSurface() {
 
 // Pages that open as glass panels (not homepage)
 const PANEL_PATHS = [
-  '/menu', '/about', '/locations', '/reserve', '/takeaway',
+  '/menu', '/about', '/locations', '/restaurant-spaces', '/reserve', '/takeaway',
   '/gift-cards', '/checkout', '/contact', '/groups', '/jobs',
-  '/privacy', '/terms', '/admin', '/gift-package',
+  '/privacy', '/terms', '/cookies', '/ai-disclaimer', '/admin', '/gift-package',
 ];
 
 export function isPanelPath(pathname) {
