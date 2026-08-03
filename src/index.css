@@ -230,8 +230,8 @@ body.bogest-panel-open div[class*="convai"] {
   body.bogest-panel-open div[id*="convai"],
   body.bogest-panel-open div[class*="convai"] {
     /* Mobile panels are full-screen — keep the widget orb visible above the
-       panel so the visitor can keep talking / navigating. */
-    transform: none !important;
+       panel at its normal size so the visitor can keep talking / navigating. */
+    transform: scale(0.82) !important;
   }
 }
 

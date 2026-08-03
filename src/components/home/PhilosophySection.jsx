@@ -35,7 +35,7 @@ export const LABELS = {
     label: 'Onze belofte en filosofie',
     title: 'Achter elk gerecht',
     accent: 'een verhaal.',
-    lead: 'Bogèst begon met één gedachte: genieten zonder verrassingen. Rond die belofte groeide een huis van ambacht — waar grilleurs, wijnen en drie authentieke hoeves samen één verhaal vertellen.',
+    lead: "Bogèst is de nieuwe naam van d'Entrecôte. Verder is er niets veranderd. De eigenaren, het team, het menu en onze formule zijn nog altijd precies zoals u ze kent. De naam is geïnspireerd op het Franse Beau Geste, oftewel \"een mooi gebaar\". Een naam die past bij hoe wij onze gasten willen ontvangen: met aandacht, vakmanschap en oprechte gastvrijheid. Kwaliteit en kwantiteit voor een eerlijke prijs. Dat was altijd al onze belofte en dat blijft het.",
     chapters: [
       { num: '01', title: 'Ons Verhaal', subtitle: 'Drie hoeves, één familie', body: 'Wat begon als een bescheiden grillrestaurant groeide uit tot drie geliefde hoeves — in Hasselt, Borgloon en Heusden-Zolder. Drie plekken, dezelfde warmte, dezelfde passie voor vleesambacht en gastvrijheid.' },
       { num: '02', title: 'Onze Filosofie', subtitle: 'De formule, de ambacht', body: 'Eén prijs, een compleet diner: voorgerecht, hoofdgerecht en dessert. Geen verrassingen op de rekening — alleen op het bord. Achter die eenvoud staat een keuken die elk detail kent.' },
@@ -47,7 +47,7 @@ export const LABELS = {
     label: 'Notre promesse et philosophie',
     title: 'Derrière chaque plat',
     accent: 'une histoire.',
-    lead: "Bogèst est né d'une idée : profiter sans surprises. Autour de cette promesse s'est bâti une maison d'artisanat — où grillards, vins et trois fermes authentiques racontent une seule histoire.",
+    lead: "Bogèst est le nouveau nom de d'Entrecôte. Pour le reste, rien n'a changé. Les propriétaires, l'équipe, la carte et notre formule restent exactement comme vous les connaissez. Le nom s'inspire du français Beau Geste, c'est-à-dire « un beau geste ». Un nom qui correspond à la façon dont nous voulons recevoir nos invités : avec attention, savoir-faire et hospitalité sincère. Qualité et quantité à un prix juste. C'était toujours notre promesse, et ça l'est encore.",
     chapters: [
       { num: '01', title: 'Notre Histoire', subtitle: 'Trois fermes, une famille', body: "Ce qui a commencé comme un modeste restaurant-grill est devenu trois fermes bien-aimées — à Hasselt, Borgloon et Heusden-Zolder. Trois lieux, la même chaleur, la même passion pour l'art de la viande et l'hospitalité." },
       { num: '02', title: 'Notre Philosophie', subtitle: "La formule, l'artisanat", body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail." },
@@ -59,7 +59,7 @@ export const LABELS = {
     label: 'Our promise and philosophy',
     title: 'Behind every dish',
     accent: 'a story.',
-    lead: 'Bogèst began with one thought: enjoyment without surprises. Around that promise grew a house of craft — where grillers, wines and three authentic farmhouses tell a single story.',
+    lead: "Bogèst is the new name of d'Entrecôte. Nothing else has changed. The owners, the team, the menu and our formula remain exactly as you know them. The name is inspired by the French Beau Geste, meaning \"a beautiful gesture\". A name that fits how we want to receive our guests: with attention, craftsmanship and sincere hospitality. Quality and quantity at an honest price. That was always our promise, and it still is.",
     chapters: [
       { num: '01', title: 'Our Story', subtitle: 'Three farmhouses, one family', body: 'What began as a modest grill restaurant grew into three beloved farmhouses — in Hasselt, Borgloon and Heusden-Zolder. Three places, the same warmth, the same passion for the craft of meat and hospitality.' },
       { num: '02', title: 'Our Philosophy', subtitle: 'The formula, the craft', body: 'One price, a complete dinner: starter, main and dessert. No surprises on the bill — only on the plate. Behind that simplicity stands a kitchen that knows every detail.' },
@@ -100,19 +100,19 @@ export default function PhilosophySection() {
         </SectionReveal>
 
         {/* Three chapters — hairline-separated editorial columns */}
-        <div className="mt-14 lg:mt-20 grid grid-cols-1 lg:grid-cols-3 lg:divide-x lg:divide-border/50">
+        <div className="mt-14 lg:mt-20 grid grid-cols-1 gap-12 lg:gap-0 lg:grid-cols-3 lg:divide-x lg:divide-border/50">
           {labels.chapters.map((ch, i) => (
             <SectionReveal
               key={ch.num}
               direction="up"
               delay={i * 0.1}
-              className={i === 0 ? 'lg:pr-10' : i === labels.chapters.length - 1 ? 'lg:pl-10' : 'lg:px-10'}
+              className="lg:px-10"
             >
-              <div className="flex gap-5">
-                <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none">
+              <div className="flex items-start gap-5">
+                <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none mt-1">
                   {ch.num}
                 </span>
-                <div className="pt-1 min-w-0">
+                <div className="min-w-0">
                   <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2">{ch.title}</p>
                   <p className="font-heading text-lg md:text-xl font-semibold text-foreground mb-3 leading-snug">{ch.subtitle}</p>
                   <p className="font-body text-base text-muted-foreground leading-relaxed">{ch.body}</p>
@@ -122,9 +122,7 @@ export default function PhilosophySection() {
                       className="group mt-5 inline-flex items-center gap-2 font-body text-[11px] tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300"
                     >
                       {ch.link.label}
-                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
-                      </span>
+                      <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
                     </Link>
                   )}
                 </div>
@@ -141,9 +139,7 @@ export default function PhilosophySection() {
               className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
             >
               {labels.finalCta}
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
-              </span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
             </Link>
           </div>
         </SectionReveal>
