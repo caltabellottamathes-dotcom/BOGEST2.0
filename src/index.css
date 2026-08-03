@@ -208,6 +208,11 @@ video::-internal-media-controls-overlay-cast-button { display: none !important; 
   elevenlabs-convai { transform: scale(0.82); transform-origin: bottom right; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
 }
 
+/* When a glass panel is open, hide the hero text and blur the paused hero
+   video — only the blurred, paused video remains visible behind the panel. */
+body.bogest-panel-open .hero-video { filter: blur(14px) saturate(0.9); transition: filter 0.45s ease; }
+body.bogest-panel-open .hero-content { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+
 /* Slide the ElevenLabs widget aside when a glass panel opens — synced with the panel animation */
 body.bogest-panel-open elevenlabs-convai,
 body.bogest-panel-open div[id*="elevenlabs"],

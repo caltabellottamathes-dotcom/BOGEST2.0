@@ -6,29 +6,30 @@ const LOCATION_VIDEOS = {
   'heusden-zolder': 'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/193f4a2a7_Heusden_Vid_New.mp4',
 };
 
-// Muted looping location video that plays automatically when its card scrolls
-// into view and pauses when it leaves. The filename encodes the location.
+// Muted looping location video that plays ONLY while the visitor hovers it
+// (desktop) or taps it (mobile). It pauses the moment the pointer leaves or
+// the card scrolls out of view, so the four location previews stay calm and
+// silent until the guest shows interest.
 export default function LocationVideo({ slug }) {
   const ref = useRef(null);
   const [active, setActive] = useState(false);
   const src = LOCATION_VIDEOS[slug];
 
   useEffect(() => {
-    if (!src || !ref.current) return;
     const v = ref.current;
-    const target = v.parentElement || v;
+    if (!v || !src) return;
+
+    // Pause whenever the card scrolls out of view.
     const io = new IntersectionObserver((entries) => {
       entries.forEach((e) => {
-        if (e.isIntersecting) {
-          setActive(true);
-          v.play().catch(() => {});
-        } else {
+        if (!e.isIntersecting) {
           setActive(false);
           try { v.pause(); } catch {}
         }
       });
     }, { threshold: 0.4 });
-    io.observe(target);
+    io.observe(v.parentElement || v);
+
     return () => io.disconnect();
   }, [src]);
 
@@ -41,6 +42,9 @@ export default function LocationVideo({ slug }) {
       loop
       playsInline
       preload="metadata"
+      onMouseEnter={(e) => { setActive(true); e.currentTarget.play().catch(() => {}); }}
+      onMouseLeave={(e) => { setActive(false); try { e.currentTarget.pause(); } catch {} }}
+      onTouchStart={(e) => { setActive(true); e.currentTarget.play().catch(() => {}); }}
       className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${active ? 'opacity-100' : 'opacity-0'}`}
     />
   );

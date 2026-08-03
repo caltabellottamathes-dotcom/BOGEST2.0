@@ -54,7 +54,7 @@ export default function HeroSection() {
       <div className="fixed inset-0 z-0 overflow-hidden bg-black" aria-hidden>
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover hero-video"
           src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/ea197f17e_Bogest_Intro_New_KL.mp4"
           autoPlay
           muted
@@ -69,7 +69,7 @@ export default function HeroSection() {
       {/* Hero content — sits above the fixed video and scrolls normally.
           pointer-events-none on the shell lets clicks reach the fixed video
           (for Beeldbank); interactive elements re-enable pointer events. */}
-      <section className="relative z-20 w-full h-[100svh] min-h-[500px] pointer-events-none" style={{ overflowX: 'hidden' }}>
+      <section className="relative z-20 w-full h-[100svh] min-h-[500px] pointer-events-none hero-content" style={{ overflowX: 'hidden' }}>
         <div className="relative h-full flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-20 sm:pb-6 md:pb-10 pointer-events-none">
         <motion.div
           initial={{ opacity: 0, y: 50 }}

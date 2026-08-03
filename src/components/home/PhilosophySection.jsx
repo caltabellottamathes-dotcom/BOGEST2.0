@@ -1,12 +1,10 @@
-import React, { useRef, useEffect } from 'react';
-import { useTheme } from '@/lib/ThemeContext';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
-import { useIsMobile } from '@/hooks/use-mobile';
 import { useSiteImages } from '@/lib/SiteImageContext';
-import BogestLogo from '@/components/BogestLogo';
 import HomeTitle from '@/components/home/HomeTitle';
-import HostHint from '@/components/HostHint';
-import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
 export const PILLARS_DATA = {
   nl: [
@@ -33,262 +31,82 @@ export const PILLARS_DATA = {
 };
 
 export const LABELS = {
-  nl: { label: 'Onze belofte en filosofie', title: 'Het gebaar achter Bogèst.', accent: 'Bogèst' },
-  fr: { label: 'Notre promesse et philosophie', title: 'Le geste derrière Bogèst.', accent: 'Bogèst' },
-  en: { label: 'Our promise and philosophy', title: 'The gesture behind Bogèst.', accent: 'Bogèst' }
+  nl: {
+    label: 'Onze belofte en filosofie',
+    title: 'Het gebaar achter Bogèst.',
+    accent: 'Bogèst',
+    lead: 'Bogèst begon met een eenvoudige gedachte: een compleet diner genieten, zonder verrassingen op de rekening. Rond die belofte groeide een huis van ambacht — grilleurs die elk stuk vlees kennen, een kelder met zelfgekozen wijnen, en drie authentieke hoeves waar generaties samenkomen. Achter elk gerecht schuilt een verhaal van mensen, passie en streek. Dit is wie we zijn.',
+    cta: 'Ontdek ons verhaal',
+  },
+  fr: {
+    label: 'Notre promesse et philosophie',
+    title: 'Le geste derrière Bogèst.',
+    accent: 'Bogèst',
+    lead: "Bogèst est né d'une idée simple : profiter d'un dîner complet, sans surprise sur l'addition. Autour de cette promesse s'est bâtie une maison d'artisanat — des grillards qui connaissent chaque pièce de viande, une cave de vins choisis par nos soins, et trois fermes authentiques où se réunissent les générations. Derrière chaque plat se cache une histoire de personnes, de passion et de territoire. C'est ce que nous sommes.",
+    cta: 'Découvrez notre histoire',
+  },
+  en: {
+    label: 'Our promise and philosophy',
+    title: 'The gesture behind Bogèst.',
+    accent: 'Bogèst',
+    lead: 'Bogèst began with a simple idea: enjoy a complete dinner, with no surprises on the bill. Around that promise grew a house of craft — grillers who know every cut of meat, a cellar of self-selected wines, and three authentic farmhouses where generations gather. Behind every dish lies a story of people, passion and region. This is who we are.',
+    cta: 'Discover our story',
+  },
 };
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
+// A calm, editorial introduction to the Over Ons panel — the story of Bogèst
+// in one quiet section, with a single image and a link onward. The complex
+// scroll-driven sticky panels were removed in favour of this readable intro.
 export default function PhilosophySection() {
-  const { theme } = useTheme();
   const { lang } = useLang();
-  const isMobile = useIsMobile();
-  const pillars = PILLARS_DATA[lang] || PILLARS_DATA.nl;
-  const labels = LABELS[lang] || LABELS.nl;
-  const isLight = theme === 'light';
   const { siteImg } = useSiteImages();
-  const NAV = isMobile ? 64 : 80;
-
-  const sectionRef = useRef(null);
-  const rafRef = useRef(null);
-  const panelRefs = useRef([]);
-  const imgRefs = useRef([]);
-
-  // Same glassmorphism as overlay panels (OverlayPanelShell / GlassPanel)
-  const glassBg = isLight ? 'hsl(var(--background) / 0.30)' : 'rgba(0,0,0,0.38)';
-  const glassBorder = isLight ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.10)';
-  const glassShadow = isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -24px 80px rgba(0,0,0,0.50)';
-
-  // Footer-matching glass — applied only to the FIRST sticky panel.
-  const footerBg = isLight ? 'hsl(var(--background) / 0.30)' : 'rgba(255,255,255,0.06)';
-  const footerBorder = isLight ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.14)';
-  const footerShadow = isLight ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)';
-
-  useEffect(() => {
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        rafRef.current = null;
-        const el = sectionRef.current;
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const totalScrollable = el.offsetHeight - window.innerHeight;
-        if (totalScrollable <= 0) return;
-
-        const progress = Math.max(0, Math.min(1, -rect.top / totalScrollable));
-        const n = pillars.length - 1;
-
-        for (let i = 1; i < pillars.length; i++) {
-          const startAt = (i - 1) / n;
-          const entryWindow = 0.18;
-          const p = (progress - startAt) / entryWindow;
-          const clamped = Math.max(0, Math.min(1, p));
-          const offset = (1 - clamped) * 100;
-
-          const panel = panelRefs.current[i];
-          if (panel) panel.style.transform = `translate3d(0, ${offset}%, 0)`;
-
-        }
-      });
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [pillars.length, isMobile]);
-
-  // Total scroll height: each panel gets ~80vh of "dwell" time to be read
-  const totalHeight = pillars.length * 80; // vh units
+  const labels = LABELS[lang] || LABELS.nl;
 
   return (
-    <section id="filosofie" className="w-full bg-background">
+    <section id="filosofie" className="relative w-full py-16 md:py-28 overflow-hidden">
+      {/* Ghosted bull watermark — recurring brand motif */}
+      <img src={BULL_MARK} alt="" aria-hidden loading="lazy" decoding="async" draggable={false}
+        className="absolute pointer-events-none select-none hidden md:block"
+        style={{ height: '34rem', width: 'auto', top: '-5rem', right: '-5%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
 
-      {/*
-               Outer div: tall enough to scroll through all panels.
-               Inner sticky div: pins to viewport while user scrolls through outer div.
-               Panels are absolutely positioned on top of each other; JS picks which is visible.
-              */}
-        <div
-          ref={sectionRef}
-          style={{ height: `${totalHeight}vh` }}>
-          
-          <div
-            style={{
-              position: 'sticky',
-              top: NAV,
-              height: `calc(100vh - ${NAV}px)`,
-              overflow: 'hidden',
-              willChange: 'transform',
-              transform: 'translateZ(0)'
-            }}>
-            
-            {/* Title — always visible behind panels */}
-            <div style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              zIndex: 1,
-              background: 'hsl(var(--background))',
-              paddingTop: 'clamp(1.5rem, 3vw, 3rem)',
-              paddingBottom: 'clamp(1rem, 2vw, 1.5rem)',
-              paddingLeft: 'clamp(1.5rem, 5vw, 4rem)',
-              paddingRight: 'clamp(1.5rem, 5vw, 4rem)'
-            }}>
-              <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">
-                {labels.label}
-              </span>
-              <HomeTitle title={labels.title} accent={labels.accent} />
+      <div className="relative w-full px-6 md:px-10 lg:px-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+          {/* Text */}
+          <SectionReveal direction="right">
+            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-4 block">
+              {labels.label}
+            </span>
+            <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7" />
+            <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed mb-9 max-w-xl">
+              {labels.lead}
+            </p>
+            <Link to="/about" className="group inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">
+              {labels.cta}
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
+          </SectionReveal>
+
+          {/* Image */}
+          <SectionReveal direction="left" delay={0.15}>
+            <div className="relative overflow-hidden rounded-2xl aspect-[16/10] shadow-2xl">
+              <img
+                src={siteImg('philosophy.0')}
+                data-bb-key="philosophy.0"
+                data-bb-label="Filosofie — Bogèst"
+                alt="Bogèst"
+                loading="lazy" decoding="async"
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                style={{ filter: 'saturate(0.85) brightness(0.92)' }}
+              />
+              <div className="absolute top-3 left-3 w-10 h-10 border-t border-l border-primary/40 rounded-tl-lg" />
+              <div className="absolute bottom-3 right-3 w-10 h-10 border-b border-r border-primary/40 rounded-br-lg" />
             </div>
-
-            {/* Panels — all stacked at the same position, scroll-driven translateY */}
-            {pillars.map((pillar, i) => {
-              const imageLeft = i % 2 === 0;
-              const initOffset = i === 0 ? 0 : 100;
-              return (
-                <div
-                  key={pillar.num}
-                  className="group"
-                  ref={el => panelRefs.current[i] = el}
-                  style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    height: isMobile ? '86%' : '78%',
-                    zIndex: 10 + i,
-                    background: i === 0 ? footerBg : glassBg,
-                    backdropFilter: i === 0 ? 'blur(24px) saturate(150%)' : (isMobile ? 'blur(14px)' : 'blur(20px)'),
-                    WebkitBackdropFilter: i === 0 ? 'blur(24px) saturate(150%)' : (isMobile ? 'blur(14px)' : 'blur(20px)'),
-                    borderTop: i === 0 ? footerBorder : glassBorder,
-                    borderRadius: '24px 24px 0 0',
-                    boxShadow: i === 0 ? footerShadow : glassShadow,
-                    overflow: 'hidden',
-                    transform: `translate3d(0, ${initOffset}%, 0)`,
-                    willChange: 'transform',
-                    backfaceVisibility: 'hidden'
-                  }}>
-                  
-                  {/* Bull mark — large ghosted watermark in the bottom corner beside the text */}
-                  <img
-                    src="https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png"
-                    alt=""
-                    aria-hidden
-                    draggable={false}
-                    className="absolute pointer-events-none select-none hidden md:block"
-                    style={{
-                      height: '150%',
-                      width: 'auto',
-                      bottom: '-118%',
-                      right: imageLeft ? '-28%' : 'auto',
-                      left: imageLeft ? 'auto' : '-28%',
-                      opacity: 0.13,
-                      filter: 'grayscale(1) brightness(2.6)',
-                      mixBlendMode: 'screen',
-                      zIndex: 0
-                    }}
-                  />
-                  <div className="relative z-10 w-full h-full flex items-stretch px-4 md:px-12 lg:px-16 py-3 md:py-8 opacity-100">
-                    <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-6 lg:gap-12 items-stretch">
-
-                      {/* Image — portrait, slides in from side, with gold frame and watermark */}
-                      <div className={`relative col-span-1 md:col-span-5 flex items-center overflow-hidden ${imageLeft ? 'order-1 md:order-1' : 'order-1 md:order-2'}`}>
-                        {/* chapter numeral moved to the text column as a graphic anchor */}
-                        {/* Image with refined frame — slides in from its side */}
-                        <div
-                          className="relative overflow-hidden rounded-2xl w-full aspect-[16/10] md:aspect-[3/4] max-h-[150px] md:max-h-full"
-                          style={{
-                            boxShadow: isMobile ? 'none' : (isLight ? '0 16px 56px rgba(0,0,0,0.16)' : '0 16px 56px rgba(0,0,0,0.55)'),
-                            border: isLight ? '1px solid rgba(107, 122, 63, 0.22)' : '1px solid rgba(200, 163, 89, 0.22)'
-                          }}>
-                          
-                          <img
-                            src={siteImg('philosophy.' + i)}
-                            data-bb-key={`philosophy.${i}`}
-                            data-bb-label={`Filosofie ${pillar.num}`}
-                            alt={pillar.title}
-                            className="w-full h-full object-cover"
-                            style={{ filter: 'saturate(0.85) brightness(0.92)' }} loading="lazy" decoding="async" />
-                          
-                          {/* Gold accent corner — top-left */}
-                          <div className="absolute top-3 left-3 w-10 h-10 border-t border-l border-primary/40 rounded-tl-lg" />
-                          {/* Gold accent corner — bottom-right */}
-                          <div className="absolute bottom-3 right-3 w-10 h-10 border-b border-r border-primary/40 rounded-br-lg" />
-                          <HostHint variant="note" question={hostQuestion(lang, pillar.title)} className="absolute top-3 right-3 z-20" />
-                        </div>
-                      </div>
-
-                      {/* Text — editorial layout with progress indicator */}
-                      <div className={`relative col-span-1 md:col-span-7 flex flex-col justify-start md:justify-end pb-2 md:pb-10 ${imageLeft ? 'order-2 md:order-2' : 'order-2 md:order-1'}`}>
-
-                        {/* Giant chapter numeral — graphic anchor, bleeds off the outer edge */}
-                        <span aria-hidden className="absolute font-heading font-bold select-none leading-none pointer-events-none block"
-                          style={{ fontSize: 'clamp(4rem, 22vw, 20rem)', color: 'hsl(var(--primary) / 0.12)', top: '-0.5rem', right: imageLeft ? '-0.3rem' : 'auto', left: imageLeft ? 'auto' : '-0.3rem', zIndex: 0 }}>
-                          {pillar.num}
-                        </span>
-
-                        {/* Top corner — brand mark fills empty upper corner */}
-                        <div className={`absolute top-0 hidden md:block ${imageLeft ? 'right-0 text-right' : 'left-0'}`} style={{ zIndex: 5 }}>
-                          <BogestLogo className="text-lg leading-none block" />
-                          <span className="font-body text-[11px] tracking-[0.3em] uppercase block mt-1 text-foreground">
-                            {labels.label}
-                          </span>
-                        </div>
-
-                        <div className="relative z-10">
-                        {/* Progress indicator */}
-                        <div className="flex items-center gap-1.5 mb-3 md:mb-6">
-                          {pillars.map((_, idx) =>
-                          <div
-                            key={idx}
-                            className="h-px transition-all duration-500"
-                            style={{
-                              width: idx === i ? '36px' : '18px',
-                              background: idx <= i ? 'hsl(var(--primary))' : 'hsl(var(--border))',
-                              opacity: idx <= i ? 1 : 0.5
-                            }} />
-
-                          )}
-                          <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary ml-3">
-                            {pillar.num} / 0{pillars.length}
-                          </span>
-                        </div>
-
-                        {/* Subtitle as overline */}
-                        <div className="flex items-center gap-3 mb-2 md:mb-3">
-                          <span className="h-px w-8 bg-primary/50" />
-                          <span className="font-body text-xs tracking-[0.35em] uppercase text-primary">
-                            {pillar.subtitle}
-                          </span>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="font-heading text-3xl md:text-5xl lg:text-[4.5vw] font-bold leading-[0.98] mb-2 md:mb-4 text-foreground">
-                          {pillar.title}<span className="text-primary">.</span>
-                        </h3>
-
-                        {/* Refined divider */}
-                        <div className="flex items-center gap-2 mb-3 md:mb-6">
-                          <div className="w-12 h-px bg-primary/50" />
-                          <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-                        </div>
-
-                        {/* Body */}
-                        <p className="font-body text-sm md:text-base leading-snug md:leading-relaxed w-full pr-4 text-foreground">
-                          {pillar.body}
-                        </p>
-                        </div>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>);
-
-            })}
-          </div>
+          </SectionReveal>
         </div>
-
-    </section>);
-
+      </div>
+    </section>
+  );
 }
