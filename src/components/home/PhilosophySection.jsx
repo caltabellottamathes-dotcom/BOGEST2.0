@@ -5,6 +5,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import HomeTitle from '@/components/home/HomeTitle';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 export const PILLARS_DATA = {
   nl: [
   { num: '01', title: 'Onze Formule', subtitle: 'De basis van alles', body: 'Bij Bogèst draait alles om de formule: bij elk hoofdgerecht is een voorgerecht naar keuze én een dessert inbegrepen. Geen verrassingen op de rekening — één prijs, een complete ervaring. Van de warme soep tot de laatste hap dessert, wij zorgen voor het hele traject. Dat is hoe wij gastvrijheid vieren.', image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799913-Y5ZEKPI4I2XXUTYC8W3T/d2db3621-8f9b-45f1-95c8-498c24ed15c3-1.jpg' },
@@ -80,6 +82,8 @@ export default function PhilosophySection() {
     <section id="filosofie" className="relative w-full py-20 md:py-32 overflow-hidden">
       {/* Subtle warm tonal layer for depth */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.06) 0%, transparent 45%)' }} />
+      {/* Large ghosted bull mark — bleeding off the right edge, the recurring site motif */}
+      <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '40rem', width: 'auto', bottom: '-8rem', right: '-10%', opacity: 0.05, filter: 'grayscale(1) brightness(2.4)' }} />
 
       <div className="relative w-full px-6 md:px-10 lg:px-16">
 

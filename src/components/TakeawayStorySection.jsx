@@ -43,6 +43,7 @@ export default function TakeawayStorySection() {
       titleAccent={tr.accent}
       lead={tr.lead}
       mirror
+      ghostBull={false}
     />
   );
 }

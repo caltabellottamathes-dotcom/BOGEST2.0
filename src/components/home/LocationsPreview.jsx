@@ -18,10 +18,10 @@ import LocationVideo from '@/components/LocationVideo';
 export default function LocationsPreview() {
   const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
-  const LOCATIONS_DATA = getLocations(lang);
+  const LOCATIONS_DATA = getLocations(lang).filter((l) => l.active !== false);
 
   return (
-    <section id="vestigingen" className="w-full py-8 md:py-14">
+    <section id="vestigingen" className="w-full py-6 md:py-12">
       <div className="w-full px-6 md:px-10 lg:px-16">
         <SectionReveal className="mb-6 md:mb-10">
           <div className="flex items-center gap-3 mb-4">
@@ -104,12 +104,12 @@ export default function LocationsPreview() {
                       <span className="h-px w-8 bg-primary/40" />
                       <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
                     </div>
-                    <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground mb-2">{loc.name}</h3>
+                    <h3 className="font-heading text-xl md:text-2xl font-bold text-foreground mb-1.5">{loc.name}</h3>
                     {inactive ? (
                       <p className="font-body text-sm text-muted-foreground max-w-xs leading-relaxed">{loc.city}, {loc.region} — {t('loc_coming_soon')}.</p>
                     ) : (
                       <>
-                        <p className="font-body text-sm text-muted-foreground mb-5 max-w-xs leading-relaxed">{loc.address}</p>
+                        <p className="font-body text-sm text-muted-foreground mb-4 max-w-xs leading-relaxed">{loc.address}</p>
                         <Link to={`/locations/${loc.slug}`} className="group/cta inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary">
                           {t('btn_more')}
                           <span className="inline-flex items-center justify-center w-8 h-8 rounded-full border border-primary/40 text-primary group-hover/cta:bg-primary group-hover/cta:text-primary-foreground transition-all duration-300">

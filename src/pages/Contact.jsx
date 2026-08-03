@@ -103,27 +103,39 @@ export default function Contact() {
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('nav_locations')}</span>
             </div>
             <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-8">{t('con_locations')}<span className="text-primary">.</span></h2>
-            <div className="space-y-4">
-              {locations.map((loc, i) => {
+            <div className="space-y-3">
+              {locations.map((loc) => {
                 const selected = form.location === loc.slug;
                 return (
                   <button key={loc.slug} type="button" onClick={() => set('location', loc.slug)}
-                    className={`group relative w-full text-left rounded-2xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
-                    <div className="relative h-28 md:h-32 overflow-hidden">
-                      <img src={loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
-                      <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.78) 0%, rgba(26,24,20,0.1) 60%)' }} />
-                      <span className="absolute left-4 top-3 font-heading font-bold text-white/35 text-3xl leading-none select-none">{String(i + 1).padStart(2, '0')}</span>
-                      <h3 className="absolute left-4 right-4 bottom-3 font-heading text-lg md:text-xl font-bold text-white">{loc.name}<span className="text-primary">.</span></h3>
-                      {selected && (
-                        <span className="absolute right-3 top-3 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary text-primary-foreground font-body text-[10px] tracking-[0.2em] uppercase">
-                          <Check className="w-3 h-3" />{t('shop_choose')}
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-4 bg-white/[0.04] backdrop-blur-md space-y-1.5">
-                      <p className="font-body text-sm text-muted-foreground leading-snug">{loc.address}</p>
-                      <p className="font-body text-sm text-muted-foreground">{loc.phone}</p>
-                      <p className="font-body text-sm text-muted-foreground break-all">{loc.email}</p>
+                    className={`group relative w-full text-left rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}
+                    style={{ background: 'rgba(255,255,255,0.03)' }}>
+                    <div className="flex">
+                      {/* Image strip */}
+                      <div className="relative w-24 md:w-28 flex-shrink-0 overflow-hidden">
+                        <img src={loc.image} alt={loc.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" loading="lazy" />
+                        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.55) 0%, rgba(26,24,20,0.05) 60%)' }} />
+                        <span className="absolute left-2 top-1.5 font-heading font-bold text-white/30 text-2xl leading-none select-none">{loc.number}</span>
+                      </div>
+                      {/* Content */}
+                      <div className="relative flex-1 p-4 md:p-5">
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary block mb-1">{loc.city}</span>
+                            <h3 className="font-heading text-base md:text-lg font-bold text-foreground leading-tight">{loc.name}<span className="text-primary">.</span></h3>
+                          </div>
+                          {selected && (
+                            <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary text-primary-foreground font-body text-[9px] tracking-[0.2em] uppercase">
+                              <Check className="w-3 h-3" />{t('shop_choose')}
+                            </span>
+                          )}
+                        </div>
+                        <div className="mt-2.5 space-y-0.5 font-body text-xs text-muted-foreground">
+                          <p className="leading-snug">{loc.address}</p>
+                          <p>{loc.phone}</p>
+                          <p className="break-all">{loc.email}</p>
+                        </div>
+                      </div>
                     </div>
                   </button>
                 );

@@ -27,6 +27,7 @@ export default function TakeawayGiftPackagesSection() {
       lead={t('ta_gift_desc')}
       chipLabel={t('ta_gp_pick')}
       divider
+      ghostBull={false}
       footer={
         <>
           <p className="font-body text-xs text-muted-foreground mt-6">{t('ta_gp_note')}</p>
