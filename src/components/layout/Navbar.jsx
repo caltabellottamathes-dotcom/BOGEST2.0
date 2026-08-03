@@ -97,8 +97,11 @@ export default function Navbar() {
             type="button"
             onClick={() => {
               setMobileOpen(false);
-              if (location.pathname !== '/') navigate('/');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              if (location.pathname === '/') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                navigate('/');
+              }
             }}
             className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >

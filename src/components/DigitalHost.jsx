@@ -1031,6 +1031,17 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
+  // The card stays invisible until the displayed video's first frame is
+  // loaded, so the entrance never flashes a black frame. The parent preloads
+  // the video (warming the cache), so this fires near-instantly; a short
+  // fallback guards against slow devices.
+  const [frameReady, setFrameReady] = useState(false);
+  useEffect(() => {
+    if (frameReady) return;
+    const t = setTimeout(() => setFrameReady(true), 900);
+    return () => clearTimeout(t);
+  }, [frameReady]);
+
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 639px)');
@@ -1068,7 +1079,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={() => { pauseVideo(); onSkip(); }} />
-      <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
+      <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={frameReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 20 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
@@ -1080,6 +1091,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline preload="auto"
+              onLoadedData={() => setFrameReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}

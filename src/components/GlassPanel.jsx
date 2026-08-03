@@ -91,17 +91,14 @@ export default function GlassPanelWrapper({ children }) {
       {/* Panel — a sleek layer that slides over the site. The previous panel
           closes before the next opens (mode="wait") so each layer reads as a
           distinct sheet opening and closing over the homepage beneath. */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {isPanel && (
           <motion.div
             key={location.pathname}
-            initial="closed"
-            animate="open"
-            exit="closed"
-            variants={{
-              closed: { x: '100%', transition: { duration: 0.28, ease: [0.4, 0, 0.2, 1] } },
-              open: { x: 0, transition: { duration: 0.4, ease: [0.32, 0.72, 0, 1] } },
-            }}
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%', opacity: 0 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
             className="fixed right-0 z-40"
             style={{
               top: navHeight,
