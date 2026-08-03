@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ChefHat } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
@@ -34,29 +34,15 @@ export default function StorySection() {
                 />
               </div>
 
-              {/* Enlarged formula card */}
-              <div className="relative -mt-12 mx-4 md:mx-0 md:absolute md:-bottom-8 md:right-6 md:mt-0 rounded-2xl p-6 shadow-2xl max-w-[280px]"
-                style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.10)' }}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-9 h-9 rounded-xl flex items-center justify-center"
-                    style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.35)' }}>
-                    <ChefHat className="w-4 h-4 text-primary" />
-                  </div>
-                  <p className="font-body text-[10px] tracking-[0.2em] uppercase text-primary font-semibold">{t('home_formula_label')}</p>
-                </div>
-                <div className="space-y-2.5">
+              {/* Formula card — stripped to the essentials: label + the three courses.
+                  No icon, no numbered circles, no "included" footer, no drop shadow. */}
+              <div className="relative -mt-12 mx-4 md:mx-0 md:absolute md:-bottom-8 md:right-6 md:mt-0 rounded-2xl p-6 max-w-[280px]"
+                style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                <p className="font-body text-[10px] tracking-[0.2em] uppercase text-primary font-semibold mb-4">{t('home_formula_label')}</p>
+                <div className="space-y-2">
                   {[t('home_formula_starter'), t('home_formula_main'), t('home_formula_dessert')].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <span className="w-5 h-5 rounded-full font-body text-[10px] font-bold flex items-center justify-center flex-shrink-0"
-                        style={{ background: 'rgba(20,14,0,0.78)', border: '1px solid rgba(200,163,89,0.35)', color: 'rgba(255,235,160,0.92)' }}>
-                        {i + 1}
-                      </span>
-                      <p className="font-heading text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.95)' }}>{item}</p>
-                    </div>
+                    <p key={i} className="font-heading text-sm font-semibold" style={{ color: 'rgba(255,255,255,0.95)' }}>{item}</p>
                   ))}
-                </div>
-                <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(255,255,255,0.12)' }}>
-                  <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.70)' }}>{t('home_formula_included')}</p>
                 </div>
               </div>
             </div>

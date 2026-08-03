@@ -1,21 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import { useInView } from 'framer-motion';
 import { useLang } from '@/lib/LangContext';
 
-function Counter({ value, suffix, inView }) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    let start = 0;
-    const step = value / 60;
-    const timer = setInterval(() => {
-      start += step;
-      if (start >= value) { setCount(value); clearInterval(timer); }
-      else setCount(Math.floor(start));
-    }, 16);
-    return () => clearInterval(timer);
-  }, [inView, value]);
-  return <>{count}{suffix}</>;
+// Numbers render at their final value — no count-up. Stillness is the default;
+// the ghosted "10" is the single animated-feeling element in the section.
+function Counter({ value, suffix }) {
+  return <>{value}{suffix}</>;
 }
 
 // "Redactionele lint" — desktop: one giant ghosted italic "10" bleeds off the
