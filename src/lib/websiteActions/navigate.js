@@ -15,7 +15,7 @@ const ROUTES = {
   // English
   home: '/',
   menu: '/menu', kaart: '/menu',
-  about: '/about', story: '/about', verhaal: '/about',
+  about: '/about', story: '/about', verhaal: '/about', 'over-ons': '/about', 'about-us': '/about', 'wie-zijn-wij': '/about', 'over-ons-verhaal': '/about/ons-verhaal',
   'ons-verhaal': '/about/ons-verhaal',
   locations: '/locations', vestigingen: '/locations', locaties: '/locations',
   hasselt: '/locations/hasselt',
@@ -32,7 +32,7 @@ const ROUTES = {
   jobs: '/jobs', vacatures: '/jobs', vacature: '/jobs',
   instagram: '/about/instagram', social: '/about/instagram',
   facebook: '/about/instagram', fb: '/about/instagram',
-  filosofie: '/about/onze-filosofie', 'onze-filosofie': '/about/onze-filosofie',
+  filosofie: '/about/onze-filosofie', 'onze-filosofie': '/about/onze-filosofie', vlees: '/about/onze-filosofie', meat: '/about/onze-filosofie', 'vleesfilosofie': '/about/onze-filosofie', 'meat-philosophy': '/about/onze-filosofie',
   'ons-verhaal': '/about/ons-verhaal',
 };
 
