@@ -37,7 +37,6 @@ export default function LocationsPreview() {
           {LOCATIONS_DATA.map((loc, i) => {
             const inactive = loc.active === false;
             const imageLeft = i % 2 === 0;
-            const alignRight = i % 2 === 1;
             const img = siteImg('location.' + loc.slug) || loc.image;
             return (
               <SectionReveal
@@ -46,36 +45,43 @@ export default function LocationsPreview() {
                 className={`relative md:py-2 ${i === 0 ? '' : 'md:-mt-24'}`}
                 style={{ zIndex: 10 + i }}
               >
-                {/* ── Mobile: full-bleed image card, text overlaid bottom ── */}
+                {/* ── Mobile: full-bleed image card with a frosted glass info bar ── */}
                 <div className="md:hidden group relative overflow-hidden rounded-2xl aspect-[4/3] shadow-2xl">
                   <img src={img} data-bb-key={`location.${loc.slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover"
-                    style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.88) brightness(0.9)' }}
+                    style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.88) brightness(0.92)' }}
                     loading="lazy" decoding="async" />
                   {!inactive && <LocationVideo slug={loc.slug} />}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-                  <span className={`absolute top-4 ${alignRight ? 'right-4' : 'left-4'} font-heading font-bold leading-none text-4xl ${inactive ? 'text-white/20' : 'text-white/30'}`}>{loc.number}</span>
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.18) 45%, transparent 72%)' }} />
+                  <span className="absolute top-4 left-4 font-heading font-bold leading-none text-4xl text-white/25">{loc.number}</span>
                   {inactive && (
-                    <span className={`absolute top-4 ${alignRight ? 'left-4' : 'right-4'} inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30`}>
+                    <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30">
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />
                       <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
                     </span>
                   )}
-                  <div className={`absolute inset-x-0 bottom-0 p-5 ${alignRight ? 'text-right' : 'text-left'}`}>
-                    <div className={`flex items-center gap-3 mb-1.5 ${alignRight ? 'flex-row-reverse' : ''}`}>
-                      <span className="h-px w-7 bg-primary/70" />
-                      <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
-                    </div>
-                    <h3 className="font-heading text-2xl font-bold text-white leading-tight">{loc.name}</h3>
-                    {inactive ? (
-                      <p className="font-body text-xs text-white/70 mt-1">{loc.city}, {loc.region} — {t('loc_coming_soon')}.</p>
-                    ) : (
-                      <div className="flex items-end justify-between gap-3 mt-1.5">
-                        <p className={`font-body text-xs text-white/75 leading-relaxed max-w-[15rem] ${alignRight ? 'ml-auto' : ''}`}>{loc.address}</p>
-                        <Link to={`/locations/${loc.slug}`} className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/30 text-white">
-                          <ArrowRight className="w-3.5 h-3.5" />
-                        </Link>
+                  {/* Frosted glass info bar — city, name, address + solid gold CTA */}
+                  <div className="absolute inset-x-0 bottom-0 p-3.5">
+                    <div className="flex items-end justify-between gap-3 rounded-xl px-4 py-3"
+                      style={{ background: 'rgba(12,11,9,0.42)', backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)', border: '1px solid rgba(255,255,255,0.14)' }}>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2.5 mb-1">
+                          <span className="h-px w-6 bg-primary/80" />
+                          <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                        </div>
+                        <h3 className="font-heading text-xl font-bold text-white leading-tight truncate">{loc.name}</h3>
+                        {inactive ? (
+                          <p className="font-body text-[11px] text-white/65 leading-tight mt-1 truncate">{t('loc_coming_soon')}</p>
+                        ) : (
+                          <p className="font-body text-[11px] text-white/70 leading-tight mt-1 truncate">{loc.address}</p>
+                        )}
                       </div>
-                    )}
+                      {!inactive && (
+                        <Link to={`/locations/${loc.slug}`} aria-label={loc.name}
+                          className="flex-shrink-0 inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground transition-transform duration-300 group-hover:scale-105">
+                          <ArrowRight className="w-4 h-4" />
+                        </Link>
+                      )}
+                    </div>
                   </div>
                 </div>
 

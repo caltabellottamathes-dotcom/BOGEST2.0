@@ -77,6 +77,8 @@ export default function Footer() {
 
   const quickLinks = [
     { label: t('nav_menu'), path: '/menu' },
+    { label: t('nav_locations'), path: '/locations' },
+    { label: t('nav_about'), path: '/about' },
     { label: t('nav_reserve'), path: '/reserve' },
     { label: t('nav_takeaway'), path: '/takeaway' },
     { label: t('nav_giftcards'), path: '/gift-cards' },

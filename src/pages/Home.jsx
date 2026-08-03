@@ -19,7 +19,7 @@ export default function Home() {
           fades from transparent (video visible) to the solid page background,
           so the gradient transition is attached to the content and slides over
           the video with it — premium on mobile and desktop. */}
-      <div className="relative z-10 bg-background">
+      <div className="home-content relative z-10 bg-background">
         {/* Shadow gradient — attached to the content, slides up over the fixed
             hero video. Dark high behind the hero text (like the sections cast a
             shadow over the video), fading seamlessly into the page background. */}
