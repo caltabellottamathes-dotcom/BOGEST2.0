@@ -5,6 +5,8 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { getLocations } from '@/lib/data';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HintBubble from '@/components/HintBubble';
+import { hostQuestion } from '@/lib/hostHint';
 import HomeTitle from '@/components/home/HomeTitle';
 import LocationVideo from '@/components/LocationVideo';
 
@@ -93,6 +95,7 @@ export default function LocationsPreview() {
                           <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
                         </span>
                       )}
+                      {!inactive && <HintBubble question={hostQuestion(lang, loc.name)} />}
                     </div>
                   </div>
                   <div className={`md:col-span-5 ${imageLeft ? '' : 'md:order-1'}`}>

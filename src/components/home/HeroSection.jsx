@@ -160,14 +160,19 @@ export default function HeroSection() {
           </motion.div>
         </motion.div>
 
-        {/* Scroll hint — one quiet chevron, no repeat animation */}
-        <button
+        {/* Scroll hint */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
           onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-          className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 cursor-pointer pointer-events-auto"
-          aria-label={t('hero_scroll')}
+          className="flex absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2 cursor-pointer pointer-events-auto"
         >
-          <ChevronDown className="w-4 h-4 text-white/30" />
-        </button>
+          <span className="font-body text-[10px] tracking-[0.3em] uppercase text-white/30">{t('hero_scroll')}</span>
+          <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
+            <ChevronDown className="w-4 h-4 text-white/30" />
+          </motion.div>
+        </motion.button>
         </div>
       </section>
     </>

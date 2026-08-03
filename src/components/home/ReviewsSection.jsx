@@ -118,6 +118,10 @@ export default function ReviewsSection() {
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('home_reviews_label')}</span>
             </div>
             <HomeTitle title={t('home_reviews_title')} accent={t('home_reviews_title_accent')} />
+            <div className="flex items-center gap-3 mt-4">
+              <Stars count={5} />
+              <span className="font-body text-sm text-muted-foreground">{t('home_reviews_rating')}</span>
+            </div>
             <div className="flex items-center gap-2 mt-3">
               <span className="h-px w-6 bg-primary/40" />
               <span className="font-body text-[10px] tracking-[0.22em] uppercase text-muted-foreground/80">{sourcesLine}</span>
@@ -177,6 +181,16 @@ export default function ReviewsSection() {
                 </motion.div>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Pagination dots */}
+        {!showAll && pages > 1 && (
+          <div className="flex justify-center gap-2 mt-12">
+            {Array.from({ length: pages }).map((_, i) => (
+              <button key={i} onClick={() => setPage(i)}
+                className={`h-1.5 rounded-full transition-all duration-300 ${safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'}`} />
+            ))}
           </div>
         )}
 

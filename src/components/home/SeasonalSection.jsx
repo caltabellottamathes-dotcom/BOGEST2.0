@@ -1,10 +1,13 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
+import { askHost, hostQuestion } from '@/lib/hostHint';
+
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
 export const MONTH_NAMES = {
   nl: ['Januari','Februari','Maart','April','Mei','Juni','Juli','Augustus','September','Oktober','November','December'],
@@ -51,58 +54,103 @@ export const SUGGESTIONS = {
   ],
 };
 
-// One calm card: image, a single static tag pill, a price, a title, and a
-// two-line description. No hover-reveal "ask host" CTA, no expand/collapse,
-// no read-more, no image zoom — the photo and the dish name lead.
-export function SuggestionCard({ item }) {
-  const { lang: _lang } = useLang();
+export function SuggestionCard({ item, showFade = true }) {
+  const [expanded, setExpanded] = useState(false);
+  const { lang } = useLang();
   const { siteImg } = useSiteImages();
   const seasonalIdx = Number(String(item.id).replace('s', '')) - 1;
+  const readMore = lang === 'nl' ? 'Lees meer' : lang === 'fr' ? 'Lire plus' : 'Read more';
+  const readLess = lang === 'nl' ? 'Lees minder' : lang === 'fr' ? 'Lire moins' : 'Read less';
 
   return (
-    <div className="flex-shrink-0 w-[280px] md:w-[360px] relative">
+    <div className="flex-shrink-0 w-[280px] md:w-[360px] group relative">
       <div className="relative overflow-hidden rounded-2xl h-72 mb-5">
         <img
           src={siteImg('seasonal.' + seasonalIdx)}
           data-bb-key={`seasonal.${seasonalIdx}`}
-          data-bb-label={`Seizoenssuggestie ${seasonalIdx + 1}`}
+          data-bb-label={`Seizoensuggestie ${seasonalIdx + 1}`}
           alt={item.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           style={{ filter: 'saturate(0.82) brightness(0.95)' }}
           loading="lazy" decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-transparent" />
-        <span className="absolute top-4 left-4 font-body text-[10px] tracking-[0.2em] uppercase text-white/90 whitespace-nowrap px-3 py-1 bg-black/35 backdrop-blur-md rounded-full">
-          {item.tag}
-        </span>
+        <button onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(hostQuestion(lang, item.name)); }}
+          className="absolute top-4 left-4 flex flex-col items-start px-3 py-1 bg-black/35 backdrop-blur-md rounded-2xl border border-white/15 overflow-hidden transition-all duration-500 group-hover:bg-black/55">
+          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-white whitespace-nowrap">{item.tag}</span>
+          <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
+            <span className="block font-body text-[9px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1">Vraag het aan Bogèst ↘</span>
+          </span>
+        </button>
         <div className="absolute bottom-4 right-4">
           <span className="inline-block px-3 py-2 bg-white/15 backdrop-blur-md text-white font-heading text-base font-bold rounded-lg border border-white/20">
             {item.price}
           </span>
         </div>
       </div>
-      <h3 className="font-heading text-lg font-bold text-foreground mb-2 leading-tight">
+      <h3 className="font-heading text-lg font-bold text-foreground group-hover:text-primary transition-colors duration-300 mb-2 leading-tight">
         {item.name}
       </h3>
-      <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-2">{item.desc}</p>
+      {showFade ? (
+        <>
+          <div className="relative">
+            <div
+              className="overflow-hidden transition-all duration-500 ease-in-out"
+              style={{ maxHeight: expanded ? '300px' : '68px' }}
+            >
+              <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+            </div>
+            {!expanded && (
+              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+            )}
+          </div>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="mt-2 inline-flex items-center gap-1 font-body text-xs tracking-[0.15em] uppercase text-primary hover:text-foreground transition-colors duration-200"
+          >
+            {expanded ? readLess : readMore}
+            <ChevronDown className={`w-3 h-3 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
+          </button>
+        </>
+      ) : (
+        <p className="font-body text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
+      )}
     </div>
   );
 }
 
 export default function SeasonalSection() {
   const ref = useRef(null);
+  const scrollRef = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
-  const { lang } = useLang();
+  const { t, lang } = useLang();
   const now = new Date();
   const monthLabel = MONTH_NAMES[lang]?.[now.getMonth()] || MONTH_NAMES.nl[now.getMonth()];
   const yearLabel = now.getFullYear();
   const suggestions = SUGGESTIONS[lang] || SUGGESTIONS.nl;
+  const [canLeft, setCanLeft] = useState(false);
+  const [canRight, setCanRight] = useState(true);
+
+  const scroll = (dir) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * 400, behavior: 'smooth' });
+  };
+
+  const onScroll = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCanLeft(el.scrollLeft > 10);
+    setCanRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+  };
 
   return (
-    <section id="suggesties" className="relative w-full py-14 md:py-20">
+    <section id="suggesties" className="relative w-full py-14 md:py-20 overflow-hidden">
+      {/* Layered warm gradient + ghosted bull — recurring panel motif */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
+      <img src={BULL_MARK} alt="" aria-hidden loading="lazy" decoding="async" draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '24rem', width: 'auto', top: '-3rem', right: '-5%', opacity: 0.06, filter: 'grayscale(1) brightness(2.4)' }} />
       <div className="relative w-full px-6 md:px-10 lg:px-16">
-        {/* Header — one focal title, one quiet date, one link. No ghost bull,
-            no gradient, no scroll-arrow buttons (native scroll/swipe is enough). */}
+        {/* Header */}
         <motion.div
           ref={ref}
           initial={{ opacity: 0, y: 24 }}
@@ -119,24 +167,49 @@ export default function SeasonalSection() {
               accent={(SECTION_LABELS[lang] || SECTION_LABELS.nl).accent}
             />
           </div>
-          <Link to="/menu"
-            className="group mt-6 md:mt-0 inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">
-            {MENU_LABELS[lang] || MENU_LABELS.nl}
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
-          </Link>
+          <div className="flex items-center gap-3 mt-6 md:mt-0">
+            <button
+              onClick={() => scroll(-1)}
+              disabled={!canLeft}
+              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={() => scroll(1)}
+              disabled={!canRight}
+              className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <Link to="/menu"
+              className="group ml-2 inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">
+              {MENU_LABELS[lang] || MENU_LABELS.nl}
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+            </Link>
+          </div>
         </motion.div>
       </div>
 
-      {/* Horizontal scroll — native, no per-card stagger animation */}
+      {/* Horizontal scroll */}
       <div
+        ref={scrollRef}
+        onScroll={onScroll}
         className="flex gap-5 overflow-x-auto pl-6 md:pl-10 lg:pl-16 pr-6 pb-4 snap-x snap-mandatory"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {suggestions.map((item) => (
-          <div key={item.id} className="snap-start">
+        {suggestions.map((item, i) => (
+          <motion.div
+            key={item.id}
+            initial={{ opacity: 0, x: 30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
+            transition={{ duration: 0.6, delay: i * 0.08 }}
+            className="snap-start"
+          >
             <SuggestionCard item={item} />
-          </div>
+          </motion.div>
         ))}
+        {/* End spacer */}
         <div className="flex-shrink-0 w-6" />
       </div>
     </section>
