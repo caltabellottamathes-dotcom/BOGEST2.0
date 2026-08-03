@@ -237,7 +237,7 @@ body.bogest-panel-open div[id*="elevenlabs"],
 body.bogest-panel-open div[class*="elevenlabs"],
 body.bogest-panel-open div[id*="convai"],
 body.bogest-panel-open div[class*="convai"] {
-  transform: translateX(calc(-1 * min(82vw, 1200px))) scale(0.9) !important;
+  transform: translateX(calc(-1 * min(82vw, 1200px, (100vw - 184px)))) scale(0.9) !important;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 @media (max-width: 639px) {

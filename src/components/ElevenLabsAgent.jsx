@@ -145,7 +145,7 @@ export default function ElevenLabsAgent() {
       const walker = document.createTreeWalker(el.shadowRoot, NodeFilter.SHOW_TEXT, null);
       let node;
       while ((node = walker.nextNode())) {
-        if (node.nodeValue && /powered by/i.test(node.nodeValue)) {
+        if (node.nodeValue && /powered by|eleven\s*agents/i.test(node.nodeValue)) {
           const p = node.parentElement;
           if (p) p.style.display = 'none';
         }

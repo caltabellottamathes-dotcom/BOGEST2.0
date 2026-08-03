@@ -28,6 +28,10 @@ registerAction('scroll', async ({ target, options = {}, data = {} }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return { message: 'Scrolled to top', section: 'top' };
   }
+  if (String(target).toLowerCase().trim() === 'bottom') {
+    window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+    return { message: 'Scrolled to bottom', section: 'bottom' };
+  }
   const key = String(target).toLowerCase().trim();
   const el = await waitForElement(() => findTarget(key), { timeout: 1200 });
   if (!el) return { error: 'not_found', target };

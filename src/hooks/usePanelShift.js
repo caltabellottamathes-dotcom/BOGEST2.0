@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
  *
  * Listens for the `bogest:panel-visibility` event dispatched by <Layout />.
  */
-export function usePanelShift() {
+export function usePanelShift(wide = false) {
   const [shift, setShift] = useState(0);
 
   useEffect(() => {
@@ -22,7 +22,13 @@ export function usePanelShift() {
       // host button stays reachable and the chat can reopen over the panel.
       if (w < 640) return 0;
       const panelWidth = Math.min(w * 0.82, 1200);
-      return -panelWidth;
+      // Slide the floating set to the left of the screen and let it float
+      // over the panel — but never off-screen. Clamp so the widest element in
+      // the group stays fully visible at ~left:16. `wide` covers the chat
+      // panel + proactive bubble; the default covers the FAB, video card, orb.
+      const elemSpan = wide ? 96 + 440 : 20 + 148;
+      const toLeftEdge = -(w - elemSpan - 16);
+      return Math.max(-panelWidth, toLeftEdge);
     };
     const handler = (e) => setShift(e.detail?.open ? compute() : 0);
     const onResize = () => setShift((s) => (s < 0 ? compute() : 0));
@@ -32,7 +38,7 @@ export function usePanelShift() {
       window.removeEventListener('bogest:panel-visibility', handler);
       window.removeEventListener('resize', onResize);
     };
-  }, []);
+  }, [wide]);
 
   return shift;
 }
