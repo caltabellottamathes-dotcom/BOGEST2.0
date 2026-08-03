@@ -60,7 +60,6 @@ export default function Layout() {
   // Tell floating UI (host, video card, ElevenLabs) to slide aside when a panel opens
   useEffect(() => {
     window.dispatchEvent(new CustomEvent('bogest:panel-visibility', { detail: { open: isPanel } }));
-    document.body.classList.toggle('bogest-panel-open', isPanel);
   }, [isPanel]);
 
   // Make third-party widgets (D-ID, ElevenLabs) draggable so they never block the digital host

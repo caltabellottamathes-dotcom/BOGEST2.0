@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTheme } from '@/lib/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { openPanel, closePanel } from '@/lib/panelOpenState';
 
 // Refined frosted-glass surface for the sliding panels — the same transparent
 // "layer" treatment used across the site (cards, footer). A touch more
@@ -61,9 +62,9 @@ export default function GlassPanelWrapper({ children }) {
   // Toggle the panel-open body flag so the hero video pauses and the
   // ElevenLabs widget slides aside while a glass panel is open.
   useEffect(() => {
-    if (isPanel) document.body.classList.add('bogest-panel-open');
-    else document.body.classList.remove('bogest-panel-open');
-    return () => document.body.classList.remove('bogest-panel-open');
+    if (!isPanel) return;
+    openPanel();
+    return () => closePanel();
   }, [isPanel]);
 
   return (

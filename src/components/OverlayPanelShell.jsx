@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { openPanel, closePanel } from '@/lib/panelOpenState';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -17,14 +18,13 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
   // Toggle the panel-open body flag (pauses the hero video + slides the
   // ElevenLabs widget aside) while this widget overlay is open.
   useEffect(() => {
-    if (isOpen) {
-      document.body.classList.add('bogest-panel-open', 'bogest-overlay-open');
-    } else {
-      document.body.classList.remove('bogest-panel-open', 'bogest-overlay-open');
-    }
-    window.dispatchEvent(new CustomEvent('bogest:overlay-panel-visibility', { detail: { open: isOpen } }));
+    if (!isOpen) return;
+    openPanel();
+    document.body.classList.add('bogest-overlay-open');
+    window.dispatchEvent(new CustomEvent('bogest:overlay-panel-visibility', { detail: { open: true } }));
     return () => {
-      document.body.classList.remove('bogest-panel-open', 'bogest-overlay-open');
+      closePanel();
+      document.body.classList.remove('bogest-overlay-open');
       window.dispatchEvent(new CustomEvent('bogest:overlay-panel-visibility', { detail: { open: false } }));
     };
   }, [isOpen]);

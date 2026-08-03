@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Instagram as InstagramIcon, Facebook as FacebookIcon, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
-import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
-import { base44 } from '@/api/base44Client';
 
 export const PILLARS_DATA = {
   nl: [
@@ -39,11 +37,8 @@ export const LABELS = {
     chapters: [
       { num: '01', title: 'Ons Verhaal', subtitle: 'Drie hoeves, één familie', body: 'Wat begon als een bescheiden grillrestaurant groeide uit tot drie geliefde hoeves — in Hasselt, Borgloon en Heusden-Zolder. Drie plekken, dezelfde warmte, dezelfde passie voor vleesambacht en gastvrijheid.' },
       { num: '02', title: 'Onze Filosofie', subtitle: 'De formule, de ambacht', body: 'Eén prijs, een compleet diner: voorgerecht, hoofdgerecht en dessert. Geen verrassingen op de rekening — alleen op het bord. Achter die eenvoud staat een keuken die elk detail kent.' },
+      { num: '03', title: 'Achter de schermen', subtitle: 'Onze wereld, live', body: 'Sfeerbeelden, gerechten en momenten uit keuken en zalen — wij delen ze dagelijks op Instagram en Facebook. Een blik achter de schermen, terwijl het gebeurt.', link: { label: 'Bekijk achter de schermen', to: '/about/instagram' } },
     ],
-    behindLabel: 'Achter de schermen',
-    behindCta: 'Meer zien',
-    followInstagram: 'Volg op Instagram',
-    followFacebook: 'Volg op Facebook',
     finalCta: 'Ontdek ons verhaal',
   },
   fr: {
@@ -53,12 +48,9 @@ export const LABELS = {
     lead: "Bogèst est né d'une idée : profiter sans surprises. Autour de cette promesse s'est bâti une maison d'artisanat — où grillards, vins et trois fermes authentiques racontent une seule histoire.",
     chapters: [
       { num: '01', title: 'Notre Histoire', subtitle: 'Trois fermes, une famille', body: "Ce qui a commencé comme un modeste restaurant-grill est devenu trois fermes bien-aimées — à Hasselt, Borgloon et Heusden-Zolder. Trois lieux, la même chaleur, la même passion pour l'art de la viande et l'hospitalité." },
-      { num: '02', title: 'Notre Philosophie', subtitle: 'La formule, l\'artisanat', body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail." },
+      { num: '02', title: 'Notre Philosophie', subtitle: "La formule, l'artisanat", body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail." },
+      { num: '03', title: 'Dans les coulisses', subtitle: 'Notre univers, en direct', body: "Ambiances, plats et moments de la cuisine et des salles — nous les partageons chaque jour sur Instagram et Facebook. Un regard dans les coulisses, au fil de l'instant.", link: { label: 'Voir les coulisses', to: '/about/instagram' } },
     ],
-    behindLabel: 'Dans les coulisses',
-    behindCta: 'Voir plus',
-    followInstagram: 'Suivre sur Instagram',
-    followFacebook: 'Suivre sur Facebook',
     finalCta: 'Découvrez notre histoire',
   },
   en: {
@@ -69,42 +61,20 @@ export const LABELS = {
     chapters: [
       { num: '01', title: 'Our Story', subtitle: 'Three farmhouses, one family', body: 'What began as a modest grill restaurant grew into three beloved farmhouses — in Hasselt, Borgloon and Heusden-Zolder. Three places, the same warmth, the same passion for the craft of meat and hospitality.' },
       { num: '02', title: 'Our Philosophy', subtitle: 'The formula, the craft', body: 'One price, a complete dinner: starter, main and dessert. No surprises on the bill — only on the plate. Behind that simplicity stands a kitchen that knows every detail.' },
+      { num: '03', title: 'Behind the scenes', subtitle: 'Our world, live', body: 'Atmosphere, dishes and moments from the kitchen and the dining rooms — we share them daily on Instagram and Facebook. A look behind the scenes, as it happens.', link: { label: 'See behind the scenes', to: '/about/instagram' } },
     ],
-    behindLabel: 'Behind the scenes',
-    behindCta: 'See more',
-    followInstagram: 'Follow on Instagram',
-    followFacebook: 'Follow on Facebook',
     finalCta: 'Discover our story',
   },
 };
 
-const FACEBOOK_URL = 'https://www.facebook.com/dEntrecote';
-const FALLBACK_INSTAGRAM_URL = 'https://www.instagram.com/dentrecoteborgloon/';
-
+// A quiet, editorial introduction to the Over Ons panel. Three chapters —
+// Verhaal, Filosofie, Achter de schermen — separated by hairline rules, each
+// led by a ghosted gold numeral. The "Achter de schermen" chapter points to
+// the dedicated social panel (/about/instagram) rather than showing social
+// content inline. No watermark, no images — just the story, leading onward.
 export default function PhilosophySection() {
   const { lang } = useLang();
-  const { siteImg } = useSiteImages();
   const labels = LABELS[lang] || LABELS.nl;
-
-  const [posts, setPosts] = useState([]);
-  const [username, setUsername] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    let alive = true;
-    base44.functions.invoke('getInstagramPosts', {})
-      .then((res) => {
-        if (!alive) return;
-        const data = res.data || {};
-        setUsername(data.username || '');
-        setPosts((data.posts || []).filter((p) => p.media_type !== 'VIDEO').slice(0, 6));
-      })
-      .catch(() => {})
-      .finally(() => { if (alive) setLoading(false); });
-    return () => { alive = false; };
-  }, []);
-
-  const instagramUrl = username ? `https://www.instagram.com/${username}` : FALLBACK_INSTAGRAM_URL;
 
   return (
     <section id="filosofie" className="relative w-full py-20 md:py-32 overflow-hidden">
@@ -119,135 +89,61 @@ export default function PhilosophySection() {
             <span className="h-px w-10 bg-primary" />
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{labels.label}</span>
           </div>
-          <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7 max-w-[14ch]" />
+          <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7 max-w-[16ch]" />
           <p className="font-body text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
             {labels.lead}
           </p>
         </SectionReveal>
 
-        {/* Main grid — story + philosophy chapters on the left, the highlighted
-            behind-the-scenes social feature on the right. */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mt-14 lg:mt-20 items-start">
-
-          {/* Chapters */}
-          <div className="lg:col-span-5">
-            <div className="space-y-12">
-              {labels.chapters.map((ch, i) => (
-                <SectionReveal key={ch.num} direction="up" delay={i * 0.1}>
-                  <div className="flex gap-6">
-                    <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none">
-                      {ch.num}
-                    </span>
-                    <div className="pt-1">
-                      <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2">{ch.title}</p>
-                      <p className="font-heading text-lg md:text-xl font-semibold text-foreground mb-3">{ch.subtitle}</p>
-                      <p className="font-body text-base text-muted-foreground leading-relaxed max-w-md">{ch.body}</p>
-                    </div>
-                  </div>
-                </SectionReveal>
-              ))}
-            </div>
-
-            {/* CTA into the Over Ons panel */}
-            <SectionReveal direction="up" delay={0.2}>
-              <div className="mt-12 pt-8 border-t border-border/60">
-                <Link
-                  to="/about"
-                  className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
-                >
-                  {labels.finalCta}
-                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </span>
-                </Link>
-              </div>
-            </SectionReveal>
-          </div>
-
-          {/* Behind the scenes — refined, quiet social feature */}
-          <div className="lg:col-span-7">
-            <SectionReveal direction="left" delay={0.15}>
-              <div className="lg:pl-10 lg:border-l lg:border-border/50">
-                {/* header — quiet, editorial */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <InstagramIcon className="w-4 h-4 text-primary/70" />
-                    <div>
-                      <p className="font-body text-[10px] tracking-[0.32em] uppercase text-muted-foreground">{labels.behindLabel}</p>
-                      <p className="font-heading text-sm text-foreground/85 mt-1">
-                        @{username || 'bogesthasselt'}{!loading && posts.length > 0 ? ` · ${posts.length}` : ''}
-                      </p>
-                    </div>
-                  </div>
-                  <Link
-                    to="/about/instagram"
-                    className="group inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    {labels.behindCta}
-                    <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
-                  </Link>
-                </div>
-
-                {/* grid — quiet row of squares, gentle hover */}
-                {loading ? (
-                  <div className="flex items-center justify-center py-14">
-                    <Loader2 className="w-5 h-5 animate-spin text-primary/50" />
-                  </div>
-                ) : posts.length === 0 ? (
-                  <div className="flex items-center justify-center py-14">
-                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 font-body text-sm text-muted-foreground hover:text-primary transition-colors">
-                      <InstagramIcon className="w-4 h-4" />
-                      {labels.followInstagram}
-                    </a>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-4 gap-2">
-                    {posts.slice(0, 4).map((post) => (
-                      <a
-                        key={post.id || post.permalink}
-                        href={post.permalink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group relative overflow-hidden rounded-md aspect-square"
-                      >
-                        <img
-                          src={post.media_url}
-                          alt={(post.caption || 'Instagram post').slice(0, 60)}
-                          loading="lazy" decoding="async"
-                          className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-colors duration-500" />
-                        <ExternalLink className="absolute top-2 right-2 w-3 h-3 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </a>
-                    ))}
-                  </div>
-                )}
-
-                {/* follow line — minimal, premium */}
-                <div className="mt-6 flex items-center gap-5">
-                  <a
-                    href={instagramUrl}
-                    target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 font-body text-[11px] tracking-[0.18em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    <InstagramIcon className="w-3.5 h-3.5" />
-                    {labels.followInstagram}
-                  </a>
-                  <span className="h-3 w-px bg-border/70" />
-                  <a
-                    href={FACEBOOK_URL}
-                    target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 font-body text-[11px] tracking-[0.18em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
-                  >
-                    <FacebookIcon className="w-3.5 h-3.5" />
-                    {labels.followFacebook}
-                  </a>
+        {/* Three chapters — hairline-separated editorial columns */}
+        <div className="mt-14 lg:mt-20 grid grid-cols-1 lg:grid-cols-3 lg:divide-x lg:divide-border/50">
+          {labels.chapters.map((ch, i) => (
+            <SectionReveal
+              key={ch.num}
+              direction="up"
+              delay={i * 0.1}
+              className={i === 0 ? 'lg:pr-10' : i === labels.chapters.length - 1 ? 'lg:pl-10' : 'lg:px-10'}
+            >
+              <div className="flex gap-5">
+                <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none">
+                  {ch.num}
+                </span>
+                <div className="pt-1 min-w-0">
+                  <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2">{ch.title}</p>
+                  <p className="font-heading text-lg md:text-xl font-semibold text-foreground mb-3 leading-snug">{ch.subtitle}</p>
+                  <p className="font-body text-base text-muted-foreground leading-relaxed">{ch.body}</p>
+                  {ch.link && (
+                    <Link
+                      to={ch.link.to}
+                      className="group mt-5 inline-flex items-center gap-2 font-body text-[11px] tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+                    >
+                      {ch.link.label}
+                      <span className="inline-flex items-center justify-center w-7 h-7 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                      </span>
+                    </Link>
+                  )}
                 </div>
               </div>
             </SectionReveal>
-          </div>
-
+          ))}
         </div>
+
+        {/* CTA into the Over Ons panel */}
+        <SectionReveal direction="up" delay={0.2}>
+          <div className="mt-16 pt-8 border-t border-border/60">
+            <Link
+              to="/about"
+              className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+            >
+              {labels.finalCta}
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
+              </span>
+            </Link>
+          </div>
+        </SectionReveal>
+
       </div>
     </section>
   );

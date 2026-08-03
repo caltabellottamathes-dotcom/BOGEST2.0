@@ -21,9 +21,9 @@ export default function LocationsPreview() {
   const LOCATIONS_DATA = getLocations(lang);
 
   return (
-    <section id="vestigingen" className="w-full py-12 md:py-20">
+    <section id="vestigingen" className="w-full py-8 md:py-14">
       <div className="w-full px-6 md:px-10 lg:px-16">
-        <SectionReveal className="mb-8 md:mb-14">
+        <SectionReveal className="mb-6 md:mb-10">
           <div className="flex items-center gap-3 mb-4">
             <span className="h-px w-10 bg-primary" />
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">
@@ -33,7 +33,7 @@ export default function LocationsPreview() {
           <HomeTitle title={t('section_locations')} accent={t('section_locations_accent')} />
         </SectionReveal>
 
-        <div className="space-y-3 md:space-y-0">
+        <div className="space-y-2 md:space-y-0">
           {LOCATIONS_DATA.map((loc, i) => {
             const inactive = loc.active === false;
             const imageLeft = i % 2 === 0;
@@ -82,7 +82,7 @@ export default function LocationsPreview() {
                 {/* ── Desktop: alternating editorial row (image 7 / text 5) ── */}
                 <div className="hidden md:grid md:grid-cols-12 gap-6 md:gap-10 items-center">
                   <div className={`md:col-span-7 ${imageLeft ? '' : 'md:order-2'}`}>
-                    <div className="group relative overflow-hidden rounded-2xl aspect-[16/10] shadow-2xl">
+                    <div className="group relative overflow-hidden rounded-2xl aspect-[16/9] shadow-2xl">
                       <img src={img} data-bb-key={`location.${loc.slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         style={inactive ? { filter: 'grayscale(1) brightness(0.55) opacity(0.5)' } : { filter: 'saturate(0.85) brightness(0.9)' }}
                         loading="lazy" decoding="async" />
