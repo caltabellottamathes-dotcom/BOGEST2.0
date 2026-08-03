@@ -134,6 +134,28 @@ export default function ElevenLabsAgent() {
     };
   }, []);
 
+  // Hide the "Powered by" attribution badge inside the widget's shadow DOM.
+  // The widget exposes no CSS part for it, so we walk text nodes and hide the
+  // element containing the "powered by" text. Runs on an interval because the
+  // badge is rendered after the widget connects and again when the panel opens.
+  useEffect(() => {
+    const hide = () => {
+      const el = widgetRef.current;
+      if (!el || !el.shadowRoot) return;
+      const walker = document.createTreeWalker(el.shadowRoot, NodeFilter.SHOW_TEXT, null);
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.nodeValue && /powered by/i.test(node.nodeValue)) {
+          const p = node.parentElement;
+          if (p) p.style.display = 'none';
+        }
+      }
+    };
+    hide();
+    const id = setInterval(hide, 1000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <elevenlabs-convai
       ref={widgetRef}

@@ -1019,13 +1019,22 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     if (!el) return;
     // Unmuted intro video — play with sound. If the browser blocks unmuted
     // autoplay (no prior gesture), play muted for motion and unmute on the
-    // first tap so the guest hears sound the moment they interact.
+    // first tap so the guest hears sound the moment they interact. iPadOS is
+    // strict, so we listen for pointerdown, touchend AND click (capture phase).
     el.muted = false;
     el.play().catch(() => {
       el.muted = true;
+      el.defaultMuted = true;
       el.play().catch(() => {});
-      const unmute = () => { try { el.muted = false; el.play().catch(() => {}); } catch {} window.removeEventListener('pointerdown', unmute); };
-      window.addEventListener('pointerdown', unmute, { passive: true });
+      const unmute = () => {
+        try { el.muted = false; el.play().catch(() => {}); } catch {}
+        window.removeEventListener('pointerdown', unmute, true);
+        window.removeEventListener('touchend', unmute, true);
+        window.removeEventListener('click', unmute, true);
+      };
+      window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
+      window.addEventListener('touchend', unmute, { capture: true, passive: true });
+      window.addEventListener('click', unmute, { capture: true, passive: true });
     });
     return () => { try { videoRef.current?.pause(); } catch {} };
   }, []);

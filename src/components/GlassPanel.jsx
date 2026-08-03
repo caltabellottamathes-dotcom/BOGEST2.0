@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, createContext } from 'react';
+import React, { useEffect, useRef, useState, createContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -52,6 +52,12 @@ export default function GlassPanelWrapper({ children }) {
   const navHeight = isMobile ? 64 : 80;
   const isPanel = isPanelPath(location.pathname);
   const contentRef = useRef(null);
+  const [isCompact, setIsCompact] = useState(() => typeof window !== 'undefined' && window.innerWidth < 640);
+  useEffect(() => {
+    const onResize = () => setIsCompact(window.innerWidth < 640);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   useEffect(() => {
     if (isPanel && contentRef.current) {
@@ -75,9 +81,8 @@ export default function GlassPanelWrapper({ children }) {
           <motion.div
             key="panel-backdrop"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ opacity: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
+            exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
             className="fixed inset-0 z-30 pointer-events-auto"
             style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.16)' : 'rgba(0,0,0,0.38)' }}
             onClick={() => navigate('/')}
@@ -96,15 +101,14 @@ export default function GlassPanelWrapper({ children }) {
           <motion.div
             key={location.pathname}
             initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%', opacity: 0 }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
+            animate={{ x: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }}
+            exit={{ x: '100%', transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }}
             className="fixed right-0 z-40"
             style={{
               top: navHeight,
               bottom: 0,
               width: '100vw',
-              maxWidth: isMobile ? '100vw' : 'min(82vw, 1200px)',
+              maxWidth: isCompact ? '100vw' : 'min(82vw, 1200px)',
               willChange: 'transform',
               transform: 'translateZ(0)',
             }}

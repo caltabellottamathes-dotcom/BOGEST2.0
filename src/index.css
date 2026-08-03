@@ -216,6 +216,11 @@ did-agent,
 /* Hide the Chrome cast overlay button on videos (floating video card) */
 video::-internal-media-controls-overlay-cast-button { display: none !important; }
 
+/* Slightly smaller widget on desktop and tablet */
+@media (min-width: 640px) {
+  elevenlabs-convai { transform: scale(0.9); transform-origin: bottom right; transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1); }
+}
+
 /* Slightly shrink the ElevenLabs widget orb on mobile */
 @media (max-width: 639px) {
   elevenlabs-convai { transform: scale(0.82); transform-origin: bottom right; transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1); }
@@ -232,7 +237,7 @@ body.bogest-panel-open div[id*="elevenlabs"],
 body.bogest-panel-open div[class*="elevenlabs"],
 body.bogest-panel-open div[id*="convai"],
 body.bogest-panel-open div[class*="convai"] {
-  transform: translateX(calc(-1 * min(82vw, 1200px))) !important;
+  transform: translateX(calc(-1 * min(82vw, 1200px))) scale(0.9) !important;
   transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 @media (max-width: 639px) {
@@ -286,12 +291,31 @@ body.bogest-chat-open div[class*="convai"] {
   .hero-fixed-bg { background-attachment: scroll !important; }
 }
 
-/* Styled scrollbar — thin, gold, matches the Bogèst palette. Applied via .bogest-scroll on scrollable layers. */
-.bogest-scroll { scrollbar-width: thin; scrollbar-color: hsl(var(--primary) / 0.45) transparent; }
-.bogest-scroll::-webkit-scrollbar { width: 6px; height: 6px; display: block; }
-.bogest-scroll::-webkit-scrollbar-track { background: transparent; }
-.bogest-scroll::-webkit-scrollbar-thumb { background: hsl(var(--primary) / 0.40); border-radius: 9999px; }
-.bogest-scroll::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.65); }
+/* No scrollbars anywhere — .bogest-scroll layers stay scrollable but bar-free. */
+.bogest-scroll { scrollbar-width: none; -ms-overflow-style: none; }
+.bogest-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* Native selects & option lists — themed to match the design (no Windows-94 dropdowns) */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a59655' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.9rem;
+  padding-right: 2.5rem;
+}
+select option, select optgroup {
+  background-color: hsl(var(--popover));
+  color: hsl(var(--popover-foreground));
+}
+select option:checked,
+select option:hover,
+select option:focus {
+  background-color: hsl(var(--primary) / 0.22);
+  color: hsl(var(--primary));
+}
 
 /* Mobile homepage — denser, tighter body text for a premium editorial read.
    Only paragraphs are tightened; labels, kickers and headings keep their

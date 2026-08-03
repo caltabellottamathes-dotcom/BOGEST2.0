@@ -147,7 +147,7 @@ export default function FloatingVideo() {
     if (Math.hypot(dx, dy) > 60) setDismissed(true);
   };
 
-  const base = isDesktop ? 172 : 112;
+  const base = isDesktop ? 148 : 112;
   const scale = active ? (isDesktop ? 2.6 : 1.9) : 1;
   const offX = (kbOpen || chatOpen ? 600 : 0) + (!isDesktop && overlayOpen ? 700 : 0);
   const dismissX = dismissed ? 540 : 0;
