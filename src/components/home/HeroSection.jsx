@@ -56,6 +56,7 @@ export default function HeroSection() {
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover hero-video"
           src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/6744c0aa2_Bogest_Intro_.mp4"
+          poster={HERO_IMAGE}
           autoPlay
           muted
           loop

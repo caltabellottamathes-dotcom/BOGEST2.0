@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
+import { Instagram as InstagramIcon, Facebook as FacebookIcon, ArrowRight, ExternalLink, Loader2 } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
+import { base44 } from '@/api/base44Client';
 
 export const PILLARS_DATA = {
   nl: [
@@ -27,117 +28,228 @@ export const PILLARS_DATA = {
   { num: '03', title: 'For Everyone', subtitle: 'Chicken, Fish and Veggie', body: "While meat is our craft, we understand that not everyone makes the same choice. That's why we also offer delicious chicken, fresh fish, and innovative vegetarian options. Each dish is prepared with the same care and ingredient quality.", image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/426ec0ed-f1b6-4eb0-90d5-ad7cea634e7c/7B0C379C-A65C-400B-83D7-C140E27E6ABF_1_201_a.jpeg' },
   { num: '04', title: 'Our Wines', subtitle: 'Exclusive House Label', body: "Wine is more than a pairing — it's a dinner partner. Our exclusive house label was selected by us, in collaboration with winemakers we know personally. We chose wines with character that complement our grilled dishes: a full red that elevates the meat, a crisp white that enhances the fish, and surprising orange wines for those seeking something different. Every bottle in our cellar is a conscious choice — never an accident.", image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798027-ZPXKAMZNVCSV6440QX6W/402597853_796945305777335_8211882432551808857_n.jpg' },
   { num: '05', title: 'The Atmosphere', subtitle: 'Authentic Farmhouses', body: "Our three locations — Hasselt, Borgloon, and Heusden-Zolder — are not just restaurants. They are warm, convivial farmhouses where generations have eaten, laughed, and celebrated. Every space tells a story.", image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798126-DFOS1XY5Y0NOWCQVE23M/96368874_542981379699687_4859956873555607552_n.jpg' }]
-
 };
 
 export const LABELS = {
   nl: {
     label: 'Onze belofte en filosofie',
-    title: 'Het gebaar achter Bogèst.',
-    accent: 'Bogèst',
-    lead: 'Bogèst begon met een eenvoudige gedachte: een compleet diner genieten, zonder verrassingen op de rekening. Rond die belofte groeide een huis van ambacht — grilleurs die elk stuk vlees kennen, een kelder met zelfgekozen wijnen, en drie authentieke hoeves waar generaties samenkomen. Achter elk gerecht schuilt een verhaal van mensen, passie en streek.',
-    cta: 'Ontdek ons verhaal',
-    caption: 'Drie hoeves · één belofte',
+    title: 'Achter elk gerecht',
+    accent: 'een verhaal.',
+    lead: 'Bogèst begon met één gedachte: genieten zonder verrassingen. Rond die belofte groeide een huis van ambacht — waar grilleurs, wijnen en drie authentieke hoeves samen één verhaal vertellen.',
+    chapters: [
+      { num: '01', title: 'Ons Verhaal', subtitle: 'Drie hoeves, één familie', body: 'Wat begon als een bescheiden grillrestaurant groeide uit tot drie geliefde hoeves — in Hasselt, Borgloon en Heusden-Zolder. Drie plekken, dezelfde warmte, dezelfde passie voor vleesambacht en gastvrijheid.' },
+      { num: '02', title: 'Onze Filosofie', subtitle: 'De formule, de ambacht', body: 'Eén prijs, een compleet diner: voorgerecht, hoofdgerecht en dessert. Geen verrassingen op de rekening — alleen op het bord. Achter die eenvoud staat een keuken die elk detail kent.' },
+    ],
+    behindLabel: 'Achter de schermen',
+    behindCta: 'Meer zien',
+    followInstagram: 'Volg op Instagram',
+    followFacebook: 'Volg op Facebook',
+    finalCta: 'Ontdek ons verhaal',
   },
   fr: {
     label: 'Notre promesse et philosophie',
-    title: 'Le geste derrière Bogèst.',
-    accent: 'Bogèst',
-    lead: "Bogèst est né d'une idée simple : profiter d'un dîner complet, sans surprise sur l'addition. Autour de cette promesse s'est bâtie une maison d'artisanat — des grillards qui connaissent chaque pièce de viande, une cave de vins choisis par nos soins, et trois fermes authentiques où se réunissent les générations. Derrière chaque plat se cache une histoire de personnes, de passion et de territoire.",
-    cta: 'Découvrez notre histoire',
-    caption: 'Trois fermes · une promesse',
+    title: 'Derrière chaque plat',
+    accent: 'une histoire.',
+    lead: "Bogèst est né d'une idée : profiter sans surprises. Autour de cette promesse s'est bâti une maison d'artisanat — où grillards, vins et trois fermes authentiques racontent une seule histoire.",
+    chapters: [
+      { num: '01', title: 'Notre Histoire', subtitle: 'Trois fermes, une famille', body: "Ce qui a commencé comme un modeste restaurant-grill est devenu trois fermes bien-aimées — à Hasselt, Borgloon et Heusden-Zolder. Trois lieux, la même chaleur, la même passion pour l'art de la viande et l'hospitalité." },
+      { num: '02', title: 'Notre Philosophie', subtitle: 'La formule, l\'artisanat', body: "Un seul prix, un dîner complet : entrée, plat et dessert. Aucune surprise sur l'addition — seulement dans l'assiette. Derrière cette simplicité se cache une cuisine qui connaît chaque détail." },
+    ],
+    behindLabel: 'Dans les coulisses',
+    behindCta: 'Voir plus',
+    followInstagram: 'Suivre sur Instagram',
+    followFacebook: 'Suivre sur Facebook',
+    finalCta: 'Découvrez notre histoire',
   },
   en: {
     label: 'Our promise and philosophy',
-    title: 'The gesture behind Bogèst.',
-    accent: 'Bogèst',
-    lead: 'Bogèst began with a simple idea: enjoy a complete dinner, with no surprises on the bill. Around that promise grew a house of craft — grillers who know every cut of meat, a cellar of self-selected wines, and three authentic farmhouses where generations gather. Behind every dish lies a story of people, passion and region.',
-    cta: 'Discover our story',
-    caption: 'Three farmhouses · one promise',
+    title: 'Behind every dish',
+    accent: 'a story.',
+    lead: 'Bogèst began with one thought: enjoyment without surprises. Around that promise grew a house of craft — where grillers, wines and three authentic farmhouses tell a single story.',
+    chapters: [
+      { num: '01', title: 'Our Story', subtitle: 'Three farmhouses, one family', body: 'What began as a modest grill restaurant grew into three beloved farmhouses — in Hasselt, Borgloon and Heusden-Zolder. Three places, the same warmth, the same passion for the craft of meat and hospitality.' },
+      { num: '02', title: 'Our Philosophy', subtitle: 'The formula, the craft', body: 'One price, a complete dinner: starter, main and dessert. No surprises on the bill — only on the plate. Behind that simplicity stands a kitchen that knows every detail.' },
+    ],
+    behindLabel: 'Behind the scenes',
+    behindCta: 'See more',
+    followInstagram: 'Follow on Instagram',
+    followFacebook: 'Follow on Facebook',
+    finalCta: 'Discover our story',
   },
 };
 
-// A calm, editorial introduction to the Over Ons panel. Strong typography, a
-// single portrait image with a refined gold corner accent, and a hairline
-// that separates the text from the image on desktop — no watermark, no
-// scroll-driven panels; just the story of Bogèst, leading onward.
+const FACEBOOK_URL = 'https://www.facebook.com/dEntrecote';
+const FALLBACK_INSTAGRAM_URL = 'https://www.instagram.com/dentrecoteborgloon/';
+
 export default function PhilosophySection() {
   const { lang } = useLang();
   const { siteImg } = useSiteImages();
   const labels = LABELS[lang] || LABELS.nl;
 
+  const [posts, setPosts] = useState([]);
+  const [username, setUsername] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let alive = true;
+    base44.functions.invoke('getInstagramPosts', {})
+      .then((res) => {
+        if (!alive) return;
+        const data = res.data || {};
+        setUsername(data.username || '');
+        setPosts((data.posts || []).filter((p) => p.media_type !== 'VIDEO').slice(0, 6));
+      })
+      .catch(() => {})
+      .finally(() => { if (alive) setLoading(false); });
+    return () => { alive = false; };
+  }, []);
+
+  const instagramUrl = username ? `https://www.instagram.com/${username}` : FALLBACK_INSTAGRAM_URL;
+
   return (
     <section id="filosofie" className="relative w-full py-20 md:py-32 overflow-hidden">
-      {/* Subtle warm tonal layer for depth — no watermark */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.05) 0%, transparent 45%)' }} />
+      {/* Subtle warm tonal layer for depth */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.06) 0%, transparent 45%)' }} />
 
       <div className="relative w-full px-6 md:px-10 lg:px-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
 
-          {/* Text column */}
-          <div className="lg:col-span-7 lg:pr-12 lg:border-r lg:border-border/70">
-            <SectionReveal direction="up">
-              <div className="flex items-center gap-3 mb-7">
-                <span className="h-px w-10 bg-primary" />
-                <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">
-                  {labels.label}
-                </span>
+        {/* Editorial header */}
+        <SectionReveal direction="up">
+          <div className="flex items-center gap-3 mb-7">
+            <span className="h-px w-10 bg-primary" />
+            <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{labels.label}</span>
+          </div>
+          <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-7 max-w-[14ch]" />
+          <p className="font-body text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
+            {labels.lead}
+          </p>
+        </SectionReveal>
+
+        {/* Main grid — story + philosophy chapters on the left, the highlighted
+            behind-the-scenes social feature on the right. */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mt-14 lg:mt-20 items-start">
+
+          {/* Chapters */}
+          <div className="lg:col-span-5">
+            <div className="space-y-12">
+              {labels.chapters.map((ch, i) => (
+                <SectionReveal key={ch.num} direction="up" delay={i * 0.1}>
+                  <div className="flex gap-6">
+                    <span className="font-heading text-5xl md:text-6xl font-bold text-primary/25 leading-none select-none">
+                      {ch.num}
+                    </span>
+                    <div className="pt-1">
+                      <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mb-2">{ch.title}</p>
+                      <p className="font-heading text-lg md:text-xl font-semibold text-foreground mb-3">{ch.subtitle}</p>
+                      <p className="font-body text-base text-muted-foreground leading-relaxed max-w-md">{ch.body}</p>
+                    </div>
+                  </div>
+                </SectionReveal>
+              ))}
+            </div>
+
+            {/* CTA into the Over Ons panel */}
+            <SectionReveal direction="up" delay={0.2}>
+              <div className="mt-12 pt-8 border-t border-border/60">
+                <Link
+                  to="/about"
+                  className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+                >
+                  {labels.finalCta}
+                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  </span>
+                </Link>
               </div>
-
-              <HomeTitle title={labels.title} accent={labels.accent} breakLine className="mb-8" />
-
-              <div className="flex items-center gap-2 mb-7">
-                <div className="w-12 h-px bg-primary/50" />
-                <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-              </div>
-
-              <p className="font-body text-lg md:text-xl text-muted-foreground leading-relaxed max-w-xl mb-10">
-                {labels.lead}
-              </p>
-
-              <Link
-                to="/about"
-                className="group inline-flex items-center gap-3 font-body text-xs tracking-[0.3em] uppercase text-primary hover:text-foreground transition-colors duration-300"
-              >
-                {labels.cta}
-                <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-primary/40 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
-                </span>
-              </Link>
             </SectionReveal>
           </div>
 
-          {/* Image column */}
-          <div className="lg:col-span-5">
-            <SectionReveal direction="left" delay={0.12}>
-              <figure className="relative">
-                <div
-                  className="relative overflow-hidden rounded-2xl aspect-[4/5] shadow-2xl"
-                  style={{ boxShadow: '0 28px 70px -24px rgba(0,0,0,0.45)' }}
-                >
-                  <img
-                    src={siteImg('philosophy.0')}
-                    data-bb-key="philosophy.0"
-                    data-bb-label="Filosofie — Bogèst"
-                    alt="Bogèst"
-                    loading="lazy" decoding="async"
-                    className="w-full h-full object-cover transition-transform duration-1000 hover:scale-105"
-                    style={{ filter: 'saturate(0.85) brightness(0.92)' }}
-                  />
-                  {/* Soft tonal gradient for caption legibility */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent" />
-                  {/* Gold corner accents */}
-                  <div className="absolute top-4 left-4 w-12 h-12 border-t border-l border-primary/50 rounded-tl-lg" />
-                  <div className="absolute bottom-4 right-4 w-12 h-12 border-b border-r border-primary/50 rounded-br-lg" />
+          {/* Behind the scenes — highlighted social feature */}
+          <div className="lg:col-span-7">
+            <SectionReveal direction="left" delay={0.15}>
+              <div className="relative rounded-2xl border border-border/60 bg-white/[0.03] backdrop-blur-md p-5 md:p-6 overflow-hidden">
+                {/* soft gold corner accent */}
+                <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, hsl(var(--primary) / 0.12), transparent 70%)' }} />
+
+                {/* header */}
+                <div className="relative flex items-center justify-between mb-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-primary/10 border border-primary/25 flex items-center justify-center flex-shrink-0">
+                      <InstagramIcon className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-heading text-base md:text-lg font-bold text-foreground leading-tight">{labels.behindLabel}</p>
+                      <p className="font-body text-[11px] text-muted-foreground mt-0.5">
+                        @{username || 'bogesthasselt'}{!loading && posts.length > 0 ? ` · ${posts.length}` : ''}
+                      </p>
+                    </div>
+                  </div>
+                  <Link
+                    to="/about/instagram"
+                    className="group inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.25em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+                  >
+                    {labels.behindCta}
+                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-300" />
+                  </Link>
                 </div>
 
-                <figcaption className="mt-5 flex items-center gap-3">
-                  <span className="h-px w-7 bg-primary/50" />
-                  <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground">
-                    {labels.caption}
-                  </span>
-                </figcaption>
-              </figure>
+                {/* grid */}
+                {loading ? (
+                  <div className="flex items-center justify-center py-16">
+                    <Loader2 className="w-6 h-6 animate-spin text-primary/60" />
+                  </div>
+                ) : posts.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-16 gap-3">
+                    <InstagramIcon className="w-10 h-10 text-muted-foreground/30" />
+                    <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className="font-body text-sm text-muted-foreground hover:text-primary transition-colors">
+                      {labels.followInstagram}
+                    </a>
+                  </div>
+                ) : (
+                  <div className="relative grid grid-cols-3 gap-2 md:gap-2.5">
+                    {posts.map((post) => (
+                      <a
+                        key={post.id || post.permalink}
+                        href={post.permalink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group relative overflow-hidden rounded-lg aspect-square"
+                      >
+                        <img
+                          src={post.media_url}
+                          alt={(post.caption || 'Instagram post').slice(0, 60)}
+                          loading="lazy" decoding="async"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-white/15 backdrop-blur flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <ExternalLink className="w-3 h-3 text-white" />
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {/* follow links */}
+                <div className="relative mt-5 flex flex-wrap items-center gap-3">
+                  <a
+                    href={instagramUrl}
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-primary/30 bg-primary/5 hover:bg-primary hover:text-primary-foreground transition-colors duration-300 font-body text-[10px] tracking-[0.2em] uppercase text-primary"
+                  >
+                    <InstagramIcon className="w-3.5 h-3.5" />
+                    {labels.followInstagram}
+                  </a>
+                  <a
+                    href={FACEBOOK_URL}
+                    target="_blank" rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-border hover:border-primary/40 transition-colors duration-300 font-body text-[10px] tracking-[0.2em] uppercase text-muted-foreground hover:text-foreground"
+                  >
+                    <FacebookIcon className="w-3.5 h-3.5" />
+                    {labels.followFacebook}
+                  </a>
+                </div>
+              </div>
             </SectionReveal>
           </div>
 
