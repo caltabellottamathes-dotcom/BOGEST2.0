@@ -7,8 +7,14 @@ import ReserveCtaSection from '@/components/ReserveCtaSection';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 
+const SUBTITLE = {
+  nl: 'Het verhaal achter Bogèst — van Beau Geste tot een gulhartig steakhouse in Limburg.',
+  fr: "L'histoire derrière Bogèst — de Beau Geste à un steakhouse généreux au Limbourg.",
+  en: 'The story behind Bogèst — from Beau Geste to a generous steakhouse in Limburg.',
+};
+
 export default function OnsVerhaal() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
 
   const story = [
@@ -22,14 +28,14 @@ export default function OnsVerhaal() {
     <div className="w-full">
       <PanelHero
         label={t('about_story_label')}
-        title="Ons verhaal"
+        title={t('about_story_label')}
         titleAccent="Bogèst"
-        subtitle="Het verhaal achter Bogèst — van Beau Geste tot een gulhartig steakhouse in Limburg."
+        subtitle={SUBTITLE[lang] || SUBTITLE.nl}
         positionKey="onsverhaal.hero"
       />
 
       <PanelContent>
-        <SubPageNav nextTo="/about/onze-filosofie" nextLabel="Onze filosofie" />
+        <SubPageNav nextTo="/about/onze-filosofie" nextLabel={t('about_philosophy_label')} />
 
         {/* Story header */}
         <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">

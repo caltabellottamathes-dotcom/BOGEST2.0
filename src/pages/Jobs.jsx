@@ -13,17 +13,47 @@ import { base44 } from '@/api/base44Client';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
+// UI chrome — localized per language (kept local so the shared i18n file
+// doesn't keep growing).
+const UI = {
+  nl: {
+    titleAccent: 'kom erbij',
+    walkinTitle: 'Liever langslopen?',
+    walkinDesc: 'Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.',
+    walkinAsk: 'vraag naar',
+    walkinNote: 'Voor een vlotte start vragen we u bij een sollicitatie volgende zaken mee te brengen: uw identiteitskaart, bankkaart en een e-mailadres (voor de digitale loonbrief bij de loonberekening).',
+    cardWalkin: 'Langskomen?',
+  },
+  fr: {
+    titleAccent: 'joignez-vous',
+    walkinTitle: 'Préférez-vous passer ?',
+    walkinDesc: 'Passez nous voir — nous vous accueillons volontiers pour une rencontre informelle.',
+    walkinAsk: 'demandez',
+    walkinNote: "Pour un démarrage en douceur, nous vous demandons d'apporter les éléments suivants lors de votre candidature : votre carte d'identité, votre carte bancaire et une adresse e-mail (pour la fiche de paie numérique lors du calcul du salaire).",
+    cardWalkin: 'Passer sur place ?',
+  },
+  en: {
+    titleAccent: 'join us',
+    walkinTitle: 'Rather drop by?',
+    walkinDesc: 'Feel free to drop in — we welcome you for an informal meet-up.',
+    walkinAsk: 'ask for',
+    walkinNote: 'For a smooth start, we ask you to bring the following to your application: your identity card, bank card and an email address (for the digital payslip during payroll).',
+    cardWalkin: 'Dropping by?',
+  },
+};
+
 // Actuele vacatures — overgenomen van bogest.be/joinus
-const openings = [
-  {
-    title: 'Zaalverantwoordelijke',
-    location: 'Bogèst Hasselt',
-    type: 'Voltijds · M/V',
-    desc: 'Een verbindende leider met passie voor service, sfeer en kwaliteit voor onze authentieke zaak in Hasselt-Wimmertingen.',
-    applyEmail: 'info@bogest-hasselt.be',
-    applyPhone: '0473 77 87 49',
-    walkIn: 'Marah (Hasselt)',
-    fullText: `Voor Bogèst Hasselt, onze authentieke zaak in Hasselt-Wimmertingen, zoeken we een voltijdse zaalverantwoordelijke M/V. Bij Bogèst draait alles om kwaliteit, gastvrijheid en een gulhartige restaurantbeleving. Jij zorgt ervoor dat onze gasten zich welkom voelen, het zaalteam sterk samenwerkt en iedere service vlot verloopt.
+const OPENINGS = {
+  nl: [
+    {
+      title: 'Zaalverantwoordelijke',
+      location: 'Bogèst Hasselt',
+      type: 'Voltijds · M/V',
+      desc: 'Een verbindende leider met passie voor service, sfeer en kwaliteit voor onze authentieke zaak in Hasselt-Wimmertingen.',
+      applyEmail: 'info@bogest-hasselt.be',
+      applyPhone: '0473 77 87 49',
+      walkIn: 'Marah (Hasselt)',
+      fullText: `Voor Bogèst Hasselt, onze authentieke zaak in Hasselt-Wimmertingen, zoeken we een voltijdse zaalverantwoordelijke M/V. Bij Bogèst draait alles om kwaliteit, gastvrijheid en een gulhartige restaurantbeleving. Jij zorgt ervoor dat onze gasten zich welkom voelen, het zaalteam sterk samenwerkt en iedere service vlot verloopt.
 
 Wat ga je doen?
 — Je geeft leiding aan het zaalteam en maakt de personeelsplanning op.
@@ -51,16 +81,16 @@ Wat bieden wij?
 — Stabiliteit en groei binnen drie gevestigde locaties in Limburg.
 
 Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat mooie gebaar begint bij oprechte gastvrijheid, en daar speel jij als zaalverantwoordelijke een sleutelrol in.`,
-  },
-  {
-    title: 'Grillkok',
-    location: 'Bogèst Heusden-Zolder',
-    type: 'Voltijds',
-    desc: 'Ben jij op je best achter een gloeiende grill? Een mooi stuk vlees perfect tot zijn recht laten komen?',
-    applyEmail: 'info@bogest-heusdenzolder.be',
-    applyPhone: '011 18 21 20',
-    walkIn: 'Mieke (Heusden-Zolder)',
-    fullText: `Ben jij op je best achter een gloeiende grill? Weet jij hoe je een mooi stuk vlees perfect tot zijn recht laat komen? Dan hebben wij misschien een plaats voor jou in ons team in Heusden-Zolder. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot onze beroemde spare ribs: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
+    },
+    {
+      title: 'Grillkok',
+      location: 'Bogèst Heusden-Zolder',
+      type: 'Voltijds',
+      desc: 'Ben jij op je best achter een gloeiende grill? Een mooi stuk vlees perfect tot zijn recht laten komen?',
+      applyEmail: 'info@bogest-heusdenzolder.be',
+      applyPhone: '011 18 21 20',
+      walkIn: 'Mieke (Heusden-Zolder)',
+      fullText: `Ben jij op je best achter een gloeiende grill? Weet jij hoe je een mooi stuk vlees perfect tot zijn recht laat komen? Dan hebben wij misschien een plaats voor jou in ons team in Heusden-Zolder. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot onze beroemde spare ribs: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
 
 Wat ga je doen?
 — Je bereidt onze vleesgerechten met respect voor product en bakwijze.
@@ -85,16 +115,16 @@ Wat bieden wij?
 — Ruimte om je vakkennis verder te ontwikkelen en door te groeien.
 
 Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we onze gasten iedere dag willen bieden, en daar hebben we jouw talent voor nodig.`,
-  },
-  {
-    title: 'Grillkok / koude kant',
-    location: 'Bogèst Borgloon',
-    type: 'Voltijds · M/V',
-    desc: 'Gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten — thuis achter de grill én aan de koude kant.',
-    applyEmail: 'info@bogest-borgloon.be',
-    applyPhone: '012 21 06 90',
-    walkIn: 'Ramin (Borgloon)',
-    fullText: `Ben jij gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten? Voel jij je thuis achter de grill én aan de koude kant van de keuken? Voor Bogèst Borgloon zoeken we een voltijdse grillkok / medewerker koude kant M/V. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot verzorgde voorgerechten, frisse salades en huisbereide desserts: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
+    },
+    {
+      title: 'Grillkok / koude kant',
+      location: 'Bogèst Borgloon',
+      type: 'Voltijds · M/V',
+      desc: 'Gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten — thuis achter de grill én aan de koude kant.',
+      applyEmail: 'info@bogest-borgloon.be',
+      applyPhone: '012 21 06 90',
+      walkIn: 'Ramin (Borgloon)',
+      fullText: `Ben jij gepassioneerd door koken, kwaliteitsproducten en mooi afgewerkte gerechten? Voel jij je thuis achter de grill én aan de koude kant van de keuken? Voor Bogèst Borgloon zoeken we een voltijdse grillkok / medewerker koude kant M/V. Bij Bogèst draait alles om kwaliteit, ambacht en een gulhartige restaurantbeleving. Van een perfect gebakken steak en sappige ribeye tot verzorgde voorgerechten, frisse salades en huisbereide desserts: onze gasten rekenen op smaak, vakmanschap en constante kwaliteit.
 
 Wat ga je doen?
 — Je bereidt onze vleesgerechten met respect voor product en bakwijze.
@@ -125,12 +155,240 @@ Wat bieden wij?
 — Stabiliteit en groeimogelijkheden binnen drie gevestigde locaties in Limburg.
 
 Bogèst is afgeleid van Beau Geste — een mooi gebaar. Dat is precies wat we onze gasten iedere dag willen bieden, en daar hebben we jouw talent voor nodig.`,
-  },
-];
+    },
+  ],
+  fr: [
+    {
+      title: 'Responsable de salle',
+      location: 'Bogèst Hasselt',
+      type: 'Temps plein · H/F',
+      desc: "Un leader fédérateur passionné par le service, l'ambiance et la qualité pour notre établissement authentique à Hasselt-Wimmertingen.",
+      applyEmail: 'info@bogest-hasselt.be',
+      applyPhone: '0473 77 87 49',
+      walkIn: 'Marah (Hasselt)',
+      fullText: `Pour Bogèst Hasselt, notre établissement authentique à Hasselt-Wimmertingen, nous recherchons un responsable de salle temps plein H/F. Chez Bogèst, tout tourne autour de la qualité, de l'hospitalité et d'une expérience restaurant généreuse. Vous veillez à ce que nos invités se sentent les bienvenus, que l'équipe de salle collabore fort et que chaque service se déroule sans heurts.
+
+Que ferez-vous ?
+— Vous dirigez l'équipe de salle et établissez le planning du personnel.
+— Vous garantissez chaque jour une expérience optimale pour les invités.
+— Vous répondez aux questions de manière orientée client et gérez les demandes spéciales avec professionnalisme.
+— Vous fluidifiez les processus de service et veillez à une qualité constante.
+— Vous travaillez en étroite collaboration avec la cuisine et les autres départements pour un service sans couture.
+— Vous aidez au recrutement, à la formation et au coaching des nouveaux collaborateurs.
+
+Qui recherchons-nous ?
+— Vous dégagez une énergie positive et faites preuve de proactivité.
+— Vous disposez de solides compétences de communication et de direction.
+— Vous avez plusieurs années d'expérience en gestion de salle ou en tant que responsable dans l'horeca.
+— Vous travaillez de manière structurée et gardez votre sang-froid lors des moments chargés.
+— Vous savez motiver, coacher et inspirer les collaborateurs.
+— Vous êtes orienté client, représentatif et hands-on.
+
+Qu'offrons-nous ?
+— Une rémunération attractive, conforme au marché, avec des perspectives d'évolution.
+— Une voiture de société, selon votre expérience.
+— Deux jours de congé fixes par semaine.
+— Cinq services du soir, sans service de midi.
+— Des possibilités d'évolution au sein d'une équipe de pointe et solidaire.
+— Travailler dans un steakhouse authentique passionné de qualité.
+— Stabilité et croissance au sein de trois établissements établis au Limbourg.
+
+Bogèst est dérivé de Beau Geste — un beau geste. Ce beau geste commence par une hospitalité sincère, et vous, en tant que responsable de salle, y jouez un rôle clé.`,
+    },
+    {
+      title: 'Grillardin',
+      location: 'Bogèst Heusden-Zolder',
+      type: 'Temps plein',
+      desc: 'Donnez-vous le meilleur devant un grill brûlant ? Sublimer une belle pièce de viande ?',
+      applyEmail: 'info@bogest-heusdenzolder.be',
+      applyPhone: '011 18 21 20',
+      walkIn: 'Mieke (Heusden-Zolder)',
+      fullText: `Donnez-vous le mieux de vous-même devant un grill brûlant ? Savez-vous comment sublimer une belle pièce de viande ? Nous avons peut-être une place pour vous dans notre équipe à Heusden-Zolder. Chez Bogèst, tout tourne autour de la qualité, de l'artisanat et d'une expérience restaurant généreuse. D'un steak parfaitement cuit et d'un ribeye juteux à nos célèbres spare ribs : nos invités comptent sur le goût, le savoir-faire et une qualité constante.
+
+Que ferez-vous ?
+— Vous préparez nos plats de viande avec respect pour le produit et la cuisson.
+— Vous veillez à la qualité et à la cuisson parfaite de chaque plat.
+— Vous travaillez de façon fluide et organisée pendant le service.
+— Vous formez, avec la cuisine et l'équipe de salle, une seule équipe forte.
+— Vous contribuez à faire de chaque assiette un vrai moment Bogèst.
+
+Qui recherchons-nous ?
+— Vous avez de l'expérience comme grillardin ou une forte passion pour le grill et la préparation de la viande.
+— Vous connaissez la différence entre bleu, saignant et à point.
+— Vous travaillez proprement, avec précision et résistance au stress.
+— Vous êtes fiable et un vrai joueur d'équipe.
+— Vous placez la qualité, le goût et la satisfaction des invités au plus haut.
+
+Qu'offrons-nous ?
+— Une rémunération attractive, conforme au marché, selon votre expérience.
+— Deux jours de congé fixes par semaine.
+— Cinq services du soir, sans service de midi.
+— Une fonction stable au sein d'une équipe solidaire et expérimentée.
+— Travailler avec de la viande de qualité, des produits frais et des plats maison.
+— De l'espace pour développer votre savoir-faire et évoluer.
+
+Bogèst est dérivé de Beau Geste — un beau geste. C'est précisément ce que nous voulons offrir à nos invités chaque jour, et pour cela nous avons besoin de votre talent.`,
+    },
+    {
+      title: 'Grillardin / partie froide',
+      location: 'Bogèst Borgloon',
+      type: 'Temps plein · H/F',
+      desc: "Passionné de cuisine, de produits de qualité et de plats soignés — à l'aise au grill comme à la partie froide.",
+      applyEmail: 'info@bogest-borgloon.be',
+      applyPhone: '012 21 06 90',
+      walkIn: 'Ramin (Borgloon)',
+      fullText: `Êtes-vous passionné de cuisine, de produits de qualité et de plats soignés ? Vous sentez-vous à l'aise au grill comme à la partie froide de la cuisine ? Pour Bogèst Borgloon, nous recherchons un grillardin / collaborateur partie froide temps plein H/F. Chez Bogèst, tout tourne autour de la qualité, de l'artisanat et d'une expérience restaurant généreuse. D'un steak parfaitement cuit et d'un ribeye juteux aux entrées soignées, salades fraîches et desserts maison : nos invités comptent sur le goût, le savoir-faire et une qualité constante.
+
+Que ferez-vous ?
+— Vous préparez nos plats de viande avec respect pour le produit et la cuisson.
+— Vous veillez à la qualité et à la cuisson parfaite de chaque plat.
+— Vous assurez la mise en place et les préparations de la partie froide.
+— Vous participez à nos entrées, salades et garnitures froides.
+— Vous assurez une finition soignée de nos desserts maison.
+— Vous veillez à la présentation et à la qualité de chaque assiette.
+— Vous travaillez de façon fluide et organisée pendant le service.
+— Vous coordonnez avec la cuisine chaude, la partie froide et l'équipe de salle.
+— Vous tenez votre poste propre et suivez correctement les règles d'hygiène.
+
+Qui recherchons-nous ?
+— Vous avez de l'expérience comme grillardin, cuisinier ou collaborateur de cuisine.
+— Vous connaissez les différents modes de cuisson ou êtes motivé pour les apprendre parfaitement.
+— Vous avez l'œil pour le goût, la présentation et le détail.
+— Vous pouvez travailler en autonomie, mais êtes aussi un vrai joueur d'équipe.
+— Vous travaillez proprement, avec précision et résistance au stress.
+— Vous êtes fiable, motivé et hands-on.
+
+Qu'offrons-nous ?
+— Une rémunération attractive, conforme au marché, selon votre expérience.
+— Deux jours de congé fixes par semaine.
+— Cinq services du soir, sans service de midi.
+— Une fonction temps plein stable au sein d'une équipe solidaire et expérimentée.
+— Travailler avec de la viande de qualité, des produits frais et des plats maison.
+— De l'espace pour développer votre savoir-faire et évoluer.
+— Stabilité et possibilités d'évolution au sein de trois établissements établis au Limbourg.
+
+Bogèst est dérivé de Beau Geste — un beau geste. C'est précisément ce que nous voulons offrir à nos invités chaque jour, et pour cela nous avons besoin de votre talent.`,
+    },
+  ],
+  en: [
+    {
+      title: 'Front-of-house manager',
+      location: 'Bogèst Hasselt',
+      type: 'Full-time · M/F',
+      desc: 'A unifying leader with a passion for service, atmosphere and quality for our authentic restaurant in Hasselt-Wimmertingen.',
+      applyEmail: 'info@bogest-hasselt.be',
+      applyPhone: '0473 77 87 49',
+      walkIn: 'Marah (Hasselt)',
+      fullText: `For Bogèst Hasselt, our authentic restaurant in Hasselt-Wimmertingen, we are looking for a full-time front-of-house manager M/F. At Bogèst, everything revolves around quality, hospitality and a generous restaurant experience. You ensure our guests feel welcome, the floor team works together strongly and every service runs smoothly.
+
+What will you do?
+— You lead the floor team and draw up the staff schedule.
+— You ensure an optimal guest experience every day.
+— You handle questions in a guest-oriented way and deal with special requests professionally.
+— You streamline service processes and safeguard constant quality.
+— You work closely with the kitchen and other departments for a seamless service.
+— You help recruit, train and coach new staff.
+
+Who are we looking for?
+— You radiate positive energy and take a proactive attitude.
+— You have strong communication and leadership skills.
+— You have at least several years of experience in floor management or as a hospitality lead.
+— You work in a structured way and keep your cool during busy moments.
+— You know how to motivate, coach and inspire staff.
+— You are guest-oriented, presentable and hands-on.
+
+What do we offer?
+— An attractive, market-conform remuneration with growth opportunities.
+— A company car, depending on your experience.
+— Two fixed days off per week.
+— Five evening services, no lunch service.
+— Growth opportunities within a collegial top team.
+— Working in an authentic steakhouse with a passion for quality.
+— Stability and growth across three established locations in Limburg.
+
+Bogèst is derived from Beau Geste — a beautiful gesture. That beautiful gesture begins with sincere hospitality, and as front-of-house manager you play a key role in it.`,
+    },
+    {
+      title: 'Grill chef',
+      location: 'Bogèst Heusden-Zolder',
+      type: 'Full-time',
+      desc: 'Are you at your best behind a glowing grill? Bringing a beautiful piece of meat to perfection?',
+      applyEmail: 'info@bogest-heusdenzolder.be',
+      applyPhone: '011 18 21 20',
+      walkIn: 'Mieke (Heusden-Zolder)',
+      fullText: `Are you at your best behind a glowing grill? Do you know how to bring a beautiful piece of meat to perfection? Then we may have a place for you on our team in Heusden-Zolder. At Bogèst, everything revolves around quality, craft and a generous restaurant experience. From a perfectly cooked steak and juicy ribeye to our famous spare ribs: our guests count on flavour, craftsmanship and constant quality.
+
+What will you do?
+— You prepare our meat dishes with respect for the product and the cooking method.
+— You safeguard the quality and perfect doneness of every dish.
+— You work smoothly and in an organised way during service.
+— You form one strong team together with the kitchen and floor crew.
+— You help turn every plate into a true Bogèst moment.
+
+Who are we looking for?
+— You have experience as a grill chef or a strong passion for grilling and meat preparation.
+— You know the difference between bleu, saignant and à point.
+— You work cleanly, precisely and stress-resistant.
+— You are reliable and a real team player.
+— You hold quality, flavour and guest satisfaction in high regard.
+
+What do we offer?
+— An attractive, market-conform remuneration depending on your experience.
+— Two fixed days off per week.
+— Five evening services, no lunch service.
+— A stable role within a collegial and experienced team.
+— Working with quality meat, fresh products and homemade dishes.
+— Room to further develop your craft and grow.
+
+Bogèst is derived from Beau Geste — a beautiful gesture. That is exactly what we want to offer our guests every day, and for that we need your talent.`,
+    },
+    {
+      title: 'Grill chef / cold section',
+      location: 'Bogèst Borgloon',
+      type: 'Full-time · M/F',
+      desc: 'Passionate about cooking, quality products and beautifully finished dishes — at home at the grill and on the cold section.',
+      applyEmail: 'info@bogest-borgloon.be',
+      applyPhone: '012 21 06 90',
+      walkIn: 'Ramin (Borgloon)',
+      fullText: `Are you passionate about cooking, quality products and beautifully finished dishes? Do you feel at home at the grill as well as on the cold section of the kitchen? For Bogèst Borgloon we are looking for a full-time grill chef / cold section worker M/F. At Bogèst, everything revolves around quality, craft and a generous restaurant experience. From a perfectly cooked steak and juicy ribeye to carefully prepared starters, fresh salads and homemade desserts: our guests count on flavour, craftsmanship and constant quality.
+
+What will you do?
+— You prepare our meat dishes with respect for the product and the cooking method.
+— You safeguard the quality and perfect doneness of every dish.
+— You handle the mise-en-place and preparations of the cold section.
+— You help with our starters, salads and cold garnishes.
+— You ensure a careful finish of our homemade desserts.
+— You safeguard the presentation and quality of every plate.
+— You work smoothly and in an organised way during service.
+— You coordinate well with the hot kitchen, cold section and floor crew.
+— You keep your workstation clean and follow hygiene rules correctly.
+
+Who are we looking for?
+— You have experience as a grill chef, cook or kitchen worker.
+— You know the different doneness levels or are motivated to learn them perfectly.
+— You have an eye for flavour, presentation and detail.
+— You can work independently, but are also a real team player.
+— You work cleanly, precisely and stress-resistant.
+— You are reliable, motivated and hands-on.
+
+What do we offer?
+— An attractive, market-conform remuneration depending on your experience.
+— Two fixed days off per week.
+— Five evening services, no lunch service.
+— A stable full-time role within a collegial and experienced team.
+— Working with quality meat, fresh products and homemade dishes.
+— Room to further develop your craft and grow.
+— Stability and growth opportunities across three established locations in Limburg.
+
+Bogèst is derived from Beau Geste — a beautiful gesture. That is exactly what we want to offer our guests every day, and for that we need your talent.`,
+    },
+  ],
+};
 
 function JobCard({ job, onSelect, isSelected, lang, num }) {
   const [expanded, setExpanded] = useState(false);
   const { t } = useLang();
+  const ui = UI[lang] || UI.nl;
 
   return (
     <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-white/[0.04] backdrop-blur-md hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
@@ -192,7 +450,7 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
                   )}
                   {job.walkIn && (
                     <p className="flex items-center gap-2 font-body text-xs text-muted-foreground">
-                      <Footprints className="w-3.5 h-3.5 text-primary" /> Langskomen? Vraag naar {job.walkIn}
+                      <Footprints className="w-3.5 h-3.5 text-primary" /> {ui.cardWalkin} {ui.walkinAsk} {job.walkIn}
                     </p>
                   )}
                 </div>
@@ -215,6 +473,8 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
 
 export default function Jobs() {
   const { t, lang } = useLang();
+  const ui = UI[lang] || UI.nl;
+  const openings = OPENINGS[lang] || OPENINGS.nl;
   const [selected, setSelected] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', motivation: '' });
   const [success, setSuccess] = useState(false);
@@ -244,7 +504,7 @@ export default function Jobs() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('job_label')} title={t('job_title')} titleAccent="kom erbij" subtitle={t('job_subtitle')} positionKey="jobs.hero" />
+      <PanelHero label={t('job_label')} title={t('job_title')} titleAccent={ui.titleAccent} subtitle={t('job_subtitle')} positionKey="jobs.hero" />
 
       <PanelContent>
       <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
@@ -273,16 +533,16 @@ export default function Jobs() {
 
             <SectionReveal delay={0.1}>
               <div className="mt-8 p-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md shadow-lg">
-                <h3 className="font-heading text-base font-semibold text-foreground mb-3">Liever langslopen?</h3>
-                <p className="font-body text-sm text-muted-foreground mb-4">Spring gerust binnen — we ontvangen u graag voor een informele kennismaking.</p>
+                <h3 className="font-heading text-base font-semibold text-foreground mb-3">{ui.walkinTitle}</h3>
+                <p className="font-body text-sm text-muted-foreground mb-4">{ui.walkinDesc}</p>
                 <ul className="space-y-2 font-body text-sm text-muted-foreground">
-                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Borgloon</span> — vraag naar Ramin</li>
-                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Hasselt</span> — vraag naar Marah</li>
-                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Heusden-Zolder</span> — vraag naar Mieke</li>
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Borgloon</span> — {ui.walkinAsk} Ramin</li>
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Hasselt</span> — {ui.walkinAsk} Marah</li>
+                  <li className="flex items-center gap-2"><MapPin className="w-3.5 h-3.5 text-primary flex-shrink-0" /><span className="text-foreground">Heusden-Zolder</span> — {ui.walkinAsk} Mieke</li>
                 </ul>
                 <div className="mt-4 pt-4 border-t border-border/50">
                   <p className="font-body text-xs text-muted-foreground">
-                    Voor een vlotte start vragen we u bij een sollicitatie volgende zaken mee te brengen: uw identiteitskaart, bankkaart en een e-mailadres (voor de digitale loonbrief bij de loonberekening).
+                    {ui.walkinNote}
                   </p>
                 </div>
               </div>

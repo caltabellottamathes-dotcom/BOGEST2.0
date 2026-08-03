@@ -3,14 +3,47 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 
-export default function WineSection() {
-  const { t } = useLang();
-  const { siteImg } = useSiteImages();
-  const wines = [
+const WINES = {
+  nl: [
     { name: 'Malbec', origin: 'Argentinië', note: 'Rijk, fruitig, volle body' },
     { name: 'Primitivo', origin: 'Italië', note: 'Droog, krachtig, diep rood' },
     { name: 'Godina', origin: 'België', note: 'Licht, elegant, verfijnd' },
-  ];
+  ],
+  fr: [
+    { name: 'Malbec', origin: 'Argentine', note: 'Riche, fruité, corps plein' },
+    { name: 'Primitivo', origin: 'Italie', note: 'Sec, puissant, rouge profond' },
+    { name: 'Godina', origin: 'Belgique', note: 'Léger, élégant, raffiné' },
+  ],
+  en: [
+    { name: 'Malbec', origin: 'Argentina', note: 'Rich, fruity, full body' },
+    { name: 'Primitivo', origin: 'Italy', note: 'Dry, powerful, deep red' },
+    { name: 'Godina', origin: 'Belgium', note: 'Light, elegant, refined' },
+  ],
+};
+
+const COPY = {
+  nl: {
+    heading: 'Eigen label, uitgelezen keuze.',
+    body: 'In samenwerking met onze wijnleveranciers werden wijnen speciaal samengesteld om perfect te matchen met onze vleesgerechten — exclusief onder ons eigen label.',
+    alt: 'Wijn',
+  },
+  fr: {
+    heading: 'Label maison, choix d’exception.',
+    body: "En collaboration avec nos fournisseurs, des vins ont été spécialement composés pour accompagner parfaitement nos plats de viande — exclusivement sous notre propre label.",
+    alt: 'Vin',
+  },
+  en: {
+    heading: 'House label, hand-picked.',
+    body: 'In collaboration with our suppliers, wines have been specially composed to pair perfectly with our meat dishes — exclusively under our own label.',
+    alt: 'Wine',
+  },
+};
+
+export default function WineSection() {
+  const { t, lang } = useLang();
+  const { siteImg } = useSiteImages();
+  const wines = WINES[lang] || WINES.nl;
+  const c = COPY[lang] || COPY.nl;
   return (
     <section className="w-full py-24 md:py-32">
       <div className="w-full px-6 md:px-10 lg:px-16">
@@ -20,10 +53,10 @@ export default function WineSection() {
               {t('section_wine')}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-7">
-              Eigen label, uitgelezen keuze.
+              {c.heading}
             </h2>
             <p className="font-body text-base text-muted-foreground leading-relaxed mb-10">
-              In samenwerking met onze wijnleveranciers werden wijnen speciaal samengesteld om perfect te matchen met onze vleesgerechten — exclusief onder ons eigen label.
+              {c.body}
             </p>
             <div className="space-y-3">
               {wines.map(w => (
@@ -44,7 +77,7 @@ export default function WineSection() {
             <div className="overflow-hidden rounded-xl aspect-[4/5]">
               <img
                 src={siteImg('wine')}
-                alt="Wine"
+                alt={c.alt}
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
                 style={{ filter: 'saturate(0.82) brightness(0.95)' }}
               />

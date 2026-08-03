@@ -10,6 +10,13 @@ import { PILLARS_DATA, LABELS } from '@/components/home/PhilosophySection';
 
 const HERO_FALLBACK = 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906819066-6MA0KSXPX5SHGKCY0Q7R/tbone.jpeg';
 
+const SUBTITLE = {
+  nl: 'De pijlers achter Bogèst — formule, ambacht, wijnen en sfeer, uitgeschreven.',
+  fr: "Les piliers de Bogèst — formule, artisanat, vins et ambiance, décrits.",
+  en: 'The pillars behind Bogèst — formula, craft, wines and atmosphere, written out.',
+};
+const NEXTLABEL = { nl: 'Achter de schermen', fr: 'Dans les coulisses', en: 'Behind the scenes' };
+
 export default function OnzeFilosofie() {
   const { lang, t } = useLang();
   const { siteImg } = useSiteImages();
@@ -21,15 +28,15 @@ export default function OnzeFilosofie() {
     <div className="w-full">
       <PanelHero
         label={t('about_philosophy_label')}
-        title="Onze filosofie"
+        title={t('about_philosophy_label')}
         titleAccent="Bogèst"
-        subtitle="De pijlers achter Bogèst — formule, ambacht, wijnen en sfeer, uitgeschreven."
+        subtitle={SUBTITLE[lang] || SUBTITLE.nl}
         positionKey="philosophy.hero"
         bgImage={HERO_FALLBACK}
       />
 
       <PanelContent>
-        <SubPageNav nextTo="/about/instagram" nextLabel="Achter de schermen" />
+        <SubPageNav nextTo="/about/instagram" nextLabel={NEXTLABEL[lang] || NEXTLABEL.nl} />
 
         {/* Header */}
         <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">

@@ -102,13 +102,15 @@ const SPACES_DATA = {
   }
 };
 
+const NOT_FOUND = { nl: 'Restaurant niet gevonden', fr: 'Restaurant introuvable', en: 'Restaurant not found' };
+
 export default function RestaurantSpaces() {
   const { location } = useParams();
-  const { lang } = useLang();
+  const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
   const data = SPACES_DATA[lang]?.[location];
 
-  if (!data) return <div className="p-6 text-center">Restaurant not found</div>;
+  if (!data) return <div className="p-6 text-center">{NOT_FOUND[lang] || NOT_FOUND.en}</div>;
 
   return (
     <div className="w-full">
@@ -133,7 +135,7 @@ export default function RestaurantSpaces() {
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-heading text-lg font-semibold text-foreground">{space.name}</h3>
                     <span className="inline-flex items-center gap-1 font-body text-xs text-primary">
-                      <Users className="w-3 h-3" /> max. {space.capacity}p
+                      <Users className="w-3 h-3" /> {t('grp_max')} {space.capacity}p
                     </span>
                   </div>
                   <p className="font-body text-sm text-muted-foreground leading-relaxed">{space.desc}</p>

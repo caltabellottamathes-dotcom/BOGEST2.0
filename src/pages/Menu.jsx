@@ -14,7 +14,7 @@ import KidsMenu from '@/components/menu/KidsMenu';
 function PageHero() {
   const { t } = useLang();
   return (
-    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle="Onze kaart — vuur, vlees en gulhartige gerechten, met seizoenssuggesties van de chef." positionKey="menu.hero" bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg">
+    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle={t('menu_panel_subtitle')} positionKey="menu.hero" bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg">
       <p className="font-body text-sm text-white/75 mt-4 max-w-xl leading-relaxed" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}>
         <span className="text-primary font-medium">{t('menu_formula_label')} — </span>{t('menu_formula')}.
       </p>

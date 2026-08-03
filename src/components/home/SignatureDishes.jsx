@@ -7,30 +7,36 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import HostHint from '@/components/HostHint';
 import { hostQuestion, hostHintLabel } from '@/lib/hostHint';
 
-const dishes = [
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798020-1RKR6N8VGHSE1Z88BXP4/378389609_756558059816060_7208800625589654574_n.jpg',
-    tag: 'Ons paradepaardje',
-    name: 'Belgisch Wit Blauw',
-    range: '€32.90 – €56',
-  },
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg',
-    tag: 'Specialiteit',
-    name: 'Spare Ribs',
-    range: '€28.90',
-  },
-  {
-    image: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg',
-    tag: 'Eigen label',
-    name: 'Wijnselectie',
-    range: '',
-  },
+const IMAGES = [
+  'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906798020-1RKR6N8VGHSE1Z88BXP4/378389609_756558059816060_7208800625589654574_n.jpg',
+  'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906799926-VML5QXWO8V6D1NYAO2ZA/909af4c2-7392-4bbc-af18-2ea890714ecd-1.jpg',
+  'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/32f05da0-47c0-41c3-8beb-befced66a749/5D626C0A-F4F5-4B45-895D-E1D622FB21E2.jpeg',
 ];
+
+const DISHES = {
+  nl: [
+    { tag: 'Ons paradepaardje', name: 'Belgisch Wit Blauw', range: '€32.90 – €56' },
+    { tag: 'Specialiteit', name: 'Spare Ribs', range: '€28.90' },
+    { tag: 'Eigen label', name: 'Wijnselectie', range: '' },
+  ],
+  fr: [
+    { tag: 'Notre fierté', name: 'Blanc Bleu Belge', range: '€32.90 – €56' },
+    { tag: 'Spécialité', name: 'Spare Ribs', range: '€28.90' },
+    { tag: 'Label maison', name: 'Sélection de vins', range: '' },
+  ],
+  en: [
+    { tag: 'Our pride', name: 'Belgian White Blue', range: '€32.90 – €56' },
+    { tag: 'Speciality', name: 'Spare Ribs', range: '€28.90' },
+    { tag: 'House label', name: 'Wine selection', range: '' },
+  ],
+};
+
+const HEADING = { nl: 'Onze keuken.', fr: 'Notre cuisine.', en: 'Our kitchen.' };
 
 export default function SignatureDishes() {
   const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
+  const dishes = DISHES[lang] || DISHES.nl;
   return (
     <section className="w-full py-24 md:py-32 bg-card">
       <div className="w-full px-6 md:px-10 lg:px-16">
@@ -40,7 +46,7 @@ export default function SignatureDishes() {
               {t('section_signature')}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              Onze keuken.
+              {HEADING[lang] || HEADING.nl}
             </h2>
           </SectionReveal>
           <Link to="/menu"
@@ -55,7 +61,7 @@ export default function SignatureDishes() {
             <SectionReveal key={dish.name} delay={i * 0.12}>
               <Link to="/menu" className="group relative block">
                 <div className="relative overflow-hidden rounded-xl aspect-[3/4] mb-5">
-                  <img src={siteImg('signature.' + i)} alt={dish.name}
+                  <img src={siteImg('signature.' + i) || IMAGES[i]} alt={dish.name}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                     style={{ filter: 'saturate(0.82) brightness(0.95)' }} loading="lazy" decoding="async" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

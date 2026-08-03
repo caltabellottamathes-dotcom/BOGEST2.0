@@ -28,7 +28,9 @@ export default function GiftCardsHighlights() {
     <PanelSwitcher
       items={items}
       label={t('gc_panel_label')}
-      icon={Gift}
+      title={t('gc_section_title')}
+      titleAccent={t('gc_section_accent')}
+      lead={t('gc_section_lead')}
       mirror
     />
   );

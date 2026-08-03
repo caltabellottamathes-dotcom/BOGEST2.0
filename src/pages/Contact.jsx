@@ -42,7 +42,7 @@ export default function Contact() {
 
   return (
     <div className="w-full">
-      <PanelHero label={t('con_label')} title={t('con_title')} titleAccent={t('con_title_accent')} subtitle="Vragen of reservaties? Ons team helpt u graag verder." positionKey="contact.hero" />
+      <PanelHero label={t('con_label')} title={t('con_title')} titleAccent={t('con_title_accent')} subtitle={t('con_subtitle')} positionKey="contact.hero" />
 
       <PanelContent>
       <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">

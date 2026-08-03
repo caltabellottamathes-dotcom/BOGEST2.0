@@ -50,7 +50,7 @@ export default function Groups() {
 
   return (
     <div className="w-full">
-      <PanelHero label="Events" title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} positionKey="groups.hero" />
+      <PanelHero label={t('nav_groups')} title={t('grp_title_main')} titleAccent={t('grp_title_accent')} subtitle={t('grp_subtitle')} positionKey="groups.hero" />
 
       <PanelContent>
       <GroupsConceptSection />
