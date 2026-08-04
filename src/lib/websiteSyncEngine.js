@@ -53,10 +53,6 @@ async function executeEntry(entry) {
   }
 
   if (action === 'scroll') {
-    if (target === 'top') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return { success: true, message: 'scrolled to top', target };
-    }
     return await window.websiteAction({ action: 'scroll', target });
   }
   if (action === 'highlight') {

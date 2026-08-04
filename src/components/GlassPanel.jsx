@@ -129,6 +129,7 @@ export default function GlassPanelWrapper({ children }) {
             <PanelScrollContext.Provider value={contentRef}>
               <div
                 ref={contentRef}
+                data-panel-scroll
                 className="relative h-full overflow-y-auto overflow-x-hidden scroll-smooth overscroll-contain bogest-scroll"
                 style={{ WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' }}
               >
