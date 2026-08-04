@@ -46,14 +46,17 @@ export default async function (req) {
 
     // Natural-language search: tokenize (NL/FR/EN stop words removed) and
     // score each asset across categories + tags + description + meta.
+    const norm = (s: string) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    const lev = (a: string, b: string) => { if (a === b) return 0; const m = a.length, n = b.length; if (!m) return n; if (!n) return m; let prev = Array.from({ length: n + 1 }, (_, k) => k); for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) { cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))); } prev = cur; } return prev[n]; };
     const q = String(params.query || '').trim().toLowerCase();
     if (q) {
       const stop = new Set(['show', 'me', 'find', 'a', 'an', 'the', 'of', 'with', 'and', 'or', 'for', 'to', 'in', 'at', 'on', 'by', 'photos', 'photo', 'pictures', 'picture', 'image', 'images', 'served', 'that', 'are', 'is', 'was', 'van', 'een', 'de', 'het', 'met', 'en', 'fotos', 'foto', 'afbeelding', 'toon', 'laat', 'zien', 'vind', 'zoek', 'montre', 'moi', 'une', 'des', 'un', 'le', 'la', 'les', 'avec', 'pour', 'de']);
       const tokens = q.split(/\s+/).filter((t) => t.length > 1 && !stop.has(t));
       if (tokens.length) {
+        const qNorm = norm(q);
         const scored = items
           .map((a) => {
-            const hay = [
+            const hayStr = norm([
               ...(a.categories || []),
               ...(a.tags || []),
               a.description || '',
@@ -61,16 +64,34 @@ export default async function (req) {
               a.mood || '',
               a.source_platform || '',
               a.primary_category || '',
+              a.matched_dish || '',
               a.location || '',
-            ].join(' ').toLowerCase();
-            const score = tokens.reduce((s, t) => s + (hay.includes(t) ? 1 : 0), 0);
+            ].join(' '));
+            const hayTokens = hayStr.split(' ').filter(Boolean);
+            let score = 0;
+            for (const t of tokens) {
+              const nt = norm(t);
+              if (!nt) continue;
+              if (hayStr.includes(nt)) score += 2;
+              else { for (const ht of hayTokens) { if (lev(nt, ht) <= 2) { score += 1; break; } } }
+            }
+            // Strong boost when the query fuzzy-matches the linked menu item —
+            // so "lasagne" still finds a photo tagged "Veggie Lasagna".
+            const md = norm(a.matched_dish || '');
+            if (md) {
+              if (md === qNorm) score += 6;
+              else if (md.includes(qNorm) || qNorm.includes(md)) score += 5;
+              else {
+                const mdTokens = md.split(' ').filter(Boolean);
+                const qTokens = qNorm.split(' ').filter(Boolean);
+                for (const qt of qTokens) { for (const mt of mdTokens) { if (lev(qt, mt) <= 2) score += 3; } }
+              }
+            }
             return { a, score };
           })
           .filter((x) => x.score > 0)
           .sort((x, y) => y.score - x.score || (y.a.quality_score || 0) - (x.a.quality_score || 0))
           .map((x) => x.a);
-        // If the (often Dutch) query doesn't match the English tags/descriptions,
-        // fall back to the top-quality images so the caller always gets results.
         if (scored.length) items = scored;
       }
     }

@@ -1,6 +1,11 @@
 import { websiteAction } from './websiteDispatcher';
 import { base44 } from '@/api/base44Client';
 
+// Normalize a dish name for fuzzy matching (lowercase, strip accents &
+// punctuation) so "Lasagne" matches a photo tagged "Veggie Lasagna".
+const _norm = (s) => String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+const _lev = (a, b) => { if (a === b) return 0; const m = a.length, n = b.length; if (!m) return n; if (!n) return m; let prev = Array.from({ length: n + 1 }, (_, k) => k); for (let i = 1; i <= m; i++) { const cur = [i]; for (let j = 1; j <= n; j++) { cur.push(Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1))); } prev = cur; } return prev[n]; };
+
 /**
  * UI Action Layer — the contract between the Base44 text-chat agent
  * (VraagHetBogest / "Digital Host") and the website front end.
@@ -71,17 +76,34 @@ export async function dispatchUIAction({ type, args = [] }) {
       const [query, category, location] = a;
       try {
         const res = await base44.functions.invoke('assetSearch', {
-          query: query || '', category: category || 'all', location: location || 'all', limit: 12,
+          query: query || '', category: category || 'all', location: location || 'all', limit: 24,
         });
-        // Only photos that are explicitly linked to a menu item (matched_dish)
-        // may be shown — the Beeldbank ties each food photo to exactly one dish.
+        // Only photos explicitly linked to a menu item (matched_dish) may be
+        // shown — the Beeldbank ties each food photo to exactly one dish.
         const images = (res?.data?.images || res?.images || []).filter((im) => im.matched_dish);
-        const q = (query || '').toLowerCase().trim();
+        const q = _norm(query || '');
         let best = null;
+        let bestScore = 0;
         if (q) {
-          best = images.find((im) => (im.matched_dish || '').toLowerCase() === q)
-            || images.find((im) => (im.matched_dish || '').toLowerCase().includes(q))
-            || images.find((im) => q.includes((im.matched_dish || '').toLowerCase()));
+          for (const im of images) {
+            const md = _norm(im.matched_dish || '');
+            if (!md) continue;
+            let score = 0;
+            if (md === q) score = 100;
+            else if (md.includes(q) || q.includes(md)) score = 80;
+            else {
+              const mdTokens = md.split(' ').filter(Boolean);
+              const qTokens = q.split(' ').filter(Boolean);
+              for (const qt of qTokens) {
+                for (const mt of mdTokens) {
+                  if (mt === qt) score = Math.max(score, 60);
+                  else if (mt.includes(qt) || qt.includes(mt)) score = Math.max(score, 50);
+                  else if (_lev(qt, mt) <= 2) score = Math.max(score, 40);
+                }
+              }
+            }
+            if (score > bestScore) { bestScore = score; best = im; }
+          }
         }
         if (!best) return { success: false, message: 'no_relevant_photo' };
         window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {

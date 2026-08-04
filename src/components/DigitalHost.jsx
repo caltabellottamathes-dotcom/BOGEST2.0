@@ -896,6 +896,15 @@ const PAGE_LABELS = {
   en: { '/menu':'Menu','/reserve':'Reserve','/locations':'Locations','/gift-cards':'Gift cards','/contact':'Contact','/takeaway':'Takeaway','/groups':'Groups','/about':'Our story','/instagram':'Instagram' },
 };
 
+// Human labels for action buttons whose label came through as a raw URL path
+// (e.g. "/about/ons-verhaal"). Every site path maps to a short, host-like title
+// so a button NEVER displays a technical path.
+const ACTION_PATH_LABELS = {
+  nl: { '/':'Home','/menu':'Menu','/reserve':'Reserveren','/locations':'Vestigingen','/locations/hasselt':'Hasselt','/locations/borgloon':'Borgloon','/locations/heusden-zolder':'Heusden-Zolder','/gift-cards':'Cadeaubonnen','/contact':'Contact','/takeaway':'Afhalen','/groups':'Groepen','/jobs':'Vacatures','/about':'Ons verhaal','/about/ons-verhaal':'Ons verhaal','/about/onze-filosofie':'Onze filosofie','/about/instagram':'Instagram' },
+  fr: { '/':'Accueil','/menu':'Menu','/reserve':'Réserver','/locations':'Adresses','/locations/hasselt':'Hasselt','/locations/borgloon':'Borgloon','/locations/heusden-zolder':'Heusden-Zolder','/gift-cards':'Bons cadeaux','/contact':'Contact','/takeaway':'À emporter','/groups':'Groupes','/jobs':'Emplois','/about':'Notre histoire','/about/ons-verhaal':'Notre histoire','/about/onze-filosofie':'Notre philosophie','/about/instagram':'Instagram' },
+  en: { '/':'Home','/menu':'Menu','/reserve':'Reserve','/locations':'Locations','/locations/hasselt':'Hasselt','/locations/borgloon':'Borgloon','/locations/heusden-zolder':'Heusden-Zolder','/gift-cards':'Gift cards','/contact':'Contact','/takeaway':'Takeaway','/groups':'Groups','/jobs':'Jobs','/about':'Our story','/about/ons-verhaal':'Our story','/about/onze-filosofie':'Our philosophy','/about/instagram':'Instagram' },
+};
+
 const UIACTION_LABELS = {
   nl: { openReservation:'Reserveren', openContact:'Contact', openGiftCards:'Cadeaubonnen', openGallery:"Foto's bekijken", displaySocialPosts:'Instagram bekijken', displayReviews:'Reviews bekijken', displayMaps:'Op de kaart', scroll:'Tonen', highlight:'Tonen' },
   fr: { openReservation:'Réserver', openContact:'Contact', openGiftCards:'Bons cadeaux', openGallery:'Voir les photos', displaySocialPosts:'Voir Instagram', displayReviews:'Voir les avis', displayMaps:'Voir sur la carte', scroll:'Voir', highlight:'Voir' },
@@ -939,11 +948,35 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
           {photos?.map((p, i) => <PhotoCard key={i} desc={p.desc} location={p.location} isDark={isDark} url={p.url} />)}
           {instagrams?.map((p, i) => <InstagramCard key={i} post={p} />)}
         </div>
-        {actions?.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
-            {actions.map((a, i) => <ActionButton key={i} label={a.label} url={a.url} isDark={isDark} onClick={onLinkClick} />)}
-          </div>
-        )}
+        {(() => {
+          // Drop action buttons for any page the host already opened via a
+          // UIACTION in this same reply (openPage/openSection) — a redundant
+          // button after auto-navigation is noise. Also turn any path-like
+          // label ("/about/ons-verhaal") into a short, human title.
+          const opened = new Set((uiActions || [])
+            .filter((x) => x.type === 'openPage' || x.type === 'openSection')
+            .map((x) => x.args && x.args[0]).filter(Boolean));
+          const clean = (actions || [])
+            .filter((a) => a.url && !opened.has(a.url))
+            .map((a) => {
+              const looksPath = (a.label || '').startsWith('/') || (a.label || '').trim() === (a.url || '').trim();
+              let label = a.label;
+              if (looksPath) {
+                const map = ACTION_PATH_LABELS[lang] || ACTION_PATH_LABELS.nl;
+                label = map[a.url] || (() => {
+                  const seg = (a.url || '').split('/').filter(Boolean).pop() || '';
+                  return seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ');
+                })();
+              }
+              return { ...a, label };
+            });
+          if (!clean.length) return null;
+          return (
+            <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
+              {clean.map((a, i) => <ActionButton key={i} label={a.label} url={a.url} isDark={isDark} onClick={onLinkClick} />)}
+            </div>
+          );
+        })()}
         {uiActions?.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
             {uiActions.map((a, i) => {

@@ -6,23 +6,28 @@
       "type": "string",
       "enum": [
         "signature",
+        "starters",
         "beef",
+        "masters",
         "chicken",
         "fish",
         "veggie",
+        "pork",
+        "classics",
         "sides",
         "sauces",
         "wines",
         "beers",
         "drinks",
         "desserts",
-        "kids"
+        "kids",
+        "seasonal"
       ],
       "description": "Menu category"
     },
     "item_name": {
       "type": "string",
-      "description": "Display name of the item"
+      "description": "Display name of the item (Dutch canonical name)"
     },
     "description": {
       "type": "string",
@@ -30,7 +35,7 @@
     },
     "price": {
       "type": "number",
-      "description": "Price in EUR"
+      "description": "Price in EUR (null/omitted = included in the formula)"
     },
     "pairing": {
       "type": "string",
