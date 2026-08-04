@@ -137,9 +137,6 @@ div[class*="elevenlabs"],
 div[id*="convai"],
 div[class*="convai"] {
   z-index: 99999 !important;
-  /* Earthy olive-green accent — scoped to the voice widget only (site stays gold) */
-  --primary: 78 28% 34%;
-  --ring: 78 28% 34%;
 }
 
 /* Branded widget styling — gold orb + charcoal panel, matching the site.

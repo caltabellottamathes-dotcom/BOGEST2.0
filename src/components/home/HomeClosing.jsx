@@ -50,12 +50,8 @@ export default function HomeClosing() {
         </div>
       </div>
 
-      {/* Empty space at the end — a subtle transition from the gold site into the
-          olive footer, then the footer rises and overlaps the CTA a bit */}
-      <div className="relative z-10" aria-hidden style={{
-        height: '18rem',
-        background: 'linear-gradient(to bottom, hsl(45 50% 57% / 0.05), hsl(78 28% 34% / 0.18))',
-      }} />
+      {/* Empty space at the end — the footer rises and overlaps the CTA a bit */}
+      <div className="relative z-10" style={{ height: '18rem' }} aria-hidden />
     </section>
   );
 }
