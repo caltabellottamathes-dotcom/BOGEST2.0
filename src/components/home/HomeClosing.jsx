@@ -50,19 +50,19 @@ export default function HomeClosing() {
         </div>
       </div>
 
-      {/* Brand sign-off — the end-of-home wordmark + tagline */}
-      <div className="relative z-10 flex flex-col items-center gap-6 py-14 md:py-20 px-6 text-center">
-        <div className="flex items-center gap-4">
-          <span className="h-px w-10 bg-primary/40" />
-          <span className="font-body text-[11px] md:text-xs tracking-[0.5em] uppercase text-primary">Bogèst</span>
-          <span className="h-px w-10 bg-primary/40" />
+      {/* Brand sign-off — a quiet, refined end-of-home wordmark */}
+      <div className="relative z-10 flex flex-col items-center gap-3.5 py-10 md:py-14 px-6 text-center">
+        <div className="flex items-center gap-3">
+          <span className="h-px w-8 bg-primary/40" />
+          <span className="font-body text-[10px] tracking-[0.45em] uppercase text-primary">Bogèst</span>
+          <span className="h-px w-8 bg-primary/40" />
         </div>
-        <h2 className="font-heading font-bold text-white leading-[0.95] tracking-tight flex flex-wrap items-baseline justify-center gap-x-4 md:gap-x-6 text-[clamp(2.4rem,8vw,5.5rem)]">
+        <h2 className="font-heading font-medium text-white/90 uppercase tracking-[0.14em] flex items-center gap-3 md:gap-4 text-[clamp(0.78rem,1.6vw,1.02rem)]">
           <span>VUUR<span className="text-primary">.</span></span>
           <span>SMAAK<span className="text-primary">.</span></span>
           <span>GEZEL<span className="text-primary">.</span></span>
         </h2>
-        <p className="font-heading italic text-white/55 text-sm md:text-base tracking-wide max-w-xl">Een Beau Geste — vakmanschap in smaak</p>
+        <p className="font-heading italic text-white/45 text-xs md:text-sm tracking-wide">Een Beau Geste — vakmanschap in smaak</p>
       </div>
 
       {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
