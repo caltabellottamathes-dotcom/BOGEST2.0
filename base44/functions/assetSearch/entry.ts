@@ -89,6 +89,7 @@ export default async function (req) {
           subcategory: a.subcategory || '',
           location: a.location || 'unknown',
           tags: a.tags || [],
+          matched_dish: a.matched_dish || '',
           quality_score: a.quality_score || 0,
         };
       }),

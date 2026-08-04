@@ -71,22 +71,23 @@ export async function dispatchUIAction({ type, args = [] }) {
       const [query, category, location] = a;
       try {
         const res = await base44.functions.invoke('assetSearch', {
-          query: query || '', category: category || 'all', location: location || 'all', limit: 4,
+          query: query || '', category: category || 'all', location: location || 'all', limit: 12,
         });
-        const images = (res?.data?.images || []);
-        const q = (query || '').toLowerCase();
+        // Only photos that are explicitly linked to a menu item (matched_dish)
+        // may be shown — the Beeldbank ties each food photo to exactly one dish.
+        const images = (res?.data?.images || res?.images || []).filter((im) => im.matched_dish);
+        const q = (query || '').toLowerCase().trim();
         let best = null;
         if (q) {
-          best = images.find((im) => (im.matched_dish || '').toLowerCase().includes(q))
-            || images.find((im) => (im.description || '').toLowerCase().includes(q))
-            || images.find((im) => (im.tags || []).some((tg) => (tg || '').toLowerCase().includes(q)));
+          best = images.find((im) => (im.matched_dish || '').toLowerCase() === q)
+            || images.find((im) => (im.matched_dish || '').toLowerCase().includes(q))
+            || images.find((im) => q.includes((im.matched_dish || '').toLowerCase()));
         }
-        best = best || images[0] || null;
         if (!best) return { success: false, message: 'no_relevant_photo' };
         window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {
           detail: {
             url: best.url,
-            name: query || best.matched_dish || 'Bogèst',
+            name: best.matched_dish || query || 'Bogèst',
             description: best.description || '',
             location: best.location || location || '',
           },

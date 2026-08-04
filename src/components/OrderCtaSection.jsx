@@ -44,11 +44,11 @@ export default function OrderCtaSection({
             aria-hidden
             draggable={false}
             className="absolute pointer-events-none select-none"
-            style={{ height: '220%', width: 'auto', bottom: '-70%', right: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
+            style={{ height: '220%', width: 'auto', bottom: '-70%', left: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
           />
 
           {/* Tekst links */}
-          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[13rem] lg:max-w-xs z-10">
+          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
             {eyebrow && <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{eyebrow}</p>}
             <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
               {title}
@@ -65,7 +65,7 @@ export default function OrderCtaSection({
 
         {/* Zwevende glazen kaart — exact 1:1 ReserveCtaSection (/menu) */}
         <div
-          className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:mt-0 md:max-w-sm rounded-2xl p-5 md:p-6"
+          className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:max-w-sm rounded-2xl p-5 md:p-6"
           style={{
             background: 'rgba(255,255,255,0.06)',
             backdropFilter: 'blur(24px) saturate(150%)',
@@ -74,7 +74,7 @@ export default function OrderCtaSection({
             boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)',
           }}
         >
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-5">
             <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.35)' }}>
               <Icon className="w-4 h-4 text-primary" />
             </div>
