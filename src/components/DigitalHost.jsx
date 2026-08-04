@@ -913,12 +913,22 @@ const UIACTION_LABELS = {
 function uiActionLabel(a, lang) {
   if (a.type === 'openPage' || a.type === 'openSection') {
     const path = a.args && a.args[0];
-    const map = PAGE_LABELS[lang] || PAGE_LABELS.nl;
-    if (path && path.indexOf('/locations/') === 0) {
+    // Case-insensitive lookup — the agent sometimes emits a path with
+    // different casing (e.g. "/about/Instagram"); never let that fall
+    // through to showing the raw path as the button label.
+    const map = ACTION_PATH_LABELS[lang] || ACTION_PATH_LABELS.nl;
+    const pathLower = (path || '').toLowerCase();
+    const mapKey = Object.keys(map).find((k) => k.toLowerCase() === pathLower);
+    if (mapKey) return map[mapKey];
+    if (path && path.toLowerCase().indexOf('/locations/') === 0) {
       const slug = path.split('/')[2];
-      return slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace('-', ' ') : 'Locatie';
+      return slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/-/g, ' ') : 'Locatie';
     }
-    return (path && map[path]) || (path || (lang === 'fr' ? 'Ouvrir' : 'Openen'));
+    if (path) {
+      const seg = path.split('/').filter(Boolean).pop() || '';
+      return seg ? seg.charAt(0).toUpperCase() + seg.slice(1).replace(/-/g, ' ') : (lang === 'fr' ? 'Ouvrir' : 'Openen');
+    }
+    return lang === 'fr' ? 'Ouvrir' : 'Openen';
   }
   const L = UIACTION_LABELS[lang] || UIACTION_LABELS.nl;
   return L[a.type] || (a.args && a.args[0]) || (lang === 'fr' ? 'Ouvrir' : 'Openen');

@@ -3,16 +3,33 @@ import { useEffect, useState } from 'react';
 /**
  * Returns the horizontal shift (px) that the floating bottom-right UI
  * (digital host, ElevenLabs widget, video card, proactive bubbles) should
- * apply when a glass panel opens, so they slide out from behind the panel.
+ * apply when ANY panel is open — a full route panel (glass panel: menu,
+ * locations, ...) or a smaller slide-in overlay panel (dish photo, map,
+ * reserve, gift card, ...) — so they slide out from behind it.
  *
- * Returns 0 when no panel is open, and a negative value matching the panel
+ * Returns 0 when nothing is open, and a negative value matching the panel
  * width when one is — keeping the elements visible just to the left of the
- * panel on desktop, and off-screen on mobile (where the panel is full-width).
+ * panel on desktop, and off-screen on mobile (where panels are full-width).
  *
- * Listens for the `bogest:panel-visibility` event dispatched by <Layout />.
+ * Listens for both `bogest:panel-visibility` (route panels, dispatched by
+ * <Layout />) and `bogest:overlay-panel-visibility` (slide-in widget panels,
+ * dispatched by <OverlayPanelShell />) so every panel type shifts the UI.
  */
 export function usePanelShift(wide = false) {
+  const [routeOpen, setRouteOpen] = useState(false);
+  const [overlayOpen, setOverlayOpen] = useState(false);
   const [shift, setShift] = useState(0);
+
+  useEffect(() => {
+    const onRoute = (e) => setRouteOpen(Boolean(e.detail?.open));
+    const onOverlay = (e) => setOverlayOpen(Boolean(e.detail?.open));
+    window.addEventListener('bogest:panel-visibility', onRoute);
+    window.addEventListener('bogest:overlay-panel-visibility', onOverlay);
+    return () => {
+      window.removeEventListener('bogest:panel-visibility', onRoute);
+      window.removeEventListener('bogest:overlay-panel-visibility', onOverlay);
+    };
+  }, []);
 
   useEffect(() => {
     const compute = () => {
@@ -30,15 +47,11 @@ export function usePanelShift(wide = false) {
       const toLeftEdge = -(w - elemSpan - 16);
       return Math.max(-panelWidth, toLeftEdge);
     };
-    const handler = (e) => setShift(e.detail?.open ? compute() : 0);
     const onResize = () => setShift((s) => (s < 0 ? compute() : 0));
-    window.addEventListener('bogest:panel-visibility', handler);
     window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('bogest:panel-visibility', handler);
-      window.removeEventListener('resize', onResize);
-    };
-  }, [wide]);
+    setShift((routeOpen || overlayOpen) ? compute() : 0);
+    return () => window.removeEventListener('resize', onResize);
+  }, [routeOpen, overlayOpen, wide]);
 
   return shift;
 }

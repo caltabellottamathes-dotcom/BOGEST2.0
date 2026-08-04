@@ -110,8 +110,13 @@ export async function dispatchUIAction({ type, args = [] }) {
         // host may pass a different category for non-dish requests (e.g.
         // atmosphere), which is respected.
         const cat = (category && category !== 'all') ? category : 'gastronomy';
+        // Dish photos are almost never location-tagged in the Beeldbank (most
+        // gastronomy shots have location: unknown) — hard-filtering by the
+        // visitor's current location would wipe out real matches (e.g. the
+        // lasagne photo). Only keep the location filter for non-dish photos
+        // (atmosphere/interiors/architecture) where it's meaningful.
         const res = await base44.functions.invoke('assetSearch', {
-          query: query || '', category: cat, location: location || 'all', limit: 24,
+          query: query || '', category: cat, location: cat === 'gastronomy' ? 'all' : (location || 'all'), limit: 24,
         });
         const images = (res?.data?.images || res?.images || []).filter((im) => im.url);
         const q = _norm(query || '');
