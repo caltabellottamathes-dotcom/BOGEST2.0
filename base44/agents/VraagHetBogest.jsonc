@@ -96,10 +96,14 @@
   "selected_skill_names": [
     "guest-memory-personalisation",
     "live-social-media-connector",
-    "personalised-recommendation-logic"
+    "personalised-recommendation-logic",
+    "welcome-and-intent-detection",
+    "wine-beer-cocktail-expertise",
+    "menu-steak-expertise",
+    "location-recommendation"
   ],
   "selected_workspace_skill_ids": [],
-  "model": "gpt_5_mini",
+  "model": "automatic",
   "whatsapp_greeting": "",
   "telegram_greeting": "",
   "line_greeting": "",
