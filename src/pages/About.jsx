@@ -21,7 +21,7 @@ export default function About() {
 
       <PanelContent>
         <AboutQuote />
-        <section className="w-full px-6 md:px-10 lg:px-16 pb-16 md:pb-24">
+        <section id="about-cards" className="w-full px-6 md:px-10 lg:px-16 pb-16 md:pb-24">
           <AboutCardGrid />
         </section>
         <AboutClosing />

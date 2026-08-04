@@ -39,7 +39,7 @@ export default function OnzeFilosofie() {
         <SubPageNav nextTo="/about/instagram" nextLabel={NEXTLABEL[lang] || NEXTLABEL.nl} />
 
         {/* Header */}
-        <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">
+        <section id="filosofie-header" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">
           <div className="max-w-5xl mx-auto">
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('about_philosophy_label')}</span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
@@ -49,10 +49,11 @@ export default function OnzeFilosofie() {
         </section>
 
         {/* Pijlers */}
-        <section className="w-full pb-10">
+        <section id="filosofie-pijlers" className="w-full pb-10">
           {pillars.map((p, i) => (
             <StoryChapter
               key={p.num}
+              id={`filosofie-pijler-${p.num}`}
               num={p.num}
               total={total}
               title={p.title}

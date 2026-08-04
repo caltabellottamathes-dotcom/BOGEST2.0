@@ -131,6 +131,68 @@ MENU_DATA.forEach((cat) => {
   INDEX.push(make(`loc-${slug}-spaces`, 'section', `Spaces ${slug}`, ['spaces', 'ruimtes', 'restaurant spaces', 'terras', 'terrace', 'zaal', 'salles', 'rooms', 'restaurant en ruimtes', 'de ruimtes', 'zalen', 'terrassen'], `/locations/${slug}`, 'scroll', 'spaces', `Terrace / spaces / rooms of ${slug} — scrolls to the spaces section on that location's page`));
 });
 
+// ── Panel & page sections (scroll) ─────────────────────────────────────────
+INDEX.push(
+  // /about
+  make('about-quote', 'section', 'About quote', ['over ons quote', 'quote', 'citaten', 'de belofte', 'belofte quote'], '/about', 'scroll', 'about-quote', 'The opening quote on the about page'),
+  make('about-cards', 'section', 'About cards', ['over ons kaarten', 'verhaal filosofie social', 'drie kaarten', 'about cards', 'over ons kaarten'], '/about', 'scroll', 'about-cards', 'The three about cards (story, philosophy, social)'),
+  // /about/ons-verhaal
+  make('verhaal-header', 'section', 'Story header', ['verhaal header', 'verhaal intro', 'ons verhaal intro', 'story header'], '/about/ons-verhaal', 'scroll', 'verhaal-header', 'The story header on Ons Verhaal'),
+  make('verhaal-hoofdstukken', 'section', 'Story chapters', ['hoofdstukken', 'chapters', 'verhaal hoofdstukken', 'story chapters', 'de hoofdstukken'], '/about/ons-verhaal', 'scroll', 'verhaal-hoofdstukken', 'The story chapters container on Ons Verhaal'),
+  make('verhaal-h-01', 'section', 'Chapter 01', ['hoofdstuk 1', 'hoofdstuk 01', 'chapter 1', 'chapitre 1', 'hoofdstuk een'], '/about/ons-verhaal', 'scroll', 'verhaal-hoofdstuk-01', 'Story chapter 01'),
+  make('verhaal-h-02', 'section', 'Chapter 02', ['hoofdstuk 2', 'hoofdstuk 02', 'chapter 2', 'chapitre 2', 'hoofdstuk twee'], '/about/ons-verhaal', 'scroll', 'verhaal-hoofdstuk-02', 'Story chapter 02'),
+  make('verhaal-h-03', 'section', 'Chapter 03', ['hoofdstuk 3', 'hoofdstuk 03', 'chapter 3', 'chapitre 3', 'hoofdstuk drie'], '/about/ons-verhaal', 'scroll', 'verhaal-hoofdstuk-03', 'Story chapter 03'),
+  make('verhaal-h-04', 'section', 'Chapter 04', ['hoofdstuk 4', 'hoofdstuk 04', 'chapter 4', 'chapitre 4', 'hoofdstuk vier'], '/about/ons-verhaal', 'scroll', 'verhaal-hoofdstuk-04', 'Story chapter 04'),
+  // /about/onze-filosofie
+  make('filosofie-header', 'section', 'Philosophy header', ['filosofie header', 'filosofie intro', 'pijlers intro', 'philosophy header'], '/about/onze-filosofie', 'scroll', 'filosofie-header', 'The philosophy header'),
+  make('filosofie-pijlers', 'section', 'Pillars', ['de pijlers', 'filosofie pijlers', 'the pillars', 'vijf pijlers', 'pijlers container'], '/about/onze-filosofie', 'scroll', 'filosofie-pijlers', 'The five pillars container of Bogèst'),
+  make('filosofie-p-01', 'section', 'Pillar 01 — formula', ['pijler 01', 'pijler 1', 'de formule', 'formule pijler', 'the formula', 'la formule', 'onze formule'], '/about/onze-filosofie', 'scroll', 'filosofie-pijler-01', 'Pillar 01 — the formula'),
+  make('filosofie-p-02', 'section', 'Pillar 02 — craft', ['pijler 02', 'pijler 2', 'de specialiteit', 'vleesambacht', 'the craft', 'la specialite', 'specialiteit pijler'], '/about/onze-filosofie', 'scroll', 'filosofie-pijler-02', 'Pillar 02 — the meat craft'),
+  make('filosofie-p-03', 'section', 'Pillar 03 — everyone', ['pijler 03', 'pijler 3', 'voor iedereen', 'kip vis veggie', 'for everyone', 'pour tous'], '/about/onze-filosofie', 'scroll', 'filosofie-pijler-03', 'Pillar 03 — for everyone'),
+  make('filosofie-p-04', 'section', 'Pillar 04 — wines', ['pijler 04', 'pijler 4', 'de wijnen', 'wijnen pijler', 'huislabel', 'the wines', 'les vins'], '/about/onze-filosofie', 'scroll', 'filosofie-pijler-04', 'Pillar 04 — the wines'),
+  make('filosofie-p-05', 'section', 'Pillar 05 — atmosphere', ['pijler 05', 'pijler 5', 'de sfeer', 'sfeer pijler', 'the atmosphere', 'l ambiance', 'authentieke hoeves'], '/about/onze-filosofie', 'scroll', 'filosofie-pijler-05', 'Pillar 05 — the atmosphere'),
+  // /locations overview cards
+  make('loc-card-hasselt', 'section', 'Hasselt card', ['hasselt kaart', 'hasselt vestiging', 'hasselt card', 'kaart hasselt'], '/locations', 'scroll', 'loc-card-hasselt', 'The Hasselt location card on the locations overview'),
+  make('loc-card-borgloon', 'section', 'Borgloon card', ['borgloon kaart', 'borgloon vestiging', 'borgloon card', 'kaart borgloon'], '/locations', 'scroll', 'loc-card-borgloon', 'The Borgloon location card on the locations overview'),
+  make('loc-card-heusden-zolder', 'section', 'Heusden-Zolder card', ['heusden kaart', 'heusden-zolder vestiging', 'heusden card', 'kaart heusden', 'zolder kaart'], '/locations', 'scroll', 'loc-card-heusden-zolder', 'The Heusden-Zolder location card on the locations overview'),
+  make('loc-card-lommel', 'section', 'Lommel card', ['lommel kaart', 'lommel vestiging', 'lommel card', 'kaart lommel'], '/locations', 'scroll', 'loc-card-lommel', 'The Lommel (coming soon) card on the locations overview'),
+  // /restaurant-spaces/{location}
+  make('spaces-hero', 'section', 'Spaces hero', ['ruimtes hero', 'spaces header', 'ruimtes header'], null, 'scroll', 'spaces-hero', 'The spaces page hero'),
+  make('spaces-grid', 'section', 'Spaces grid', ['ruimtes grid', 'spaces overzicht', 'ruimtes overzicht', 'de ruimtes grid'], null, 'scroll', 'spaces-grid', 'The spaces grid'),
+  // /reserve
+  make('reserveer-vestigingen', 'section', 'Reserve locations', ['reserveer vestiging', 'vestiging kiezen', 'kies vestiging', 'waar tafel', 'choose location', 'waar mag de tafel'], '/reserve', 'scroll', 'reserveer-vestigingen', 'The location picker on the reserve page'),
+  // /takeaway
+  make('takeaway-story', 'section', 'Takeaway story', ['traiteur verhaal', 'takeaway verhaal', 'onze keuken thuis', 'traiteur', 'keuken thuis'], '/takeaway', 'scroll', 'takeaway-story', 'The traiteur story section'),
+  make('takeaway-pakketten', 'section', 'Gift packages', ['cadeaupakketten', 'gift packages', 'pakketten', 'wijn pakket', 'gin pakket', 'cadeaupakket'], '/takeaway', 'scroll', 'takeaway-pakketten', 'The gift packages section on takeaway'),
+  make('takeaway-order', 'section', 'Order takeaway', ['bestel takeaway', 'bestel nu', 'bestellen', 'order takeaway', 'bestel'], '/takeaway', 'scroll', 'takeaway-order', 'The order CTA on the takeaway page'),
+  // /gift-cards
+  make('cadeaubon-highlights', 'section', 'Gift card highlights', ['cadeaubon highlights', 'gift card highlights', 'highlights'], '/gift-cards', 'scroll', 'cadeaubon-highlights', 'The gift card highlights section'),
+  make('cadeaubon-bestel', 'section', 'Order gift card', ['cadeaubon bestel', 'bestel cadeaubon', 'buy gift card', 'koop cadeaubon', 'bestel cadeaubon'], '/gift-cards', 'scroll', 'bestel', 'The order gift card CTA'),
+  make('cadeaubon-saldo', 'section', 'Check balance', ['saldo', 'saldo controleren', 'check balance', 'controleer saldo', 'restwaarde', 'saldo check'], '/gift-cards', 'scroll', 'cadeaubon-saldo', 'The check gift card balance section'),
+  // /contact
+  make('contact-formulier', 'section', 'Contact form', ['contact formulier', 'contactformulier', 'stuur bericht', 'formulier', 'contact form', 'stuur een bericht'], '/contact', 'scroll', 'contact-formulier', 'The contact form'),
+  make('contact-vestigingen', 'section', 'Contact locations', ['contact vestigingen', 'vestigingen contact', 'locations contact', 'locaties contact'], '/contact', 'scroll', 'contact-vestigingen', 'The locations list on the contact page'),
+  // /groups
+  make('groepen-concept', 'section', 'Groups concept', ['groepen concept', 'concept', 'groepsformule', 'group concept'], '/groups', 'scroll', 'groepen-concept', 'The groups concept section'),
+  make('groepen-aanvraag', 'section', 'Group request', ['groepen aanvraag', 'aanvraag', 'groepsaanvraag', 'group request', 'request form', 'aanvraag formulier'], '/groups', 'scroll', 'groepen-aanvraag', 'The group request form'),
+  make('groepen-evenementen', 'section', 'Group events', ['groepen evenementen', 'evenementen', 'soorten evenementen', 'group events', 'events list'], '/groups', 'scroll', 'groepen-evenementen', 'The events list on the groups page'),
+  // /jobs
+  make('vacatures', 'section', 'Job openings', ['vacatures', 'openstaande vacatures', 'jobs list', 'job openings', 'open positions'], '/jobs', 'scroll', 'vacatures', 'The job openings list'),
+  make('langskomen', 'section', 'Walk in', ['langskomen', 'langslopen', 'walk in', 'drop by', 'spontaan solliciteren', 'spontaan langskomen'], '/jobs', 'scroll', 'langskomen', 'The walk-in / drop-by info card'),
+  make('solliciteren', 'section', 'Apply', ['solliciteren', 'sollicitatie', 'sollicitatieformulier', 'apply', 'candidature', 'apply form'], '/jobs', 'scroll', 'solliciteren', 'The job application form'),
+  // /about/instagram
+  make('instagram-feed', 'section', 'Instagram feed', ['instagram feed', 'instagram berichten', 'ig feed', 'instagram posts'], '/about/instagram', 'scroll', 'instagram-feed', 'The Instagram feed section'),
+  make('facebook-feed', 'section', 'Facebook feed', ['facebook feed', 'facebook berichten', 'fb feed', 'facebook posts'], '/about/instagram', 'scroll', 'facebook-feed', 'The Facebook feed section'),
+  make('social-accounts', 'section', 'Social accounts', ['social accounts', 'accounts', 'volg ons', 'vestiging accounts', 'social media accounts', 'volg onze vestigingen'], '/about/instagram', 'scroll', 'social-accounts', 'The location social account links'),
+  // Shared CTAs — page = null so they always scroll on the CURRENT page
+  make('reserveer-cta', 'section', 'Reserve CTA', ['reserveer', 'reserveer nu', 'reserveer cta', 'reserve button', 'reserveren cta'], null, 'scroll', 'reserveer', 'The reserve call-to-action banner on the current page'),
+  make('bestel-cta', 'section', 'Order CTA', ['bestel', 'bestel nu', 'bestel cta', 'order button'], null, 'scroll', 'bestel', 'The order call-to-action banner on the current page'),
+  // Legal pages — shared content section (page = null → current legal page)
+  make('legal-content', 'section', 'Legal content', ['juridische tekst', 'legal content', 'privacy tekst', 'terms tekst', 'cookies tekst', 'ai disclaimer tekst'], null, 'scroll', 'legal-content', 'The legal document content section'),
+  // Restaurant spaces overlay
+  make('ruimtes-overlay', 'section', 'Spaces overlay', ['ruimtes overlay', 'restaurant en ruimtes overlay', 'spaces overlay'], null, 'scroll', 'ruimtes-overlay', 'The restaurant-and-spaces overlay panel'),
+);
+
 // ── Close (dismiss an open panel) ──────────────────────────────────────────
 INDEX.push(
   make('close-panel', 'close', 'Close panel', ['close', 'sluiten', 'sluit', 'dicht', 'fermer', 'ferme', 'close panel', 'sluit panel', 'sluit het panel', 'never mind', 'laat maar', 'laat maar zitten', 'stop', 'annuleer', 'cancel', 'terug', 'go back', 'back', 'hide panel', 'verberg', 'sluit dit', 'weg ermee', 'dismiss', 'verberg panel', 'sluit de ruimtes', 'sluit ruimtes'], null, 'close', 'panel', 'Close / dismiss the currently open panel (e.g. the restaurant-and-spaces panel)')
@@ -259,6 +321,27 @@ const SEMANTIC_CLUSTERS = [
   { id: 'home-reviews', words: ['ervaringen', 'reviews', 'recensies', 'testimonials', 'beoordelingen', 'wat zeggen klanten', 'avis', 'guest reviews', 'gasten'] },
   { id: 'home-stats', words: ['stats', 'statistieken', 'cijfers', 'in cijfers', 'chiffres', 'in numbers', 'jaar ervaring'] },
   { id: 'home-cta', words: ['acties', 'reserveer nu', 'actiekaarten', 'bestel nu', 'reserveer direct'] },
+  { id: 'verhaal-hoofdstukken', words: ['hoofdstukken', 'verhaal hoofdstukken', 'story chapters', 'de hoofdstukken'] },
+  { id: 'filosofie-pijlers', words: ['de pijlers', 'filosofie pijlers', 'the pillars', 'vijf pijlers'] },
+  { id: 'groepen-concept', words: ['groepen concept', 'groepsformule', 'group concept'] },
+  { id: 'groepen-aanvraag', words: ['groepsaanvraag', 'groep aanvraag', 'group request', 'aanvraag formulier'] },
+  { id: 'groepen-evenementen', words: ['soorten evenementen', 'evenementen lijst', 'group events list'] },
+  { id: 'vacatures', words: ['vacatures', 'openstaande vacatures', 'job openings', 'open positions'] },
+  { id: 'langskomen', words: ['langskomen', 'langslopen', 'spontaan langskomen', 'walk in', 'drop by'] },
+  { id: 'solliciteren', words: ['solliciteren', 'sollicitatie', 'sollicitatieformulier', 'apply form'] },
+  { id: 'instagram-feed', words: ['instagram feed', 'ig feed', 'instagram berichten'] },
+  { id: 'facebook-feed', words: ['facebook feed', 'fb feed', 'facebook berichten'] },
+  { id: 'social-accounts', words: ['social accounts', 'volg onze vestigingen', 'social media accounts'] },
+  { id: 'contact-formulier', words: ['contact formulier', 'contactformulier', 'stuur een bericht', 'contact form'] },
+  { id: 'contact-vestigingen', words: ['contact vestigingen', 'vestigingen contact', 'locations contact'] },
+  { id: 'cadeaubon-highlights', words: ['cadeaubon highlights', 'gift card highlights'] },
+  { id: 'cadeaubon-saldo', words: ['saldo controleren', 'check balance', 'restwaarde', 'saldo check'] },
+  { id: 'takeaway-story', words: ['traiteur verhaal', 'takeaway verhaal', 'onze keuken thuis'] },
+  { id: 'takeaway-pakketten', words: ['cadeaupakketten', 'gift packages', 'pakketten'] },
+  { id: 'takeaway-order', words: ['bestel takeaway', 'bestel nu takeaway', 'order takeaway'] },
+  { id: 'reserveer-vestigingen', words: ['kies vestiging', 'vestiging kiezen', 'choose location', 'waar tafel'] },
+  { id: 'reserveer-cta', words: ['reserveer nu', 'reserveer cta', 'reserve button'] },
+  { id: 'bestel-cta', words: ['bestel nu', 'bestel cta', 'order button'] },
   { id: 'home-einde', words: ['einde', 'closing', 'afsluiting', 'onderaan', 'naar beneden', 'laatste'] },
   { id: 'menu-maandselectie', words: ['maandselectie', 'maandelijkse selectie', 'chef suggestie', 'suggestions du mois', 'monthly selection', 'seizoensuggesties', 'suggestie van de chef'] },
   { id: 'close-panel', words: ['close', 'sluiten', 'sluit', 'dicht', 'fermer', 'ferme', 'never mind', 'laat maar', 'laat maar zitten', 'stop', 'annuleer', 'cancel', 'terug', 'go back', 'back', 'verberg', 'sluit dit', 'weg ermee', 'dismiss', 'sluit het panel', 'sluit het'] },

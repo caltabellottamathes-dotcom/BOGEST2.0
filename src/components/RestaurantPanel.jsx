@@ -19,7 +19,7 @@ export default function RestaurantPanel({ isOpen, onClose, location, spaces, tit
     <OverlayPanelShell isOpen={isOpen} onClose={onClose} header={header}>
       <div className="p-6 sm:p-8 space-y-6">
         {/* Spaces grid */}
-        <div className="grid grid-cols-1 gap-4">
+        <div id="ruimtes-overlay" className="grid grid-cols-1 gap-4">
           {spaces.map((space, i) => (
             <SectionReveal key={space.name} delay={i * 0.05}>
               <div

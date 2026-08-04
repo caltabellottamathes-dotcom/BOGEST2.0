@@ -21,13 +21,14 @@ export default function PanelSwitcher({
   chipLabel,
   divider = false,
   ghostBull = true,
+  sectionId,
 }) {
   const [active, setActive] = useState(0);
   const current = items[active];
   const { siteImg } = useSiteImages();
 
   return (
-    <section className={`relative overflow-hidden w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
+    <section id={sectionId} className={`relative overflow-hidden w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
       {/* Gelaagde warme gradient + ghostbull — terugkerend motief */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.14) 0%, transparent 60%)' }} />
       {ghostBull && <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '26rem', width: 'auto', bottom: '-4rem', right: '-8%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />}

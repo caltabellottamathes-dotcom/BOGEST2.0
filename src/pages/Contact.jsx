@@ -45,7 +45,7 @@ export default function Contact() {
       <PanelHero label={t('con_label')} title={t('con_title')} titleAccent={t('con_title_accent')} subtitle={t('con_subtitle')} positionKey="contact.hero" />
 
       <PanelContent>
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
+      <section id="contact-formulier" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
         {/* Gelaagd glas — warme gradient + ghostbull, zoals de pop-up */}
         <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
@@ -97,7 +97,7 @@ export default function Contact() {
             }
           </SectionReveal>
 
-          <SectionReveal direction="right" delay={0.1}>
+          <SectionReveal id="contact-vestigingen" direction="right" delay={0.1}>
             <div className="flex items-center gap-3 mb-4">
               <span className="h-px w-10 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('nav_locations')}</span>

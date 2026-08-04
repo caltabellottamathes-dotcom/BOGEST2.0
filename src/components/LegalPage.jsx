@@ -9,7 +9,7 @@ export default function LegalPage({ content }) {
   const { lang } = useLang();
   return (
     <div className="w-full">
-      <section className="w-full pt-32 md:pt-40 pb-12 px-6 md:px-10 lg:px-16">
+      <section id="legal-hero" className="w-full pt-32 md:pt-40 pb-12 px-6 md:px-10 lg:px-16">
         <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">{LEGAL_LABEL[lang] || LEGAL_LABEL.nl}</span>
         <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground">{content.title}</h1>
         {content.intro && (
@@ -20,7 +20,7 @@ export default function LegalPage({ content }) {
         )}
       </section>
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24 max-w-4xl">
+      <section id="legal-content" className="w-full px-6 md:px-10 lg:px-16 pb-24 max-w-4xl">
         <div className="space-y-8">
           {content.sections.map((section) => (
             <div key={section.num} className="space-y-3">

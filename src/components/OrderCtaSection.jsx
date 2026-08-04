@@ -31,7 +31,7 @@ export default function OrderCtaSection({
   };
 
   return (
-    <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
+    <section id="bestel" className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
       <div className="relative">
         {/* Glasmorphism-banner met bull-ghost */}
         <div

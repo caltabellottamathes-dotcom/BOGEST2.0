@@ -17,7 +17,7 @@ export default function Locations() {
       <PanelContent>
         <div className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
           {LOCATIONS_DATA.map((loc, i) => (
-            <SectionReveal key={loc.slug} delay={i * 0.08} className="py-12 md:py-14">
+            <SectionReveal key={loc.slug} id={`loc-card-${loc.slug}`} delay={i * 0.08} className="py-12 md:py-14">
               <LocationCard loc={loc} index={i} />
             </SectionReveal>
           ))}

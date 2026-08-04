@@ -145,7 +145,7 @@ export default function Instagram() {
         </section>
 
         {/* Instagram feed */}
-        <section className="w-full px-6 md:px-10 lg:px-16 pt-8 pb-10">
+        <section id="instagram-feed" className="w-full px-6 md:px-10 lg:px-16 pt-8 pb-10">
           <div className="flex items-center gap-3 mb-6">
             <InstagramIcon className="w-4 h-4 text-primary" />
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{c.igSection}</span>
@@ -196,7 +196,7 @@ export default function Instagram() {
         </section>
 
         {/* Facebook feed */}
-        <section className="w-full px-6 md:px-10 lg:px-16 pb-12">
+        <section id="facebook-feed" className="w-full px-6 md:px-10 lg:px-16 pb-12">
           <div className="flex items-center gap-3 mb-6">
             <FacebookIcon className="w-4 h-4 text-primary" />
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{c.fbSection}</span>
@@ -251,7 +251,7 @@ export default function Instagram() {
         </section>
 
         {/* Account links — 3 locations, IG + FB each */}
-        <section className="w-full px-6 md:px-10 lg:px-16 pb-20">
+        <section id="social-accounts" className="w-full px-6 md:px-10 lg:px-16 pb-20">
           <div className="border-t border-border pt-10">
             <h3 className="font-heading text-lg font-semibold text-foreground mb-6">{c.accounts}.</h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

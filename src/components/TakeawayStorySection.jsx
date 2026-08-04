@@ -44,6 +44,7 @@ export default function TakeawayStorySection() {
       lead={tr.lead}
       mirror
       ghostBull={false}
+      sectionId="takeaway-story"
     />
   );
 }

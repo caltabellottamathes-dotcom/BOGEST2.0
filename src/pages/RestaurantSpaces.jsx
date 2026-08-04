@@ -114,7 +114,7 @@ export default function RestaurantSpaces() {
 
   return (
     <div className="w-full">
-      <section className="relative w-full pt-32 md:pt-40 pb-16">
+      <section id="spaces-hero" className="relative w-full pt-32 md:pt-40 pb-16">
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
         <div className="px-6 md:px-10 lg:px-16">
           <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">{data.location}</span>
@@ -122,7 +122,7 @@ export default function RestaurantSpaces() {
         </div>
       </section>
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <section id="spaces-grid" className="w-full px-6 md:px-10 lg:px-16 pb-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10">
           {data.spaces.map((space, i) => (
             <SectionReveal key={space.name} delay={i * 0.1}>

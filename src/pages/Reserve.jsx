@@ -45,7 +45,7 @@ export default function Reserve() {
       <PanelHero label={t('res_label')} title={rc.heroTitle} titleAccent={rc.heroAccent} subtitle={rc.heroSubtitle} positionKey="reserve.hero" />
 
       <PanelContent>
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-14 pb-24">
+      <section id="reserveer-vestigingen" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-14 pb-24">
         {/* Gelaagd glas — warme gradient + ghostbull */}
         <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.16) 0%, rgba(44,42,36,0.04) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />

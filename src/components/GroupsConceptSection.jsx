@@ -20,7 +20,7 @@ export default function GroupsConceptSection() {
   const maxCap = useMemo(() => Math.max(...loc.spaces.map((s) => s.capacity), 1), [loc]);
 
   return (
-    <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16">
+    <section id="groepen-concept" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-16">
       {/* Concept intro */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}

@@ -108,10 +108,12 @@ export async function handleWebsiteActionToolCall(params = {}) {
   if (action === 'search') return await window.websiteAction({ action: 'search', target: params.target, data: params.data });
 
   // Page-agnostic in-page scroll shortcuts — always act on the CURRENT page,
-  // never route to a different page.
+  // never route to a different page. Includes the shared CTA / overlay ids
+  // (reserveer, bestel, legal-content, ruimtes-overlay) that exist on many
+  // pages and must scroll the banner on the page the visitor is already on.
   if (action === 'scroll') {
     const st = String(params.target || '').toLowerCase().trim();
-    if (st === 'top' || st === 'bottom' || st === 'footer') {
+    if (['top', 'bottom', 'footer', 'reserveer', 'bestel', 'legal-content', 'ruimtes-overlay'].includes(st)) {
       return await window.websiteAction({ action: 'scroll', target: st });
     }
   }

@@ -507,7 +507,7 @@ export default function Jobs() {
       <PanelHero label={t('job_label')} title={t('job_title')} titleAccent={ui.titleAccent} subtitle={t('job_subtitle')} positionKey="jobs.hero" />
 
       <PanelContent>
-      <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
+      <section id="vacatures" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-24">
         {/* Gelaagd glas — warme gradient + ghostbull, zoals de pop-up */}
         <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
@@ -532,7 +532,7 @@ export default function Jobs() {
             </div>
 
             <SectionReveal delay={0.1}>
-              <div className="mt-8 p-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md shadow-lg">
+              <div id="langskomen" className="mt-8 p-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md shadow-lg">
                 <h3 className="font-heading text-base font-semibold text-foreground mb-3">{ui.walkinTitle}</h3>
                 <p className="font-body text-sm text-muted-foreground mb-4">{ui.walkinDesc}</p>
                 <ul className="space-y-2 font-body text-sm text-muted-foreground">
@@ -549,7 +549,7 @@ export default function Jobs() {
             </SectionReveal>
           </div>
 
-          <SectionReveal direction="right" delay={0.1}>
+          <SectionReveal id="solliciteren" direction="right" delay={0.1}>
             {success ? (
               <div className="flex flex-col items-center text-center rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">

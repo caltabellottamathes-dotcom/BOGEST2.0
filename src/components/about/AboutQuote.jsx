@@ -12,7 +12,7 @@ const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e
 export default function AboutQuote() {
   const { t } = useLang();
   return (
-    <section className="relative overflow-hidden w-full px-6 md:px-10 lg:px-16 pt-12 md:pt-16 pb-10 md:pb-12">
+    <section id="about-quote" className="relative overflow-hidden w-full px-6 md:px-10 lg:px-16 pt-12 md:pt-16 pb-10 md:pb-12">
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.14) 0%, transparent 60%)' }} />
       <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '24rem', width: 'auto', bottom: '-3rem', right: '-8%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
       <motion.div

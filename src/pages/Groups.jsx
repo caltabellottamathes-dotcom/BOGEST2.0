@@ -55,7 +55,7 @@ export default function Groups() {
       <PanelContent>
       <GroupsConceptSection />
 
-      <section className="w-full px-6 md:px-10 lg:px-16 pb-24">
+      <section id="groepen-aanvraag" className="w-full px-6 md:px-10 lg:px-16 pb-24">
         <div className="relative overflow-hidden rounded-2xl" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.20) 0%, rgba(44,42,36,0.06) 55%, transparent 100%)', border: '1px solid rgba(255,255,255,0.10)' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.05), transparent 55%)' }} />
           <img src={BULL_MARK} alt="" aria-hidden draggable={false} className="absolute pointer-events-none select-none hidden md:block" style={{ height: '30rem', width: 'auto', bottom: '-5rem', right: '-8%', opacity: 0.09, filter: 'grayscale(1) brightness(2.4)' }} />
@@ -102,7 +102,7 @@ export default function Groups() {
             )}
           </SectionReveal>
 
-          <SectionReveal direction="fade" delay={0.1}>
+          <SectionReveal id="groepen-evenementen" direction="fade" delay={0.1}>
             <div className="space-y-4">
               {events.map(item => (
                 <div key={item.num} className="group relative py-6 border-b border-border/40">

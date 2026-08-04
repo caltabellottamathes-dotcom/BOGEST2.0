@@ -32,6 +32,7 @@ export default function GiftCardsHighlights() {
       titleAccent={t('gc_section_accent')}
       lead={t('gc_section_lead')}
       mirror
+      sectionId="cadeaubon-highlights"
     />
   );
 }

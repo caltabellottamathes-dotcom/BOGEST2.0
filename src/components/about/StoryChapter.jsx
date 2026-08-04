@@ -6,10 +6,10 @@ import SectionReveal from '@/components/ui/SectionReveal';
  * Onze Filosofie). Alternërend beeld/tekst, compakte line-spacing, ghost-numeral,
  * goud-hoekaccenten en een zwevende revelatie. Eén ontwerp, overal gelijk.
  */
-export default function StoryChapter({ num, total, title, subtitle, body, image, index, bbKey }) {
+export default function StoryChapter({ id, num, total, title, subtitle, body, image, index, bbKey }) {
   const flip = index % 2 === 1;
   return (
-    <div className="w-full px-6 md:px-10 lg:px-16 py-10 md:py-14 border-t border-border/40">
+    <div id={id} className="w-full px-6 md:px-10 lg:px-16 py-10 md:py-14 border-t border-border/40">
       <SectionReveal>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
           {/* Beeld */}

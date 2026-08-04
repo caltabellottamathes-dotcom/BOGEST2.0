@@ -38,7 +38,7 @@ export default function OnsVerhaal() {
         <SubPageNav nextTo="/about/onze-filosofie" nextLabel={t('about_philosophy_label')} />
 
         {/* Story header */}
-        <section className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">
+        <section id="verhaal-header" className="w-full px-6 md:px-10 lg:px-16 pt-10 md:pt-12 pb-6">
           <div className="max-w-5xl mx-auto">
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('about_story_label')}</span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
@@ -48,10 +48,11 @@ export default function OnsVerhaal() {
         </section>
 
         {/* Hoofdstukken */}
-        <section className="w-full pb-10">
+        <section id="verhaal-hoofdstukken" className="w-full pb-10">
           {story.map((s, i) => (
             <StoryChapter
               key={s.num}
+              id={`verhaal-hoofdstuk-${s.num}`}
               num={s.num}
               total="04"
               title={s.title}

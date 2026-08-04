@@ -10,7 +10,7 @@ const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e
 export default function ReserveCtaSection() {
   const { t } = useLang();
   return (
-    <section className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
+    <section id="reserveer" className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
       <div className="relative">
         {/* Glasmorphism-banner met bull-ghost */}
         <div

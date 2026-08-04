@@ -46,7 +46,7 @@ export default function GiftCards() {
       />
 
       {/* ── Saldo controleren ────────────────────────────────── */}
-      <div className="w-full px-6 md:px-10 lg:px-16 pb-20 flex justify-center md:justify-end">
+      <div id="cadeaubon-saldo" className="w-full px-6 md:px-10 lg:px-16 pb-20 flex justify-center md:justify-end">
         <button
           onClick={() => setCheckOpen(true)}
           className="group inline-flex items-center gap-2 font-body text-[11px] tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
