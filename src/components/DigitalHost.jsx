@@ -732,10 +732,9 @@ async function fetchInlineImages(requests) {
         } catch { posts = []; }
         if (posts.length) {
           for (const p of posts) instagrams.push({ media_url: p.media_url, caption: p.caption || '', permalink: p.permalink || '' });
-        } else {
-          const res = await base44.functions.invoke('assetSearch', { location: loc || 'all', limit: 3 });
-          for (const im of (res.data?.images || []).slice(0, 3)) photos.push({ url: im.url, desc: DUTCH_CAT_LABEL[im.category] || 'Bogèst', location: im.location || '' });
         }
+        // No Instagram posts synced → show nothing. Never fall back to random
+        // archive/location photos (no image is better than a wrong image).
       }
     } catch {}
   }
@@ -937,7 +936,7 @@ function UiActionButton({ uiAction, label, isNav, isDark, onLinkClick }) {
   );
 }
 
-function AssistantBubble({ content, actions, photos, cards, instagrams, uiActions, isDark, lang, onLinkClick }) {
+function AssistantBubble({ content, actions, photos, cards, instagrams, uiActions, isDark, lang, onLinkClick, currentPath }) {
   return (
     <div className="flex items-start gap-2">
       <LogoAvatar size="sm" online={false} isDark={isDark} />
@@ -957,7 +956,7 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
             .filter((x) => x.type === 'openPage' || x.type === 'openSection')
             .map((x) => x.args && x.args[0]).filter(Boolean));
           const clean = (actions || [])
-            .filter((a) => a.url && !opened.has(a.url))
+            .filter((a) => a.url && !opened.has(a.url) && a.url !== currentPath)
             .map((a) => {
               const looksPath = (a.label || '').startsWith('/') || (a.label || '').trim() === (a.url || '').trim();
               let label = a.label;
@@ -977,16 +976,27 @@ function AssistantBubble({ content, actions, photos, cards, instagrams, uiAction
             </div>
           );
         })()}
-        {uiActions?.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
-            {uiActions.map((a, i) => {
-              const label = uiActionLabel(a, lang);
-              if (!label) return null;
-              const isNav = ['openPage','openSection','openReservation','openContact','openGiftCards'].includes(a.type);
-              return <UiActionButton key={`ui-${i}`} uiAction={a} label={label} isNav={isNav} isDark={isDark} onLinkClick={onLinkClick} />;
-            })}
-          </div>
-        )}
+        {uiActions?.length > 0 && (() => {
+          const navTarget = (a) => {
+            if (a.type === 'openPage') return a.args && a.args[0];
+            if (a.type === 'openReservation') return '/reserve';
+            if (a.type === 'openContact') return '/contact';
+            if (a.type === 'openGiftCards') return '/gift-cards';
+            return null;
+          };
+          const visible = uiActions.filter((a) => !(navTarget(a) && navTarget(a) === currentPath));
+          if (!visible.length) return null;
+          return (
+            <div className="flex flex-wrap gap-1.5 mt-2 pl-0.5">
+              {visible.map((a, i) => {
+                const label = uiActionLabel(a, lang);
+                if (!label) return null;
+                const isNav = ['openPage','openSection','openReservation','openContact','openGiftCards'].includes(a.type);
+                return <UiActionButton key={`ui-${i}`} uiAction={a} label={label} isNav={isNav} isDark={isDark} onLinkClick={onLinkClick} />;
+              })}
+            </div>
+          );
+        })()}
       </div>
     </div>
   );
@@ -1584,7 +1594,10 @@ export default function DigitalHost() {
         const key = last._key;
         if (key && !dispatchedKeysRef.current.has(key)) {
           dispatchedKeysRef.current.add(key);
+          const curPath = location.pathname;
           last.uiActions.forEach((a, i) => {
+            // Don't auto-navigate to the page the visitor is already on.
+            if (a.type === 'openPage' && a.args && a.args[0] === curPath) return;
             setTimeout(() => { try { dispatchUIAction(a); } catch {} }, 100 + i * 140);
           });
         }
@@ -1904,7 +1917,7 @@ export default function DigitalHost() {
                 {messages.map((m, i) => (
                   m.role === 'user'
                     ? <UserBubble key={i} content={m.content} isDark={isDark} />
-                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => {}} />
+                    : <AssistantBubble key={i} content={m.content} actions={m.actions} photos={m.photos} cards={m.cards} instagrams={m.instagrams} uiActions={m.uiActions} isDark={isDark} lang={lang} onLinkClick={() => {}} currentPath={location.pathname} />
                 ))}
                 {messages.length <= 1 && pageChips.length > 0 && (
                   <div className="flex flex-wrap gap-1.5 pl-10">
