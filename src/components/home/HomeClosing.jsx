@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import CTACards from '@/components/home/CTACards';
-import BogestLogo from '@/components/BogestLogo';
 
 // A curated good review used until the database returns one.
 const FALLBACK_REVIEW = {
@@ -52,16 +51,18 @@ export default function HomeClosing() {
       </div>
 
       {/* Brand sign-off — the end-of-home wordmark + tagline */}
-      <div className="relative z-10 flex flex-col items-center gap-5 py-16 md:py-24 px-6 text-center">
-        <BogestLogo className="text-4xl md:text-5xl tracking-[0.06em]" />
-        <span className="h-px w-10 bg-primary/40" />
-        <p className="font-body text-[10px] md:text-xs tracking-[0.4em] uppercase text-white/65 max-w-xl">
-          VUUR. SMAAK. GEZEL. Een Beau Geste — vakmanschap in smaak
+      <div className="relative z-10 flex flex-col items-center gap-4 py-16 md:py-24 px-6 text-center">
+        <span className="font-body text-[11px] md:text-xs tracking-[0.5em] uppercase text-primary">BOGEST</span>
+        <h2 className="font-heading font-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-none">
+          VUUR. SMAAK. GEZEL.
+        </h2>
+        <p className="font-body text-sm md:text-base text-white/70 max-w-xl">
+          Een Beau Geste — vakmanschap in smaak
         </p>
       </div>
 
-      {/* Empty space at the end — the footer rises and overlaps the sign-off a bit */}
-      <div className="relative z-10" style={{ height: '7rem' }} aria-hidden />
+      {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
+      <div className="relative z-10" style={{ height: '6rem' }} aria-hidden />
     </section>
   );
 }

@@ -10,6 +10,7 @@ import FloatingVideo from '@/components/FloatingVideo';
 import UIActionOverlay from '@/components/UIActionOverlay';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import BeeldbankEditor from '@/components/BeeldbankEditor';
+import CustomCursor from '@/components/CustomCursor';
 import { SiteImagesProvider } from '@/lib/SiteImageContext';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
 
@@ -106,6 +107,9 @@ export default function Layout() {
 
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />
+
+      {/* Custom gold cursor — dot + trailing ring (mouse only) */}
+      <CustomCursor />
 
       {/* Beeldbank in-place editor — only renders when logged in as Beeldbank admin */}
       {!isAssets && <BeeldbankEditor />}
