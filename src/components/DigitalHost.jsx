@@ -1248,6 +1248,7 @@ export default function DigitalHost() {
   const subscriptionRef = useRef(null);
   const greetingRef = useRef(null);
   const responsePendingRef = useRef(false);
+  const stuckTimeoutRef = useRef(null);
   const makeGreetingRef = useRef(() => '');
   const inlineMediaRef = useRef({});
   const dispatchedKeysRef = useRef(new Set());
@@ -1540,6 +1541,7 @@ export default function DigitalHost() {
   // Cleanup agent subscription on unmount
   useEffect(() => {
     return () => {
+      clearTimeout(stuckTimeoutRef.current);
       if (subscriptionRef.current) { try { subscriptionRef.current(); } catch {} }
       if (window.DID_AGENTS_API?.functions?.interrupt) {
         try { window.DID_AGENTS_API.functions.interrupt(); } catch {}
@@ -1572,6 +1574,7 @@ export default function DigitalHost() {
     });
     conversationRef.current = conv;
     subscriptionRef.current = base44.agents.subscribeToConversation(conv.id, (data) => {
+      try {
       const agentMessages = (data.messages || []).map((m) => {
         if (m.role === 'user') return { role: 'user', content: (m.content || '').replace(/^\[ctx:[^\]]*\]\s*/i, '') };
         const parsed = parseActions(m.content || '');
@@ -1594,6 +1597,7 @@ export default function DigitalHost() {
       const last = agentMessages[agentMessages.length - 1];
       if (last?.role === 'assistant' && last?.content && responsePendingRef.current) {
         responsePendingRef.current = false;
+        clearTimeout(stuckTimeoutRef.current);
         setIsLoading(false);
         sounds.receive();
       }
@@ -1631,6 +1635,11 @@ export default function DigitalHost() {
           }));
         }).catch(() => {});
       }
+      } catch {
+        // Never let a parsing/dispatch error break the subscription — fall
+        // back to clearing the loading state so the chat never looks stuck.
+        if (responsePendingRef.current) { responsePendingRef.current = false; setIsLoading(false); }
+      }
     });
     return conv;
   };
@@ -1641,6 +1650,20 @@ export default function DigitalHost() {
     setInput(''); setPhase('chat'); sounds.send();
     setIsLoading(true);
     responsePendingRef.current = true;
+
+    // Watchdog — if no reply arrives within 25s (a stalled agent run), stop
+    // the spinner and let the visitor try again instead of staying stuck.
+    clearTimeout(stuckTimeoutRef.current);
+    stuckTimeoutRef.current = setTimeout(() => {
+      if (responsePendingRef.current) {
+        responsePendingRef.current = false;
+        setIsLoading(false);
+        const sorry = lang === 'fr' ? "Excusez-moi, quelque chose s'est mal passé. Pouvez-vous répéter votre question ?"
+          : lang === 'en' ? "Sorry, something went wrong on my end — could you ask that again?"
+          : 'Excuseer, daar ging iets mis. Kunt u uw vraag nog eens stellen?';
+        setMessages((prev) => [...prev, { role: 'assistant', content: sorry, actions: [] }]);
+      }
+    }, 25000);
 
     // The digital host auto-navigates the site from the UIACTION tags the agent
     // emits in its reply (see the subscription handler above). Action buttons
