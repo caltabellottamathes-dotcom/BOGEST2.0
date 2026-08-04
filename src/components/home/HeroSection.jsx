@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useTheme } from '@/lib/ThemeContext';
+import { HERO_VIDEO_URL } from '@/lib/heroVideo';
 
 
 const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
@@ -55,7 +56,7 @@ export default function HeroSection() {
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover hero-video"
-          src="https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/2d4d5be6f_intro_hero.mp4"
+          src={HERO_VIDEO_URL}
           autoPlay
           muted
           loop

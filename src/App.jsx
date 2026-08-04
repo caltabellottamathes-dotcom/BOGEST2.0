@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -11,6 +12,7 @@ import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
 import AdminGate from '@/components/AdminGate';
 import BogestLogo from '@/components/BogestLogo';
+import { preloadHeroVideo } from '@/lib/heroVideo';
 
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
@@ -40,8 +42,18 @@ import AdminLogin from '@/pages/AdminLogin';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
+  const [heroVideoReady, setHeroVideoReady] = useState(false);
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  // Preload the hero video during the loading entrance so the homepage is
+  // fully ready (video playing) the moment it reveals. Always preload in the
+  // background; only block the reveal when the guest actually lands on home.
+  useEffect(() => {
+    preloadHeroVideo().then(() => setHeroVideoReady(true));
+    const path = window.location.pathname;
+    if (path !== '/' && path !== '') setHeroVideoReady(true);
+  }, []);
+
+  if (isLoadingPublicSettings || isLoadingAuth || (!authError && !heroVideoReady)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">

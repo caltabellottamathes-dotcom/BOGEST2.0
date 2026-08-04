@@ -9,6 +9,7 @@ import {
   categoryLabel,
   deriveOrientation,
 } from '@/lib/assetTaxonomy';
+import { SUGGESTIONS } from '@/components/home/SeasonalSection';
 
 const LOCATIONS = ['unknown', 'hasselt', 'borgloon', 'heusden-zolder'];
 const LOC_LABELS = { unknown: 'Onbekend', hasselt: 'Hasselt', borgloon: 'Borgloon', 'heusden-zolder': 'Heusden-Zolder' };
@@ -268,6 +269,13 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
                     {items.map((it) => <option key={it.id} value={it.item_name}>{it.item_name}</option>)}
                   </optgroup>
                 ))}
+                {(SUGGESTIONS.nl || []).length > 0 && (
+                  <optgroup label="Seizoensselectie (chef)">
+                    {(SUGGESTIONS.nl || []).map((s) => (
+                      <option key={'seasonal-' + s.id} value={s.name}>{s.name}</option>
+                    ))}
+                  </optgroup>
+                )}
               </select>
             </Field>
 
