@@ -97,7 +97,8 @@
     "guest-memory-personalisation",
     "live-social-media-connector",
     "personalised-recommendation-logic",
-    "welcome-and-intent-detection"
+    "welcome-and-intent-detection",
+    "wine-beer-cocktail-expertise"
   ],
   "selected_workspace_skill_ids": [],
   "model": "automatic",
