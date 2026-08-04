@@ -107,6 +107,15 @@ export async function handleWebsiteActionToolCall(params = {}) {
   if (action === 'close') return await window.websiteAction({ action: 'close', target: params.target });
   if (action === 'search') return await window.websiteAction({ action: 'search', target: params.target, data: params.data });
 
+  // Page-agnostic in-page scroll shortcuts — always act on the CURRENT page,
+  // never route to a different page.
+  if (action === 'scroll') {
+    const st = String(params.target || '').toLowerCase().trim();
+    if (st === 'top' || st === 'bottom' || st === 'footer') {
+      return await window.websiteAction({ action: 'scroll', target: st });
+    }
+  }
+
   const topic = params.topic || params.target || '';
   const entry = topic ? await routeTopic(topic) : null;
   if (entry) return await executeEntry(entry);

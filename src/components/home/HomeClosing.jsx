@@ -8,7 +8,7 @@ import { useLang } from '@/lib/LangContext';
 export default function HomeClosing() {
   const { t } = useLang();
   return (
-    <section className="relative w-full overflow-hidden" style={{ background: 'hsl(25 6% 5%)' }}>
+    <section id="einde" className="relative w-full overflow-hidden" style={{ background: 'hsl(25 6% 5%)' }}>
       <div className="relative z-10 flex flex-col items-center justify-center text-center py-16 md:py-24 px-6">
         <motion.span
           initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-40px' }}

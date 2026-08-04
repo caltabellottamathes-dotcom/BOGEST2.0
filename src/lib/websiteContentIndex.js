@@ -89,6 +89,8 @@ INDEX.push(
   make('home-cta', 'section', 'Actions', ['acties', 'reserveer nu', 'cta', 'actions', 'actiekaarten', 'kaarten'], '/', 'scroll', 'acties', 'Action cards section on the home page'),
   make('home-locations-preview', 'section', 'Locations preview', ['vestigingen preview', 'our locations preview', 'locations on home', 'locaties preview', 'preview vestigingen'], '/', 'scroll', 'vestigingen', 'Locations preview section on the home page'),
   make('home-reviews', 'section', 'Reviews', ['ervaringen', 'reviews', 'review', 'recensies', 'testimonials', 'klanten', 'beoordelingen', 'wat zeggen klanten', 'klantbeoordelingen', 'avis'], '/', 'scroll', 'ervaringen', 'Reviews / testimonials section on the home page'),
+  make('home-einde', 'section', 'Closing', ['einde', 'closing', 'afsluiting', 'slot', 'onderaan', 'naar beneden', 'laatste'], '/', 'scroll', 'einde', 'The closing section at the bottom of the home page'),
+  make('menu-maandselectie', 'section', 'Monthly selection', ['maandselectie', 'maandelijkse selectie', 'chef suggestie', 'suggestions du mois', 'monthly selection', 'seizoensuggesties', 'specials', 'suggestie van de chef'], '/menu', 'scroll', 'maandselectie', 'The chef monthly / seasonal selection on the menu page'),
 );
 
 // ── Menu categories (scroll on /menu) ─────────────────────────────────────
@@ -257,6 +259,8 @@ const SEMANTIC_CLUSTERS = [
   { id: 'home-reviews', words: ['ervaringen', 'reviews', 'recensies', 'testimonials', 'beoordelingen', 'wat zeggen klanten', 'avis', 'guest reviews', 'gasten'] },
   { id: 'home-stats', words: ['stats', 'statistieken', 'cijfers', 'in cijfers', 'chiffres', 'in numbers', 'jaar ervaring'] },
   { id: 'home-cta', words: ['acties', 'reserveer nu', 'actiekaarten', 'bestel nu', 'reserveer direct'] },
+  { id: 'home-einde', words: ['einde', 'closing', 'afsluiting', 'onderaan', 'naar beneden', 'laatste'] },
+  { id: 'menu-maandselectie', words: ['maandselectie', 'maandelijkse selectie', 'chef suggestie', 'suggestions du mois', 'monthly selection', 'seizoensuggesties', 'suggestie van de chef'] },
   { id: 'close-panel', words: ['close', 'sluiten', 'sluit', 'dicht', 'fermer', 'ferme', 'never mind', 'laat maar', 'laat maar zitten', 'stop', 'annuleer', 'cancel', 'terug', 'go back', 'back', 'verberg', 'sluit dit', 'weg ermee', 'dismiss', 'sluit het panel', 'sluit het'] },
 ];
 

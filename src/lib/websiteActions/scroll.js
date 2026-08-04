@@ -28,7 +28,8 @@ registerAction('scroll', async ({ target, options = {}, data = {} }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     return { message: 'Scrolled to top', section: 'top' };
   }
-  if (String(target).toLowerCase().trim() === 'bottom') {
+  const t = String(target).toLowerCase().trim();
+  if (t === 'bottom' || t === 'footer') {
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
     return { message: 'Scrolled to bottom', section: 'bottom' };
   }

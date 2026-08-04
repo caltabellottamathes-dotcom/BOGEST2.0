@@ -91,7 +91,7 @@ function Maandselectie() {
   const monthLabel = (MONTH_NAMES[lang] || MONTH_NAMES.nl)[now.getMonth()];
   const suggestions = SUGGESTIONS[lang] || SUGGESTIONS.nl;
   return (
-    <section className="w-full px-6 md:px-10 lg:px-16 pt-12 md:pt-16 pb-10">
+    <section id="maandselectie" className="w-full px-6 md:px-10 lg:px-16 pt-12 md:pt-16 pb-10">
       <div className="mb-8 md:mb-10">
         <div className="flex items-center gap-3 mb-4">
           <span className="h-px w-10 bg-primary" />
