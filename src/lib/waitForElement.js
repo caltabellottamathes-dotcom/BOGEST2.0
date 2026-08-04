@@ -18,6 +18,23 @@ export function waitForElement(find, { timeout = 1200, interval = 80 } = {}) {
 }
 
 /**
+ * The scroll container currently active — the open glass panel's content area
+ * (marked with data-panel-scroll) when a panel is open and on screen, otherwise
+ * null (meaning the window is the scroller). Shared by the scroll and highlight
+ * actions so every websiteAction lands inside the panel the visitor is looking at.
+ */
+export function getActiveScroller() {
+  const panel = document.querySelector('[data-panel-scroll]');
+  if (panel) {
+    const r = panel.getBoundingClientRect();
+    // Only treat the panel as active while it is actually on screen — it
+    // lingers in the DOM briefly during the exit animation.
+    if (r.width > 0 && r.height > 0) return panel;
+  }
+  return null;
+}
+
+/**
  * Scroll an element into view, centred within its nearest scrollable
  * ancestor (e.g. an open glass panel's content area) — or the window when
  * there is none. Works on mobile (full-screen panel) and desktop alike.
@@ -44,6 +61,13 @@ export function scrollIntoContainerView(el, { behavior = 'smooth' } = {}) {
       break;
     }
     node = node.parentElement;
+  }
+  // Fallback: if no nearer scrollable ancestor, use the open panel's scroll
+  // area when the element lives inside it — so a panel section always scrolls
+  // the panel, never the page behind it.
+  if (!scroller) {
+    const panel = getActiveScroller();
+    if (panel && panel.contains(el)) scroller = panel;
   }
   if (scroller) {
     // Use transform-independent offset accumulation so the scroll lands

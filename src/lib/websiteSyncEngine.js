@@ -1,4 +1,5 @@
 import { routeTopic } from '@/lib/websiteSyncRouter';
+import { isPanelPath } from '@/components/GlassPanel';
 
 /**
  * Conversational Sync Engine — single source of truth.
@@ -16,7 +17,6 @@ import { routeTopic } from '@/lib/websiteSyncRouter';
 let lastTargetId = null;
 let lastTargetAt = 0;
 const DEDUP_MS = 3500;
-const NAV_RENDER_MS = 450;
 
 function resetDedupIfStale() {
   if (lastTargetId && Date.now() - lastTargetAt > DEDUP_MS) lastTargetId = null;
@@ -49,7 +49,11 @@ async function executeEntry(entry) {
   if (needNav) {
     const navRes = await window.websiteAction({ action: 'navigate', target: page });
     if (!navRes?.success) return navRes;
-    await new Promise((r) => setTimeout(r, NAV_RENDER_MS));
+    // Let the page render and — for glass panels — let the slide-in finish
+    // before scrolling, so the scroll lands smoothly instead of fighting the
+    // panel animation. Homepage sections need less time.
+    const settleMs = isPanelPath(page) ? 720 : 280;
+    await new Promise((r) => setTimeout(r, settleMs));
   }
 
   if (action === 'scroll') {

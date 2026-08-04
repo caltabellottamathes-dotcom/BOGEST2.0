@@ -75,7 +75,7 @@ function findTarget(target, key) {
 registerAction('highlight', async ({ target, options = {}, data = {} }) => {
   if (!target) return { error: 'missing_target' };
   const key = String(target).toLowerCase().trim();
-  const el = await waitForElement(() => findTarget(target, key), { timeout: 1400 });
+  const el = await waitForElement(() => findTarget(target, key), { timeout: 2000 });
   if (!el) return { error: 'not_found', target };
   const duration = Number.isFinite(options?.duration) ? options.duration
     : Number.isFinite(data?.duration) ? data.duration : 6000;

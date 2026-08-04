@@ -1,5 +1,5 @@
 import { registerAction } from '../websiteDispatcher';
-import { waitForElement } from '@/lib/waitForElement';
+import { waitForElement, getActiveScroller } from '@/lib/waitForElement';
 import { applyHighlight } from './highlight';
 
 /**
@@ -15,19 +15,6 @@ import { applyHighlight } from './highlight';
  * Waits for the element to appear after a navigation / panel animation so the
  * scroll lands on the freshly-mounted target instead of failing instantly.
  */
-
-/** The scroll container that is currently active: the open panel's content
- *  area when a glass panel is open, otherwise null (the window is the scroller). */
-export function getActiveScroller() {
-  const panel = document.querySelector('[data-panel-scroll]');
-  if (panel) {
-    const r = panel.getBoundingClientRect();
-    // Only treat the panel as active while it is actually on screen — it
-    // lingers in the DOM briefly during the exit animation.
-    if (r.width > 0 && r.height > 0) return panel;
-  }
-  return null;
-}
 
 function findTarget(key) {
   const selector = key.replace(/[^a-z0-9-_]/g, '-');
@@ -68,7 +55,7 @@ registerAction('scroll', async ({ target, options = {}, data = {} }) => {
   }
 
   const key = t;
-  const el = await waitForElement(() => findTarget(key), { timeout: 1200 });
+  const el = await waitForElement(() => findTarget(key), { timeout: 2000 });
   if (!el) return { error: 'not_found', target };
   const duration = Number.isFinite(options?.duration) ? options.duration
     : Number.isFinite(data?.duration) ? data.duration : 5000;
