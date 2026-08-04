@@ -14,7 +14,7 @@ import KidsMenu from '@/components/menu/KidsMenu';
 function PageHero() {
   const { t } = useLang();
   return (
-    <PanelHero label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle={t('menu_panel_subtitle')} positionKey="menu.hero" bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg">
+    <PanelHero id="menu-hero" label={t('menu_label')} title={t('menu_title')} titleAccent={t('menu_title_accent')} subtitle={t('menu_panel_subtitle')} positionKey="menu.hero" bgImage="https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906793880-RYMZN9OWYYUERUL16C6K/B4E94C22-3656-4874-A66B-CEA4D674F86D.jpeg">
       <p className="font-body text-sm text-white/75 mt-4 max-w-xl leading-relaxed" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.5)' }}>
         <span className="text-primary font-medium">{t('menu_formula_label')} — </span>{t('menu_formula')}.
       </p>
@@ -60,7 +60,7 @@ function CategoryRow({ cat, idx }) {
           {cat.items.map(item => {
             const priceStr = formatPrice(item.price, lang);
             return (
-              <div key={item.id} data-highlight={slugify(loc(item.name, 'nl'))} className="group relative py-3.5 border-b border-border/40 last:border-0">
+              <div key={item.id} id={`gerecht-${slugify(loc(item.name, 'nl'))}`} data-highlight={slugify(loc(item.name, 'nl'))} className="group relative py-3.5 border-b border-border/40 last:border-0">
                 <div className="flex items-baseline gap-3">
                   <span className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300">
                     {loc(item.name, lang)}
@@ -172,7 +172,7 @@ export default function Menu() {
       <PanelContent>
       <Maandselectie />
 
-      <div className="sticky top-0 z-30 bg-background/92 backdrop-blur-sm border-b border-white/8">
+      <div id="menu-categorieen" className="sticky top-0 z-30 bg-background/92 backdrop-blur-sm border-b border-white/8">
         <div ref={tabsScrollRef} className="w-full px-6 md:px-10 lg:px-16 py-4 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           <div className="flex gap-6 min-w-max">
             {MENU_DATA.map((cat, i) => {

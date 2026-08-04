@@ -159,16 +159,15 @@ export default function ReviewsSection() {
 
         {/* Featured pull-quote + supporting */}
         {featured && (
-          <div className="min-h-[58vh] md:min-h-[calc(100svh-300px)] flex items-center">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
             <div className="lg:col-span-8">
-              <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[14vw] sm:text-[9vw] lg:text-[6vw] -mb-6 select-none">“</span>
+              <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[22vw] sm:text-[16vw] lg:text-[10vw] -mb-2 select-none">“</span>
               <motion.blockquote
                 key={featured.name + featured.date + page}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.12] text-foreground"
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground"
               >
                 {featured.text}
               </motion.blockquote>
@@ -200,7 +199,6 @@ export default function ReviewsSection() {
                 </motion.div>
               ))}
             </div>
-          </div>
           </div>
         )}
 

@@ -122,6 +122,12 @@ MENU_DATA.forEach((cat) => {
   });
 });
 
+// ── Menu structural sections (scroll on /menu) ───────────────────────────
+INDEX.push(
+  make('menu-hero', 'section', 'Menu hero', ['menu hero', 'kaart hero', 'menu header', 'menu intro'], '/menu', 'scroll', 'menu-hero', 'The menu page hero / intro'),
+  make('menu-categorieen', 'section', 'Menu categories', ['menu categorieen', 'categorieen', 'categories', 'menu tabs', 'category tabs', 'de categorieen'], '/menu', 'scroll', 'menu-categorieen', 'The sticky category tabs / categories navigation on the menu page'),
+);
+
 // ── Location sub-sections (scroll on /locations/{slug}) ───────────────────
 ['hasselt', 'borgloon', 'heusden-zolder'].forEach((slug) => {
   INDEX.push(make(`loc-${slug}-hours`, 'section', `Hours ${slug}`, ['openingsuren', 'opening hours', 'hours', 'uren', 'horaires', 'geopend', 'when open', 'openingstijden', 'openingstijd', 'wanneer open', 'hoe laat open', 'tijden'], `/locations/${slug}`, 'scroll', 'openingsuren', `Opening hours of ${slug}`));
@@ -343,6 +349,8 @@ const SEMANTIC_CLUSTERS = [
   { id: 'reserveer-cta', words: ['reserveer nu', 'reserveer cta', 'reserve button'] },
   { id: 'bestel-cta', words: ['bestel nu', 'bestel cta', 'order button'] },
   { id: 'home-einde', words: ['einde', 'closing', 'afsluiting', 'onderaan', 'naar beneden', 'laatste'] },
+  { id: 'menu-hero', words: ['menu hero', 'menu intro', 'kaart hero', 'menu header'] },
+  { id: 'menu-categorieen', words: ['menu categorieen', 'de categorieen', 'category tabs', 'menu tabs'] },
   { id: 'menu-maandselectie', words: ['maandselectie', 'maandelijkse selectie', 'chef suggestie', 'suggestions du mois', 'monthly selection', 'seizoensuggesties', 'suggestie van de chef'] },
   { id: 'close-panel', words: ['close', 'sluiten', 'sluit', 'dicht', 'fermer', 'ferme', 'never mind', 'laat maar', 'laat maar zitten', 'stop', 'annuleer', 'cancel', 'terug', 'go back', 'back', 'verberg', 'sluit dit', 'weg ermee', 'dismiss', 'sluit het panel', 'sluit het'] },
 ];

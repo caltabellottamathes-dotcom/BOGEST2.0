@@ -8,11 +8,11 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 //  · De gekantelde margin-label in een vaste, gecentreerde linker rail —
 //    leesbaar (hoger contrast + zachte schaduw), nooit overlappend.
 //  · Zachtere gradients (warm, niet zwart-geel) — zacht geel naar grijs.
-export default function PanelHero({ label, title, titleAccent, subtitle, children, bgImage, positionKey }) {
+export default function PanelHero({ id, label, title, titleAccent, subtitle, children, bgImage, positionKey }) {
   const { siteImg } = useSiteImages();
   const bg = (positionKey ? siteImg(positionKey) : null) || bgImage;
   return (
-    <section className="relative w-full pt-24 md:pt-36 pb-24 md:pb-32 px-6 md:px-12 lg:px-16 overflow-hidden">
+    <section id={id} className="relative w-full pt-24 md:pt-36 pb-24 md:pb-32 px-6 md:px-12 lg:px-16 overflow-hidden">
       {bg ? (
         <div className="absolute inset-0 z-0">
           <img src={bg} data-bb-key={positionKey || undefined} data-bb-label={label} alt="" className="w-full h-full object-cover" loading="lazy" />
