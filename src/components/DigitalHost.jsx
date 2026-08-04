@@ -1688,7 +1688,7 @@ export default function DigitalHost() {
                   <motion.div
                     initial={{ opacity: 0, y: 10, scale: 0.95 }} animate={{ opacity: 1, x: wideShift, y: 0, scale: 1 }} exit={{ opacity: 0, y: 6, scale: 0.95 }}
                     transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                    className="fixed bottom-[120px] right-[184px] z-[60] cursor-pointer"
+                    className="fixed bottom-[100px] right-[150px] z-[60] cursor-pointer"
                     style={{ maxWidth: 'min(calc(100vw - 160px), 300px)' }}
                     onClick={() => { setProactiveMsg(null); openChat(proactiveMsg.msg); }}
                   >

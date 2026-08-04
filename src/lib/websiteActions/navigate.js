@@ -18,6 +18,7 @@ const ROUTES = {
   about: '/about', story: '/about', verhaal: '/about', 'over-ons': '/about', 'about-us': '/about', 'wie-zijn-wij': '/about', 'over-ons-verhaal': '/about/ons-verhaal',
   'ons-verhaal': '/about/ons-verhaal',
   locations: '/locations', vestigingen: '/locations', locaties: '/locations',
+  gelegenheid: '/locations', occasion: '/locations', 'speciale-gelegenheid': '/locations', verjaardag: '/locations', anniversary: '/locations', romantisch: '/locations', date: '/locations', feest: '/locations', 'iets-speciaals': '/locations',
   hasselt: '/locations/hasselt',
   borgloon: '/locations/borgloon',
   'heusden-zolder': '/locations/heusden-zolder',
