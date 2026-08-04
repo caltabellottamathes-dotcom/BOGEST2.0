@@ -99,7 +99,8 @@
     "personalised-recommendation-logic",
     "welcome-and-intent-detection",
     "wine-beer-cocktail-expertise",
-    "menu-steak-expertise"
+    "menu-steak-expertise",
+    "location-recommendation"
   ],
   "selected_workspace_skill_ids": [],
   "model": "automatic",
