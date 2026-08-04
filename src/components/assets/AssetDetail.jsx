@@ -25,6 +25,13 @@ const COLLECTIONS = [
   { key: 'hero', label: 'Hero / spotlight' },
 ];
 
+// Menu categories for the matched_dish dropdown (Dutch labels, admin only)
+const CAT_LABELS = {
+  signature: 'Signature', beef: 'Runds', chicken: 'Kip', fish: 'Vis & Veggie',
+  veggie: 'Veggie', sides: 'Bijgerechten', sauces: 'Sauzen', wines: 'Wijnen',
+  beers: 'Bieren', drinks: 'Dranken', desserts: 'Desserts', kids: 'Kinderen',
+};
+
 function Field({ label, children }) {
   return (
     <div>
@@ -45,6 +52,15 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
   const [activeGroup, setActiveGroup] = useState('food');
   const [showReplace, setShowReplace] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
+  const [menuItems, setMenuItems] = useState([]);
+
+  // Load the full restaurant menu so each food photo can be assigned to
+  // exactly one menu item (single-select, all items available).
+  useEffect(() => {
+    base44.entities.MenuKnowledge.list('-sort_order', 250)
+      .then((rows) => setMenuItems(rows || []))
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (!asset) return;
@@ -64,6 +80,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
       source_url: asset.source_url || '',
       source_platform: asset.source_platform || '',
       collections: asset.collections || [],
+      matched_dish: asset.matched_dish || '',
     });
     setConfirming(false);
   }, [asset?.id]);
@@ -120,6 +137,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
         source_url: form.source_url,
         source_platform: form.source_platform,
         collections: form.collections,
+        matched_dish: form.matched_dish || '',
       };
       // Only send quality_score when it's a real number — sending null on a
       // number field was what made saves fail.
@@ -238,6 +256,19 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
                   );
                 })}
               </div>
+            </Field>
+
+            <Field label="Gerecht (menu-item · max 1)">
+              <select value={form.matched_dish} onChange={(e) => set('matched_dish', e.target.value)} className={inputCls}>
+                <option value="">— Geen gerecht —</option>
+                {Object.entries(
+                  menuItems.reduce((acc, it) => { const c = it.category || 'overig'; (acc[c] = acc[c] || []).push(it); return acc; }, {})
+                ).map(([cat, items]) => (
+                  <optgroup key={cat} label={CAT_LABELS[cat] || cat}>
+                    {items.map((it) => <option key={it.id} value={it.item_name}>{it.item_name}</option>)}
+                  </optgroup>
+                ))}
+              </select>
             </Field>
 
             <div className="grid grid-cols-2 gap-3">

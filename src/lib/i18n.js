@@ -551,7 +551,7 @@ export const translations = {
     cat_pork: 'Porc',
     cat_classics: 'Classiques',
     cat_sauces: 'Sauces',
-    cat_sides: 'Accompagnements',
+    cat_sides: 'Garnitures',
     cat_desserts: 'Desserts',
     cat_drinks: 'Boissons',
     cat_kids: 'Enfants',

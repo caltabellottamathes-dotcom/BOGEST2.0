@@ -7,7 +7,8 @@ import { getLocations } from '@/lib/data';
 // Slide-in Google Maps panel — opens from the right when a visitor clicks
 // "Route" in a location panel, or when a host (chat / voice) asks to show a
 // location on the map or a route. Uses the keyless Google Maps embed so no
-// API key is required, styled to match the site's frosted-glass panels.
+// API key is required. Same proportions (full height, 920px) as the reserve
+// / Zenchef widget panel so all overlay panels feel consistent.
 export default function MapPanel() {
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
@@ -42,22 +43,22 @@ export default function MapPanel() {
     <OverlayPanelShell
       isOpen={open}
       onClose={close}
-      maxWidth="min(92vw, 460px)"
-      compact
+      maxWidth="min(90vw, 920px)"
+      scrollable={false}
       header={
         <div className="flex items-center gap-3">
-          <span className="w-9 h-9 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center">
+          <span className="w-10 h-10 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center flex-shrink-0">
             <MapPin className="w-4 h-4 text-primary" />
           </span>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{L.label}</p>
-            <h2 className="font-heading text-lg font-bold text-foreground leading-tight">{loc ? `${loc.city}.` : 'Route'}</h2>
+            <h2 className="font-heading text-base md:text-lg font-semibold text-foreground leading-tight">{loc ? `${loc.city}.` : 'Route'}</h2>
           </div>
         </div>
       }
     >
-      <div className="p-5 md:p-6 flex flex-col gap-5">
-        <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl" style={{ height: 'min(44vh, 320px)' }}>
+      <div className="flex-1 min-h-0 flex flex-col p-4 md:p-6 gap-4">
+        <div className="flex-1 min-h-0 rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black/20">
           <iframe
             title="Bogèst kaart"
             src={embed}
@@ -68,7 +69,7 @@ export default function MapPanel() {
             allowFullScreen
           />
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 flex-shrink-0">
           {loc?.address && (
             <div className="flex items-start gap-3">
               <MapPin className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />

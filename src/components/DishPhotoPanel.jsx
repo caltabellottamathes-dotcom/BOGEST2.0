@@ -4,8 +4,9 @@ import OverlayPanelShell from '@/components/OverlayPanelShell';
 import { useLang } from '@/lib/LangContext';
 
 // Slide-in dish photo panel — when a host (chat or voice) wants to show a
-// photo of a dish, a smaller panel slides in from the right with the photo,
-// its name and a short description. Styled to match the site's glass panels.
+// photo of a dish, the panel slides in from the right with the photo, its
+// name and a short description. Same proportions (full height, 920px) as the
+// reserve / Zenchef widget panel so all overlay panels feel consistent.
 export default function DishPhotoPanel() {
   const { lang } = useLang();
   const [open, setOpen] = useState(false);
@@ -35,23 +36,23 @@ export default function DishPhotoPanel() {
     <OverlayPanelShell
       isOpen={open}
       onClose={close}
-      maxWidth="min(92vw, 460px)"
-      compact
+      maxWidth="min(90vw, 920px)"
+      scrollable={false}
       header={
         <div className="flex items-center gap-3">
-          <span className="w-9 h-9 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center">
+          <span className="w-10 h-10 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center flex-shrink-0">
             <span className="w-2 h-2 rounded-full bg-primary" />
           </span>
-          <div>
+          <div className="flex-1 min-w-0">
             <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{L.label}</p>
-            <h2 className="font-heading text-lg font-bold text-foreground leading-tight">{name ? `${name}.` : 'Bogèst.'}</h2>
+            <h2 className="font-heading text-base md:text-lg font-semibold text-foreground leading-tight">{name ? `${name}.` : 'Bogèst.'}</h2>
           </div>
         </div>
       }
     >
-      <div className="p-5 md:p-6 flex flex-col gap-5">
+      <div className="flex-1 min-h-0 flex flex-col p-4 md:p-6 gap-4">
         {photo?.url && (
-          <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-xl" style={{ aspectRatio: '4 / 3' }}>
+          <div className="flex-1 min-h-0 relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black/20">
             <img src={photo.url} alt={photo.name || 'Bogèst'} className="w-full h-full object-cover" style={{ filter: 'saturate(0.92) brightness(0.97)' }} />
             <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent 45%)' }} />
             {photo?.location && (
@@ -63,7 +64,7 @@ export default function DishPhotoPanel() {
           </div>
         )}
         {photo?.description && (
-          <p className="font-body text-sm text-foreground/85 leading-relaxed">{photo.description}</p>
+          <p className="font-body text-sm text-foreground/85 leading-relaxed flex-shrink-0">{photo.description}</p>
         )}
       </div>
     </OverlayPanelShell>

@@ -69,7 +69,7 @@ export default function StorySection() {
             {/* Glasformule-strook — horizontaal, drijft over de onderkant en steekt
                 op desktop links uit zodat tekst en beeld één gelaagde compositie vormen */}
             <div
-              className="absolute -bottom-5 left-0 right-0 rounded-2xl p-4 md:p-5 z-30"
+              className="absolute -bottom-6 left-3 right-3 lg:left-[-10%] lg:right-[16%] rounded-2xl p-4 md:p-5 z-30"
               style={{
                 background: 'rgba(255,255,255,0.10)',
                 backdropFilter: 'blur(22px) saturate(150%)',

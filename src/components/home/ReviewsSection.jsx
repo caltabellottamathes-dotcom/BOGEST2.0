@@ -42,11 +42,11 @@ function SourceBadge({ source }) {
   );
 }
 
-function formatDate(dateStr) {
+function formatDate(dateStr, locale) {
   if (!dateStr) return '';
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('nl-BE', { month: 'long', year: 'numeric' });
+    return d.toLocaleDateString(locale || 'nl-BE', { month: 'long', year: 'numeric' });
   } catch {
     return '';
   }
@@ -60,8 +60,10 @@ export default function ReviewsSection() {
   const { t, lang } = useLang();
   const [page, setPage] = useState(0);
   const [showAll, setShowAll] = useState(false);
+  const [sourceReviews, setSourceReviews] = useState(FALLBACK_REVIEWS);
   const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
   const isMobile = useIsMobile();
+  const translateCache = useRef(null);
   const perPage = isMobile ? 2 : 4;
   const pages = Math.ceil(reviews.length / perPage);
   const safePage = Math.min(page, pages - 1);
@@ -79,17 +81,18 @@ export default function ReviewsSection() {
     base44.entities.ZenchefReview.list('-date', 100)
       .then(dbReviews => {
         if (dbReviews && dbReviews.length > 0) {
+          const locale = lang === 'fr' ? 'fr-BE' : lang === 'en' ? 'en-GB' : 'nl-BE';
           const mapped = dbReviews
             .filter(r => r.text || r.author_name)
             .map(r => ({
-              name: r.author_name || 'Anoniem',
+              name: r.author_name || (lang === 'fr' ? 'Anonyme' : lang === 'en' ? 'Anonymous' : 'Anoniem'),
               location: r.location ? r.location.charAt(0).toUpperCase() + r.location.slice(1).replace('-', '-') : '',
               rating: r.rating || 5,
               text: r.text || '',
-              date: formatDate(r.date),
+              date: formatDate(r.date, locale),
               source: r.source || 'Zenchef',
             }));
-          if (mapped.length > 0) setReviews(mapped);
+          if (mapped.length > 0) setSourceReviews(mapped);
         }
       })
       .catch(() => {});
@@ -102,6 +105,27 @@ export default function ReviewsSection() {
     });
     return () => { try { unsubscribe(); } catch {} };
   }, []);
+
+  // Translate the reviews into the visitor's language. The Dutch source
+  // (fallback + Zenchef DB) stays as-is; for FR/EN we translate the text in
+  // one batched LLM call, cached by language + content so it never re-runs
+  // for the same set.
+  useEffect(() => {
+    if (lang === 'nl') { setReviews(sourceReviews); return; }
+    const key = lang + '::' + sourceReviews.map(r => r.text).join('||');
+    if (translateCache.current?.key === key) { setReviews(translateCache.current.data); return; }
+    let active = true;
+    base44.integrations.Core.InvokeLLM({
+      prompt: `You translate Belgian restaurant guest reviews into ${lang === 'fr' ? 'French' : 'English'}. Keep the tone warm, natural and first-person; preserve any names and dish words. Return ONLY a JSON object { "translations": [ "...", ... ] } in the SAME order as the input. Reviews (JSON array, same order):\n${JSON.stringify(sourceReviews.map(r => r.text))}`,
+      response_json_schema: { type: 'object', properties: { translations: { type: 'array', items: { type: 'string' } } } },
+    }).then((res) => {
+      const t = Array.isArray(res?.translations) ? res.translations : [];
+      const out = sourceReviews.map((r, i) => ({ ...r, text: (t[i] || r.text) }));
+      translateCache.current = { key, data: out };
+      if (active) setReviews(out);
+    }).catch(() => { if (active) setReviews(sourceReviews); });
+    return () => { active = false; };
+  }, [sourceReviews, lang]);
 
   // Auto-rotate through the review pages
   useEffect(() => {
