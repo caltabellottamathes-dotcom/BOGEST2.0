@@ -97,7 +97,7 @@ function Maandselectie() {
           <span className="h-px w-10 bg-primary" />
           <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{monthLabel} {now.getFullYear()}</span>
         </div>
-        <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground">{(SECTION_LABELS[lang] || SECTION_LABELS.nl).title}<span className="text-primary">.</span></h2>
+        <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground">{(SECTION_LABELS[lang] || SECTION_LABELS.nl).title.replace(/\.$/, '')}<span className="text-primary">.</span></h2>
       </div>
       <div className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {suggestions.map((item) => (

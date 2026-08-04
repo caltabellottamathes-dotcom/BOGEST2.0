@@ -253,7 +253,7 @@ export default function Instagram() {
         {/* Account links — 3 locations, IG + FB each */}
         <section id="social-accounts" className="w-full px-6 md:px-10 lg:px-16 pb-20">
           <div className="border-t border-border pt-10">
-            <h3 className="font-heading text-lg font-semibold text-foreground mb-6">{c.accounts}.</h3>
+            <h3 className="font-heading text-lg font-semibold text-foreground mb-6">{c.accounts}<span className="text-primary">.</span></h3>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               {ACCOUNTS.map((acc) => (
                 <SectionReveal key={acc.location} className="h-full">

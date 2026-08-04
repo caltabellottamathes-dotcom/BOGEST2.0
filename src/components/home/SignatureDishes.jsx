@@ -46,7 +46,7 @@ export default function SignatureDishes() {
               {t('section_signature')}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground">
-              {HEADING[lang] || HEADING.nl}
+              {(HEADING[lang] || HEADING.nl).replace(/\.$/, '')}<span className="text-primary">.</span>
             </h2>
           </SectionReveal>
           <Link to="/menu"

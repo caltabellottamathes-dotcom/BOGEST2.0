@@ -569,7 +569,7 @@ export default function Jobs() {
                   <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('job_label')}</span>
                 </div>
                 <h2 className="font-heading text-3xl md:text-4xl font-bold leading-[0.95] text-foreground mb-2">
-                  {selected ? `${t('job_apply_for')}${selected.title}` : t('job_apply_title') + '.'}
+                  {selected ? `${t('job_apply_for')}${selected.title}` : t('job_apply_title')}<span className="text-primary">.</span>
                 </h2>
                 {!selected && <p className="font-body text-sm text-muted-foreground mb-6">{t('job_apply_desc')}</p>}
                 {selected && <p className="font-body text-sm text-primary mb-6">{selected.location} · {selected.type}</p>}

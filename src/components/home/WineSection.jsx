@@ -53,7 +53,7 @@ export default function WineSection() {
               {t('section_wine')}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-7">
-              {c.heading}
+              {c.heading.replace(/\.$/, '')}<span className="text-primary">.</span>
             </h2>
             <p className="font-body text-base text-muted-foreground leading-relaxed mb-10">
               {c.body}

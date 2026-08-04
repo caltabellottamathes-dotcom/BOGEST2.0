@@ -51,7 +51,7 @@ export default function MeatSection() {
               {c.eyebrow}
             </span>
             <h2 className="font-heading text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-8">
-              {c.heading}
+              {c.heading.replace(/\.$/, '')}<span className="text-primary">.</span>
             </h2>
             <p className="font-body text-base md:text-lg text-muted-foreground leading-relaxed mb-6">
               {c.body1}

@@ -212,7 +212,7 @@ export default function LocationDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20 px-6">
         <div className="text-center">
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-4">{t('loc_not_found')}</h1>
+          <h1 className="font-heading text-3xl font-bold text-foreground mb-4">{t('loc_not_found')}<span className="text-primary">.</span></h1>
           <Link to="/locations" className="font-body text-sm text-primary hover:underline">{t('loc_back')}</Link>
         </div>
       </div>
@@ -233,7 +233,7 @@ export default function LocationDetail() {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
           <div className="w-full px-6 md:px-10 lg:px-16">
             <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">{t('nav_locations')}</span>
-            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground">{loc.name}</h1>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-foreground">{loc.name}<span className="text-primary">.</span></h1>
             <p className="font-body text-base text-muted-foreground mt-2">{loc.city}, {loc.region}</p>
             <div className="mt-6 inline-flex items-center gap-2 px-5 py-3 rounded-full border border-primary/30 bg-primary/5">
               <Sparkles className="w-4 h-4 text-primary" />

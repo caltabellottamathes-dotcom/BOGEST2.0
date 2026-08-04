@@ -46,7 +46,7 @@ export default function PanelHero({ id, label, title, titleAccent, subtitle, chi
               <span className="italic text-primary">{titleAccent}</span>
             </>
           )}
-          <span className="not-italic text-white">.</span>
+          <span className="not-italic text-primary">.</span>
         </h1>
         {subtitle && (
           <p className="font-body text-sm md:text-base text-white/80 mt-6 max-w-xl leading-relaxed" style={{ textShadow: '0 1px 12px rgba(0,0,0,0.40)' }}>

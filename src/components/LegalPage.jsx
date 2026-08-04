@@ -11,7 +11,7 @@ export default function LegalPage({ content }) {
     <div className="w-full">
       <section id="legal-hero" className="w-full pt-32 md:pt-40 pb-12 px-6 md:px-10 lg:px-16">
         <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">{LEGAL_LABEL[lang] || LEGAL_LABEL.nl}</span>
-        <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground">{content.title}</h1>
+        <h1 className="font-heading text-4xl md:text-5xl font-bold text-foreground">{content.title}<span className="text-primary">.</span></h1>
         {content.intro && (
           <p className="font-body text-base text-muted-foreground leading-relaxed mt-6 max-w-3xl">{content.intro}</p>
         )}
@@ -25,7 +25,7 @@ export default function LegalPage({ content }) {
           {content.sections.map((section) => (
             <div key={section.num} className="space-y-3">
               <h2 className="font-heading text-lg md:text-xl font-bold text-foreground">
-                {section.num}. {section.title}
+                {section.num}. {section.title}<span className="text-primary">.</span>
               </h2>
               <p className="font-body text-base text-muted-foreground leading-relaxed">{section.content}</p>
               {section.list && (

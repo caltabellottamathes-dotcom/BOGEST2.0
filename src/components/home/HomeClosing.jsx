@@ -51,7 +51,7 @@ export default function HomeClosing() {
       </div>
 
       {/* Brand sign-off — the end-of-home wordmark + tagline */}
-      <div className="relative z-10 flex flex-col items-center gap-4 py-16 md:py-24 px-6 text-center">
+      <div className="relative z-10 flex flex-col items-center gap-4 py-12 md:py-16 px-6 text-center">
         <span className="font-body text-[11px] md:text-xs tracking-[0.5em] uppercase text-primary">BOGEST</span>
         <h2 className="font-heading font-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-none">
           VUUR. SMAAK. GEZEL.
@@ -62,7 +62,7 @@ export default function HomeClosing() {
       </div>
 
       {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
-      <div className="relative z-10" style={{ height: '6rem' }} aria-hidden />
+      <div className="relative z-10" style={{ height: '3rem' }} aria-hidden />
     </section>
   );
 }

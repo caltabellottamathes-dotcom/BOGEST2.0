@@ -118,7 +118,7 @@ export default function RestaurantSpaces() {
         <div className="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none" />
         <div className="px-6 md:px-10 lg:px-16">
           <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-4 block">{data.location}</span>
-          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{data.title}</h1>
+          <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-foreground">{data.title}<span className="text-primary">.</span></h1>
         </div>
       </section>
 

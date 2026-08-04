@@ -56,7 +56,7 @@ export default function Reserve() {
               <span className="h-px w-10 bg-primary" />
               <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{bookable.map(l => l.city).join(' · ')}</span>
             </div>
-            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-10">{rc.heading}<span className="text-primary">.</span></h2>
+            <h2 className="font-heading text-3xl md:text-5xl font-bold leading-[0.95] text-foreground mb-10">{rc.heading.replace(/\?$/, '')}<span className="text-primary">?</span></h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-5">
               {bookable.map((loc) => {
