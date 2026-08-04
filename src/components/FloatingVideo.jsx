@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react';
-import { usePanelShift } from '@/hooks/usePanelShift';
+// usePanelShift replaced by a local ElevenLabs-matching shift (see below).
 
 /**
  * Floating welcome video — a pure video card on the right side.
@@ -32,7 +32,26 @@ export default function FloatingVideo() {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [drag, setDrag] = useState({ x: 0, y: 0 });
-  const shift = usePanelShift();
+  // Glue the video card to the ElevenLabs orb: when a glass panel opens, the
+  // orb slides left on desktop by -min(82vw, 1200px, 100vw-552px) and stays put
+  // on mobile. The card mirrors that exact shift so it floats above the orb's
+  // right-top corner at all times.
+  const [shift, setShift] = useState(0);
+  useEffect(() => {
+    const compute = () => {
+      const w = window.innerWidth;
+      if (w < 640) return 0; // mobile: the orb stays put when a panel opens
+      return -Math.min(w * 0.82, 1200, w - 552); // match the orb's slide exactly
+    };
+    const handler = (e) => setShift(e.detail?.open ? compute() : 0);
+    const onResize = () => setShift((s) => (s < 0 ? compute() : 0));
+    window.addEventListener('bogest:panel-visibility', handler);
+    window.addEventListener('resize', onResize);
+    return () => {
+      window.removeEventListener('bogest:panel-visibility', handler);
+      window.removeEventListener('resize', onResize);
+    };
+  }, []);
   const dragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, moved: false });
 
@@ -157,9 +176,9 @@ export default function FloatingVideo() {
 
   return (
     <div
-      className="fixed right-4 sm:right-5 z-[100001]"
+      className="fixed right-5 sm:right-6 z-[100001]"
       style={{
-        bottom: 84,
+        bottom: 82,
         pointerEvents: 'none',
         transform: `translate(${totalX}px, ${totalY}px)`,
         transition: 'transform 0.55s cubic-bezier(0.22, 1, 0.36, 1)',

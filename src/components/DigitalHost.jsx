@@ -45,7 +45,7 @@ const HOST_STRINGS = {
     intro_question: 'Waarmee kan ik u helpen?',
     chip_location: 'Welke vestiging past bij mij?',
     chip_reserve: 'Tafel reserveren',
-    chip_menu: 'Mag ik iets aanraden?',
+    chip_menu: 'Kan u iets aanraden?',
     chip_explore: 'Ik kijk even rond',
     entry_headline: 'Welkom bij Bogèst',
     entry_sub: 'Hoe wilt u vandaag kennismaken?',

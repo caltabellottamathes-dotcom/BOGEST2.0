@@ -159,7 +159,7 @@ export default function ReviewsSection() {
 
         {/* Featured pull-quote + supporting */}
         {featured && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 h-[26rem] md:h-[28rem] lg:h-[26rem] overflow-hidden">
             <div className="lg:col-span-8">
               <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[22vw] sm:text-[16vw] lg:text-[10vw] -mb-2 select-none">“</span>
               <motion.blockquote
@@ -167,7 +167,7 @@ export default function ReviewsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground min-h-[6.5rem] sm:min-h-[8rem] md:min-h-[10rem] lg:min-h-[13rem] line-clamp-4"
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] text-foreground h-[11rem] sm:h-[13rem] md:h-[15rem] lg:h-[16rem] overflow-hidden flex items-center line-clamp-4"
               >
                 {featured.text}
               </motion.blockquote>
@@ -180,7 +180,7 @@ export default function ReviewsSection() {
               </div>
             </div>
 
-            <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-8 flex flex-col gap-7">
+            <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-8 flex flex-col gap-6 overflow-hidden">
               {supporting.map((r, i) => (
                 <motion.div
                   key={r.name + r.date + page}

@@ -51,14 +51,18 @@ export default function HomeClosing() {
       </div>
 
       {/* Brand sign-off — the end-of-home wordmark + tagline */}
-      <div className="relative z-10 flex flex-col items-center gap-4 py-12 md:py-16 px-6 text-center">
-        <span className="font-body text-[11px] md:text-xs tracking-[0.5em] uppercase text-primary">BOGEST</span>
-        <h2 className="font-heading font-bold text-white text-3xl sm:text-4xl md:text-5xl lg:text-6xl tracking-tight leading-none">
-          VUUR. SMAAK. GEZEL.
+      <div className="relative z-10 flex flex-col items-center gap-6 py-14 md:py-20 px-6 text-center">
+        <div className="flex items-center gap-4">
+          <span className="h-px w-10 bg-primary/40" />
+          <span className="font-body text-[11px] md:text-xs tracking-[0.5em] uppercase text-primary">Bogèst</span>
+          <span className="h-px w-10 bg-primary/40" />
+        </div>
+        <h2 className="font-heading font-bold text-white leading-[0.95] tracking-tight flex flex-wrap items-baseline justify-center gap-x-4 md:gap-x-6 text-[clamp(2.4rem,8vw,5.5rem)]">
+          <span>VUUR<span className="text-primary">.</span></span>
+          <span>SMAAK<span className="text-primary">.</span></span>
+          <span>GEZEL<span className="text-primary">.</span></span>
         </h2>
-        <p className="font-body text-sm md:text-base text-white/70 max-w-xl">
-          Een Beau Geste — vakmanschap in smaak
-        </p>
+        <p className="font-heading italic text-white/55 text-sm md:text-base tracking-wide max-w-xl">Een Beau Geste — vakmanschap in smaak</p>
       </div>
 
       {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
