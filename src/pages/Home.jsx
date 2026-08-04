@@ -5,6 +5,7 @@ import StorySection from '@/components/home/StorySection';
 import PhilosophySection from '@/components/home/PhilosophySection';
 import SeasonalSection from '@/components/home/SeasonalSection';
 import HomeClosing from '@/components/home/HomeClosing';
+import HomeEndTagline from '@/components/home/HomeEndTagline';
 import LocationsPreview from '@/components/home/LocationsPreview';
 import ReviewsSection from '@/components/home/ReviewsSection';
 import IntroPopup from '@/components/IntroPopup';
@@ -29,6 +30,7 @@ export default function Home() {
         <PhilosophySection />
         <SeasonalSection />
         <ReviewsSection />
+        <HomeEndTagline />
         <HomeClosing />
       </div>
     </>
