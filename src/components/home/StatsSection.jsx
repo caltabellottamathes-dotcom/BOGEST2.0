@@ -35,7 +35,7 @@ export default function StatsSection() {
   ];
 
   return (
-    <section ref={ref} id="stats" className="w-full py-12 md:py-24 border-b border-border relative overflow-hidden">
+    <section ref={ref} id="stats" className="w-full py-16 md:py-24 border-b border-border relative overflow-hidden">
       <div className="w-full px-6 md:px-10 lg:px-16 relative">
 
         {/* ── Mobile: hero stat with ghosted 10 + 3 small hairline stats ── */}
@@ -55,7 +55,7 @@ export default function StatsSection() {
           <div className="grid grid-cols-3 divide-x divide-border/40">
             {stats.slice(1).map((s) => (
               <div key={s.label} className="px-3 first:pl-0 last:pr-0">
-                <p className="font-body text-[9px] tracking-[0.22em] uppercase text-foreground/60 mb-1.5">{s.label}</p>
+                <p className="font-body text-[10px] tracking-[0.3em] uppercase text-foreground/60 mb-1.5">{s.label}</p>
                 <p className="font-heading text-2xl font-bold text-primary leading-none">
                   <Counter value={s.value} suffix={s.suffix} inView={inView} />
                 </p>

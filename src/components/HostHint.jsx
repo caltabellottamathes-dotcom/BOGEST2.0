@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { askHost, hostHintLabel } from '@/lib/hostHint';
 
@@ -17,7 +17,7 @@ function Mark({ label }) {
     <span className="inline-flex items-center gap-1.5 whitespace-nowrap font-body text-[10px] tracking-[0.3em] uppercase text-white/90">
       <span className="w-1 h-1 rounded-full bg-white/70 flex-shrink-0" />
       {label}
-      <span className="text-white/50">→</span>
+      <ArrowRight className="w-3 h-3 text-white/50 flex-shrink-0" />
     </span>
   );
 }
@@ -27,7 +27,7 @@ function GlassMark({ label }) {
     <span className="inline-flex items-center gap-2 whitespace-nowrap font-body text-[10px] tracking-[0.3em] uppercase text-white/90">
       <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
       {label}
-      <ChevronRight className="w-3 h-3 text-white/55 transition-transform duration-300 group-hover/hint:translate-x-0.5" />
+      <ArrowRight className="w-3.5 h-3.5 text-white/55 transition-transform duration-300 group-hover/hint:translate-x-0.5" />
     </span>
   );
 }

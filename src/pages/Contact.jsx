@@ -125,7 +125,7 @@ export default function Contact() {
                             <h3 className="font-heading text-base md:text-lg font-bold text-foreground leading-tight">{loc.name}<span className="text-primary">.</span></h3>
                           </div>
                           {selected && (
-                            <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary text-primary-foreground font-body text-[9px] tracking-[0.2em] uppercase">
+                            <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-1 rounded-full bg-primary text-primary-foreground font-body text-[10px] tracking-[0.2em] uppercase">
                               <Check className="w-3 h-3" />{t('shop_choose')}
                             </span>
                           )}

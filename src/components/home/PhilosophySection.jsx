@@ -79,7 +79,7 @@ export default function PhilosophySection() {
   const labels = LABELS[lang] || LABELS.nl;
 
   return (
-    <section id="filosofie" className="relative w-full py-20 md:py-32 overflow-hidden">
+    <section id="filosofie" className="relative w-full py-16 md:py-24 overflow-hidden">
       {/* Subtle warm tonal layer for depth */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.06) 0%, transparent 45%)' }} />
       {/* Large ghosted bull mark — bleeding off the right edge, the recurring site motif */}
@@ -119,7 +119,7 @@ export default function PhilosophySection() {
                   {ch.link && (
                     <Link
                       to={ch.link.to}
-                      className="group mt-5 inline-flex items-center gap-2 font-body text-[11px] tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300"
+                      className="group mt-5 inline-flex items-center gap-2 font-body text-xs tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300"
                     >
                       {ch.link.label}
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />

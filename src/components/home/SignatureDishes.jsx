@@ -38,7 +38,7 @@ export default function SignatureDishes() {
   const { siteImg } = useSiteImages();
   const dishes = DISHES[lang] || DISHES.nl;
   return (
-    <section className="w-full py-24 md:py-32 bg-card">
+    <section className="w-full py-16 md:py-24 bg-card">
       <div className="w-full px-6 md:px-10 lg:px-16">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between mb-14">
           <SectionReveal>

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Star, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { base44 } from '@/api/base44Client';
@@ -35,7 +35,7 @@ function SourceBadge({ source }) {
   if (!source) return null;
   const label = source.charAt(0).toUpperCase() + source.slice(1);
   return (
-    <span className="inline-flex items-center gap-1.5 font-body text-[9px] tracking-[0.18em] uppercase text-primary/85 border border-primary/30 rounded-full px-2 py-0.5">
+    <span className="inline-flex items-center gap-1.5 font-body text-[10px] tracking-[0.18em] uppercase text-primary/85 border border-primary/30 rounded-full px-2 py-0.5">
       <span className="w-1 h-1 rounded-full bg-primary/70" />
       {label}
     </span>
@@ -172,11 +172,11 @@ export default function ReviewsSection() {
             )}
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={safePage === 0}
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30">
-              <ChevronLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4" />
             </button>
             <button onClick={() => setPage(p => Math.min(pages - 1, p + 1))} disabled={safePage === pages - 1}
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30">
-              <ChevronRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
         </motion.div>

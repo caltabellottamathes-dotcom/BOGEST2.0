@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowUpRight, CalendarDays, ShoppingBag, Gift } from 'lucide-react';
+import { ArrowRight, CalendarDays, ShoppingBag, Gift } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 
@@ -49,7 +49,7 @@ export default function CTACards() {
               style={{ height: '220%', width: 'auto', bottom: '-70%', left: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
             />
             <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
-              <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{t('home_cta_label')}</p>
+              <p className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2">{t('home_cta_label')}</p>
               <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
                 {idx >= 0 ? (
                   <>{before}<span className="italic text-primary">{accent}</span>{after}<span className="text-primary">.</span></>
@@ -69,14 +69,14 @@ export default function CTACards() {
                 const Icon = card.icon;
                 return (
                   <Link key={i} to={card.path} className="group/item flex items-center gap-4 -mx-2 px-2 py-3 rounded-xl hover:bg-white/[0.06] transition-colors duration-300">
-                    <span className="w-10 h-10 rounded-xl flex items-center justify-center text-primary flex-shrink-0" style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.30)' }}>
+                    <span className="w-10 h-10 rounded-xl flex items-center justify-center text-primary flex-shrink-0" style={{ background: 'hsl(var(--primary) / 0.14)', border: '1px solid hsl(var(--primary) / 0.30)' }}>
                       <Icon style={{ width: 17, height: 17 }} />
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-heading text-base font-bold text-white leading-tight">{card.title}</h3>
                       <p className="font-body text-xs text-white/60 leading-snug truncate">{card.desc}</p>
                     </div>
-                    <ArrowUpRight className="w-4 h-4 text-white/40 group-hover/item:text-primary group-hover/item:translate-x-0.5 group-hover/item:-translate-y-0.5 transition-all duration-300 flex-shrink-0" />
+                    <ArrowRight className="w-4 h-4 text-white/40 group-hover/item:text-primary group-hover/item:translate-x-1 transition-all duration-300 flex-shrink-0" />
                   </Link>
                 );
               })}

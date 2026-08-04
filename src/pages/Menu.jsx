@@ -179,7 +179,7 @@ export default function Menu() {
               const active = activeId === cat.id;
               return (
                 <button key={cat.id} ref={(el) => { if (el) tabRefs.current[cat.id] = el; }} onClick={() => scrollTo(cat.id)}
-                  className={`inline-flex items-center gap-2 font-body text-[11px] tracking-[0.25em] uppercase whitespace-nowrap transition-colors duration-200 ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
+                  className={`inline-flex items-center gap-2 font-body text-xs tracking-[0.25em] uppercase whitespace-nowrap transition-colors duration-200 ${active ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>
                   <span className={`font-heading text-sm font-bold ${active ? 'text-primary' : 'text-muted-foreground/50'}`}>{String(i + 1).padStart(2, '0')}</span>
                   <span>{t(cat.key)}</span>
                   <span className={`h-1 w-1 rounded-full bg-primary transition-opacity duration-200 ${active ? 'opacity-100' : 'opacity-0'}`} />

@@ -14,6 +14,14 @@ module.exports = {
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
   		},
+  		lineHeight: {
+  			none: '1',
+  			tight: '1.15',
+  			snug: '1.4',
+  			normal: '1.5',
+  			relaxed: '1.55',
+  			loose: '1.7'
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',

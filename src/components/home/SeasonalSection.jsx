@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useInView } from 'framer-motion';
-import { ArrowRight, ChevronDown, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ArrowRight, ChevronDown, ArrowLeft } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HomeTitle from '@/components/home/HomeTitle';
@@ -79,7 +79,7 @@ export function SuggestionCard({ item, showFade = true }) {
           className="absolute top-4 left-4 flex flex-col items-start px-3 py-1 bg-black/35 backdrop-blur-md rounded-2xl border border-white/15 overflow-hidden transition-all duration-500 group-hover:bg-black/55">
           <span className="font-body text-[10px] tracking-[0.2em] uppercase text-white whitespace-nowrap">{item.tag}</span>
           <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-            <span className="block font-body text-[9px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1">Vraag het aan Bogèst ↘</span>
+            <span className="block font-body text-[10px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1 inline-flex items-center gap-1">Vraag het aan Bogèst <ArrowRight className="w-3 h-3" /></span>
           </span>
         </button>
         <div className="absolute bottom-4 right-4">
@@ -145,7 +145,7 @@ export default function SeasonalSection() {
   };
 
   return (
-    <section id="suggesties" className="relative w-full py-14 md:py-20 overflow-hidden">
+    <section id="suggesties" className="relative w-full py-16 md:py-24 overflow-hidden">
       {/* Layered warm gradient + ghosted bull — recurring panel motif */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
       <div className="relative w-full px-6 md:px-10 lg:px-16">
@@ -172,14 +172,14 @@ export default function SeasonalSection() {
               disabled={!canLeft}
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ArrowLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => scroll(1)}
               disabled={!canRight}
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" />
             </button>
             <Link to="/menu"
               className="group ml-2 inline-flex items-center gap-2 font-body text-xs tracking-widest uppercase text-primary hover:text-foreground transition-colors duration-300">

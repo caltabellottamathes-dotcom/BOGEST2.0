@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, ArrowUpRight, X } from 'lucide-react';
+import { MapPin, Phone, ArrowRight, X } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useLang } from '@/lib/LangContext';
 import { LANGUAGES } from '@/lib/i18n';
@@ -152,7 +152,7 @@ export default function Footer() {
                 <Link key={link.path} to={link.path} onClick={closeFooter}
                   className="group inline-flex items-center gap-1 font-body text-sm text-foreground/60 hover:text-primary transition-colors duration-300">
                   {link.label}
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
                 </Link>
               ))}
             </div>
@@ -166,7 +166,7 @@ export default function Footer() {
                 <Link key={link.path} to={link.path} onClick={closeFooter}
                   className="group inline-flex items-center gap-1 font-body text-sm text-foreground/60 hover:text-primary transition-colors duration-300">
                   {link.label}
-                  <ArrowUpRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <ArrowRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-300" />
                 </Link>
               ))}
             </div>

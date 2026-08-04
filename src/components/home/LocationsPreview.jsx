@@ -52,7 +52,7 @@ export default function LocationsPreview() {
                     <span className="absolute top-4 left-4 font-heading font-bold leading-none text-5xl text-white/20">{loc.number}</span>
                     <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30">
                       <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />
-                      <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
+                      <span className="font-body text-[10px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
                     </span>
                     <div className="absolute inset-x-0 bottom-0 p-4">
                       <div className="rounded-xl px-4 py-3"
@@ -62,7 +62,7 @@ export default function LocationsPreview() {
                           <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
                         </div>
                         <h3 className="font-heading text-2xl font-bold text-white leading-tight">{loc.city}<span className="text-primary">.</span></h3>
-                        <p className="font-body text-[11px] text-white/65 leading-tight mt-1">{t('loc_coming_soon')}</p>
+                        <p className="font-body text-xs text-white/65 leading-tight mt-1">{t('loc_coming_soon')}</p>
                       </div>
                     </div>
                   </div>
@@ -82,7 +82,7 @@ export default function LocationsPreview() {
                           <span className="font-body text-[9px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
                         </div>
                         <h3 className="font-heading text-2xl font-bold text-white leading-tight">{loc.city}<span className="text-primary">.</span></h3>
-                        <p className="font-body text-[11px] text-white/70 leading-tight mt-1">{loc.address}</p>
+                        <p className="font-body text-xs text-white/70 leading-tight mt-1">{loc.address}</p>
                       </div>
                     </div>
                   </Link>
@@ -102,7 +102,7 @@ export default function LocationsPreview() {
                       {inactive && (
                         <span className="absolute top-5 right-5 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/15 border border-primary/30">
                           <span className="w-1.5 h-1.5 rounded-full bg-primary/70 animate-pulse" />
-                          <span className="font-body text-[9px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
+                          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-primary">{t('loc_coming_soon')}</span>
                         </span>
                       )}
                       {/* glass caption bottom-left — white, expands downward into the "Vraag het aan Bogèst" hint on hover (active locations) */}
@@ -125,7 +125,7 @@ export default function LocationsPreview() {
                             <span className="font-body text-[10px] tracking-[0.3em] uppercase text-white">Bogèst · {loc.city}</span>
                           </div>
                           <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-                            <span className="block font-body text-[9px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1">Vraag het aan Bogèst ↘</span>
+                            <span className="block font-body text-[10px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1 inline-flex items-center gap-1">Vraag het aan Bogèst <ArrowRight className="w-3 h-3" /></span>
                           </span>
                         </button>
                       )}

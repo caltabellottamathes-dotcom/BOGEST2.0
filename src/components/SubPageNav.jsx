@@ -16,7 +16,7 @@ export default function SubPageNav({ backTo = '/about', backLabel, nextTo, nextL
       <div className="max-w-5xl mx-auto flex items-center justify-between">
         <Link
           to={backTo}
-          className="group inline-flex items-center gap-2.5 font-body text-[11px] tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
+          className="group inline-flex items-center gap-2.5 font-body text-xs tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
         >
           <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-border transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/10">
             <ArrowLeft className="w-3.5 h-3.5" />
@@ -26,7 +26,7 @@ export default function SubPageNav({ backTo = '/about', backLabel, nextTo, nextL
         {nextTo && nextLabel && (
           <Link
             to={nextTo}
-            className="group inline-flex items-center gap-2.5 font-body text-[11px] tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
+            className="group inline-flex items-center gap-2.5 font-body text-xs tracking-[0.3em] uppercase text-muted-foreground hover:text-primary transition-colors duration-300"
           >
             {nextLabel}
             <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-border transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/10">

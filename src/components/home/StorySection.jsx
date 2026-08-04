@@ -35,9 +35,9 @@ export default function StorySection() {
                 {title}<br />
                 <span className="italic text-primary">{accent}</span><span className="not-italic text-primary">.</span>
               </h2>
-              <p className="font-body text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-lg mb-3">{t('home_story_body1')}</p>
-              <p className="font-body text-sm md:text-[15px] text-muted-foreground leading-relaxed max-w-lg mb-4">{t('home_story_body2')}</p>
-              <Link to="/about" className="group inline-flex items-center gap-2 font-body text-[11px] tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300">
+              <p className="font-body text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mb-3">{t('home_story_body1')}</p>
+              <p className="font-body text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mb-4">{t('home_story_body2')}</p>
+              <Link to="/about" className="group inline-flex items-center gap-2 font-body text-xs tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300">
                 {t('btn_more')}
                 <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
               </Link>

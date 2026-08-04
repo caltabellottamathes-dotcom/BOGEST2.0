@@ -49,7 +49,7 @@ export default function OrderCtaSection({
 
           {/* Tekst links */}
           <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
-            {eyebrow && <p className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-2">{eyebrow}</p>}
+            {eyebrow && <p className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2">{eyebrow}</p>}
             <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
               {title}
               {titleAccent && (
@@ -75,7 +75,7 @@ export default function OrderCtaSection({
           }}
         >
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'rgba(200,163,89,0.14)', border: '1px solid rgba(200,163,89,0.35)' }}>
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.14)', border: '1px solid hsl(var(--primary) / 0.30)' }}>
               <Icon className="w-4 h-4 text-primary" />
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">{cardEyebrow}</span>
