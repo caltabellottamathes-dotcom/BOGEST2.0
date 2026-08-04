@@ -104,12 +104,16 @@ export default function Footer() {
       transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
       className="fixed bottom-0 left-0 right-0 z-[90] flex flex-col"
       style={{
-        background: theme === 'light' ? 'hsl(var(--background) / 0.30)' : 'rgba(255,255,255,0.06)',
+        '--primary': '78 28% 34%',
+        '--ring': '78 28% 34%',
+        background: theme === 'light'
+          ? 'linear-gradient(to bottom, hsl(var(--background) / 0.30), hsl(78 28% 34% / 0.18))'
+          : 'linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(95,113,62,0.16))',
         backdropFilter: 'blur(24px) saturate(150%)',
         WebkitBackdropFilter: 'blur(24px) saturate(150%)',
-        borderTop: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.25)' : '1px solid rgba(255,255,255,0.14)',
-        borderLeft: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
-        borderRight: theme === 'light' ? '1px solid hsl(78 35% 28% / 0.12)' : 'none',
+        borderTop: theme === 'light' ? '1px solid hsl(78 28% 26% / 0.30)' : '1px solid rgba(95,113,62,0.30)',
+        borderLeft: theme === 'light' ? '1px solid hsl(78 28% 26% / 0.14)' : 'none',
+        borderRight: theme === 'light' ? '1px solid hsl(78 28% 26% / 0.14)' : 'none',
         borderRadius: '24px 24px 0 0',
         boxShadow: theme === 'light' ? '0 -24px 60px rgba(0,0,0,0.10)' : '0 -30px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.10)',
       }}
