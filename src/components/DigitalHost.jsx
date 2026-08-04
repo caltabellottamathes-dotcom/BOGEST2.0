@@ -859,12 +859,14 @@ const DUTCH_CAT_LABEL = { gastronomy: 'Gerecht', interiors: 'Interieur', atmosph
 // Image loads eagerly with a placeholder frame so it's always visible, and the
 // caption is shown in Dutch.
 function PhotoCard({ desc, location, isDark, url }) {
+  const [loaded, setLoaded] = useState(false);
   if (!url) return null;
   const locLabel = DUTCH_LOC_LABEL[location] || location;
   return (
     <div className="rounded-xl overflow-hidden mt-2" style={{ border: isDark ? '1px solid rgba(255,255,255,0.10)' : '1px solid rgba(74,83,32,0.18)' }}>
-      <div className="w-full h-40" style={{ background: 'rgba(255,255,255,0.06)' }}>
-        <img src={url} alt={desc} className="w-full h-40 object-cover" loading="eager" decoding="async" fetchpriority="high" />
+      <div className="w-full h-40 relative" style={{ background: 'rgba(255,255,255,0.06)' }}>
+        {!loaded && <div className="absolute inset-0 animate-pulse" style={{ background: 'linear-gradient(110deg, rgba(255,255,255,0.04), rgba(255,255,255,0.10), rgba(255,255,255,0.04))', backgroundSize: '200% 100%' }} />}
+        <img src={url} alt={desc} className="w-full h-40 object-cover transition-opacity duration-500" style={{ opacity: loaded ? 1 : 0 }} loading="eager" decoding="async" fetchpriority="high" onLoad={() => setLoaded(true)} />
       </div>
       <div className="px-3 py-2" style={{ background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(74,83,32,0.05)' }}>
         {desc && <p className="font-body text-xs" style={{ color: 'rgba(255,255,255,0.9)' }}>{desc}</p>}

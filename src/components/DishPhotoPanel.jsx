@@ -13,16 +13,27 @@ export default function DishPhotoPanel() {
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const [photo, setPhoto] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handler = (e) => {
       const p = e.detail || {};
       if (!p?.url) return;
       setPhoto(p);
+      setLoading(false);
+      setOpen(true);
+    };
+    const loadingHandler = () => {
+      setPhoto(null);
+      setLoading(true);
       setOpen(true);
     };
     window.addEventListener('bogest:show-dish-photo', handler);
-    return () => window.removeEventListener('bogest:show-dish-photo', handler);
+    window.addEventListener('bogest:show-dish-photo-loading', loadingHandler);
+    return () => {
+      window.removeEventListener('bogest:show-dish-photo', handler);
+      window.removeEventListener('bogest:show-dish-photo-loading', loadingHandler);
+    };
   }, []);
 
   // Close when the visitor navigates to another page, or when the host emits a
@@ -62,15 +73,23 @@ export default function DishPhotoPanel() {
       }
     >
       <div className="flex-1 min-h-0 flex flex-col p-4 md:p-6 gap-4">
-        {photo?.url && (
+        {(loading || photo?.url) && (
           <div className="flex-1 min-h-0 relative rounded-2xl overflow-hidden border border-white/10 shadow-xl bg-black/20">
-            <img src={photo.url} alt={photo.name || 'Bogèst'} className="w-full h-full object-cover" style={{ filter: 'saturate(0.92) brightness(0.97)' }} />
-            <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent 45%)' }} />
-            {photo?.location && (
-              <div className="absolute left-4 bottom-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(12,11,9,0.55)', border: '1px solid rgba(255,255,255,0.16)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
-                <MapPin className="w-3 h-3 text-primary" />
-                <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white">Bogèst · {photo.location}</span>
+            {loading ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/5">
+                <div className="w-7 h-7 border-2 border-primary/25 border-t-primary rounded-full animate-spin" />
               </div>
+            ) : (
+              <>
+                <img src={photo.url} alt={photo.name || 'Bogèst'} className="w-full h-full object-cover" style={{ filter: 'saturate(0.92) brightness(0.97)' }} />
+                <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.5), transparent 45%)' }} />
+                {photo?.location && (
+                  <div className="absolute left-4 bottom-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(12,11,9,0.55)', border: '1px solid rgba(255,255,255,0.16)', backdropFilter: 'blur(10px)', WebkitBackdropFilter: 'blur(10px)' }}>
+                    <MapPin className="w-3 h-3 text-primary" />
+                    <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white">Bogèst · {photo.location}</span>
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

@@ -104,6 +104,9 @@ export async function dispatchUIAction({ type, args = [] }) {
     // photo, so a no-match returns silently and the host describes instead.
     case 'showDishPhoto': {
       const [query, category, location] = a;
+      // Open the panel instantly with a skeleton so the guest sees motion
+      // immediately, then fill in the real photo when assetSearch resolves.
+      window.dispatchEvent(new CustomEvent('bogest:show-dish-photo-loading', { detail: { query } }));
       try {
         // Always restrict dish photos to the food category so a wrong
         // location / atmosphere photo can never substitute for a dish. The
