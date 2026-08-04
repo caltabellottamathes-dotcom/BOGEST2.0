@@ -8,6 +8,8 @@ import DigitalHost from '@/components/DigitalHost';
 import ElevenLabsAgent from '@/components/ElevenLabsAgent';
 import FloatingVideo from '@/components/FloatingVideo';
 import UIActionOverlay from '@/components/UIActionOverlay';
+import MapPanel from '@/components/MapPanel';
+import DishPhotoPanel from '@/components/DishPhotoPanel';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import BeeldbankEditor from '@/components/BeeldbankEditor';
 import CustomCursor from '@/components/CustomCursor';
@@ -107,6 +109,12 @@ export default function Layout() {
 
       {/* UI Action overlay renderer (Section 5) — gallery, reviews, maps, notifications */}
       <UIActionOverlay />
+
+      {/* Slide-in map panel (route / location on the map) */}
+      <MapPanel />
+
+      {/* Slide-in dish photo panel (agent shows a dish photo) */}
+      <DishPhotoPanel />
 
       {/* Custom gold cursor — dot + trailing ring (mouse only) */}
       <CustomCursor />

@@ -104,6 +104,14 @@ export async function handleWebsiteActionToolCall(params = {}) {
     return { success: true, message: "De digitale gastheer toont de foto's." };
   }
 
+  // Show a location on the map / route — a small Google Maps panel slides in
+  // from the right. Target is a location slug (hasselt | borgloon | heusden-zolder).
+  if (action === 'showmap') {
+    const slug = String(params.target || '').toLowerCase();
+    window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug } }));
+    return { success: true, message: 'Map panel opened.' };
+  }
+
   if (action === 'close') return await window.websiteAction({ action: 'close', target: params.target });
   if (action === 'search') return await window.websiteAction({ action: 'search', target: params.target, data: params.data });
 

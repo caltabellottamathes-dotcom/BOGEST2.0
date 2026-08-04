@@ -1306,17 +1306,28 @@ export default function DigitalHost() {
           query: query || '', category: category || 'all', location: location || 'all', limit: 3,
         });
         const images = (res.data?.images || []).slice(0, 3);
-        if (!images.length) return;
-        const intro = lang === 'fr' ? 'Voici quelques photos de notre beeldbank :'
-          : lang === 'en' ? 'Here are a few photos from our archive:'
-          : "Hier zijn een paar foto's uit onze beeldbank:";
-        const photos = images.map((im) => ({
-          url: im.url,
-          desc: DUTCH_CAT_LABEL[im.category] || query || 'Bogèst',
-          location: im.location || location || '',
-        }));
         sessionStorage.setItem('bogest-host-seen', '1');
-        setMessages([{ role: 'assistant', content: intro, actions: [], photos }]);
+        if (!images.length) {
+          const none = lang === 'fr' ? "Hélas, je n'ai pas de photo de ce plat."
+            : lang === 'en' ? "Unfortunately I don't have a photo of that dish."
+            : 'Helaas heb ik daar geen foto van.';
+          setMessages([{ role: 'assistant', content: none, actions: [] }]);
+          setPhase('chat');
+          return;
+        }
+        const first = images[0];
+        const intro = lang === 'fr' ? "Voici la photo — je l'affiche dans le panneau."
+          : lang === 'en' ? 'Here is the photo — showing it in the panel.'
+          : 'Hier is de foto — ik toon hem in het paneel.';
+        window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {
+          detail: {
+            url: first.url,
+            name: query || DUTCH_CAT_LABEL[first.category] || 'Bogèst',
+            description: first.description || '',
+            location: first.location || location || '',
+          },
+        }));
+        setMessages([{ role: 'assistant', content: intro, actions: [] }]);
         setPhase('chat');
       } catch { /* ignore — the voice agent keeps the conversation going */ }
     };

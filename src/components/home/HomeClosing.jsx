@@ -51,7 +51,7 @@ export default function HomeClosing() {
       </div>
 
       {/* Brand sign-off — a quiet, refined end-of-home wordmark */}
-      <div className="relative z-10 flex flex-col items-center gap-3.5 py-10 md:py-14 px-6 text-center">
+      <div className="relative z-10 flex flex-col items-center gap-3.5 pt-16 md:pt-20 pb-10 md:pb-14 px-6 text-center">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-primary/40" />
           <span className="font-body text-[10px] tracking-[0.45em] uppercase text-primary">Bogèst</span>

@@ -345,18 +345,18 @@ select option:focus {
   z-index: 100000 !important;
 }
 .bogest-cursor-dot {
-  width: 7px; height: 7px; background: hsl(var(--primary));
-  box-shadow: 0 0 10px hsl(var(--primary) / 0.7);
+  width: 5px; height: 5px; background: hsl(var(--primary));
+  box-shadow: 0 0 8px hsl(var(--primary) / 0.55);
   transition: opacity .2s ease;
 }
 .bogest-cursor-ring {
-  width: 34px; height: 34px;
-  border: 1px solid hsl(var(--primary) / 0.6);
-  transition: width .25s ease, height .25s ease, background-color .25s ease, border-color .25s ease, opacity .2s ease;
+  width: 30px; height: 30px;
+  border: 1px solid hsl(var(--primary) / 0.45);
+  transition: width .28s cubic-bezier(0.22,1,0.36,1), height .28s cubic-bezier(0.22,1,0.36,1), background-color .28s ease, border-color .28s ease, opacity .2s ease;
 }
 .bogest-cursor-ring.bogest-cursor--hover {
-  width: 56px; height: 56px;
-  background: hsl(var(--primary) / 0.12);
-  border-color: hsl(var(--primary) / 0.9);
+  width: 46px; height: 46px;
+  background: hsl(var(--primary) / 0.10);
+  border-color: hsl(var(--primary) / 0.85);
 }
-.bogest-cursor-ring.bogest-cursor--down { width: 26px; height: 26px; }
+.bogest-cursor-ring.bogest-cursor--down { width: 24px; height: 24px; }

@@ -48,8 +48,14 @@ export async function dispatchUIAction({ type, args = [] }) {
     case 'displayReviews':
       return websiteAction({ action: 'navigate', target: a[0] || '/' });
 
-    case 'displayMaps':
-      return websiteAction({ action: 'navigate', target: a[0] || '/locations' });
+    case 'displayMaps': {
+      const slug = (a[0] || '').toLowerCase();
+      if (slug) {
+        window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug } }));
+        return { success: true, via: 'map-panel' };
+      }
+      return websiteAction({ action: 'navigate', target: '/locations' });
+    }
 
     // Explicit pop-up actions are intentionally no-ops — the host navigates only.
     case 'openModal':

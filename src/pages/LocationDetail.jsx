@@ -444,12 +444,11 @@ export default function LocationDetail() {
                     {t('btn_reserve')}
                   </Link>
                 )}
-                {loc.mapsUrl && (
-                  <a href={loc.mapsUrl} target="_blank" rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center gap-2 px-5 py-3 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-300">
-                    {L.routeCta} <ArrowUpRight className="w-3 h-3" />
-                  </a>
-                )}
+                <button type="button"
+                  onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug: loc.slug } }))}
+                  className="inline-flex items-center justify-center gap-2 px-5 py-3 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-300">
+                  {L.routeCta} <ArrowUpRight className="w-3 h-3" />
+                </button>
               </div>
             </div>
           </SectionReveal>
