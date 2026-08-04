@@ -8,7 +8,7 @@ import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
 import SubPageNav from '@/components/SubPageNav';
-import { askHost, spaceQuestion, hostHintLabel, hostQuestion } from '@/lib/hostHint';
+import { askHost, spaceQuestion, hostHintLabel } from '@/lib/hostHint';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -265,17 +265,9 @@ export default function LocationDetail() {
     <div className="w-full">
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section className="relative w-full overflow-hidden">
-        <div className="group relative h-[46vh] min-h-[360px] w-full">
+        <div className="relative h-[46vh] min-h-[360px] w-full">
           <img src={siteImg('location.' + slug) || loc.image} data-bb-key={`location.${slug}`} data-bb-label={`Bogèst ${loc.city}`} alt={loc.name} className="absolute inset-0 w-full h-full object-cover" />
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, hsl(var(--background)) 3%, hsl(var(--background) / 0.32) 45%, rgba(0,0,0,0.5) 100%)' }} />
-          {/* Vraag het aan Bogèst — maandselectie-stijl hint */}
-          <button type="button" onClick={(e) => { e.preventDefault(); askHost(hostQuestion(lang, loc.name)); }}
-            className="absolute top-5 left-5 md:top-8 md:left-8 z-30 flex flex-col items-start px-3 py-1 bg-black/35 backdrop-blur-md rounded-2xl border border-white/15 overflow-hidden transition-all duration-500 group-hover:bg-black/55">
-            <span className="font-body text-[10px] tracking-[0.2em] uppercase text-white whitespace-nowrap">{t('nav_locations')}</span>
-            <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-              <span className="block font-body text-[9px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1">Vraag het aan Bogèst ↘</span>
-            </span>
-          </button>
           {/* Ghosted city name bleeding off the right edge */}
           <span aria-hidden className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 font-heading italic font-bold text-white/[0.06] select-none pointer-events-none leading-none" style={{ fontSize: 'clamp(8rem, 26vw, 20rem)' }}>{loc.city}</span>
           <div className="absolute inset-0 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-28 md:pb-32 pointer-events-none">
