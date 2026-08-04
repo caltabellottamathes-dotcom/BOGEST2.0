@@ -1,4 +1,5 @@
 import { websiteAction } from './websiteDispatcher';
+import { base44 } from '@/api/base44Client';
 
 /**
  * UI Action Layer — the contract between the Base44 text-chat agent
@@ -61,6 +62,40 @@ export async function dispatchUIAction({ type, args = [] }) {
     case 'openModal':
     case 'showNotification':
       return { success: true };
+
+    // Show a real Beeldbank photo in the slide-in dish-photo panel (NOT inline
+    // in the chat). Only opens the panel when assetSearch returns a relevant
+    // match for the requested dish/subject — no photo is better than a wrong
+    // photo, so a no-match returns silently and the host describes instead.
+    case 'showDishPhoto': {
+      const [query, category, location] = a;
+      try {
+        const res = await base44.functions.invoke('assetSearch', {
+          query: query || '', category: category || 'all', location: location || 'all', limit: 4,
+        });
+        const images = (res?.data?.images || []);
+        const q = (query || '').toLowerCase();
+        let best = null;
+        if (q) {
+          best = images.find((im) => (im.matched_dish || '').toLowerCase().includes(q))
+            || images.find((im) => (im.description || '').toLowerCase().includes(q))
+            || images.find((im) => (im.tags || []).some((tg) => (tg || '').toLowerCase().includes(q)));
+        }
+        best = best || images[0] || null;
+        if (!best) return { success: false, message: 'no_relevant_photo' };
+        window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {
+          detail: {
+            url: best.url,
+            name: query || best.matched_dish || 'Bogèst',
+            description: best.description || '',
+            location: best.location || location || '',
+          },
+        }));
+        return { success: true, via: 'dish-photo-panel' };
+      } catch {
+        return { success: false, message: 'asset_search_failed' };
+      }
+    }
 
     default:
       return { success: false, message: `Unknown UI action: ${type}` };

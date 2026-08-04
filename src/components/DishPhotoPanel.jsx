@@ -35,7 +35,8 @@ export default function DishPhotoPanel() {
     <OverlayPanelShell
       isOpen={open}
       onClose={close}
-      maxWidth="min(92vw, 520px)"
+      maxWidth="min(92vw, 460px)"
+      compact
       header={
         <div className="flex items-center gap-3">
           <span className="w-9 h-9 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center">

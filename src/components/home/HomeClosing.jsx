@@ -57,7 +57,7 @@ export default function HomeClosing() {
           <span className="font-body text-[10px] tracking-[0.45em] uppercase text-primary">Bogèst</span>
           <span className="h-px w-8 bg-primary/40" />
         </div>
-        <h2 className="font-heading font-medium text-white/90 uppercase tracking-[0.14em] flex items-center gap-3 md:gap-4 text-[clamp(0.78rem,1.6vw,1.02rem)]">
+        <h2 className="font-heading font-medium text-white/90 uppercase tracking-[0.14em] flex items-center gap-3 md:gap-4 text-[clamp(1.05rem,2.4vw,1.5rem)]">
           <span>VUUR<span className="text-primary">.</span></span>
           <span>SMAAK<span className="text-primary">.</span></span>
           <span>GEZEL<span className="text-primary">.</span></span>
@@ -66,7 +66,7 @@ export default function HomeClosing() {
       </div>
 
       {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
-      <div className="relative z-10" style={{ height: '3rem' }} aria-hidden />
+      <div className="relative z-10" style={{ height: '6rem' }} aria-hidden />
     </section>
   );
 }

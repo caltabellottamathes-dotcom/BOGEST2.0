@@ -2,6 +2,7 @@ import React from 'react';
 import { Gift } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HostHint from '@/components/HostHint';
 
 const IMG_DEFAULTS = {
   stays: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906792564-LXWK1DRHFSE5N4CODE8U/cadeaubon.jpeg',
@@ -16,7 +17,7 @@ const IMG_DEFAULTS = {
  * visuele taal als de rest van de site.
  */
 export default function GiftCardsFeature() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
   const mainImg = siteImg('giftcards.highlight.0') || IMG_DEFAULTS.stays;
 
@@ -31,7 +32,7 @@ export default function GiftCardsFeature() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
         {/* Groot beeld met goud-hairline kader + titel overlay */}
         <div
-          className="lg:col-span-7 relative rounded-2xl overflow-hidden min-h-[20rem] md:min-h-[24rem]"
+          className="group lg:col-span-7 relative rounded-2xl overflow-hidden min-h-[20rem] md:min-h-[24rem]"
           style={{ border: '1px solid rgba(200,163,89,0.18)' }}
         >
           <img src={mainImg} data-bb-key="giftcards.highlight.0" data-bb-label="Cadeaubonnen — highlight 1" alt="" className="absolute inset-0 w-full h-full object-cover" loading="lazy" decoding="async" />
@@ -44,6 +45,9 @@ export default function GiftCardsFeature() {
             <h2 className="font-heading text-2xl md:text-4xl font-bold text-white leading-tight max-w-md">
               {t('gc_h1_title')}<span className="text-primary">.</span>
             </h2>
+          </div>
+          <div className="absolute top-4 right-4 z-20">
+            <HostHint question={lang === 'fr' ? "Pouvez-vous m'en dire plus sur les bons cadeaux Bogèst ?" : lang === 'en' ? "Can you tell me more about Bogèst gift cards?" : "Kan u me meer vertellen over de Bogèst-cadeaubonnen?"} />
           </div>
         </div>
 

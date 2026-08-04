@@ -42,7 +42,8 @@ export default function MapPanel() {
     <OverlayPanelShell
       isOpen={open}
       onClose={close}
-      maxWidth="min(92vw, 560px)"
+      maxWidth="min(92vw, 460px)"
+      compact
       header={
         <div className="flex items-center gap-3">
           <span className="w-9 h-9 rounded-full bg-primary/15 border border-primary/40 flex items-center justify-center">
@@ -56,7 +57,7 @@ export default function MapPanel() {
       }
     >
       <div className="p-5 md:p-6 flex flex-col gap-5">
-        <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl" style={{ height: 'min(52vh, 380px)' }}>
+        <div className="rounded-2xl overflow-hidden border border-white/10 shadow-xl" style={{ height: 'min(44vh, 320px)' }}>
           <iframe
             title="Bogèst kaart"
             src={embed}

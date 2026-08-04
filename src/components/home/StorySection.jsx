@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import HostHint from '@/components/HostHint';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -11,7 +12,7 @@ const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e
 // en een brede glasformule-strook die onderaan over beide heen drijft en zo tekst
 // en beeld verbindt. Kort en krachtig, niet hoog.
 export default function StorySection() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { siteImg } = useSiteImages();
   const title = (t('home_story_title') || '').replace(/\.$/, '');
   const accent = (t('home_story_title_accent') || '').replace(/\.$/, '');
@@ -45,7 +46,7 @@ export default function StorySection() {
 
           {/* Beeld — rechts, met de glasformule-strook die links ervan overheen drijft */}
           <div className="lg:col-span-6 lg:col-start-7 relative z-0">
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl aspect-[16/10]">
+            <div className="group relative overflow-hidden rounded-2xl shadow-2xl aspect-[16/10]">
               <img
                 src={siteImg('story')}
                 data-bb-key="story"
@@ -59,18 +60,16 @@ export default function StorySection() {
               {/* rechterrand vervaagt naar achtergrondkleur (desktop) */}
               <div className="absolute inset-0 pointer-events-none hidden lg:block" style={{ background: 'linear-gradient(to right, transparent 70%, hsl(var(--background)) 100%)' }} />
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.55) 0%, transparent 55%)' }} />
-              {/* chip rechtsboven */}
-              <div className="absolute top-4 right-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
-                  <span className="font-body text-xs text-white">{t('section_our_story')}</span>
-                </div>
+              {/* Host hint rechtsboven — opent de digitale gastheer met een vraag over het verhaal */}
+              <div className="absolute top-4 right-4 z-20">
+                <HostHint question={lang === 'fr' ? "Pouvez-vous m'en dire plus sur le Bogèst-verhaal ?" : lang === 'en' ? "Can you tell me more about the Bogèst story?" : "Kan u me meer vertellen over het Bogèst-verhaal?"} />
               </div>
             </div>
 
             {/* Glasformule-strook — horizontaal, drijft over de onderkant en steekt
                 op desktop links uit zodat tekst en beeld één gelaagde compositie vormen */}
             <div
-              className="absolute -bottom-5 left-0 right-0 lg:left-[-22%] rounded-2xl p-4 md:p-5 z-30"
+              className="absolute -bottom-5 left-0 right-0 rounded-2xl p-4 md:p-5 z-30"
               style={{
                 background: 'rgba(255,255,255,0.10)',
                 backdropFilter: 'blur(22px) saturate(150%)',
@@ -95,7 +94,7 @@ export default function StorySection() {
                     </div>
                   ))}
                 </div>
-                <p className="font-body text-[11px] text-muted-foreground md:text-right md:max-w-[11rem] leading-snug">{t('home_formula_included')}</p>
+                {/* included-tekst verwijderd per verzoek */}
               </div>
             </div>
           </div>

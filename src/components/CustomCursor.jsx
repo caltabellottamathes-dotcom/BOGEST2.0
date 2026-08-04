@@ -40,7 +40,7 @@ export default function CustomCursor() {
     const onDown = () => ring.classList.add('bogest-cursor--down');
     const onUp = () => ring.classList.remove('bogest-cursor--down');
     const onOver = (e) => {
-      const t = e.target.closest?.('a,button,[role="button"],input,textarea,select,label,.cursor-target');
+      const t = e.target.closest?.('a,button,[role="button"],input,textarea,select,label,.cursor-target,elevenlabs-convai,[id*="elevenlabs"],[class*="elevenlabs"],[id*="convai"],[class*="convai"]');
       ring.classList.toggle('bogest-cursor--hover', !!t);
     };
 

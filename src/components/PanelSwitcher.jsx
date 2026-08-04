@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSiteImages } from '@/lib/SiteImageContext';
+import { useLang } from '@/lib/LangContext';
+import HostHint from '@/components/HostHint';
+import { hostQuestion } from '@/lib/hostHint';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -26,6 +29,7 @@ export default function PanelSwitcher({
   const [active, setActive] = useState(0);
   const current = items[active];
   const { siteImg } = useSiteImages();
+  const { lang } = useLang();
 
   return (
     <section id={sectionId} className={`relative overflow-hidden w-full px-6 md:px-10 lg:px-16 py-14 md:py-16 ${divider ? 'border-t border-border/40' : ''}`}>
@@ -42,14 +46,12 @@ export default function PanelSwitcher({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="relative overflow-hidden rounded-2xl shadow-xl aspect-[4/5]"
+              className="group relative overflow-hidden rounded-2xl shadow-xl aspect-[4/5]"
             >
               <img src={(current.bbKey ? siteImg(current.bbKey) : null) || current.img} data-bb-key={current.bbKey || undefined} data-bb-label={current.bbLabel || undefined} alt={current.title} className="w-full h-full object-cover" loading="lazy" />
               <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(to top, rgba(26,24,20,0.65) 0%, rgba(26,24,20,0.05) 55%)' }} />
-              <div className="absolute left-5 right-5 bottom-5 pointer-events-none">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.10)', border: '1px solid rgba(255,255,255,0.18)', backdropFilter: 'blur(8px)' }}>
-                  <span className="font-body text-xs text-white">{chipLabel || current.title}</span>
-                </div>
+              <div className="absolute left-5 bottom-5 z-20">
+                <HostHint question={hostQuestion(lang, current.title)} />
               </div>
             </motion.div>
           </AnimatePresence>

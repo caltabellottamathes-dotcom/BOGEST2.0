@@ -307,7 +307,7 @@ export default function LocationDetail() {
         <section id="spaces" className="relative w-full px-6 md:px-10 lg:px-16 py-14 md:py-20 overflow-hidden">
           <img src={BULL_MARK} alt="" aria-hidden draggable={false}
             className="absolute pointer-events-none select-none hidden md:block"
-            style={{ height: '120%', width: 'auto', right: '-6%', bottom: '-46%', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
+            style={{ height: '22rem', width: 'auto', right: '-6%', bottom: '-3rem', opacity: 0.07, filter: 'grayscale(1) brightness(2.4)' }} />
           <SectionReveal>
             <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-10 relative z-10">
               <div>

@@ -307,8 +307,8 @@ select {
   padding-right: 2.5rem;
 }
 select option, select optgroup {
-  background-color: hsl(var(--popover));
-  color: hsl(var(--popover-foreground));
+  background-color: rgba(20,18,14,0.97);
+  color: hsl(38 12% 90%);
 }
 select option:checked,
 select option:hover,
@@ -360,3 +360,21 @@ select option:focus {
   border-color: hsl(var(--primary) / 0.85);
 }
 .bogest-cursor-ring.bogest-cursor--down { width: 24px; height: 24px; }
+
+/* Keep the custom cursor (cursor: none) over the ElevenLabs shadow-DOM widget
+   too — the global `*` selector can't pierce shadow DOM, so target the host
+   element and its exposed ::part()s. Buttons inside the widget set their own
+   cursor:pointer; these rules override them so the gold cursor stays. */
+html.bogest-custom-cursor elevenlabs-convai { cursor: none !important; }
+html.bogest-custom-cursor elevenlabs-convai::part(orb),
+html.bogest-custom-cursor elevenlabs-convai::part(orb-button),
+html.bogest-custom-cursor elevenlabs-convai::part(call-button),
+html.bogest-custom-cursor elevenlabs-convai::part(mic-button),
+html.bogest-custom-cursor elevenlabs-convai::part(button),
+html.bogest-custom-cursor elevenlabs-convai::part(panel),
+html.bogest-custom-cursor elevenlabs-convai::part(conversation-panel),
+html.bogest-custom-cursor elevenlabs-convai::part(header),
+html.bogest-custom-cursor elevenlabs-convai::part(input),
+html.bogest-custom-cursor elevenlabs-convai::part(textarea),
+html.bogest-custom-cursor elevenlabs-convai::part(close-button),
+html.bogest-custom-cursor elevenlabs-convai::part(send-button) { cursor: none !important; }

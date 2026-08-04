@@ -11,7 +11,7 @@ const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e
  * with the gold hairline + ghostbull motif used across the site, so widget
  * panels feel like part of Bogèst rather than a cold external container.
  */
-export default function OverlayPanelShell({ isOpen, onClose, children, header, maxWidth = 'min(90vw, 920px)', scrollable = true }) {
+export default function OverlayPanelShell({ isOpen, onClose, children, header, maxWidth = 'min(90vw, 920px)', scrollable = true, compact = false }) {
   const isMobile = useIsMobile();
   const navHeight = isMobile ? 64 : 80;
 
@@ -55,15 +55,16 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
             }}
             className="relative pointer-events-auto flex flex-col w-full overflow-hidden"
             style={{
-              height: `calc(100vh - ${navHeight}px)`,
+              height: compact ? 'auto' : `calc(100vh - ${navHeight}px)`,
+              maxHeight: compact ? `calc(100vh - ${navHeight}px)` : undefined,
               maxWidth: isMobile ? '100vw' : maxWidth,
-              background: 'rgba(26,24,20,0.82)',
-              backdropFilter: 'blur(40px) saturate(150%)',
-              WebkitBackdropFilter: 'blur(40px) saturate(150%)',
-              borderTop: '1px solid hsl(var(--primary) / 0.18)',
-              borderLeft: '1px solid hsl(var(--primary) / 0.10)',
+              background: 'rgba(20,18,14,0.50)',
+              backdropFilter: 'blur(60px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(60px) saturate(180%)',
+              borderTop: '1px solid hsl(var(--primary) / 0.22)',
+              borderLeft: '1px solid hsl(var(--primary) / 0.14)',
               borderRadius: '24px 0 0 0',
-              boxShadow: '0 -24px 80px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06)',
+              boxShadow: '0 -24px 90px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.08)',
               willChange: 'transform',
               transform: 'translateZ(0)',
             }}
@@ -99,7 +100,7 @@ export default function OverlayPanelShell({ isOpen, onClose, children, header, m
             )}
 
             {/* Content */}
-            <div className={`relative z-10 flex-1 min-h-0 bogest-scroll ${scrollable ? 'overflow-y-auto' : 'overflow-hidden flex flex-col'}`}>
+            <div className={`relative z-10 ${compact ? '' : 'flex-1 min-h-0'} bogest-scroll ${scrollable ? 'overflow-y-auto' : 'overflow-hidden flex flex-col'}`}>
               {children}
             </div>
           </motion.div>
