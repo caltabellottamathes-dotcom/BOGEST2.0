@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { MapPin, ArrowUpRight, Navigation } from 'lucide-react';
 import OverlayPanelShell from '@/components/OverlayPanelShell';
 import { useLang } from '@/lib/LangContext';
@@ -11,6 +12,7 @@ import { getLocations } from '@/lib/data';
 // / Zenchef widget panel so all overlay panels feel consistent.
 export default function MapPanel() {
   const { lang } = useLang();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [slug, setSlug] = useState(null);
 
@@ -23,6 +25,14 @@ export default function MapPanel() {
     };
     window.addEventListener('bogest:open-map', handler);
     return () => window.removeEventListener('bogest:open-map', handler);
+  }, []);
+
+  // Close on navigation / explicit close-panel action.
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    const h = () => setOpen(false);
+    window.addEventListener('bogest:close-panel', h);
+    return () => window.removeEventListener('bogest:close-panel', h);
   }, []);
 
   const close = () => setOpen(false);

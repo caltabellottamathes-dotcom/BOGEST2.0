@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { MapPin } from 'lucide-react';
 import OverlayPanelShell from '@/components/OverlayPanelShell';
 import { useLang } from '@/lib/LangContext';
@@ -9,6 +10,7 @@ import { useLang } from '@/lib/LangContext';
 // reserve / Zenchef widget panel so all overlay panels feel consistent.
 export default function DishPhotoPanel() {
   const { lang } = useLang();
+  const location = useLocation();
   const [open, setOpen] = useState(false);
   const [photo, setPhoto] = useState(null);
 
@@ -21,6 +23,15 @@ export default function DishPhotoPanel() {
     };
     window.addEventListener('bogest:show-dish-photo', handler);
     return () => window.removeEventListener('bogest:show-dish-photo', handler);
+  }, []);
+
+  // Close when the visitor navigates to another page, or when the host emits a
+  // close-panel action — so a dish photo never lingers over the next page.
+  useEffect(() => { setOpen(false); }, [location.pathname]);
+  useEffect(() => {
+    const h = () => setOpen(false);
+    window.addEventListener('bogest:close-panel', h);
+    return () => window.removeEventListener('bogest:close-panel', h);
   }, []);
 
   const close = () => setOpen(false);

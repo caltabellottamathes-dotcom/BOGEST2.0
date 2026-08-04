@@ -1,5 +1,6 @@
 import { websiteAction } from './websiteDispatcher';
 import { base44 } from '@/api/base44Client';
+import { isPanelPath } from '@/components/GlassPanel';
 
 // Normalize a dish name for fuzzy matching (lowercase, strip accents &
 // punctuation) so "Lasagne" matches a photo tagged "Veggie Lasagna".
@@ -24,8 +25,27 @@ export async function dispatchUIAction({ type, args = [] }) {
 
     case 'openSection': {
       const [pageId, sectionId] = a;
+      const wasPanel = document.body.style.position === 'fixed';
       if (pageId) await websiteAction({ action: 'navigate', target: pageId });
-      if (sectionId) await websiteAction({ action: 'scroll', target: sectionId, options: { behavior: 'smooth' } });
+      if (sectionId) {
+        // When closing a panel (body was fixed) to scroll the page behind it,
+        // wait for the body to unlock before scrolling — otherwise the scroll
+        // lands on a locked, fixed body and nothing moves. Panel→panel keeps
+        // the body locked, so only wait when the target is NOT a panel route.
+        const targetIsPanel = pageId ? isPanelPath(pageId) : false;
+        if (wasPanel && !targetIsPanel) {
+          await new Promise((resolve) => {
+            const start = Date.now();
+            const tick = () => {
+              if (document.body.style.position !== 'fixed' || Date.now() - start >= 800) return resolve();
+              setTimeout(tick, 60);
+            };
+            tick();
+          });
+          await new Promise((r) => setTimeout(r, 140));
+        }
+        await websiteAction({ action: 'scroll', target: sectionId, options: { behavior: 'smooth' } });
+      }
       return { success: true, currentPage: pageId, sectionId };
     }
 
@@ -68,6 +88,16 @@ export async function dispatchUIAction({ type, args = [] }) {
     case 'showNotification':
       return { success: true };
 
+    // Close any open glass panel / slide-in overlay (dish photo, map) and
+    // return to the homepage. The 'bogest:close-panel' event tells overlay
+    // panels to dismiss; navigating '/' closes the glass-panel route.
+    case 'closePanel':
+    case 'close': {
+      window.dispatchEvent(new CustomEvent('bogest:close-panel', { detail: {} }));
+      await websiteAction({ action: 'navigate', target: '/' });
+      return { success: true, via: 'close-panel' };
+    }
+
     // Show a real Beeldbank photo in the slide-in dish-photo panel (NOT inline
     // in the chat). Only opens the panel when assetSearch returns a relevant
     // match for the requested dish/subject — no photo is better than a wrong
@@ -75,20 +105,24 @@ export async function dispatchUIAction({ type, args = [] }) {
     case 'showDishPhoto': {
       const [query, category, location] = a;
       try {
+        // Always restrict dish photos to the food category so a wrong
+        // location / atmosphere photo can never substitute for a dish. The
+        // host may pass a different category for non-dish requests (e.g.
+        // atmosphere), which is respected.
+        const cat = (category && category !== 'all') ? category : 'gastronomy';
         const res = await base44.functions.invoke('assetSearch', {
-          query: query || '', category: category || 'all', location: location || 'all', limit: 24,
+          query: query || '', category: cat, location: location || 'all', limit: 24,
         });
-        // Only photos explicitly linked to a menu item (matched_dish) may be
-        // shown — the Beeldbank ties each food photo to exactly one dish.
-        const images = (res?.data?.images || res?.images || []).filter((im) => im.matched_dish);
+        const images = (res?.data?.images || res?.images || []).filter((im) => im.url);
         const q = _norm(query || '');
         let best = null;
         let bestScore = 0;
-        if (q) {
-          for (const im of images) {
-            const md = _norm(im.matched_dish || '');
-            if (!md) continue;
-            let score = 0;
+        for (const im of images) {
+          let score = 0;
+          const md = _norm(im.matched_dish || '');
+          // 1) Strongest: a menu-item match (the Beeldbank links each food
+          //    photo to exactly one dish). Fuzzy so "lasagne" finds "lasagna".
+          if (md && q) {
             if (md === q) score = 100;
             else if (md.includes(q) || q.includes(md)) score = 80;
             else {
@@ -102,10 +136,24 @@ export async function dispatchUIAction({ type, args = [] }) {
                 }
               }
             }
-            if (score > bestScore) { bestScore = score; best = im; }
           }
+          // 2) Fallback: the photo's tags / description / subcategory mention
+          //    the dish (an untagged food photo that clearly shows it).
+          if (score === 0 && q) {
+            const hay = _norm([(im.tags || []).join(' '), im.description || '', im.subcategory || ''].join(' '));
+            const hayTokens = hay.split(' ').filter(Boolean);
+            const qTokens = q.split(' ').filter(Boolean);
+            let hits = 0;
+            for (const qt of qTokens) {
+              if (hay.includes(qt)) hits += 2;
+              else { for (const ht of hayTokens) { if (_lev(qt, ht) <= 2) { hits += 1; break; } } }
+            }
+            if (hits >= 2) score = 30 + hits;
+          }
+          if (score > bestScore) { bestScore = score; best = im; }
         }
-        if (!best) return { success: false, message: 'no_relevant_photo' };
+        // Require a real match — no photo is better than a wrong photo.
+        if (!best || bestScore < 30) return { success: false, message: 'no_relevant_photo' };
         window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {
           detail: {
             url: best.url,
