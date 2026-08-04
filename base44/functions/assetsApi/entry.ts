@@ -35,7 +35,7 @@ export default async function (req) {
     if (params.action === 'update') {
       const id = params.id;
       if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });
-      const allowed = ['description', 'categories', 'primary_category', 'subcategory', 'orientation', 'source_platform', 'location', 'tags', 'mood', 'colors', 'quality_score', 'is_relevant', 'status', 'source_url', 'collections'];
+      const allowed = ['description', 'categories', 'primary_category', 'subcategory', 'orientation', 'source_platform', 'location', 'tags', 'mood', 'colors', 'quality_score', 'is_relevant', 'status', 'source_url', 'collections', 'matched_dish'];
       const update = {};
       for (const k of allowed) {
         if (!(k in (params.data || {}))) continue;

@@ -155,6 +155,10 @@
         "type": "string"
       },
       "description": "User-assigned collections for use in site content (e.g. seasonal_dishes, signature, terrace, events, hero)"
+    },
+    "matched_dish": {
+      "type": "string",
+      "description": "The single MenuKnowledge item_name this food photo is linked to, so the digital host and voice agent can show a real photo for a specific dish"
     }
   },
   "required": [
