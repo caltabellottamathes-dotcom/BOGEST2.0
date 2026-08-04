@@ -138,7 +138,14 @@ export default function ReviewsSection() {
               <span className="font-body text-[10px] tracking-[0.22em] uppercase text-muted-foreground/80">{sourcesLine}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {reviews.length > perPage && (
+              <button onClick={() => setShowAll(s => !s)} className="font-body text-xs tracking-widest uppercase text-primary hover:underline">
+                {showAll
+                  ? (lang === 'fr' ? 'Voir moins' : lang === 'en' ? 'Show less' : 'Toon minder')
+                  : (lang === 'fr' ? 'Voir tous les avis' : lang === 'en' ? 'Show all reviews' : 'Toon alle reviews')}
+              </button>
+            )}
             <button onClick={() => setPage(p => Math.max(0, p - 1))} disabled={safePage === 0}
               className="w-10 h-10 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:border-primary hover:text-primary transition-all duration-200 disabled:opacity-30">
               <ChevronLeft className="w-4 h-4" />
@@ -152,15 +159,16 @@ export default function ReviewsSection() {
 
         {/* Featured pull-quote + supporting */}
         {featured && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+          <div className="min-h-[58vh] md:min-h-[calc(100svh-300px)] flex items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 w-full">
             <div className="lg:col-span-8">
-              <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[22vw] sm:text-[16vw] lg:text-[10vw] -mb-2 select-none">“</span>
+              <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[14vw] sm:text-[9vw] lg:text-[6vw] -mb-6 select-none">“</span>
               <motion.blockquote
                 key={featured.name + featured.date + page}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground"
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] leading-[1.12] text-foreground"
               >
                 {featured.text}
               </motion.blockquote>
@@ -193,6 +201,7 @@ export default function ReviewsSection() {
               ))}
             </div>
           </div>
+          </div>
         )}
 
         {/* Pagination dots */}
@@ -202,16 +211,6 @@ export default function ReviewsSection() {
               <button key={i} onClick={() => setPage(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 ${safePage === i ? 'w-6 bg-primary' : 'w-1.5 bg-border'}`} />
             ))}
-          </div>
-        )}
-
-        {reviews.length > perPage && (
-          <div className="flex justify-center mt-6">
-            <button onClick={() => setShowAll(s => !s)} className="font-body text-xs tracking-widest uppercase text-primary hover:underline">
-              {showAll
-                ? (lang === 'fr' ? 'Voir moins' : lang === 'en' ? 'Show less' : 'Toon minder')
-                : (lang === 'fr' ? 'Voir tous les avis' : lang === 'en' ? 'Show all reviews' : 'Toon alle reviews')}
-            </button>
           </div>
         )}
 
