@@ -94,7 +94,10 @@
   ],
   "app_user_connector_configs": [],
   "selected_skill_names": [
-    "guest-memory-personalisation"
+    "guest-memory-personalisation",
+    "personalised-recommendation-logic",
+    "welcome-and-intent-detection",
+    "wine-beer-cocktail-expertise"
   ],
   "selected_workspace_skill_ids": [],
   "model": "automatic",
