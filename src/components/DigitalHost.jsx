@@ -354,7 +354,9 @@ function extractProfileInfo(text, updateProfile) {
     const name = nameMatch[1].charAt(0).toUpperCase() + nameMatch[1].slice(1);
     // Filter out common false positives
     if (!['ook', 'wel', 'het', 'een', 'niet', 'op', 'aan', 'maar', 'gewoon'].includes(nameMatch[1])) {
-      updates.name = name;
+      // VisitorProfile's schema field is `first_name`, not `name` — writing
+      // `name` silently dropped the value since it isn't a declared field.
+      updates.first_name = name;
     }
   }
 
@@ -1447,7 +1449,7 @@ export default function DigitalHost() {
       // Personalised reminders for returning guests.
       const p = visitorProfile;
       const personal = [];
-      if (p?.name) personal.push({ msg: `Welkom terug, ${p.name}. Fijn u weer te zien — waarmee kan ik u vandaag helpen?` });
+      if (p?.first_name) personal.push({ msg: `Welkom terug, ${p.first_name}. Fijn u weer te zien — waarmee kan ik u vandaag helpen?` });
       if (p?.favorite_dish) personal.push({ msg: `Zin in ${p.favorite_dish} weer? Ik kan meteen een tafel zoeken.` });
       // 65% page-relevant when available, 35% general/weather/personal mix.
       let pick;
@@ -1649,7 +1651,7 @@ export default function DigitalHost() {
     try {
       const conv = await ensureConversation();
       const profileStr = visitorProfile
-        ? `name=${visitorProfile.name || '-'},loc=${visitorProfile.preferred_location || '-'},fav=${visitorProfile.favorite_dish || '-'},diet=${visitorProfile.allergies || '-'}`
+        ? `name=${visitorProfile.first_name || '-'},loc=${visitorProfile.preferred_location || '-'},fav=${visitorProfile.favorite_dish || '-'},diet=${visitorProfile.allergies || '-'}`
         : 'new';
       const ctx = `[ctx: visitor_id=${visitorId || 'anon'}; page=${location.pathname}; weather=${weather ? `${weather.desc} ${weather.temp}C` : 'n/a'}; profile=${profileStr}]`;
       await base44.agents.addMessage(conv, { role: 'user', content: `${ctx} ${userText}` });
