@@ -82,7 +82,7 @@ export default function GlassPanelWrapper({ children }) {
             key="panel-backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } }}
-            exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
+            exit={{ opacity: 0, transition: { duration: 1.1, ease: [0.22, 1, 0.36, 1] } }}
             className="fixed inset-0 z-30 pointer-events-auto"
             style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.16)' : 'rgba(0,0,0,0.38)' }}
             onClick={() => navigate('/')}
@@ -102,7 +102,7 @@ export default function GlassPanelWrapper({ children }) {
             key={location.pathname}
             initial={{ x: '100%' }}
             animate={{ x: 0, transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] } }}
-            exit={{ x: '100%', transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] } }}
+            exit={{ x: '100%', transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
             className="fixed right-0 z-40"
             style={{
               top: navHeight,

@@ -167,7 +167,7 @@ export default function ReviewsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground"
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.08] text-foreground min-h-[6.5rem] sm:min-h-[8rem] md:min-h-[10rem] lg:min-h-[13rem] line-clamp-4"
               >
                 {featured.text}
               </motion.blockquote>
