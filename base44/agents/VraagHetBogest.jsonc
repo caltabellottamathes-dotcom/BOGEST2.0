@@ -96,7 +96,8 @@
   "selected_skill_names": [
     "guest-memory-personalisation",
     "live-social-media-connector",
-    "personalised-recommendation-logic"
+    "personalised-recommendation-logic",
+    "welcome-and-intent-detection"
   ],
   "selected_workspace_skill_ids": [],
   "model": "automatic",
