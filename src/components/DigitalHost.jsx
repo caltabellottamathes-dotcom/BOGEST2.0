@@ -9,6 +9,7 @@ import { getSystemPrompt } from '@/lib/digitalHostKnowledge';
 import { useVisitorProfile } from '@/hooks/useVisitorProfile';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
+import { preloadWelcomeVideo } from '@/lib/heroVideo';
 import RecommendationCard from '@/components/digital-host/RecommendationCard';
 import MarkdownText from '@/components/digital-host/MarkdownText';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
@@ -1102,7 +1103,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   const [frameReady, setFrameReady] = useState(false);
   useEffect(() => {
     if (frameReady) return;
-    const t = setTimeout(() => setFrameReady(true), 900);
+    const t = setTimeout(() => setFrameReady(true), 400);
     return () => clearTimeout(t);
   }, [frameReady]);
 
@@ -1402,15 +1403,12 @@ export default function DigitalHost() {
       sounds.open();
       setPhase('entry');
     };
-    const isMob = typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches;
-    const src = isMob ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL;
-    const v = document.createElement('video');
-    v.preload = 'auto'; v.muted = true; v.playsInline = true; v.src = src;
-    v.addEventListener('loadeddata', enter, { once: true });
-    try { v.load(); } catch {}
-    // Fallback: enter after 2.8s even if the first frame isn't ready.
-    const fallback = setTimeout(enter, 2800);
-    return () => { clearTimeout(fallback); v.removeEventListener('loadeddata', enter); };
+    // The welcome video was already warmed in parallel with the hero video at
+    // app load, so this resolves almost instantly instead of loading late.
+    preloadWelcomeVideo().then(enter);
+    // Fallback: enter quickly even if the preload hasn't resolved yet.
+    const fallback = setTimeout(enter, 1200);
+    return () => clearTimeout(fallback);
   }, []);
 
   // Popup visibility is handled in the consolidated effect above.

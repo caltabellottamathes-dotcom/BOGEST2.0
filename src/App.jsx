@@ -12,7 +12,7 @@ import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
 import AdminGate from '@/components/AdminGate';
 import BogestLogo from '@/components/BogestLogo';
-import { preloadHeroVideo } from '@/lib/heroVideo';
+import { preloadHeroVideo, preloadWelcomeVideo } from '@/lib/heroVideo';
 
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
@@ -49,6 +49,9 @@ const AuthenticatedApp = () => {
   // background; only block the reveal when the guest actually lands on home.
   useEffect(() => {
     preloadHeroVideo().then(() => setHeroVideoReady(true));
+    // Warm the digital host's welcome video in parallel so its entry pop-up
+    // shows the video instantly instead of loading it late.
+    preloadWelcomeVideo();
     const path = window.location.pathname;
     if (path !== '/' && path !== '') setHeroVideoReady(true);
   }, []);

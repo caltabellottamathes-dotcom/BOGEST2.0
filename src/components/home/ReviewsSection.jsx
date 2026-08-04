@@ -183,7 +183,7 @@ export default function ReviewsSection() {
 
         {/* Featured pull-quote + supporting */}
         {featured && (
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 h-[26rem] md:h-[28rem] lg:h-[26rem] overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
             <div className="lg:col-span-8">
               <span aria-hidden className="font-heading italic text-primary leading-[0.5] block text-[22vw] sm:text-[16vw] lg:text-[10vw] -mb-2 select-none">“</span>
               <motion.blockquote
@@ -191,7 +191,7 @@ export default function ReviewsSection() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] text-foreground h-[11rem] sm:h-[13rem] md:h-[15rem] lg:h-[16rem] overflow-hidden flex items-center line-clamp-4"
+                className="font-heading italic text-2xl sm:text-3xl md:text-4xl lg:text-5xl leading-[1.1] text-foreground"
               >
                 {featured.text}
               </motion.blockquote>
@@ -204,7 +204,7 @@ export default function ReviewsSection() {
               </div>
             </div>
 
-            <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-8 flex flex-col gap-6 overflow-hidden">
+            <div className="lg:col-span-4 lg:border-l lg:border-border lg:pl-8 flex flex-col gap-6">
               {supporting.map((r, i) => (
                 <motion.div
                   key={r.name + r.date + page}
@@ -216,7 +216,7 @@ export default function ReviewsSection() {
                     <Stars count={r.rating} />
                     <SourceBadge source={r.source} />
                   </div>
-                  <p className="font-body text-sm text-muted-foreground leading-relaxed line-clamp-3">“{r.text}”</p>
+                  <p className="font-body text-sm text-muted-foreground leading-relaxed">“{r.text}”</p>
                   <p className="font-heading text-sm font-semibold text-foreground mt-2.5">
                     {r.name} <span className="font-body text-xs text-muted-foreground font-normal">· {r.location}</span>
                   </p>
