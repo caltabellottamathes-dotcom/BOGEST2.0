@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, ChevronRight, ExternalLink, MessageCircle, Mic, Compass, Menu } from 'lucide-react';
+import { X, Send, ChevronRight, ExternalLink, MessageCircle, Mic, Compass } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/lib/ThemeContext';
@@ -1868,28 +1868,6 @@ export default function DigitalHost() {
             >
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
             </motion.button>
-
-            {/* Mobile / tablet navigation — a minimal frosted-glass disc with a
-                menu glyph, matching the host FAB. Sits top-right, opens the
-                footer as the site menu. */}
-            <motion.button
-              initial={{ opacity: 0 }} animate={{ opacity: 1, x: shift }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
-              aria-label={lang === 'fr' ? 'Navigation' : lang === 'en' ? 'Navigation' : 'Navigatie'}
-              className="fixed top-[72px] sm:top-[80px] right-4 sm:right-6 lg:hidden z-[80] flex items-center justify-center rounded-full transition-[box-shadow,transform] duration-300 hover:scale-[1.06]"
-              style={{
-                width: isMobile ? 40 : 44,
-                height: isMobile ? 40 : 44,
-                background: 'rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(40px) saturate(160%)',
-                WebkitBackdropFilter: 'blur(40px) saturate(160%)',
-                border: '1px solid hsl(var(--primary) / 0.42)',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.12)',
-              }}
-            >
-              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
-            </motion.button>
           </>
         )}
       </AnimatePresence>
@@ -1930,27 +1908,20 @@ export default function DigitalHost() {
             >
               {/* Background watermark removed */}
 
-              {/* Header */}
-              <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 relative z-10"
-                style={{ background: 'rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>
+              {/* Header — slim and minimal */}
+              <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0 relative z-10"
+                style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}>
                 {/* Mobile drag handle */}
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-foreground/15 sm:hidden" />
-                <div className="flex items-center gap-2.5 mt-1 sm:mt-0">
-                  <LogoAvatar size="md" online isDark={isDark} />
-                  <div>
-                    <p className="font-heading text-sm font-bold leading-none" style={{ color: isDark ? 'rgba(255,240,180,0.97)' : 'rgba(40,50,15,0.95)' }}>{s.title}</p>
-                    <p className="font-body text-[9px] tracking-[0.15em] uppercase mt-0.5" style={{ color: isDark ? 'rgba(200,163,89,0.80)' : 'rgba(107,122,63,0.80)' }}>
-                      {weather ? `${weather.desc}, ${weather.temp}°C` : s.assistant}
-                    </p>
-                  </div>
+                <div className="flex items-center gap-2 mt-1 sm:mt-0">
+                  <LogoAvatar size="sm" online isDark={isDark} />
+                  <p className="font-heading text-[13px] font-semibold leading-none tracking-tight" style={{ color: isDark ? 'rgba(255,240,180,0.97)' : 'rgba(40,50,15,0.95)' }}>{s.title}</p>
                 </div>
-                <div className="flex items-center gap-1.5">
-                  <button onClick={() => setPhase('minimized')}
-                    className="w-8 h-8 rounded-full flex items-center justify-center transition-colors flex-shrink-0"
-                    style={{ background: isDark ? 'rgba(100,70,0,0.18)' : 'rgba(107,122,63,0.06)', color: isDark ? 'rgba(255,235,150,0.90)' : 'rgba(40,50,15,0.70)' }}>
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+                <button onClick={() => setPhase('minimized')} aria-label="Sluiten"
+                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors flex-shrink-0"
+                  style={{ color: isDark ? 'rgba(255,235,150,0.70)' : 'rgba(40,50,15,0.55)' }}>
+                  <X className="w-3.5 h-3.5" />
+                </button>
               </div>
 
               {/* Messages */}
@@ -1989,7 +1960,7 @@ export default function DigitalHost() {
                     placeholder={s.placeholder}
                     disabled={isLoading}
                     enterKeyHint="send"
-                    className={`flex-1 bg-transparent font-body text-sm outline-none min-w-0 disabled:opacity-40 ${isDark ? 'placeholder:text-amber-200/40' : 'placeholder:text-muted-foreground/40'}`}
+                    className={`bogest-chat-input flex-1 bg-transparent font-body text-sm outline-none min-w-0 disabled:opacity-40 ${isDark ? 'placeholder:text-amber-200/40' : 'placeholder:text-muted-foreground/40'}`}
                     style={{ color: 'rgba(255,255,255,0.95)', caretColor: 'rgba(200,163,89,0.9)', fontSize: '16px' }}
                   />
                   <button onClick={() => sendMessage()} disabled={!input.trim() || isLoading}

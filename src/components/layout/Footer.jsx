@@ -79,6 +79,7 @@ export default function Footer() {
   const quickLinks = [
     { label: t('nav_menu'), path: '/menu' },
     { label: t('nav_locations'), path: '/locations' },
+    { label: t('nav_about'), path: '/about' },
     { label: t('nav_reserve'), path: '/reserve' },
     { label: t('nav_takeaway'), path: '/takeaway' },
     { label: t('nav_giftcards'), path: '/gift-cards' },
@@ -93,7 +94,6 @@ export default function Footer() {
     { label: cookiesLabel, path: '/cookies' },
     { label: aiLabel, path: '/ai-disclaimer' },
     { label: t('nav_jobs'), path: '/jobs' },
-    { label: t('nav_about'), path: '/about' },
     { label: t('nav_contact'), path: '/contact' },
   ];
 

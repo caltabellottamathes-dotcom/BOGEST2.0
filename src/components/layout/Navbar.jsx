@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu } from 'lucide-react';
 import BogestLogo from '@/components/BogestLogo';
 import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
@@ -127,6 +127,14 @@ export default function Navbar() {
 
           {/* Right controls */}
           <div className="flex items-center gap-1 md:gap-2">
+            {/* Mobile / tablet menu — opens the footer as the site menu */}
+            <button
+              onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
+              aria-label={lang === 'fr' ? 'Navigation' : lang === 'en' ? 'Navigation' : 'Navigatie'}
+              className={`lg:hidden flex items-center justify-center w-9 h-9 -mr-1 rounded-full transition-colors duration-300 ${isTransparent ? 'text-white/80 hover:text-white' : 'text-foreground/70 hover:text-primary'}`}
+            >
+              <Menu className="w-5 h-5" strokeWidth={1.75} />
+            </button>
             {/* Language switcher */}
             <div className="relative" ref={langRef}>
               <button

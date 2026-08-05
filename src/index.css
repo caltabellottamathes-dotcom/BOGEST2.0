@@ -130,6 +130,10 @@ body.modal-open {
 /* Hide scrollbar inside digital host chat */
 .chat-messages-hide-scrollbar::-webkit-scrollbar { display: none; }
 
+/* Smaller placeholder in the digital host chat input — keeps it in line with
+   the chat bubbles while the input stays 16px to avoid iOS auto-zoom. */
+.bogest-chat-input::placeholder { font-size: 13px; }
+
 /* ElevenLabs Conversational AI Widget — fixed position, rendered above all app content */
 elevenlabs-convai,
 div[id*="elevenlabs"],
