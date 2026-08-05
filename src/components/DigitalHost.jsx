@@ -1403,20 +1403,15 @@ export default function DigitalHost() {
   // EntryPopup's own video then plays immediately from cache (unmuted).
   useEffect(() => {
     if (entryShownRef.current) return;
-    // The welcome entry only appears the very first time a visitor enters the
-    // site. Once shown, it never reappears (across sessions / refreshes).
-    try {
-      if (localStorage.getItem('bogest-intro-seen') === '1') {
-        entryShownRef.current = true;
-        setPhase('minimized');
-        return;
-      }
-    } catch {}
+    // Wait until the cookie banner is dismissed (the visitor made a consent
+    // choice) before showing the entrance pop-up — otherwise the two overlays
+    // would stack on top of each other on a first visit. Once dismissed, the
+    // entry appears every time the site loads / is re-entered.
+    if (!consent.decided) return;
     let done = false;
     const enter = () => {
       if (done) return; done = true;
       entryShownRef.current = true;
-      try { localStorage.setItem('bogest-intro-seen', '1'); } catch {}
       sounds.open();
       setPhase('entry');
     };
@@ -1426,7 +1421,7 @@ export default function DigitalHost() {
     // Fallback: enter quickly even if the preload hasn't resolved yet.
     const fallback = setTimeout(enter, 1200);
     return () => clearTimeout(fallback);
-  }, []);
+  }, [consent.decided]);
 
   // Popup visibility is handled in the consolidated effect above.
 

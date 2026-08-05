@@ -25,7 +25,9 @@ export default function FloatingVideo() {
   const [active, setActive] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
-  const [hidden, setHidden] = useState(true);
+  // The card is visible by default. It only hides while the Digital Host
+  // entrance popup is open (the host dispatches bogest:popup-visibility).
+  const [hidden, setHidden] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);

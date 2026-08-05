@@ -253,7 +253,7 @@ export default function Footer() {
               {t('footer_terms')}
             </Link>
             <button
-              onClick={openCookiePreferences}
+              onClick={() => { closeFooter(); openCookiePreferences(); }}
               className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300 text-left"
             >
               Cookievoorkeuren
