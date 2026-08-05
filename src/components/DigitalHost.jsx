@@ -1830,7 +1830,9 @@ export default function DigitalHost() {
               )}
             </AnimatePresence>
 
-            {/* FAB — circle by default, pill on hover */}
+            {/* FAB — frosted-glass host button, stacked with the ElevenLabs orb +
+                video card on the right edge (orb → video card → host button).
+                Same glass as the chat panel; circle by default, pill on hover. */}
             <motion.button
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: blinking ? [1, 0.4, 1, 0.5, 1] : 1, scale: blinking ? [1, 1.06, 1, 1.04, 1] : 1, x: shift, y: 0 }}
@@ -1839,32 +1841,34 @@ export default function DigitalHost() {
               onClick={() => openChat()}
               onMouseEnter={() => setFabExpanded(true)}
               onMouseLeave={() => setFabExpanded(false)}
-              className="fixed top-4 right-4 sm:top-6 sm:right-6 z-[80] flex items-center rounded-full shadow-xl active:scale-100 overflow-hidden"
+              className="fixed right-5 sm:right-6 z-[80] flex items-center rounded-full overflow-hidden"
               style={{
-                /* Circle: 56px mobile, 64px desktop. Pill when expanded */
+                /* Stack above the video card (orb @24px → card @82px → host button) */
+                bottom: 82 + (isMobile ? 112 : 148) + 14,
                 width: fabExpanded ? 'auto' : undefined,
-                minWidth: fabExpanded ? undefined : '56px',
-                height: '56px',
-                padding: fabExpanded ? '0 16px 0 10px' : '0',
+                minWidth: fabExpanded ? undefined : (isMobile ? 56 : 64),
+                height: isMobile ? 56 : 64,
+                padding: fabExpanded ? '0 18px 0 8px' : '0',
                 justifyContent: 'center',
                 gap: fabExpanded ? '10px' : '0',
-                /* SM+: 64px circle */
                 transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
-                background: isDark ? 'rgba(10,10,10,0.85)' : 'rgba(254,252,248,0.90)',
-                backdropFilter: 'blur(48px) saturate(180%)', WebkitBackdropFilter: 'blur(48px) saturate(180%)',
-                border: blinking ? '1px solid hsl(var(--primary) / 0.65)' : isDark ? '1px solid rgba(255,255,255,0.13)' : '1px solid rgba(74,83,32,0.30)',
+                /* Frosted glass — matches the chat window / glass panels */
+                background: 'rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(40px) saturate(160%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+                border: blinking ? '1px solid hsl(var(--primary) / 0.65)' : '1px solid hsl(var(--primary) / 0.32)',
                 boxShadow: blinking
-                  ? '0 0 20px hsl(var(--primary) / 0.38), 0 8px 32px rgba(0,0,0,0.28)'
-                  : isDark ? '0 8px 32px rgba(0,0,0,0.50)' : '0 8px 32px rgba(74,83,32,0.20)',
+                  ? '0 0 22px hsl(var(--primary) / 0.40), 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.10)'
+                  : '0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.08)',
                 maxWidth: 'calc(100vw - 32px)',
               }}
             >
               {/* Desktop: larger circle (64px) */}
-              <span className="hidden sm:flex items-center justify-center flex-shrink-0" style={{ width: 44, height: 44 }}>
+              <span className="hidden sm:flex items-center justify-center flex-shrink-0" style={{ width: 48, height: 48 }}>
                 <LogoAvatar size="md" online isDark={isDark} />
               </span>
               {/* Mobile: normal circle (56px) */}
-              <span className="flex sm:hidden items-center justify-center flex-shrink-0">
+              <span className="flex sm:hidden items-center justify-center flex-shrink-0" style={{ width: 42, height: 42 }}>
                 <LogoAvatar size="sm" online isDark={isDark} />
               </span>
               {/* Label — only visible when expanded */}
@@ -1875,7 +1879,7 @@ export default function DigitalHost() {
                 className="text-left overflow-hidden whitespace-nowrap"
                 style={{ pointerEvents: fabExpanded ? 'auto' : 'none' }}
               >
-                <p className="font-body text-[9px] tracking-[0.15em] uppercase text-muted-foreground leading-none mb-0.5">{s.fab_label}</p>
+                <p className="font-body text-[9px] tracking-[0.15em] uppercase text-primary/80 leading-none mb-0.5">{s.fab_label}</p>
                 <p className="font-heading text-xs font-semibold text-foreground leading-tight">{s.fab_cta}</p>
               </motion.div>
             </motion.button>
