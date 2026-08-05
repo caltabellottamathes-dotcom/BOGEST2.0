@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, ChevronRight, ExternalLink, MessageCircle, Mic, Compass } from 'lucide-react';
+import { X, Send, ChevronRight, ExternalLink, MessageCircle, Mic, Compass, Menu } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useTheme } from '@/lib/ThemeContext';
@@ -1080,30 +1080,26 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     // autoplay (no prior gesture), play muted for motion and unmute on the
     // first tap so the guest hears sound the moment they interact. iPadOS is
     // strict, so we listen for pointerdown, touchend AND click (capture phase).
-    // Start muted so the browser always allows autoplay; unmute on the first
-    // user gesture (browsers block unmuted autoplay without one). This is
-    // more reliable than attempting unmuted play first.
-    el.muted = true;
-    el.defaultMuted = true;
-    const tryPlay = () => { el.play().catch(() => {}); };
-    tryPlay();
-    let unmuted = false;
-    const unmute = () => {
-      if (unmuted) return; unmuted = true;
-      try { el.muted = false; el.play().catch(() => {}); } catch {}
-      window.removeEventListener('pointerdown', unmute, true);
-      window.removeEventListener('touchend', unmute, true);
-      window.removeEventListener('click', unmute, true);
-    };
-    window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
-    window.addEventListener('touchend', unmute, { capture: true, passive: true });
-    window.addEventListener('click', unmute, { capture: true, passive: true });
-    return () => {
-      try { el.pause(); } catch {}
-      window.removeEventListener('pointerdown', unmute, true);
-      window.removeEventListener('touchend', unmute, true);
-      window.removeEventListener('click', unmute, true);
-    };
+    // The visitor already interacted with the cookie banner to reach this
+    // point, so unmuted autoplay is usually permitted. Try unmuted first; if
+    // the browser still blocks it, fall back to muted and unmute on the first
+    // gesture so the welcome is heard the moment the guest interacts.
+    el.muted = false;
+    el.play().catch(() => {
+      el.muted = true;
+      el.defaultMuted = true;
+      el.play().catch(() => {});
+      const unmute = () => {
+        try { el.muted = false; el.play().catch(() => {}); } catch {}
+        window.removeEventListener('pointerdown', unmute, true);
+        window.removeEventListener('touchend', unmute, true);
+        window.removeEventListener('click', unmute, true);
+      };
+      window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
+      window.addEventListener('touchend', unmute, { capture: true, passive: true });
+      window.addEventListener('click', unmute, { capture: true, passive: true });
+    });
+    return () => { try { el.pause(); } catch {} };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1155,7 +1151,8 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     <>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[98] bg-black/55 backdrop-blur-sm" onClick={() => { pauseVideo(); onSkip(); }} />
-      <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={frameReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 20 }} exit={{ opacity: 0, scale: 0.96, y: 16 }}
+      <motion.div initial={{ opacity: 0, scale: 0.94, y: 20 }} animate={frameReady ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 20 }}
+        exit={{ opacity: 0, scale: 0.16, x: '40vw', y: '36vh', transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
         transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         className="fixed inset-0 z-[99] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full rounded-[24px] overflow-hidden relative flex flex-col sm:flex-row"
@@ -1166,7 +1163,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay muted playsInline preload="auto"
+              autoPlay playsInline preload="auto"
               onLoadedData={() => setFrameReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
@@ -1355,9 +1352,12 @@ export default function DigitalHost() {
       document.body.classList.add('bogest-entry-active');
     } else if (prev === 'entry') {
       document.body.classList.remove('bogest-entry-active');
+      // Reveal the floating video card as the popup morphs into it — timed so
+      // the card fades in just before the popup finishes collapsing into the
+      // bottom-right corner where the card lives.
       const t = setTimeout(() => {
         window.dispatchEvent(new CustomEvent('bogest:popup-visibility', { detail: { open: false } }));
-      }, 340);
+      }, 460);
       prevPhaseRef.current = phase;
       return () => clearTimeout(t);
     }
@@ -1426,8 +1426,10 @@ export default function DigitalHost() {
     // The welcome video was already warmed in parallel with the hero video at
     // app load, so this resolves almost instantly instead of loading late.
     preloadWelcomeVideo().then(enter);
-    // Fallback: enter quickly even if the preload hasn't resolved yet.
-    const fallback = setTimeout(enter, 1200);
+    // Fallback: enter quickly even if the preload hasn't resolved yet. The
+    // welcome video is warmed in parallel at app load, so this usually fires
+    // near-instantly once the cookie banner is dismissed.
+    const fallback = setTimeout(enter, 500);
     return () => clearTimeout(fallback);
   }, [consent.decided]);
 
@@ -1867,27 +1869,26 @@ export default function DigitalHost() {
               <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
             </motion.button>
 
-            {/* Mobile navigation label — vertical "Navigatie" under the host button; opens the footer as the mobile menu */}
+            {/* Mobile / tablet navigation — a minimal frosted-glass disc with a
+                menu glyph, matching the host FAB. Sits top-right, opens the
+                footer as the site menu. */}
             <motion.button
               initial={{ opacity: 0 }} animate={{ opacity: 1, x: shift }} exit={{ opacity: 0 }}
               transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-footer'))}
-              aria-label="Navigatie"
-              className="fixed top-[76px] right-4 sm:top-[84px] sm:right-6 lg:hidden z-[80] flex items-center justify-center"
+              aria-label={lang === 'fr' ? 'Navigation' : lang === 'en' ? 'Navigation' : 'Navigatie'}
+              className="fixed top-[72px] sm:top-[80px] right-4 sm:right-6 lg:hidden z-[80] flex items-center justify-center rounded-full transition-[box-shadow,transform] duration-300 hover:scale-[1.06]"
+              style={{
+                width: isMobile ? 40 : 44,
+                height: isMobile ? 40 : 44,
+                background: 'rgba(255,255,255,0.08)',
+                backdropFilter: 'blur(40px) saturate(160%)',
+                WebkitBackdropFilter: 'blur(40px) saturate(160%)',
+                border: '1px solid hsl(var(--primary) / 0.42)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.12)',
+              }}
             >
-              <span
-                className="font-body text-[10px] tracking-[0.4em] uppercase text-foreground/70 hover:text-primary transition-colors duration-300 px-1.5 py-2.5 rounded-full"
-                style={{
-                  writingMode: 'vertical-rl',
-                  transform: 'rotate(180deg)',
-                  background: isDark ? 'rgba(10,10,10,0.55)' : 'rgba(254,252,248,0.70)',
-                  backdropFilter: 'blur(16px)',
-                  WebkitBackdropFilter: 'blur(16px)',
-                  border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid hsl(78 35% 28% / 0.22)',
-                }}
-              >
-                Navigatie
-              </span>
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
             </motion.button>
           </>
         )}

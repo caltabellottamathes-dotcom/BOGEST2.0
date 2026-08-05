@@ -56,7 +56,7 @@ const AuthenticatedApp = () => {
     if (path !== '/' && path !== '') setHeroVideoReady(true);
   }, []);
 
-  if (isLoadingPublicSettings || isLoadingAuth || (!authError && !heroVideoReady)) {
+  if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">

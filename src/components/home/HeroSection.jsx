@@ -63,6 +63,7 @@ export default function HeroSection() {
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover hero-video"
           src={HERO_VIDEO_URL}
+          poster={HERO_IMAGE}
           autoPlay
           muted
           loop
