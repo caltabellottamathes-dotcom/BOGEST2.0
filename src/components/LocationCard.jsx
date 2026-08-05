@@ -53,9 +53,9 @@ export default function LocationCard({ loc, index }) {
               <div className="flex items-center gap-3 mb-4">
                 <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
                 <span className="h-px w-8 bg-primary/40" />
-                <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+                <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
               </div>
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-4">Bogèst<span className="text-primary">.</span></h3>
+              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground leading-tight mb-4">{loc.city}<span className="text-primary">.</span></h3>
               <div className="inline-flex items-center px-4 py-2 rounded-full border border-primary/30 bg-primary/5 w-fit mb-5">
                 <span className="font-body text-xs tracking-wide text-primary font-medium">{t('loc_coming_soon')}</span>
               </div>
@@ -69,10 +69,10 @@ export default function LocationCard({ loc, index }) {
             <div className="flex items-center gap-3 mb-4">
               <span className="font-heading text-xl font-bold text-primary/40">{loc.number}</span>
               <span className="h-px w-8 bg-primary/40" />
-              <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">{loc.city}</span>
+              <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary">Bogèst</span>
             </div>
             <Link to={`/locations/${loc.slug}`} className="group inline-flex items-center mb-6">
-              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">Bogèst<span className="text-primary">.</span></h3>
+              <h3 className="font-heading text-2xl md:text-3xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">{loc.city}<span className="text-primary">.</span></h3>
             </Link>
 
             {/* Two-column — contact | hours, spread across the card width */}

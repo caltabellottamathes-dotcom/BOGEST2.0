@@ -12,6 +12,8 @@ import MapPanel from '@/components/MapPanel';
 import DishPhotoPanel from '@/components/DishPhotoPanel';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import BeeldbankEditor from '@/components/BeeldbankEditor';
+import CookieBanner from '@/components/CookieBanner';
+import { useConsent } from '@/lib/consentStore';
 import CustomCursor from '@/components/CustomCursor';
 import { SiteImagesProvider } from '@/lib/SiteImageContext';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
@@ -23,6 +25,7 @@ export default function Layout() {
   const isAssets = location.pathname === '/assets';
   const frozenScrollRef = useRef(0);
   const [deferred, setDeferred] = useState(false);
+  const consent = useConsent();
 
   // Defer heavy floating widgets (external ElevenLabs script + welcome video)
   // until after the first paint so the page never stalls on initial load.
@@ -101,8 +104,10 @@ export default function Layout() {
       {/* Digital Host — hidden on the internal Beeldbank */}
       {!isAssets && <DigitalHost />}
 
-      {/* ElevenLabs Conversational AI Widget — deferred + hidden on Beeldbank */}
-      {!isAssets && deferred && <ElevenLabsAgent />}
+      {/* ElevenLabs Conversational AI Widget — deferred + hidden on Beeldbank.
+          Requires the "Spraakfunctie" consent; without it the voice orb is not
+          mounted so the microphone can never activate. */}
+      {!isAssets && deferred && consent.speech && <ElevenLabsAgent />}
 
       {/* Floating welcome video — deferred + hidden on Beeldbank */}
       {!isAssets && deferred && <FloatingVideo />}
@@ -121,6 +126,9 @@ export default function Layout() {
 
       {/* Beeldbank in-place editor — only renders when logged in as Beeldbank admin */}
       {!isAssets && <BeeldbankEditor />}
+
+      {/* Cookie / consent banner + preferences (AVG/ePrivacy) */}
+      <CookieBanner />
     </div>
     </SiteImagesProvider>
   );

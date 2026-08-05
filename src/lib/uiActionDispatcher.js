@@ -161,7 +161,12 @@ export async function dispatchUIAction({ type, args = [] }) {
           if (score > bestScore) { bestScore = score; best = im; }
         }
         // Require a real match — no photo is better than a wrong photo.
-        if (!best || bestScore < 30) return { success: false, message: 'no_relevant_photo' };
+        if (!best || bestScore < 30) {
+          // No relevant photo — dismiss the loading skeleton so the panel
+          // never sits open with a spinner.
+          window.dispatchEvent(new CustomEvent('bogest:close-panel'));
+          return { success: false, message: 'no_relevant_photo' };
+        }
         window.dispatchEvent(new CustomEvent('bogest:show-dish-photo', {
           detail: {
             url: best.url,

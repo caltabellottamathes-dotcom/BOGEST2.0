@@ -7,6 +7,7 @@ import { useTheme } from '@/lib/ThemeContext';
 import { useLang } from '@/lib/LangContext';
 import { getSystemPrompt } from '@/lib/digitalHostKnowledge';
 import { useVisitorProfile } from '@/hooks/useVisitorProfile';
+import { useConsent } from '@/lib/consentStore';
 import { useMenuKnowledge } from '@/hooks/useMenuKnowledge';
 import { startElevenLabsConversation } from '@/lib/elevenLabsWidget';
 import { preloadWelcomeVideo } from '@/lib/heroVideo';
@@ -1065,7 +1066,7 @@ function EntryButton({ icon: Icon, label, sub, isDark, onClick, variant }) {
   );
 }
 
-function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSkip, visitorMemory }) {
+function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSkip, visitorMemory, speechEnabled }) {
   const greeting = getTimeGreeting(s);
   const meal = getMealCtx();
   const v = INTRO_VARIANTS[lang] || INTRO_VARIANTS.nl;
@@ -1190,7 +1191,9 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             {/* Action buttons */}
             <div className="space-y-3 mt-auto">
               <EntryButton icon={MessageCircle} label={s.entry_chat} sub={s.entry_chat_sub} isDark={isDark} onClick={() => { pauseVideo(); onChat(); }} variant="primary" />
-              <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={() => { pauseVideo(); onLiveConversation(); }} />
+              {speechEnabled && (
+                <EntryButton icon={Mic} label={s.entry_live} sub={s.entry_live_sub} isDark={isDark} onClick={() => { pauseVideo(); onLiveConversation(); }} />
+              )}
               <EntryButton icon={Compass} label={s.entry_explore} sub={s.entry_explore_sub} isDark={isDark} onClick={() => { pauseVideo(); onSkip(); }} variant="ghost" />
             </div>
           </div>
@@ -1236,6 +1239,7 @@ export default function DigitalHost() {
   const [visitorMemory] = useState(() => touchVisitorMemory());
   const { profile: visitorProfile, updateProfile, incrementConversation, visitorId } = useVisitorProfile();
   const { menuContext, popularItems } = useMenuKnowledge(lang);
+  const consent = useConsent();
   const prevLangRef = useRef(lang);
   const blinkTimerRef = useRef(null);
   const proactiveRef = useRef(null);
@@ -1399,10 +1403,20 @@ export default function DigitalHost() {
   // EntryPopup's own video then plays immediately from cache (unmuted).
   useEffect(() => {
     if (entryShownRef.current) return;
+    // The welcome entry only appears the very first time a visitor enters the
+    // site. Once shown, it never reappears (across sessions / refreshes).
+    try {
+      if (localStorage.getItem('bogest-intro-seen') === '1') {
+        entryShownRef.current = true;
+        setPhase('minimized');
+        return;
+      }
+    } catch {}
     let done = false;
     const enter = () => {
       if (done) return; done = true;
       entryShownRef.current = true;
+      try { localStorage.setItem('bogest-intro-seen', '1'); } catch {}
       sounds.open();
       setPhase('entry');
     };
@@ -1673,13 +1687,19 @@ export default function DigitalHost() {
 
     try {
       const conv = await ensureConversation();
-      const profileStr = visitorProfile
+      // Personalisation (remembering the guest) only happens when the visitor
+      // granted "Persoonlijke ervaring" consent. Without it we never send the
+      // profile to the agent and don't capture/track anything from the message.
+      const canPersonalize = consent.personalization;
+      const profileStr = canPersonalize && visitorProfile
         ? `name=${visitorProfile.first_name || '-'},loc=${visitorProfile.preferred_location || '-'},fav=${visitorProfile.favorite_dish || '-'},diet=${visitorProfile.allergies || '-'}`
-        : 'new';
+        : 'none';
       const ctx = `[ctx: visitor_id=${visitorId || 'anon'}; page=${location.pathname}; weather=${weather ? `${weather.desc} ${weather.temp}C` : 'n/a'}; profile=${profileStr}]`;
       await base44.agents.addMessage(conv, { role: 'user', content: `${ctx} ${userText}` });
-      incrementConversation();
-      extractProfileInfo(userText, updateProfile);
+      if (canPersonalize) {
+        incrementConversation();
+        extractProfileInfo(userText, updateProfile);
+      }
     } catch {
       responsePendingRef.current = false;
       setIsLoading(false);
@@ -1718,6 +1738,9 @@ export default function DigitalHost() {
 
   const handleLiveConversation = () => {
     sessionStorage.setItem('bogest-host-seen', '1');
+    // Microphone / voice requires the "Spraakfunctie" consent. If the visitor
+    // declined, never start the voice agent — fall back to the chat.
+    if (!consent.speech) { setPhase('minimized'); return; }
     try { startElevenLabsConversation(); } catch {}
     setPhase('minimized');
   };
@@ -1736,7 +1759,7 @@ export default function DigitalHost() {
       <AnimatePresence>
         {phase === 'entry' && (
           <EntryPopup isDark={isDark} s={s} lang={lang} weather={weather}
-            onChat={() => openChat()} onLiveConversation={handleLiveConversation} onSkip={handleSkip} visitorMemory={visitorMemory} />
+            onChat={() => openChat()} onLiveConversation={handleLiveConversation} onSkip={handleSkip} visitorMemory={visitorMemory} speechEnabled={consent.speech} />
         )}
       </AnimatePresence>
 

@@ -10,6 +10,7 @@ import { hostQuestion } from '@/lib/hostHint';
 import { SuggestionCard, SUGGESTIONS, MONTH_NAMES, SECTION_LABELS } from '@/components/home/SeasonalSection';
 import ReserveCtaSection from '@/components/ReserveCtaSection';
 import KidsMenu from '@/components/menu/KidsMenu';
+import { dispatchUIAction } from '@/lib/uiActionDispatcher';
 
 function PageHero() {
   const { t } = useLang();
@@ -62,7 +63,11 @@ function CategoryRow({ cat, idx }) {
             return (
               <div key={item.id} id={`gerecht-${slugify(loc(item.name, 'nl'))}`} data-highlight={slugify(loc(item.name, 'nl'))} className="group relative py-3.5 border-b border-border/40 last:border-0">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300">
+                  <span
+                    onClick={() => dispatchUIAction({ type: 'showDishPhoto', args: [loc(item.name, 'nl'), 'gastronomy', 'all'] })}
+                    title="Bekijk foto"
+                    className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300 cursor-pointer"
+                  >
                     {loc(item.name, lang)}
                   </span>
                   <span className="flex-1 border-b border-dotted border-border/50" />

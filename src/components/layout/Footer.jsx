@@ -7,6 +7,7 @@ import { useLang } from '@/lib/LangContext';
 import { LANGUAGES } from '@/lib/i18n';
 import { useTheme } from '@/lib/ThemeContext';
 import { getLocations } from '@/lib/data';
+import { openCookiePreferences } from '@/lib/consentStore';
 
 // Brand logo is now the BogestLogo text wordmark
 
@@ -251,6 +252,12 @@ export default function Footer() {
             <Link to="/terms" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_terms')}
             </Link>
+            <button
+              onClick={openCookiePreferences}
+              className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300 text-left"
+            >
+              Cookievoorkeuren
+            </button>
             <Link
               to="/admin-login"
               className="font-body text-[10px] tracking-widest uppercase text-foreground/20 hover:text-foreground/40 transition-colors duration-300"
