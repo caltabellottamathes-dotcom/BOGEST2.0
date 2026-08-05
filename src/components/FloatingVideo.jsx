@@ -27,8 +27,7 @@ export default function FloatingVideo() {
   const [isDesktop, setIsDesktop] = useState(false);
   // The card is visible by default. It only hides while the Digital Host
   // entrance popup is open (the host dispatches bogest:popup-visibility).
-  const [hidden, setHidden] = useState(() =>
-    typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
+  const [hidden, setHidden] = useState(false);
   const [revealed, setRevealed] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -123,9 +122,6 @@ export default function FloatingVideo() {
       const isOpen = document.body.classList.contains('bogest-panel-open');
       if (wasOpen && !isOpen) setDismissed(false);
       wasOpen = isOpen;
-      // Hide the card while the Digital Host entrance popup is open, even if
-      // this deferred component mounted after the popup-visibility event.
-      setHidden(document.body.classList.contains('bogest-entry-active'));
     });
     obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
     return () => obs.disconnect();
