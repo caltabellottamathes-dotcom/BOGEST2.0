@@ -1830,73 +1830,33 @@ export default function DigitalHost() {
               )}
             </AnimatePresence>
 
-            {/* FAB — a frosted-glass host badge floating over the video card's top
-                edge, layered into the bottom-right composition (orb → card → badge).
-                Same translucent glass as the chat window; a gold chat pip at the
-                corner echoes the ElevenLabs orb. Circle by default, pill on hover. */}
+            {/* FAB — a small frosted-glass disc floating over the video card's top
+                edge, layered into the bottom-right composition (orb → card → disc).
+                One gold chat glyph; tap to open the host chat. Minimal by design. */}
             <motion.button
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: blinking ? [1, 0.4, 1, 0.5, 1] : 1, scale: blinking ? [1, 1.06, 1, 1.04, 1] : 1, x: shift, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 20 }}
-              transition={{ duration: blinking ? 1.2 : 0.4, ease: blinking ? 'easeInOut' : [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, scale: 0.8, y: 16 }}
+              animate={{ opacity: blinking ? [1, 0.55, 1] : 1, scale: blinking ? [1, 1.06, 1] : 1, x: shift, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 16 }}
+              transition={{ duration: blinking ? 1.4 : 0.4, ease: blinking ? 'easeInOut' : [0.22, 1, 0.36, 1] }}
               onClick={() => openChat()}
-              onMouseEnter={() => setFabExpanded(true)}
-              onMouseLeave={() => setFabExpanded(false)}
-              className="fixed right-5 sm:right-6 z-[100002] flex items-center rounded-full"
+              aria-label={s.fab_cta}
+              className="fixed right-5 sm:right-6 z-[100002] flex items-center justify-center rounded-full transition-[box-shadow,transform] duration-300 hover:scale-[1.06]"
               style={{
-                /* Float over the video card — bottom sliver overlaps the card's
-                   top edge so the badge reads as layered, not stacked. */
-                bottom: 82 + (isMobile ? 112 : 148) - Math.round((isMobile ? 56 : 64) * 0.2),
-                width: fabExpanded ? 'auto' : undefined,
-                minWidth: fabExpanded ? undefined : (isMobile ? 56 : 64),
-                height: isMobile ? 56 : 64,
-                padding: fabExpanded ? '0 20px 0 7px' : '0',
-                justifyContent: 'center',
-                gap: fabExpanded ? '11px' : '0',
-                transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
-                /* Frosted glass — matches the chat window / glass panels */
+                /* Float over the video card — a sliver overlaps the card's top
+                   edge so the disc reads as layered, not stacked. */
+                bottom: 82 + (isMobile ? 112 : 148) - Math.round((isMobile ? 44 : 48) * 0.25),
+                width: isMobile ? 44 : 48,
+                height: isMobile ? 44 : 48,
                 background: 'rgba(255,255,255,0.08)',
                 backdropFilter: 'blur(40px) saturate(160%)',
                 WebkitBackdropFilter: 'blur(40px) saturate(160%)',
                 border: '1px solid hsl(var(--primary) / 0.42)',
                 boxShadow: blinking
-                  ? '0 0 26px hsl(var(--primary) / 0.45), 0 14px 40px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.14)'
-                  : '0 14px 40px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.12)',
-                maxWidth: 'calc(100vw - 32px)',
+                  ? '0 0 22px hsl(var(--primary) / 0.40), 0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.14)'
+                  : '0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.12)',
               }}
             >
-              {/* Host portrait — the face of Bogèst's digital host */}
-              <span className="relative flex items-center justify-center flex-shrink-0" style={{ width: isMobile ? 42 : 50, height: isMobile ? 42 : 50 }}>
-                <LogoAvatar size={isMobile ? 'sm' : 'md'} online={false} isDark={isDark} />
-              </span>
-              {/* Gold chat pip — a layered corner badge signaling "tap to chat";
-                   picks up the orb's gold so the composition reads as one family. */}
-              <span
-                aria-hidden
-                className="absolute flex items-center justify-center rounded-full"
-                style={{
-                  bottom: -5,
-                  right: -5,
-                  width: 22,
-                  height: 22,
-                  background: 'radial-gradient(circle at 30% 28%, hsl(var(--primary) / 0.98), hsl(var(--primary) / 0.80))',
-                  border: '1.5px solid ' + (isDark ? 'rgba(8,8,8,0.95)' : 'rgba(254,252,248,0.95)'),
-                  boxShadow: '0 4px 14px hsl(var(--primary) / 0.50)',
-                }}
-              >
-                <MessageCircle className="w-3 h-3" strokeWidth={2.5} style={{ color: isDark ? 'rgba(8,8,8,0.92)' : 'rgba(40,32,8,0.92)' }} />
-              </span>
-              {/* Label — only visible when expanded (hover) */}
-              <motion.div
-                initial={false}
-                animate={{ opacity: fabExpanded ? 1 : 0, width: fabExpanded ? 'auto' : 0 }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                className="text-left overflow-hidden whitespace-nowrap"
-                style={{ pointerEvents: fabExpanded ? 'auto' : 'none' }}
-              >
-                <p className="font-body text-[9px] tracking-[0.15em] uppercase text-primary/80 leading-none mb-0.5">{s.fab_label}</p>
-                <p className="font-heading text-xs font-semibold text-foreground leading-tight">{s.fab_cta}</p>
-              </motion.div>
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
             </motion.button>
 
             {/* Mobile navigation label — vertical "Navigatie" under the host button; opens the footer as the mobile menu */}
