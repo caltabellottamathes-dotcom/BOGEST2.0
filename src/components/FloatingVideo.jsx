@@ -26,8 +26,13 @@ export default function FloatingVideo() {
   const [playing, setPlaying] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   // The card is visible by default. It only hides while the Digital Host
-  // entrance popup is open (the host dispatches bogest:popup-visibility).
-  const [hidden, setHidden] = useState(false);
+  // entrance popup is open. Because this widget is deferred-mounted
+  // (requestIdleCallback), it can mount AFTER the popup already opened and
+  // missed the bogest:popup-visibility event — so initialize from the body
+  // flag the popup sets (bogest-entry-active) to avoid showing through it.
+  const [hidden, setHidden] = useState(
+    () => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active')
+  );
   const [revealed, setRevealed] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);

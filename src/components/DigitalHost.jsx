@@ -1080,22 +1080,30 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
     // autoplay (no prior gesture), play muted for motion and unmute on the
     // first tap so the guest hears sound the moment they interact. iPadOS is
     // strict, so we listen for pointerdown, touchend AND click (capture phase).
-    el.muted = false;
-    el.play().catch(() => {
-      el.muted = true;
-      el.defaultMuted = true;
-      el.play().catch(() => {});
-      const unmute = () => {
-        try { el.muted = false; el.play().catch(() => {}); } catch {}
-        window.removeEventListener('pointerdown', unmute, true);
-        window.removeEventListener('touchend', unmute, true);
-        window.removeEventListener('click', unmute, true);
-      };
-      window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
-      window.addEventListener('touchend', unmute, { capture: true, passive: true });
-      window.addEventListener('click', unmute, { capture: true, passive: true });
-    });
-    return () => { try { videoRef.current?.pause(); } catch {} };
+    // Start muted so the browser always allows autoplay; unmute on the first
+    // user gesture (browsers block unmuted autoplay without one). This is
+    // more reliable than attempting unmuted play first.
+    el.muted = true;
+    el.defaultMuted = true;
+    const tryPlay = () => { el.play().catch(() => {}); };
+    tryPlay();
+    let unmuted = false;
+    const unmute = () => {
+      if (unmuted) return; unmuted = true;
+      try { el.muted = false; el.play().catch(() => {}); } catch {}
+      window.removeEventListener('pointerdown', unmute, true);
+      window.removeEventListener('touchend', unmute, true);
+      window.removeEventListener('click', unmute, true);
+    };
+    window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
+    window.addEventListener('touchend', unmute, { capture: true, passive: true });
+    window.addEventListener('click', unmute, { capture: true, passive: true });
+    return () => {
+      try { el.pause(); } catch {}
+      window.removeEventListener('pointerdown', unmute, true);
+      window.removeEventListener('touchend', unmute, true);
+      window.removeEventListener('click', unmute, true);
+    };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1158,7 +1166,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
             <video
               ref={videoRef}
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
-              autoPlay playsInline preload="auto"
+              autoPlay muted playsInline preload="auto"
               onLoadedData={() => setFrameReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />

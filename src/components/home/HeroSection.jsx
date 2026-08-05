@@ -40,11 +40,17 @@ export default function HeroSection() {
     };
     sync();
     if (v.readyState >= 2) setVideoReady(true);
-    const onReady = () => setVideoReady(true);
+    // Ensure the muted hero video actually starts playing once it has data —
+    // a single sync() on mount can run before the video is ready to play.
+    const onReady = () => {
+      setVideoReady(true);
+      if (!document.body.classList.contains('bogest-panel-open')) v.play().catch(() => {});
+    };
     v.addEventListener('loadeddata', onReady);
+    v.addEventListener('canplay', onReady);
     const obs = new MutationObserver(sync);
     obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => { obs.disconnect(); v.removeEventListener('loadeddata', onReady); };
+    return () => { obs.disconnect(); v.removeEventListener('loadeddata', onReady); v.removeEventListener('canplay', onReady); };
   }, []);
 
   return (
