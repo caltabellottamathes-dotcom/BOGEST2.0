@@ -1830,9 +1830,10 @@ export default function DigitalHost() {
               )}
             </AnimatePresence>
 
-            {/* FAB — frosted-glass host button, stacked with the ElevenLabs orb +
-                video card on the right edge (orb → video card → host button).
-                Same glass as the chat panel; circle by default, pill on hover. */}
+            {/* FAB — a frosted-glass host badge floating over the video card's top
+                edge, layered into the bottom-right composition (orb → card → badge).
+                Same translucent glass as the chat window; a gold chat pip at the
+                corner echoes the ElevenLabs orb. Circle by default, pill on hover. */}
             <motion.button
               initial={{ opacity: 0, scale: 0.8, y: 20 }}
               animate={{ opacity: blinking ? [1, 0.4, 1, 0.5, 1] : 1, scale: blinking ? [1, 1.06, 1, 1.04, 1] : 1, x: shift, y: 0 }}
@@ -1841,37 +1842,51 @@ export default function DigitalHost() {
               onClick={() => openChat()}
               onMouseEnter={() => setFabExpanded(true)}
               onMouseLeave={() => setFabExpanded(false)}
-              className="fixed right-5 sm:right-6 z-[80] flex items-center rounded-full overflow-hidden"
+              className="fixed right-5 sm:right-6 z-[100002] flex items-center rounded-full"
               style={{
-                /* Stack above the video card (orb @24px → card @82px → host button) */
-                bottom: 82 + (isMobile ? 112 : 148) + 14,
+                /* Float over the video card — bottom sliver overlaps the card's
+                   top edge so the badge reads as layered, not stacked. */
+                bottom: 82 + (isMobile ? 112 : 148) - Math.round((isMobile ? 56 : 64) * 0.2),
                 width: fabExpanded ? 'auto' : undefined,
                 minWidth: fabExpanded ? undefined : (isMobile ? 56 : 64),
                 height: isMobile ? 56 : 64,
-                padding: fabExpanded ? '0 18px 0 8px' : '0',
+                padding: fabExpanded ? '0 20px 0 7px' : '0',
                 justifyContent: 'center',
-                gap: fabExpanded ? '10px' : '0',
+                gap: fabExpanded ? '11px' : '0',
                 transition: 'all 0.35s cubic-bezier(0.22,1,0.36,1)',
                 /* Frosted glass — matches the chat window / glass panels */
                 background: 'rgba(255,255,255,0.08)',
                 backdropFilter: 'blur(40px) saturate(160%)',
                 WebkitBackdropFilter: 'blur(40px) saturate(160%)',
-                border: blinking ? '1px solid hsl(var(--primary) / 0.65)' : '1px solid hsl(var(--primary) / 0.32)',
+                border: '1px solid hsl(var(--primary) / 0.42)',
                 boxShadow: blinking
-                  ? '0 0 22px hsl(var(--primary) / 0.40), 0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.10)'
-                  : '0 8px 32px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.08)',
+                  ? '0 0 26px hsl(var(--primary) / 0.45), 0 14px 40px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.14)'
+                  : '0 14px 40px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.12)',
                 maxWidth: 'calc(100vw - 32px)',
               }}
             >
-              {/* Desktop: larger circle (64px) */}
-              <span className="hidden sm:flex items-center justify-center flex-shrink-0" style={{ width: 48, height: 48 }}>
-                <LogoAvatar size="md" online isDark={isDark} />
+              {/* Host portrait — the face of Bogèst's digital host */}
+              <span className="relative flex items-center justify-center flex-shrink-0" style={{ width: isMobile ? 42 : 50, height: isMobile ? 42 : 50 }}>
+                <LogoAvatar size={isMobile ? 'sm' : 'md'} online={false} isDark={isDark} />
               </span>
-              {/* Mobile: normal circle (56px) */}
-              <span className="flex sm:hidden items-center justify-center flex-shrink-0" style={{ width: 42, height: 42 }}>
-                <LogoAvatar size="sm" online isDark={isDark} />
+              {/* Gold chat pip — a layered corner badge signaling "tap to chat";
+                   picks up the orb's gold so the composition reads as one family. */}
+              <span
+                aria-hidden
+                className="absolute flex items-center justify-center rounded-full"
+                style={{
+                  bottom: -5,
+                  right: -5,
+                  width: 22,
+                  height: 22,
+                  background: 'radial-gradient(circle at 30% 28%, hsl(var(--primary) / 0.98), hsl(var(--primary) / 0.80))',
+                  border: '1.5px solid ' + (isDark ? 'rgba(8,8,8,0.95)' : 'rgba(254,252,248,0.95)'),
+                  boxShadow: '0 4px 14px hsl(var(--primary) / 0.50)',
+                }}
+              >
+                <MessageCircle className="w-3 h-3" strokeWidth={2.5} style={{ color: isDark ? 'rgba(8,8,8,0.92)' : 'rgba(40,32,8,0.92)' }} />
               </span>
-              {/* Label — only visible when expanded */}
+              {/* Label — only visible when expanded (hover) */}
               <motion.div
                 initial={false}
                 animate={{ opacity: fabExpanded ? 1 : 0, width: fabExpanded ? 'auto' : 0 }}
