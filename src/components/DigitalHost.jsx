@@ -1076,26 +1076,31 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   useEffect(() => {
     const el = videoRef.current;
     if (!el) return;
-    // Unmuted intro video — play with sound. If the browser blocks unmuted
-    // autoplay (no prior gesture), play muted for motion and unmute on the
-    // first tap so the guest hears sound the moment they interact. iPadOS is
-    // strict, so we listen for pointerdown, touchend AND click (capture phase).
-    el.muted = false;
-    el.play().catch(() => {
-      el.muted = true;
-      el.defaultMuted = true;
-      el.play().catch(() => {});
-      const unmute = () => {
-        try { el.muted = false; el.play().catch(() => {}); } catch {}
-        window.removeEventListener('pointerdown', unmute, true);
-        window.removeEventListener('touchend', unmute, true);
-        window.removeEventListener('click', unmute, true);
-      };
-      window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
-      window.addEventListener('touchend', unmute, { capture: true, passive: true });
-      window.addEventListener('click', unmute, { capture: true, passive: true });
-    });
-    return () => { try { videoRef.current?.pause(); } catch {} };
+    // Start muted so every browser allows autoplay, then unmute on the first
+    // guest gesture so they hear sound the moment they interact. play() is
+    // retried once the video buffers (canplay) in case it isn't ready at mount.
+    el.muted = true;
+    el.defaultMuted = true;
+    const tryPlay = () => { el.play().catch(() => {}); };
+    tryPlay();
+    const onCanPlay = () => tryPlay();
+    el.addEventListener('canplay', onCanPlay, { once: true });
+    const unmute = () => {
+      try { el.muted = false; el.play().catch(() => {}); } catch {}
+      window.removeEventListener('pointerdown', unmute, true);
+      window.removeEventListener('touchend', unmute, true);
+      window.removeEventListener('click', unmute, true);
+    };
+    window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
+    window.addEventListener('touchend', unmute, { capture: true, passive: true });
+    window.addEventListener('click', unmute, { capture: true, passive: true });
+    return () => {
+      el.removeEventListener('canplay', onCanPlay);
+      window.removeEventListener('pointerdown', unmute, true);
+      window.removeEventListener('touchend', unmute, true);
+      window.removeEventListener('click', unmute, true);
+      try { videoRef.current?.pause(); } catch {}
+    };
   }, []);
   const pauseVideo = () => { try { videoRef.current?.pause(); } catch {} };
 
@@ -1830,33 +1835,34 @@ export default function DigitalHost() {
               )}
             </AnimatePresence>
 
-            {/* FAB — a small frosted-glass disc floating over the video card's top
-                edge, layered into the bottom-right composition (orb → card → disc).
-                One gold chat glyph; tap to open the host chat. Minimal by design. */}
+            {/* FAB — a vertical glass text pill mirroring the mobile "Navigatie"
+                button, stacked above the video card in the bottom-right
+                composition (orb → card → pill). Tap to open the host chat. */}
             <motion.button
-              initial={{ opacity: 0, scale: 0.8, y: 16 }}
-              animate={{ opacity: blinking ? [1, 0.55, 1] : 1, scale: blinking ? [1, 1.06, 1] : 1, x: shift, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: 16 }}
-              transition={{ duration: blinking ? 1.4 : 0.4, ease: blinking ? 'easeInOut' : [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, x: 20, rotate: 180 }}
+              animate={{ opacity: 1, x: shift, rotate: 180 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => openChat()}
               aria-label={s.fab_cta}
-              className="fixed right-5 sm:right-6 z-[100002] flex items-center justify-center rounded-full transition-[box-shadow,transform] duration-300 hover:scale-[1.06]"
+              className="fixed right-5 sm:right-6 z-[100002] flex items-center justify-center rounded-full"
               style={{
-                /* Float over the video card — a sliver overlaps the card's top
-                   edge so the disc reads as layered, not stacked. */
-                bottom: 82 + (isMobile ? 112 : 148) - Math.round((isMobile ? 44 : 48) * 0.25),
-                width: isMobile ? 44 : 48,
-                height: isMobile ? 44 : 48,
-                background: 'rgba(255,255,255,0.08)',
-                backdropFilter: 'blur(40px) saturate(160%)',
-                WebkitBackdropFilter: 'blur(40px) saturate(160%)',
-                border: '1px solid hsl(var(--primary) / 0.42)',
-                boxShadow: blinking
-                  ? '0 0 22px hsl(var(--primary) / 0.40), 0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.14)'
-                  : '0 10px 30px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.12)',
+                /* Stack above the video card, right-aligned with the cluster */
+                bottom: 82 + (isMobile ? 112 : 148) + 12,
+                writingMode: 'vertical-rl',
+                padding: '12px 7px',
+                background: isDark ? 'rgba(10,10,10,0.55)' : 'rgba(254,252,248,0.70)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid hsl(78 35% 28% / 0.22)',
+                boxShadow: '0 8px 28px rgba(0,0,0,0.30)',
+                color: 'hsl(var(--foreground) / 0.70)',
+                cursor: 'pointer',
               }}
             >
-              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary" strokeWidth={1.75} />
+              <span className="font-body text-[10px] tracking-[0.4em] uppercase transition-colors duration-300 hover:text-primary">
+                {lang === 'fr' ? 'Demandez' : lang === 'en' ? 'Ask Bogèst' : 'Vraag het'}
+              </span>
             </motion.button>
 
             {/* Mobile navigation label — vertical "Navigatie" under the host button; opens the footer as the mobile menu */}

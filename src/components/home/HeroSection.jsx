@@ -31,6 +31,11 @@ export default function HeroSection() {
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
+    // React doesn't reliably set the `muted` DOM property from the JSX
+    // attribute, which silently breaks autoplay. Set it imperatively so the
+    // muted background loop always autoplays.
+    v.muted = true;
+    v.defaultMuted = true;
     const sync = () => {
       if (document.body.classList.contains('bogest-panel-open')) {
         v.pause();
@@ -39,12 +44,14 @@ export default function HeroSection() {
       }
     };
     sync();
+    const onCanPlay = () => { if (!document.body.classList.contains('bogest-panel-open')) v.play().catch(() => {}); };
+    v.addEventListener('canplay', onCanPlay);
     if (v.readyState >= 2) setVideoReady(true);
     const onReady = () => setVideoReady(true);
     v.addEventListener('loadeddata', onReady);
     const obs = new MutationObserver(sync);
     obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-    return () => { obs.disconnect(); v.removeEventListener('loadeddata', onReady); };
+    return () => { obs.disconnect(); v.removeEventListener('loadeddata', onReady); v.removeEventListener('canplay', onCanPlay); };
   }, []);
 
   return (
