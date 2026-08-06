@@ -117,18 +117,11 @@ export default function LocationsPreview() {
                       ) : (
                         <button
                           onClick={(e) => { e.preventDefault(); e.stopPropagation(); askHost(hostQuestion(lang, loc.name)); }}
-                          className="absolute left-5 bottom-5 flex flex-col items-start px-4 py-2.5 rounded-xl overflow-hidden transition-all duration-500 group-hover:bg-black/55"
-                          style={{ background: 'rgba(12,11,9,0.42)', backdropFilter: 'blur(16px) saturate(140%)', WebkitBackdropFilter: 'blur(16px) saturate(140%)', border: '1px solid rgba(255,255,255,0.16)' }}
+                          className="absolute left-5 bottom-5 flex flex-col items-start px-3 py-1 bg-black/35 backdrop-blur-md rounded-2xl border border-white/15 overflow-hidden transition-all duration-500 group-hover:bg-black/55"
                         >
-                          <div className="flex items-center gap-2.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" style={{ boxShadow: '0 0 8px hsl(var(--primary) / 0.7)' }} />
-                            <span className="font-body text-[10px] tracking-[0.3em] uppercase text-white">Bogèst · {loc.city}</span>
-                          </div>
+                          <span className="font-body text-[10px] tracking-[0.2em] uppercase text-white whitespace-nowrap">Bogèst · {loc.city}</span>
                           <span className="block max-h-0 opacity-0 group-hover:max-h-12 group-hover:opacity-100 transition-all duration-500 overflow-hidden">
-                            <span className="block font-body text-[10px] tracking-[0.25em] uppercase whitespace-nowrap pt-1.5 inline-flex items-center gap-1.5" style={{ color: 'hsl(var(--primary) / 0.92)' }}>
-                              {hostHintLabel(lang)}
-                              <ArrowRight className="w-3 h-3 text-primary/80 transition-transform duration-300 group-hover:translate-x-0.5" />
-                            </span>
+                            <span className="block font-body text-[10px] tracking-[0.25em] uppercase text-white/80 whitespace-nowrap pt-1 inline-flex items-center gap-1">{hostHintLabel(lang)} <ArrowRight className="w-3 h-3" /></span>
                           </span>
                         </button>
                       )}
