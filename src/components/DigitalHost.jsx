@@ -1108,11 +1108,6 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
   // the video (warming the cache), so this fires near-instantly; a short
   // fallback guards against slow devices.
   const [frameReady, setFrameReady] = useState(false);
-  useEffect(() => {
-    if (frameReady) return;
-    const t = setTimeout(() => setFrameReady(true), 400);
-    return () => clearTimeout(t);
-  }, [frameReady]);
 
   const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.matchMedia('(max-width: 639px)').matches);
   useEffect(() => {
@@ -1165,6 +1160,7 @@ function EntryPopup({ isDark, s, lang, weather, onChat, onLiveConversation, onSk
               src={isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL}
               autoPlay playsInline preload="auto"
               onLoadedData={() => setFrameReady(true)}
+              onError={() => setFrameReady(true)}
               className="absolute inset-0 w-full h-full object-cover object-top sm:object-center"
             />
             {/* Gradient blend — mobile: bottom */}
@@ -1423,14 +1419,11 @@ export default function DigitalHost() {
       sounds.open();
       setPhase('entry');
     };
-    // The welcome video was already warmed in parallel with the hero video at
-    // app load, so this resolves almost instantly instead of loading late.
+    // The popup only appears once the welcome video has actually loaded (its
+    // first frame is cached) so it plays immediately, unmuted, the moment the
+    // pop-up is shown — no black flash, no late load. preloadWelcomeVideo
+    // resolves on canplay/loadeddata, or after a 6s safety timeout on error.
     preloadWelcomeVideo().then(enter);
-    // Fallback: enter quickly even if the preload hasn't resolved yet. The
-    // welcome video is warmed in parallel at app load, so this usually fires
-    // near-instantly once the cookie banner is dismissed.
-    const fallback = setTimeout(enter, 500);
-    return () => clearTimeout(fallback);
   }, [consent.decided]);
 
   // Popup visibility is handled in the consolidated effect above.
@@ -1908,19 +1901,27 @@ export default function DigitalHost() {
             >
               {/* Background watermark removed */}
 
-              {/* Header — slim and minimal */}
-              <div className="flex items-center justify-between px-4 py-2.5 flex-shrink-0 relative z-10"
+              {/* Header — refined editorial */}
+              <div className="flex items-center justify-between px-4 py-3 flex-shrink-0 relative z-10"
                 style={{ borderBottom: '1px solid rgba(255,255,255,0.10)' }}>
                 {/* Mobile drag handle */}
                 <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-foreground/15 sm:hidden" />
-                <div className="flex items-center gap-2 mt-1 sm:mt-0">
+                <div className="flex items-center gap-3 mt-1.5 sm:mt-0">
                   <LogoAvatar size="sm" online isDark={isDark} />
-                  <p className="font-heading text-[13px] font-semibold leading-none tracking-tight" style={{ color: isDark ? 'rgba(255,240,180,0.97)' : 'rgba(40,50,15,0.95)' }}>{s.title}</p>
+                  <div className="flex flex-col leading-none">
+                    <p className="font-logo text-[15px] font-semibold leading-none tracking-wide" style={{ color: isDark ? 'rgba(255,240,180,0.97)' : 'rgba(40,50,15,0.95)' }}>{s.title}</p>
+                    <div className="flex items-center gap-1.5 mt-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary" style={{ boxShadow: '0 0 6px hsl(var(--primary) / 0.6)' }} />
+                      <p className="font-body text-[9px] tracking-[0.28em] uppercase" style={{ color: isDark ? 'rgba(200,163,89,0.72)' : 'rgba(107,122,63,0.72)' }}>
+                        {weather ? `${weather.desc} · ${weather.temp}°C` : (lang === 'fr' ? 'Hôte numérique' : lang === 'en' ? 'Digital host' : 'Digitale gastheer')}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <button onClick={() => setPhase('minimized')} aria-label="Sluiten"
-                  className="w-7 h-7 rounded-full flex items-center justify-center transition-colors flex-shrink-0"
-                  style={{ color: isDark ? 'rgba(255,235,150,0.70)' : 'rgba(40,50,15,0.55)' }}>
-                  <X className="w-3.5 h-3.5" />
+                <button onClick={() => setPhase('minimized')} type="button" aria-label="Sluiten"
+                  className="w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.08)', border: '1px solid hsl(var(--primary) / 0.25)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+                  <X className="w-4 h-4 text-foreground/80" />
                 </button>
               </div>
 

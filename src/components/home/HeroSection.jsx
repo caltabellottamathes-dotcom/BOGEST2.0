@@ -7,8 +7,6 @@ import { useTheme } from '@/lib/ThemeContext';
 import { HERO_VIDEO_URL } from '@/lib/heroVideo';
 
 
-const HERO_IMAGE = 'https://media.base44.com/images/public/6a062d5a5c4241c6b2404e25/8696324df_Make_this_photo_look_more_202605150157.jpg';
-
 export default function HeroSection() {
   const [pastHero, setPastHero] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
@@ -63,7 +61,6 @@ export default function HeroSection() {
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover hero-video"
           src={HERO_VIDEO_URL}
-          poster={HERO_IMAGE}
           autoPlay
           muted
           loop
