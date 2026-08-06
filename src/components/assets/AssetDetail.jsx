@@ -175,7 +175,11 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
 
         <div className="flex-1 p-5">
           <div className="rounded-xl overflow-hidden border border-border mb-3 bg-muted">
-            <img src={asset.image_url} alt={form.description || 'Bogèst'} className="w-full h-auto object-contain max-h-[36vh]" />
+            {asset.media_type === 'video' ? (
+              <video src={asset.image_url} controls playsInline preload="metadata" className="w-full h-auto max-h-[36vh] bg-black" />
+            ) : (
+              <img src={asset.image_url} alt={form.description || 'Bogèst'} className="w-full h-auto object-contain max-h-[36vh]" />
+            )}
           </div>
           <div className="flex gap-2 mb-6">
             <a href={asset.image_url} download className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:opacity-90 transition-opacity">
@@ -189,7 +193,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
             </a>
           </div>
 
-          {asset.ai_analyzed !== true && (
+          {asset.media_type !== 'video' && asset.ai_analyzed !== true && (
             <button onClick={analyze} disabled={analyzing} className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground text-sm py-2.5 rounded-lg hover:bg-primary/90 transition-colors mb-3 disabled:opacity-50">
               {analyzing ? <><Loader2 className="w-4 h-4 animate-spin" /> Bezig met analyseren…</> : <><Sparkles className="w-4 h-4" /> Analyseer nu</>}
             </button>

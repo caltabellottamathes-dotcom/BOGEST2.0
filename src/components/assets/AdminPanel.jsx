@@ -123,7 +123,8 @@ export default function AdminPanel({ onClose, onChanged }) {
         const up = await base44.integrations.Core.UploadFile({ file });
         const file_url = up?.file_url || up?.data?.file_url;
         if (!file_url) throw new Error('Upload mislukt');
-        const res = await base44.functions.invoke('importUploadedAsset', { file_url, quick: true });
+        const isVideo = (file.type || '').startsWith('video/');
+        const res = await base44.functions.invoke('importUploadedAsset', { file_url, quick: true, media_type: isVideo ? 'video' : 'image' });
         results.push({ name: file.name, ok: true });
       } catch (err) {
         results.push({ name: file.name, ok: false });
@@ -153,12 +154,12 @@ export default function AdminPanel({ onClose, onChanged }) {
           {/* Foto's uploaden */}
           <Card
             icon={Upload}
-            title="Foto's uploaden"
-            desc="Upload één of meerdere foto's tegelijk — ze worden direct aan de beeldbank toegevoegd (zonder analyse). Analyseer ze daarna handmatig vanuit de beeldbank door op de foto te klikken."
+            title="Beelden uploaden"
+            desc="Upload één of meerdere foto's of video's tegelijk — ze worden direct aan de beeldbank toegevoegd. Foto's kunnen daarna handmatig geanalyseerd worden; video's krijgen het label 'Video'."
           >
             <label className={`w-full flex items-center justify-center gap-2 border border-dashed rounded-lg py-4 px-3 text-sm cursor-pointer transition-colors ${bulk.running ? 'border-primary/40 opacity-60' : 'border-primary/40 text-primary hover:bg-primary/10'}`}>
-              {bulk.running ? <><Loader2 className="w-4 h-4 animate-spin" /> {bulk.done}/{bulk.total} toegevoegd…</> : <><Upload className="w-4 h-4" /> Kies foto's om te uploaden (meerdere toegestaan)</>}
-              <input type="file" accept="image/*" multiple className="hidden" onChange={onUploadFiles} disabled={bulk.running} />
+              {bulk.running ? <><Loader2 className="w-4 h-4 animate-spin" /> {bulk.done}/{bulk.total} toegevoegd…</> : <><Upload className="w-4 h-4" /> Kies foto's of video's om te uploaden (meerdere toegestaan)</>}
+              <input type="file" accept="image/*,video/*" multiple className="hidden" onChange={onUploadFiles} disabled={bulk.running} />
             </label>
             {bulk.running && (
               <div className="mt-3">

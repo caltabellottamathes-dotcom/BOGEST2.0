@@ -67,7 +67,7 @@ export default function HeroSection() {
           playsInline
           preload="auto"
           onCanPlay={(e) => { if (!document.body.classList.contains('bogest-panel-open')) e.currentTarget.play().catch(() => {}); }}
-          style={{ opacity: 1 }}
+          style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.6s ease' }}
         />
       </div>
 

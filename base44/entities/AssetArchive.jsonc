@@ -27,12 +27,21 @@
     },
     "image_url": {
       "type": "string",
-      "description": "CDN URL used to display the image (mirrored to Base44 storage, or the source CDN)"
+      "description": "CDN URL used to display the asset (mirrored to Base44 storage, or the source CDN). For videos this is the video file URL."
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video"
+      ],
+      "default": "image",
+      "description": "Whether this asset is a still image or a video clip. Videos skip AI vision analysis."
     },
     "mirrored": {
       "type": "boolean",
       "default": false,
-      "description": "Whether the image was copied into Base44 CDN storage"
+      "description": "Whether the asset was copied into Base44 CDN storage"
     },
     "categories": {
       "type": "array",
@@ -147,7 +156,7 @@
     "ai_analyzed": {
       "type": "boolean",
       "default": false,
-      "description": "Whether AI analysis (description, categories, tags, mood, quality) has been run on this asset. Quick-uploaded assets start false until manually analysed."
+      "description": "Whether AI analysis (description, categories, tags, mood, quality) has been run on this asset. Quick-uploaded assets and all videos start false."
     },
     "collections": {
       "type": "array",

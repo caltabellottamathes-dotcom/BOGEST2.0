@@ -11,6 +11,7 @@ export const ASSET_VIEWS = [
   { key: 'atmosphere', label: 'Sfeer & mensen', groups: ['atmosphere', 'experience', 'people', 'seasons'] },
   { key: 'exterior', label: 'Buiten & restaurant', groups: ['restaurant', 'locations'] },
   { key: 'events', label: 'Evenementen', groups: ['events'] },
+  { key: 'videos', label: "Video's", groups: null },
 ];
 
 export const LOCATIONS = [

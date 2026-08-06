@@ -66,6 +66,8 @@ export default function Assets() {
         const g = assetGroups(a);
         return v.groups.some((gr) => g.has(gr));
       });
+    } else if (activeView === 'videos') {
+      filtered = filtered.filter((a) => a.media_type === 'video');
     }
   }
   if (activeLoc !== 'all') filtered = filtered.filter((a) => a.location === activeLoc);
@@ -148,7 +150,9 @@ export default function Assets() {
               {ASSET_VIEWS.map((v) => {
                 const count = v.key === 'all'
                   ? assets.length
-                  : assets.filter((a) => { const g = assetGroups(a); return v.groups.some((gr) => g.has(gr)); }).length;
+                  : v.key === 'videos'
+                    ? assets.filter((a) => a.media_type === 'video').length
+                    : assets.filter((a) => { const g = assetGroups(a); return v.groups.some((gr) => g.has(gr)); }).length;
                 const active = activeView === v.key;
                 return (
                   <button

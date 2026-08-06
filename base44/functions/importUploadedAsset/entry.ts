@@ -16,11 +16,17 @@ export default async function (req: Request): Promise<Response> {
     const file_url = body?.file_url;
     if (!file_url) return Response.json({ error: 'file_url required' }, { status: 400 });
 
-    // Quick add — no LLM, just persist the photo so it appears in the archive
+    // Videos live in the same archive as images but skip AI vision analysis
+    // (the vision model is image-only). They are always stored "quick".
+    const media_type = body?.media_type === 'video' ? 'video' : 'image';
+
+    // Quick add — no LLM, just persist the asset so it appears in the archive
     // immediately. The admin starts the AI analysis manually afterwards.
-    if (body.quick) {
+    // Videos always take this path.
+    if (body.quick || media_type === 'video') {
       const record = await base44.asServiceRole.entities.AssetArchive.create({
         image_url: file_url,
+        media_type,
         source_url: file_url,
         source_urls: [file_url],
         source_type: 'seed',
@@ -35,6 +41,7 @@ export default async function (req: Request): Promise<Response> {
     const analysis = await analyzeImage(base44, file_url);
     const record = await base44.asServiceRole.entities.AssetArchive.create({
       image_url: file_url,
+      media_type: 'image',
       source_url: file_url,
       source_urls: [file_url],
       source_type: 'seed',
