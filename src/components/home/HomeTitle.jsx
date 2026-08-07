@@ -12,7 +12,7 @@ const stripPeriod = (s) => (s ? s.replace(/\.$/, '') : s);
 
 export default function HomeTitle({ title, accent, breakLine = false, className = '' }) {
   const base =
-    'group font-heading text-[clamp(2rem,8vw,2.4rem)] md:text-4xl lg:text-5xl font-bold text-foreground leading-tight transition-colors duration-300 cursor-default hover:text-primary';
+    'group font-heading text-[clamp(1.9rem,4.5vw,3rem)] font-bold text-foreground leading-[1.05] tracking-tight transition-colors duration-300 cursor-default hover:text-primary';
 
   const Accent = () => (
     <span className="italic text-primary transition-colors duration-300 group-hover:text-foreground">
