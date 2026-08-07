@@ -56,7 +56,11 @@ const AuthenticatedApp = () => {
     if (path !== '/' && path !== '') setHeroVideoReady(true);
   }, []);
 
-  if (isLoadingPublicSettings || isLoadingAuth) {
+  // On the homepage, keep the branded loading screen up until the hero video
+  // has preloaded its first frame. The homepage then reveals with the video
+  // already playing — no black flash. Other routes don't wait for it.
+  const onHome = window.location.pathname === '/' || window.location.pathname === '';
+  if (isLoadingPublicSettings || isLoadingAuth || (onHome && !heroVideoReady)) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">

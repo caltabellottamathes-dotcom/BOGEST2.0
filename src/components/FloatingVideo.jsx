@@ -30,9 +30,11 @@ export default function FloatingVideo() {
   // (requestIdleCallback), it can mount AFTER the popup already opened and
   // missed the bogest:popup-visibility event — so initialize from the body
   // flag the popup sets (bogest-entry-active) to avoid showing through it.
-  const [hidden, setHidden] = useState(
-    () => typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active')
-  );
+  // The video card must NOT appear at the start. It only reveals AFTER the
+  // Digital Host entry popup has been shown and then dismissed. We track
+  // "popupSeen" so the card also stays hidden during the pre-popup window.
+  const popupSeenRef = useRef(typeof document !== 'undefined' && document.body.classList.contains('bogest-entry-active'));
+  const [hidden, setHidden] = useState(true);
   const [revealed, setRevealed] = useState(false);
   const [kbOpen, setKbOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
@@ -87,10 +89,24 @@ export default function FloatingVideo() {
     };
   }, []);
 
+  // Reveal only after the entry popup has appeared and then closed.
+  // `bogest-entry-active` is added when the popup opens and removed when it
+  // closes; we remember we've seen it so the card stays hidden until then.
   useEffect(() => {
-    const handler = (e) => setHidden(e.detail?.open === true);
+    const update = () => {
+      const open = document.body.classList.contains('bogest-entry-active');
+      if (open) popupSeenRef.current = true;
+      setHidden(open || !popupSeenRef.current);
+    };
+    update();
+    const obs = new MutationObserver(update);
+    obs.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    const handler = (e) => {
+      if (e.detail?.open) popupSeenRef.current = true;
+      setHidden(e.detail?.open === true || !popupSeenRef.current);
+    };
     window.addEventListener('bogest:popup-visibility', handler);
-    return () => window.removeEventListener('bogest:popup-visibility', handler);
+    return () => { obs.disconnect(); window.removeEventListener('bogest:popup-visibility', handler); };
   }, []);
 
   // Slide the video card out of frame while the mobile chat keyboard is open.
