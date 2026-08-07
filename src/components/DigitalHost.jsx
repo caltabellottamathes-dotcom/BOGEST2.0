@@ -1838,7 +1838,7 @@ export default function DigitalHost() {
                 One gold chat glyph; tap to open the host chat. Minimal by design. */}
             <motion.button
               initial={{ opacity: 0, scale: 0.8, y: 16 }}
-              animate={{ opacity: blinking ? [1, 0.55, 1] : 1, scale: blinking ? [1, 1.06, 1] : 1, x: shift, y: 0 }}
+              animate={{ opacity: blinking ? [1, 0.55, 1] : 1, scale: blinking ? [1, 1.06, 1] : 1, x: wideShift, y: 0 }}
               exit={{ opacity: 0, scale: 0.8, y: 16 }}
               transition={{ duration: blinking ? 1.4 : 0.4, ease: blinking ? 'easeInOut' : [0.22, 1, 0.36, 1] }}
               onClick={() => openChat()}

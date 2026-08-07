@@ -5,6 +5,7 @@ import SectionReveal from '@/components/ui/SectionReveal';
 import { useLang } from '@/lib/LangContext';
 import { useSiteImages } from '@/lib/SiteImageContext';
 import HostHint from '@/components/HostHint';
+import HomeTitle from '@/components/home/HomeTitle';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -31,10 +32,7 @@ export default function StorySection() {
                 <span className="h-px w-10 bg-primary" />
                 <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary">{t('section_our_story')}</span>
               </div>
-              <h2 className="font-heading font-bold text-foreground leading-[1.02] tracking-tight mb-4 text-[clamp(1.85rem,3.8vw,2.6rem)]">
-                {title}<br />
-                <span className="italic text-primary">{accent}</span><span className="not-italic text-primary">.</span>
-              </h2>
+              <HomeTitle title={title} accent={accent} breakLine className="mb-4" />
               <p className="font-body text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mb-3">{t('home_story_body1')}</p>
               <p className="font-body text-sm md:text-base text-muted-foreground leading-relaxed max-w-lg mb-4">{t('home_story_body2')}</p>
               <Link to="/about" className="group inline-flex items-center gap-2 font-body text-xs tracking-[0.2em] uppercase text-primary hover:text-foreground transition-colors duration-300">
