@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { requireAdmin } from '../../shared/adminAuth.ts';
 
 // siteImagesApi — manages live-website image overrides.
 //   list  → public (service role): returns all overrides
@@ -37,6 +38,11 @@ export default async function (req: Request): Promise<Response> {
 
     // set / clear — access is controlled by the client-side admin gate
     // (AdminGate), same as assetsApi. Writes run as the service role.
+    // Mutations (set / clear / setBySrc / clearBySrc) require a server-side
+    // Base44 admin session — the client-side gate is not trusted.
+    const admin = await requireAdmin(base44);
+    if (!admin) return Response.json({ error: 'Admin authorization required' }, { status: 401 });
+
     if (action === 'set') {
       const { position_key, image_url, asset_id } = body;
       if (!position_key || !image_url) {

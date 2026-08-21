@@ -1,5 +1,16 @@
 const TARGET_ORIGIN = 'https://www.bogest-online.be';
 
+// Sanitize the proxy path: must be a single-slash relative path with no
+// protocol specifier (http://, https://, //) or path traversal — prevents
+// SSRF by forcing every request to stay on TARGET_ORIGIN.
+const sanitizePath = (raw) => {
+  let p = (raw || '/').trim();
+  if (/:\/\//i.test(p) || p.startsWith('//')) return null;
+  if (!p.startsWith('/')) p = '/' + p;
+  if (/(^|\/)\.\.(\/|$)/.test(p) || p.includes('\\')) return null;
+  return p;
+};
+
 Deno.serve(async (req) => {
   try {
     const url = new URL(req.url);
@@ -68,7 +79,8 @@ Deno.serve(async (req) => {
     // ── GET: reverse-proxy mode (iframe src, CSS, JS, images, AJAX) ──
     if (req.method === 'GET') {
       const rawPath = url.searchParams.get('path') || '/';
-      const proxyPath = rawPath.startsWith('/') ? rawPath : '/' + rawPath;
+      const proxyPath = sanitizePath(rawPath);
+      if (proxyPath === null) return Response.json({ error: 'Invalid path' }, { status: 400 });
       const targetUrl = TARGET_ORIGIN + proxyPath;
 
       const upstream = await fetch(targetUrl, {
@@ -127,7 +139,8 @@ Deno.serve(async (req) => {
 
     if (pathParam) {
       // Proxied POST — forward the entire request to the target
-      const proxyPath = pathParam.startsWith('/') ? pathParam : '/' + pathParam;
+      const proxyPath = sanitizePath(pathParam);
+      if (proxyPath === null) return Response.json({ error: 'Invalid path' }, { status: 400 });
       const targetUrl = TARGET_ORIGIN + proxyPath;
       const reqContentType = req.headers.get('content-type') || '';
       const bodyBuffer = await req.arrayBuffer();
@@ -183,7 +196,11 @@ Deno.serve(async (req) => {
 
     // SDK invocation — return rewritten HTML as JSON
     const body = await req.json().catch(() => ({}));
-    const targetUrl = body.url || TARGET_ORIGIN + '/';
+    const requestedUrl = body.url || TARGET_ORIGIN + '/';
+    if (typeof requestedUrl !== 'string' || !requestedUrl.startsWith(TARGET_ORIGIN)) {
+      return Response.json({ error: 'URL not allowed' }, { status: 400 });
+    }
+    const targetUrl = requestedUrl;
     const upstream = await fetch(targetUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',

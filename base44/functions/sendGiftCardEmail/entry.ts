@@ -6,7 +6,22 @@ function generateCode() {
   return `BOGEST-${seg()}-${seg()}`;
 }
 
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function buildEmailHtml({ recipientName, senderName, message, amount, code }) {
+  // User-controlled fields are HTML-escaped to prevent markup/script
+  // injection in the outgoing gift-card email.
+  recipientName = escapeHtml(recipientName);
+  senderName = escapeHtml(senderName);
+  message = message ? escapeHtml(message) : '';
   return `<!DOCTYPE html>
 <html lang="nl">
 <head>

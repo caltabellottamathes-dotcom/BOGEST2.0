@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { requireAdmin } from '../../shared/adminAuth.ts';
 
 // GET /api/assets?category=gastronomy&limit=5&sort=quality_score   (HTTP)
 // invoke('assetsApi', { category, limit, sort })                   (SDK / agent)
@@ -21,9 +22,13 @@ export default async function (req) {
       params = await req.json().catch(() => ({}));
     }
 
-    // Delete — access is controlled by the client-side admin gate (AdminLogin).
-    // The public app has no Base44 user session in the preview, so a real
-    // admin can't be verified here; writes run as the service role.
+    // Privileged mutations (delete / update) require a server-side Base44
+    // admin session — the client-side gate is not trusted for authorization.
+    if (params.action === 'delete' || params.action === 'update') {
+      const admin = await requireAdmin(base44);
+      if (!admin) return Response.json({ error: 'Admin authorization required' }, { status: 401 });
+    }
+
     if (params.action === 'delete') {
       const id = params.id;
       if (!id) return Response.json({ error: 'Missing id' }, { status: 400 });

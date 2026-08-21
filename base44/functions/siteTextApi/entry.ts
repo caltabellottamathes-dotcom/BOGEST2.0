@@ -1,4 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.40';
+import { requireAdmin } from '../../shared/adminAuth.ts';
 
 // siteTextApi — manages live-website text (i18n) overrides.
 //   list  → public (service role): returns overrides, optionally filtered by lang
@@ -31,6 +32,10 @@ export default async function (req: Request): Promise<Response> {
         overrides: (items || []).map((o) => ({ key: o.key, lang: o.lang, value: o.value })),
       });
     }
+
+    // Mutations (set / clear) require a server-side Base44 admin session.
+    const admin = await requireAdmin(base44);
+    if (!admin) return Response.json({ error: 'Admin authorization required' }, { status: 401 });
 
     if (action === 'set') {
       const { key, lang, value } = body;

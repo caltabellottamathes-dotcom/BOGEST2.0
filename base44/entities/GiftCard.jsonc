@@ -58,33 +58,15 @@
     "notes": {
       "type": "string",
       "description": "Internal admin notes"
+    },
+    "deducted_session_id": {
+      "type": "string",
+      "description": "Stripe checkout session id that last deducted this card \u2014 used for idempotent, payment-verified balance deductions"
     }
   },
   "required": [
     "code",
     "amount",
     "balance"
-  ],
-  "rls": {
-    "create": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "read": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "update": {
-      "user_condition": {
-        "role": "admin"
-      }
-    },
-    "delete": {
-      "user_condition": {
-        "role": "admin"
-      }
-    }
-  }
+  ]
 }

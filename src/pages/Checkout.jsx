@@ -54,9 +54,11 @@ export default function Checkout() {
       // Deduct gift card balance if used
       const gcId = params.get('gcId');
       const gcDiscount = parseFloat(params.get('gcDiscount')) || 0;
-      if (gcId && gcDiscount > 0) {
-        base44.functions.invoke('deductGiftCard', { cardId: gcId, amount: gcDiscount }).catch(() => {});
+      const stripeSessionId = sessionStorage.getItem('bogest_stripe_session_id');
+      if (gcId && gcDiscount > 0 && stripeSessionId) {
+        base44.functions.invoke('deductGiftCard', { cardId: gcId, amount: gcDiscount, stripeSessionId }).catch(() => {});
       }
+      sessionStorage.removeItem('bogest_stripe_session_id');
       // Get gift card info from saved session
       const savedItems = JSON.parse(sessionStorage.getItem('bogest_checkout_items') || '[]');
       const savedForm = JSON.parse(sessionStorage.getItem('bogest_checkout_form') || '{}');
@@ -153,6 +155,7 @@ export default function Checkout() {
         const stripe = await loadStripe(response.data.publishableKey);
         setStripeInstance(stripe);
         setStripeClientSecret(response.data.clientSecret);
+        sessionStorage.setItem('bogest_stripe_session_id', response.data.sessionId || '');
         setStep(3);
       } else {
         setError('Betaling kon niet worden gestart. Probeer opnieuw.');
