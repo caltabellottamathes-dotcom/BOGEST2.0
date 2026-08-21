@@ -223,12 +223,7 @@ export default function Footer() {
         <div className="border-t border-border/40 pt-4 flex flex-col md:flex-row items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
             <p className="font-body text-xs text-muted-foreground">
-              © {new Date().getFullYear()}{' '}
-              <Link to="/yellow-preview" className="hover:text-primary transition-colors duration-300">Ardan & Tylwyth Boffé</Link>
-              ,{' '}
-              <Link to="/burgundy-preview" className="hover:text-primary transition-colors duration-300">Patrick Leniere</Link>
-              {' '}en{' '}
-              <Link to="/powder-blue-preview" className="hover:text-primary transition-colors duration-300">Bogèst team</Link>.
+              © {new Date().getFullYear()} Ardan & Tylwyth Boffé, Patrick Leniere en Bogèst team.
             </p>
             <p className="font-body text-xs text-muted-foreground">
               Designed by{' '}
@@ -257,12 +252,6 @@ export default function Footer() {
             >
               Cookievoorkeuren
             </button>
-            <Link
-              to="/admin-login"
-              className="font-body text-[10px] tracking-widest uppercase text-foreground/20 hover:text-foreground/40 transition-colors duration-300"
-            >
-              Admin
-            </Link>
           </div>
         </div>
       </div>

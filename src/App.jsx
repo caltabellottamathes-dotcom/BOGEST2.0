@@ -32,13 +32,10 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import CookiePolicy from '@/pages/CookiePolicy';
 import AiDisclaimer from '@/pages/AiDisclaimer';
-import YellowPreview from '@/pages/YellowPreview';
-import BurgundyPreview from '@/pages/BurgundyPreview';
-import PowderBluePreview from '@/pages/PowderBluePreview';
 import Instagram from '@/pages/Instagram';
+import MenuBeheer from '@/pages/MenuBeheer';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import Assets from '@/pages/Assets';
-import AdminLogin from '@/pages/AdminLogin';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -78,7 +75,6 @@ const AuthenticatedApp = () => {
 
   return (
     <Routes>
-      <Route path="/admin-login" element={<AdminLogin />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
@@ -98,13 +94,11 @@ const AuthenticatedApp = () => {
         <Route path="/terms" element={<Terms />} />
         <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/ai-disclaimer" element={<AiDisclaimer />} />
-        <Route path="/yellow-preview" element={<YellowPreview />} />
-        <Route path="/burgundy-preview" element={<BurgundyPreview />} />
-        <Route path="/powder-blue-preview" element={<PowderBluePreview />} />
         <Route path="/about/instagram" element={<Instagram />} />
         <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
         <Route element={<AdminGate />}>
           <Route path="/assets" element={<Assets />} />
+          <Route path="/menu-beheer" element={<MenuBeheer />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

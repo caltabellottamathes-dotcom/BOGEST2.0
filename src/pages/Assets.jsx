@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { Search, Loader2, X, Layers, SlidersHorizontal, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Search, Loader2, X, Layers, SlidersHorizontal, ArrowLeft, Pencil } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import AssetCard from '@/components/assets/AssetCard';
 import AssetDetail from '@/components/assets/AssetDetail';
@@ -191,6 +192,9 @@ export default function Assets() {
 
           {/* Admin actions */}
           <div className="mt-auto pt-4 border-t border-border flex flex-col gap-2">
+            <Link to="/menu-beheer" className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-border text-sm hover:bg-muted transition-colors">
+              <Pencil className="w-4 h-4 text-primary" /> Menukaart
+            </Link>
             <button onClick={runDedupe} disabled={deduping} className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-lg border border-border text-sm hover:bg-muted disabled:opacity-50 transition-colors">
               {deduping ? <Loader2 className="w-4 h-4 animate-spin" /> : <Layers className="w-4 h-4 text-primary" />} Ontdubbel
             </button>
