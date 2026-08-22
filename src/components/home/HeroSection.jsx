@@ -160,13 +160,13 @@ export default function HeroSection() {
             className="flex flex-wrap items-center gap-3 sm:gap-4"
           >
             <Link
-              to="/reserve"
+              to="/reserveren"
               className="group inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 bg-primary text-primary-foreground font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:bg-primary/90 transition-all duration-500 pointer-events-auto"
             >
               {t('hero_cta_reserve')}
             </Link>
             <Link
-              to="/menu"
+              to="/menukaart"
               className="inline-flex items-center gap-2 px-5 py-2.5 sm:gap-3 sm:px-7 sm:py-3.5 border border-white/25 text-white font-body text-[10px] sm:text-xs tracking-widest uppercase rounded-full hover:border-white/50 hover:bg-white/5 transition-all duration-500 pointer-events-auto"
             >
               {t('hero_cta_menu')}

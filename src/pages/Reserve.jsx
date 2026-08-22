@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
+import { useParams } from 'react-router-dom';
 import { useLang } from '@/lib/LangContext';
 import { getLocations } from '@/lib/data';
 import ReservationPanel from '@/components/reserve/ReservationPanel';
@@ -26,13 +27,14 @@ export default function Reserve() {
   const selectedLoc = LOCATIONS_DATA.find(l => l.slug === selected);
   const bookable = LOCATIONS_DATA.filter(l => l.zenchefId);
 
+  const { vestiging } = useParams();
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const locParam = urlParams.get('loc');
+    const locParam = urlParams.get('loc') || vestiging;
     if (locParam && LOCATIONS_DATA.find(l => l.slug === locParam && l.zenchefId)) {
       setSelected(locParam);
     }
-  }, []);
+  }, [vestiging]);
 
   useEffect(() => {
     if (selected) document.body.classList.add('modal-open');

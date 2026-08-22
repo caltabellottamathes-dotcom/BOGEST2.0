@@ -77,23 +77,23 @@ export default function Footer() {
   const closeFooter = () => { setVisible(false); setPinned(false); setDismissed(true); };
 
   const quickLinks = [
-    { label: t('nav_menu'), path: '/menu' },
-    { label: t('nav_locations'), path: '/locations' },
-    { label: t('nav_about'), path: '/about' },
-    { label: t('nav_reserve'), path: '/reserve' },
-    { label: t('nav_takeaway'), path: '/takeaway' },
-    { label: t('nav_giftcards'), path: '/gift-cards' },
-    { label: t('nav_groups'), path: '/groups' },
+    { label: t('nav_menu'), path: '/menukaart' },
+    { label: t('nav_locations'), path: '/locaties' },
+    { label: t('nav_about'), path: '/over-ons' },
+    { label: t('nav_reserve'), path: '/reserveren' },
+    { label: t('nav_takeaway'), path: '/traiteur' },
+    { label: t('nav_giftcards'), path: '/cadeaubonnen' },
+    { label: t('nav_groups'), path: '/groepen' },
   ];
 
   const cookiesLabel = lang === 'fr' ? 'Cookies' : lang === 'en' ? 'Cookies' : 'Cookiebeleid';
   const aiLabel = lang === 'fr' ? 'Avertissement IA' : lang === 'en' ? 'AI Disclaimer' : 'AI-disclaimer';
   const legalLinks = [
     { label: t('footer_privacy'), path: '/privacy' },
-    { label: t('footer_terms'), path: '/terms' },
+    { label: t('footer_terms'), path: '/voorwaarden' },
     { label: cookiesLabel, path: '/cookies' },
     { label: aiLabel, path: '/ai-disclaimer' },
-    { label: t('nav_jobs'), path: '/jobs' },
+    { label: t('nav_jobs'), path: '/vacatures' },
     { label: t('nav_contact'), path: '/contact' },
   ];
 
@@ -177,7 +177,7 @@ export default function Footer() {
             <h4 className="font-body text-[10px] tracking-[0.25em] uppercase text-primary mb-2">{t('nav_locations')}</h4>
             <div className="grid grid-cols-2 lg:grid-cols-2 gap-3 lg:gap-3">
               {LOCATIONS_DATA.map(loc => (
-                <Link key={loc.slug} to={loc.phone ? `/locations/${loc.slug}` : '#'} onClick={closeFooter}
+                <Link key={loc.slug} to={loc.phone ? `/locaties/${loc.slug}` : '#'} onClick={closeFooter}
                   className={`group ${!loc.phone ? 'cursor-default' : ''}`}>
                   <h5 className="font-heading text-sm font-semibold text-foreground mb-1 group-hover:text-primary transition-colors duration-300">
                     {loc.city}
@@ -243,7 +243,7 @@ export default function Footer() {
             <Link to="/privacy" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_privacy')}
             </Link>
-            <Link to="/terms" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
+            <Link to="/voorwaarden" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_terms')}
             </Link>
             <button

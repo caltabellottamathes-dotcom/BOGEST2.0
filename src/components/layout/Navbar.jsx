@@ -66,13 +66,13 @@ export default function Navbar() {
   }, []);
 
   const navLinks = [
-    { label: t('nav_menu'), path: '/menu' },
-    { label: t('nav_locations'), path: '/locations' },
-    { label: t('nav_about'), path: '/about' },
-    { label: t('nav_takeaway'), path: '/takeaway' },
-    { label: t('nav_giftcards'), path: '/gift-cards' },
-    { label: t('nav_jobs'), path: '/jobs' },
-    { label: t('nav_groups'), path: '/groups' },
+    { label: t('nav_menu'), path: '/menukaart' },
+    { label: t('nav_locations'), path: '/locaties' },
+    { label: t('nav_about'), path: '/over-ons' },
+    { label: t('nav_takeaway'), path: '/traiteur' },
+    { label: t('nav_giftcards'), path: '/cadeaubonnen' },
+    { label: t('nav_jobs'), path: '/vacatures' },
+    { label: t('nav_groups'), path: '/groepen' },
     { label: t('nav_contact'), path: '/contact' },
   ];
 
@@ -173,7 +173,7 @@ export default function Navbar() {
 
             {/* Reserve CTA */}
             <Link
-              to="/reserve"
+              to="/reserveren"
               className={`inline-flex px-4 py-2 rounded-full font-body text-xs tracking-widest uppercase transition-all duration-500 ${
                 isTransparent
                   ? 'border border-white/30 text-white hover:bg-white/10'

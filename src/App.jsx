@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useParams } from 'react-router-dom';
 import PageNotFound from './lib/PageNotFound';
 import { AuthProvider, useAuth } from '@/lib/AuthContext';
 import UserNotRegisteredError from '@/components/UserNotRegisteredError';
@@ -44,6 +44,21 @@ import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
 import VacaturesBeheer from '@/pages/VacaturesBeheer';
 import SeoHead from '@/components/SeoHead';
+
+// Doorverwijzingen van oude Engelse paden → Nederlandse URL's. Behoudt de
+// query-string (zoals ?loc=hasselt) en eventuele route-params.
+function PathRedirect({ to }) {
+  const { search } = useLocation();
+  return <Navigate to={to + search} replace />;
+}
+function LocationRedirect() {
+  const { slug } = useParams();
+  return <Navigate to={`/locaties/${slug}`} replace />;
+}
+function SpacesRedirect() {
+  const { location } = useParams();
+  return <Navigate to={`/restaurantruimtes/${location}`} replace />;
+}
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -89,25 +104,45 @@ const AuthenticatedApp = () => {
       <Route path="/reset-password" element={<ResetPassword />} />
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/about/ons-verhaal" element={<OnsVerhaal />} />
-        <Route path="/about/onze-filosofie" element={<OnzeFilosofie />} />
-        <Route path="/locations" element={<Locations />} />
-        <Route path="/locations/:slug" element={<LocationDetail />} />
-        <Route path="/restaurant-spaces/:location" element={<RestaurantSpaces />} />
-        <Route path="/reserve" element={<Reserve />} />
-        <Route path="/takeaway" element={<Takeaway />} />
-        <Route path="/gift-cards" element={<GiftCards />} />
+
+        {/* Nederlandse routes */}
+        <Route path="/menukaart" element={<Menu />} />
+        <Route path="/over-ons" element={<About />} />
+        <Route path="/over-ons/ons-verhaal" element={<OnsVerhaal />} />
+        <Route path="/over-ons/onze-filosofie" element={<OnzeFilosofie />} />
+        <Route path="/over-ons/instagram" element={<Instagram />} />
+        <Route path="/locaties" element={<Locations />} />
+        <Route path="/locaties/:slug" element={<LocationDetail />} />
+        <Route path="/restaurantruimtes/:location" element={<RestaurantSpaces />} />
+        <Route path="/reserveren" element={<Reserve />} />
+        <Route path="/reserveren/:vestiging" element={<Reserve />} />
+        <Route path="/traiteur" element={<Takeaway />} />
+        <Route path="/cadeaubonnen" element={<GiftCards />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/groups" element={<Groups />} />
-        <Route path="/jobs" element={<Jobs />} />
+        <Route path="/groepen" element={<Groups />} />
+        <Route path="/vacatures" element={<Jobs />} />
         <Route path="/privacy" element={<Privacy />} />
-        <Route path="/terms" element={<Terms />} />
+        <Route path="/voorwaarden" element={<Terms />} />
         <Route path="/cookies" element={<CookiePolicy />} />
         <Route path="/ai-disclaimer" element={<AiDisclaimer />} />
-        <Route path="/about/instagram" element={<Instagram />} />
         <Route path="/vraag-het-aan-bogest" element={<VraagHetAanBogest />} />
+
+        {/* Doorverwijzingen van oude Engelse paden → Nederlandse URL's (301-style) */}
+        <Route path="/menu" element={<Navigate to="/menukaart" replace />} />
+        <Route path="/about" element={<Navigate to="/over-ons" replace />} />
+        <Route path="/about/ons-verhaal" element={<Navigate to="/over-ons/ons-verhaal" replace />} />
+        <Route path="/about/onze-filosofie" element={<Navigate to="/over-ons/onze-filosofie" replace />} />
+        <Route path="/about/instagram" element={<Navigate to="/over-ons/instagram" replace />} />
+        <Route path="/locations" element={<Navigate to="/locaties" replace />} />
+        <Route path="/locations/:slug" element={<LocationRedirect />} />
+        <Route path="/restaurant-spaces/:location" element={<SpacesRedirect />} />
+        <Route path="/reserve" element={<PathRedirect to="/reserveren" />} />
+        <Route path="/takeaway" element={<Navigate to="/traiteur" replace />} />
+        <Route path="/gift-cards" element={<Navigate to="/cadeaubonnen" replace />} />
+        <Route path="/groups" element={<Navigate to="/groepen" replace />} />
+        <Route path="/jobs" element={<Navigate to="/vacatures" replace />} />
+        <Route path="/terms" element={<Navigate to="/voorwaarden" replace />} />
+
         <Route element={<AdminGate />}>
           <Route path="/assets" element={<Assets />} />
           <Route path="/menu-beheer" element={<MenuBeheer />} />

@@ -1,5 +1,7 @@
 // Per-pagina SEO-data (title 50–60 tekens, description 140–160).
 // resolveSeo(pathname, lang) geeft { title, description, image, canonicalPath }.
+// Sleutels + canonicals gebruiken de Nederlandse URL's (B3); oude Engelse paden
+// worden in App.jsx doorverwezen naar deze Nederlandse routes.
 import { getLocations } from '@/lib/data';
 
 const SITE = 'Bogèst';
@@ -21,7 +23,7 @@ const PAGES = {
       description: 'Bogèst is a grill restaurant in Limburg with authentic farmhouses in Hasselt, Borgloon and Heusden-Zolder. Every main course includes a starter and a dessert. Book online.',
     },
   },
-  '/menu': {
+  '/menukaart': {
     nl: {
       title: 'Menukaart van Bogèst — grill, vlees & seizoensgerechten',
       description: 'Ontdek de menukaart van Bogèst: runds, Masters of Meat, kip, vis, klassiekers en seizoenssuggesties. Bij elk hoofdgerecht een voorgerecht en dessert inbegrepen.',
@@ -35,7 +37,7 @@ const PAGES = {
       description: 'Discover the Bogèst menu: beef, Masters of Meat, chicken, fish, classics and seasonal suggestions. Every main course includes a starter and a dessert.',
     },
   },
-  '/locations': {
+  '/locaties': {
     nl: {
       title: 'Onze vestigingen — Bogèst in Hasselt, Borgloon & Zolder',
       description: 'Bogèst heeft drie sfeervolle vestigingen in Limburg: Hasselt, Borgloon en Heusden-Zolder. Bekijk uren, adres, parking en ruimtes en reserveer direct.',
@@ -49,7 +51,7 @@ const PAGES = {
       description: 'Bogèst has three welcoming locations in Limburg: Hasselt, Borgloon and Heusden-Zolder. See hours, address, parking and spaces and book right away.',
     },
   },
-  '/reserve': {
+  '/reserveren': {
     nl: {
       title: 'Reserveren bij Bogèst — Hasselt, Borgloon of Heusden-Zolder',
       description: 'Reserveer online een tafel bij Bogèst. Kies uw vestiging in Hasselt, Borgloon of Heusden-Zolder en kies een datum en tijdstip via Zenchef.',
@@ -63,27 +65,27 @@ const PAGES = {
       description: 'Book a table online at Bogèst. Choose your location in Hasselt, Borgloon or Heusden-Zolder and pick a date and time via Zenchef.',
     },
   },
-  '/about': {
+  '/over-ons': {
     nl: { title: 'Over Bogèst — ons verhaal & vleesfilosofie | Limburg', description: 'Ontdek het verhaal achter Bogèst: een Beau Geste in Limburg. Vakmanschap, vuur en gastvrijheid in drie authentieke hoeves.' },
     fr: { title: 'À propos de Bogèst — notre histoire & philosophie | Limbourg', description: "Découvrez l'histoire de Bogèst : un Beau Geste au Limbourg. Savoir-faire, feu et hospitalité dans trois fermes authentiques." },
     en: { title: 'About Bogèst — our story & meat philosophy | Limburg', description: 'Discover the story behind Bogèst: a Beau Geste in Limburg. Craft, fire and hospitality in three authentic farmhouses.' },
   },
-  '/about/ons-verhaal': {
+  '/over-ons/ons-verhaal': {
     nl: { title: 'Ons verhaal — Bogèst, een Beau Geste in Limburg', description: 'Het verhaal van Bogèst: van d’Entrecôte tot een moderne grillbrasserie. Vakmanschap, vuur en een gul gebaar aan tafel.' },
     fr: { title: 'Notre histoire — Bogèst, un Beau Geste au Limbourg', description: "L'histoire de Bogèst : d'une entrecôte à une grill-brasserie moderne. Savoir-faire, feu et un geste généreux à table." },
     en: { title: 'Our story — Bogèst, a Beau Geste in Limburg', description: 'The story of Bogèst: from entrecôte to a modern grill brasserie. Craft, fire and a generous gesture at the table.' },
   },
-  '/about/onze-filosofie': {
+  '/over-ons/onze-filosofie': {
     nl: { title: 'Onze vleesfilosofie — Masters of Meat | Bogèst', description: 'De vleesfilosofie van Bogèst: Belgisch Witblauw, Angus en Hereford, ambachtelijke grillades en huisgemaakte sauzen.' },
     fr: { title: 'Notre philosophie de la viande — Masters of Meat | Bogèst', description: 'La philosophie viande de Bogèst : Blanc Bleu Belge, Angus et Hereford, grillades artisanales et sauces maison.' },
     en: { title: 'Our meat philosophy — Masters of Meat | Bogèst', description: 'The Bogèst meat philosophy: Belgian Blue, Angus and Hereford, artisanal grilling and homemade sauces.' },
   },
-  '/takeaway': {
+  '/traiteur': {
     nl: { title: 'Traiteur & afhalen bij Bogèst — bestel online', description: 'Bestel online bij Bogèst en haal af in Hasselt, Borgloon of Heusden-Zolder. Grillgerechten, spare ribs en klassiekers om mee naar huis te nemen.' },
     fr: { title: 'Traiteur & à emporter chez Bogèst — commande en ligne', description: 'Commandez en ligne chez Bogèst et retirez à Hasselt, Borgloon ou Heusden-Zolder. Grillades, spare ribs et classiques à emporter.' },
     en: { title: 'Takeaway & catering at Bogèst — order online', description: 'Order online at Bogèst and pick up in Hasselt, Borgloon or Heusden-Zolder. Grills, spare ribs and classics to take home.' },
   },
-  '/gift-cards': {
+  '/cadeaubonnen': {
     nl: { title: 'Cadeaubonnen van Bogèst — een geschenk in smaak', description: 'Geef een Bogèst-cadeaubon: een geschenk in smaak en vuur. Online te koop, digitaal of af te halen in de vestiging.' },
     fr: { title: 'Bons cadeaux de Bogèst — un cadeau de goût', description: 'Offrez un bon cadeau Bogèst : un cadeau de goût et de feu. En vente en ligne, numérique ou à retirer sur place.' },
     en: { title: 'Bogèst gift cards — a gift of taste', description: 'Give a Bogèst gift card: a gift of taste and fire. Buy online, digital or pick up at the restaurant.' },
@@ -93,12 +95,12 @@ const PAGES = {
     fr: { title: 'Contact — Bogèst | Hasselt, Borgloon & Heusden-Zolder', description: 'Contactez Bogèst : téléphone, e-mail et adresse pour Hasselt, Borgloon et Heusden-Zolder. À votre service.' },
     en: { title: 'Contact — Bogèst | Hasselt, Borgloon & Heusden-Zolder', description: 'Contact Bogèst: phone, email and address for Hasselt, Borgloon and Heusden-Zolder. We are happy to help.' },
   },
-  '/groups': {
+  '/groepen': {
     nl: { title: 'Groepen & events bij Bogèst — feest op maat | Limburg', description: 'Vier uw feest bij Bogèst: bedrijfsdiners, verjaardagen en groepsreservaties in Hasselt, Borgloon of Heusden-Zolder.' },
     fr: { title: 'Groupes & événements chez Bogèst — sur mesure | Limbourg', description: 'Célébrez chez Bogèst : dîners d’entreprise, anniversaires et réservations de groupe à Hasselt, Borgloon ou Heusden-Zolder.' },
     en: { title: 'Groups & events at Bogèst — tailored | Limburg', description: 'Celebrate at Bogèst: company dinners, birthdays and group bookings in Hasselt, Borgloon or Heusden-Zolder.' },
   },
-  '/jobs': {
+  '/vacatures': {
     nl: { title: 'Werken bij Bogèst — vacatures in de horeca | Limburg', description: 'Solliciteer bij Bogèst: vacatures voor grilleurs, bediening en keuken in Hasselt, Borgloon en Heusden-Zolder. Sluit je aan bij ons team.' },
     fr: { title: 'Travailler chez Bogèst — offres d’emploi horeca | Limbourg', description: 'Postulez chez Bogèst : offres pour grillards, service et cuisine à Hasselt, Borgloon et Heusden-Zolder. Rejoignez l’équipe.' },
     en: { title: 'Work at Bogèst — hospitality vacancies | Limburg', description: 'Apply at Bogèst: vacancies for grillers, service and kitchen in Hasselt, Borgloon and Heusden-Zolder. Join our team.' },
@@ -108,7 +110,7 @@ const PAGES = {
     fr: { title: 'Déclaration de confidentialité de Bogèst — RGPD', description: 'La déclaration de confidentialité de Bogèst : comment nous traitons et protégeons vos données selon le RGPD.' },
     en: { title: 'Privacy statement of Bogèst — GDPR', description: 'The privacy statement of Bogèst: how we process and protect personal data under the GDPR.' },
   },
-  '/terms': {
+  '/voorwaarden': {
     nl: { title: 'Algemene voorwaarden — Bogèst', description: 'De algemene voorwaarden van Bogèst voor reservaties, bestellingen, cadeaubonnen en diensten.' },
     fr: { title: 'Conditions générales — Bogèst', description: 'Les conditions générales de Bogèst pour réservations, commandes, bons cadeaux et services.' },
     en: { title: 'Terms & conditions — Bogèst', description: 'The general terms and conditions of Bogèst for reservations, orders, gift cards and services.' },
@@ -123,7 +125,7 @@ const PAGES = {
     fr: { title: "Disclaimer IA de Bogèst — notre hôte numérique", description: "Le disclaimer IA de Bogèst : comment fonctionne notre hôte numérique et comment nous protégeons vos données." },
     en: { title: 'AI disclaimer of Bogèst — our digital host', description: 'The AI disclaimer of Bogèst: how our digital host works, what it can do and how we protect your data.' },
   },
-  '/about/instagram': {
+  '/over-ons/instagram': {
     nl: { title: 'Bogèst op Instagram — sfeer & wekelijkse specials', description: 'Volg Bogèst op Instagram voor sfeerbeelden, weekspecials en momenten achter de schermen, per vestiging.' },
     fr: { title: 'Bogèst sur Instagram — ambiance & specials', description: "Suivez Bogèst sur Instagram pour l'ambiance, les specials et les coulisses, par établissement." },
     en: { title: 'Bogèst on Instagram — atmosphere & weekly specials', description: 'Follow Bogèst on Instagram for atmosphere, weekly specials and behind-the-scenes moments, per location.' },
@@ -133,17 +135,17 @@ const PAGES = {
     fr: { title: "Demandez à Bogèst — notre hôte numérique", description: "Posez votre question à l'hôte numérique de Bogèst : conseil menu, réservation, adresses et plus, 24/7." },
     en: { title: 'Ask Bogèst — our digital host', description: 'Ask the Bogèst digital host anything: menu advice, booking, locations and more, 24/7.' },
   },
-  '/restaurant-spaces/hasselt': {
+  '/restaurantruimtes/hasselt': {
     nl: { title: 'Ruimtes van Bogèst Hasselt — bar, living & terras', description: 'Ontdek de ruimtes van Bogèst Hasselt: de bar, open keuken, living en terras. Ideaal voor groepen en events.' },
     fr: { title: 'Espaces de Bogèst Hasselt — bar, living & terrasse', description: "Découvrez les espaces de Bogèst Hasselt : bar, cuisine ouverte, living et terrasse. Idéal pour groupes et événements." },
     en: { title: 'Spaces at Bogèst Hasselt — bar, living & terrace', description: 'Discover the spaces at Bogèst Hasselt: the bar, open kitchen, living room and terrace. Ideal for groups and events.' },
   },
-  '/restaurant-spaces/borgloon': {
+  '/restaurantruimtes/borgloon': {
     nl: { title: 'Ruimtes van Bogèst Borgloon — koelcel & terras', description: 'Ontdek de ruimtes van Bogèst Borgloon: bar, living, toog, koelcel en terras met beweegbaar dak.' },
     fr: { title: 'Espaces de Bogèst Borgloon — cave & terrasse', description: "Découvrez les espaces de Bogèst Borgloon : bar, living, comptoir, cave réfrigérée et terrasse." },
     en: { title: 'Spaces at Bogèst Borgloon — cold room & terrace', description: 'Discover the spaces at Bogèst Borgloon: bar, living, counter, cold room and terrace with movable roof.' },
   },
-  '/restaurant-spaces/heusden-zolder': {
+  '/restaurantruimtes/heusden-zolder': {
     nl: { title: 'Ruimtes van Bogèst Heusden-Zolder — restaurant & terras', description: 'Ontdek de ruimtes van Bogèst Heusden-Zolder: een warm ingericht restaurant en ruim terras, gezinsvriendelijk.' },
     fr: { title: 'Espaces de Bogèst Heusden-Zolder — restaurant & terrasse', description: "Découvrez les espaces de Bogèst Heusden-Zolder : restaurant chaleureux et grande terrasse, familial." },
     en: { title: 'Spaces at Bogèst Heusden-Zolder — restaurant & terrace', description: 'Discover the spaces at Bogèst Heusden-Zolder: a warm restaurant and spacious terrace, family-friendly.' },
@@ -163,13 +165,13 @@ function locationSeo(loc, lang) {
     title,
     description: desc,
     image: loc.image || DEFAULT_IMG,
-    canonicalPath: `/locations/${loc.slug}`,
+    canonicalPath: `/locaties/${loc.slug}`,
   };
 }
 
 export function resolveSeo(pathname, lang) {
-  // Per-vestiging detail
-  const locMatch = pathname.match(/^\/locations\/(.+)$/);
+  // Per-vestiging detail (Nederlandse route /locaties/:slug)
+  const locMatch = pathname.match(/^\/locaties\/(.+)$/);
   if (locMatch) {
     const loc = getLocations(lang).find((l) => l.slug === locMatch[1]);
     if (loc) return locationSeo(loc, lang);
