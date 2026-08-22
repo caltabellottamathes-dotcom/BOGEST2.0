@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Mail, Phone, Footprints } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
@@ -474,7 +474,27 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
 export default function Jobs() {
   const { t, lang } = useLang();
   const ui = UI[lang] || UI.nl;
-  const openings = OPENINGS[lang] || OPENINGS.nl;
+  const [openings, setOpenings] = useState(() => OPENINGS[lang] || OPENINGS.nl);
+  useEffect(() => {
+    let active = true;
+    base44.entities.Job.filter({ active: true }, 'sort_order', 50)
+      .then((rows) => {
+        if (!active || !rows || !rows.length) return;
+        const mapped = rows.map((r) => ({
+          title: r[`title_${lang}`] || r.title_nl || '',
+          location: r.location_name || '',
+          type: r[`type_${lang}`] || r.type_nl || '',
+          desc: r[`desc_${lang}`] || r.desc_nl || '',
+          applyEmail: r.apply_email,
+          applyPhone: r.apply_phone,
+          walkIn: r.walk_in,
+          fullText: r[`full_text_${lang}`] || r.full_text_nl || '',
+        }));
+        if (active && mapped.length) setOpenings(mapped);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [lang]);
   const [selected, setSelected] = useState(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', motivation: '' });
   const [success, setSuccess] = useState(false);

@@ -42,6 +42,7 @@ import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import Assets from '@/pages/Assets';
 import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
+import VacaturesBeheer from '@/pages/VacaturesBeheer';
 import SeoHead from '@/components/SeoHead';
 
 const AuthenticatedApp = () => {
@@ -112,6 +113,7 @@ const AuthenticatedApp = () => {
           <Route path="/menu-beheer" element={<MenuBeheer />} />
           <Route path="/meldingen-beheer" element={<AnnouncementBeheer />} />
           <Route path="/uren-beheer" element={<OpeningHoursBeheer />} />
+          <Route path="/vacatures-beheer" element={<VacaturesBeheer />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
