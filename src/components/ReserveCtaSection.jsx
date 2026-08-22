@@ -4,10 +4,14 @@ import { useLang } from '@/lib/LangContext';
 import OrderCtaSection from '@/components/OrderCtaSection';
 
 // Reserveer-CTA — exact hetzelfde systeem als de Traiteur- en Cadeaupakket-CTA
-// (OrderCtaSection): dezelfde glas-banner met bull-ghost en dezelfde zwevende
-// glazen kaart (icoon + Bogèst-eyebrow + titel + subtekst + knop), maar dan met
-// reserve-specifieke copy. Eén bron van waarheid voor alle "Reserveer"-CTA's
-// (/menu, /over-ons en de sub-paneelen).
+// (OrderCtaSection), met reserve-specifieke copy. De banner-titel is een
+// uitnodigende vraag ("Goesting gekregen?") met een geel vraagteken; de kaart
+// sluit af met "Reserveer uw tafel." + gele punt.
+const BANNER = {
+  nl: { title: 'Goesting gekregen', punct: '?' },
+  fr: { title: 'Envie', punct: '?' },
+  en: { title: 'Fancy it', punct: '?' },
+};
 const CARD = {
   nl: { title: 'Reserveer uw tafel', subtitle: 'Bogèst Hasselt, Borgloon of Heusden-Zolder. Wij houden een plaats voor u klaar.' },
   fr: { title: 'Réservez votre table', subtitle: 'Bogèst Hasselt, Borgloon ou Heusden-Zolder. Une place vous attend.' },
@@ -16,14 +20,17 @@ const CARD = {
 
 export default function ReserveCtaSection({ positionKey }) {
   const { t, lang } = useLang();
+  const banner = BANNER[lang] || BANNER.nl;
   const card = CARD[lang] || CARD.nl;
   return (
     <OrderCtaSection
       positionKey={positionKey}
       eyebrow={t('btn_reserve')}
-      title={t('res_title')}
+      title={banner.title}
+      punct={banner.punct}
       desc={t('res_subtitle')}
       cardTitle={card.title}
+      cardTitlePunct="."
       cardSubtitle={card.subtitle}
       buttonLabel={t('btn_reserve')}
       to="/reserveren"

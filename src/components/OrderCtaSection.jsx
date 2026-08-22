@@ -23,6 +23,8 @@ export default function OrderCtaSection({
   onClick,
   icon: Icon = ArrowRight,
   cardEyebrow = 'Bogèst',
+  punct = '.',
+  cardTitlePunct,
 }) {
   const CtaLink = ({ children }) => {
     if (href) return <a href={href} target="_blank" rel="noopener noreferrer" className="group inline-flex items-center gap-3">{children}</a>;
@@ -57,7 +59,7 @@ export default function OrderCtaSection({
                   <br className="hidden md:block" /> <span className="italic text-primary">{titleAccent}</span>
                 </>
               )}
-              <span className="text-primary">.</span>
+              <span className="text-primary">{punct}</span>
             </h2>
             {desc && <p className="font-body text-xs md:text-sm text-muted-foreground leading-relaxed mt-2 line-clamp-3">{desc}</p>}
           </div>
@@ -80,7 +82,7 @@ export default function OrderCtaSection({
             </div>
             <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">{cardEyebrow}</span>
           </div>
-          {cardTitle && <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight mb-2">{cardTitle}</h2>}
+          {cardTitle && <h2 className="font-heading text-xl md:text-2xl font-bold text-white leading-tight mb-2">{cardTitle}{cardTitlePunct && <span className="text-primary">{cardTitlePunct}</span>}</h2>}
           {cardSubtitle && <p className="font-body text-sm text-white/70 leading-relaxed mb-5">{cardSubtitle}</p>}
           <CtaLink>
             <span className="font-body text-xs tracking-[0.3em] uppercase text-white group-hover:text-primary transition-colors duration-300">{buttonLabel}</span>

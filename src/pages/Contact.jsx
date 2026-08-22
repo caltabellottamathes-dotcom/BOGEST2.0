@@ -9,6 +9,7 @@ import { getLocations } from '@/lib/data';
 import { base44 } from '@/api/base44Client';
 import PanelHero from '@/components/PanelHero';
 import PanelContent from '@/components/PanelContent';
+import ReserveCtaSection from '@/components/ReserveCtaSection';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -159,6 +160,8 @@ export default function Contact() {
           </div>
         </div>
       </section>
+
+      <ReserveCtaSection />
       </PanelContent>
     </div>
   );
