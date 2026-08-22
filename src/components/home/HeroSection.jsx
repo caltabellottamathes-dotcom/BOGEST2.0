@@ -139,7 +139,7 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.35 }}
             className="font-body font-semibold text-[11px] md:text-sm tracking-[0.24em] uppercase text-white/90 max-w-lg mb-5 leading-relaxed"
           >
-            {t('menu_formula')} · {lang === 'fr' ? 'dès €26,90' : lang === 'en' ? 'from €26.90' : 'vanaf €26,90'}
+            {lang === 'fr' ? 'dès €26,90' : lang === 'en' ? 'from €26.90' : 'vanaf €26,90'}
           </motion.h1>
 
           {/* Subtitle */}

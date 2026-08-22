@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Check, ArrowRight, ChevronDown, ChevronUp, MapPin, Clock, Mail, Phone, Footprints } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,7 @@ import PanelContent from '@/components/PanelContent';
 import { HintLine } from '@/components/HostHint';
 import { hostQuestion } from '@/lib/hostHint';
 import { base44 } from '@/api/base44Client';
+import { PanelScrollContext } from '@/components/GlassPanel';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -500,6 +501,13 @@ export default function Jobs() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const set = (k, v) => setForm(p => ({ ...p, [k]: v }));
+  const scrollRef = useContext(PanelScrollContext);
+  const selectJob = (job) => {
+    setSelected(job);
+    // Paneelinhoud terug naar boven scrollen zodat het sollicitatieformulier
+    // meteen zichtbaar en invulbaar is.
+    if (scrollRef?.current) scrollRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const handleApply = async (e) => {
     e.preventDefault();
@@ -546,7 +554,7 @@ export default function Jobs() {
             <div className="space-y-3">
               {openings.map((job, i) => (
                 <SectionReveal key={job.title} delay={i * 0.08}>
-                  <JobCard job={job} onSelect={setSelected} isSelected={selected?.title === job.title} lang={lang} num={String(i + 1).padStart(2, '0')} />
+                  <JobCard job={job} onSelect={selectJob} isSelected={selected?.title === job.title} lang={lang} num={String(i + 1).padStart(2, '0')} />
                 </SectionReveal>
               ))}
             </div>

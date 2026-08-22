@@ -20,7 +20,7 @@ export default function PanelContent({ children, className = '' }) {
       <div className="relative z-10">
         {children}
         {/* Subtiele einde-van-paneel footer */}
-        <footer className="flex flex-col items-center gap-3 py-14 md:py-20 px-6 select-none">
+        <footer className="flex flex-col items-center gap-3 py-10 md:py-12 px-6 select-none">
           <span className="h-px w-10 bg-primary/40" />
           <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/70">Bogèst</span>
         </footer>

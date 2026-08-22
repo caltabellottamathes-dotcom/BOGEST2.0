@@ -105,7 +105,7 @@ export default function Navbar() {
             }}
             className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
-            <BogestLogo className="text-xl tracking-wide" />
+            <BogestLogo className="text-2xl md:text-3xl tracking-wide" />
           </button>
 
           {/* Desktop Nav */}

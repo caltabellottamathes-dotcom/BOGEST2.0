@@ -80,7 +80,7 @@ const AuthenticatedApp = () => {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">
-          <BogestLogo className="text-3xl tracking-wide" />
+          <BogestLogo className="text-4xl md:text-5xl tracking-wide" />
           <div className="w-5 h-5 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
         </div>
       </div>

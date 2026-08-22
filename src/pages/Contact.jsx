@@ -135,6 +135,19 @@ export default function Contact() {
                           <p>{loc.phone}</p>
                           <p className="break-all">{loc.email}</p>
                         </div>
+                        {selected && (
+                          <div className="mt-3 pt-3 border-t border-border/40">
+                            <p className="font-body text-[10px] tracking-[0.2em] uppercase text-primary mb-2">{lang === 'fr' ? "Heures d'ouverture" : lang === 'en' ? 'Opening hours' : 'Openingsuren'}</p>
+                            <ul className="space-y-0.5 font-body text-xs text-muted-foreground">
+                              {loc.hours.map((h, i) => (
+                                <li key={i} className="flex justify-between gap-3">
+                                  <span>{h.day}</span>
+                                  <span className="text-foreground/80">{h.time}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </button>

@@ -6,6 +6,8 @@ import { useTheme } from '@/lib/ThemeContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { openPanel, closePanel } from '@/lib/panelOpenState';
 
+const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+
 // Refined frosted-glass surface for the sliding panels — the same transparent
 // "layer" treatment used across the site (cards, footer). A touch more
 // transparent, a sharper hairline edge and an inset top highlight so each
@@ -97,7 +99,12 @@ export default function GlassPanelWrapper({ children }) {
           exit={{ opacity: 0, transition: { duration: 1.5, ease: [0.16, 1, 0.3, 1] } }}
           className="fixed inset-0 z-30 pointer-events-auto opacity-100"
           style={{ top: navHeight, background: isLight ? 'rgba(0,0,0,0.16)' : 'rgba(0,0,0,0.38)' }}
-          onClick={() => navigate('/')} />
+          onClick={() => navigate('/')}>
+          {/* Groot ghosted Bogèst-bull-logo op de achtergrond achter het paneel */}
+          <img src={BULL_MARK} alt="" aria-hidden draggable={false}
+            className="absolute pointer-events-none select-none"
+            style={{ height: '72vh', width: 'auto', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: isLight ? 0.09 : 0.14, filter: 'grayscale(1) brightness(2.4)' }} />
+        </motion.div>
 
         }
       </AnimatePresence>
