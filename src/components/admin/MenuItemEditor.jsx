@@ -8,9 +8,10 @@ const labelCls = 'font-body text-[10px] tracking-[0.2em] uppercase text-muted-fo
 // Modale editor voor één MenuKnowledge-gerecht. Volledige CRUD-velden:
 // categorie, naam, beschrijving, prijs (leeg = inbegrepen in formule), pairing,
 // beschikbaarheid per vestiging (niets = alle), populair/nieuw en volgorde.
-export default function MenuItemEditor({ item, saving, onSave, onCancel }) {
+export default function MenuItemEditor({ item, saving, onSave, onCancel, categories, defaultCategory }) {
+  const cats = categories && categories.length ? categories : MENU_CATEGORIES;
   const [form, setForm] = useState(() => ({
-    category: item?.category || 'beef',
+    category: item?.category || defaultCategory || cats[0]?.key || 'beef',
     item_name: item?.item_name || '',
     description: item?.description || '',
     price: item?.price ?? '',
@@ -49,7 +50,7 @@ export default function MenuItemEditor({ item, saving, onSave, onCancel }) {
             <div>
               <label className={labelCls}>Categorie</label>
               <select value={form.category} onChange={(e) => set('category', e.target.value)} className={inputCls}>
-                {MENU_CATEGORIES.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
+                {cats.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
               </select>
             </div>
             <div>

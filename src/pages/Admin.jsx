@@ -55,7 +55,7 @@ export default function Admin() {
       )}
 
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border/50 px-5 lg:px-8 py-3.5 flex items-center justify-between gap-3">
+        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border/50 px-5 lg:px-8 py-5 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center">
               <UtensilsCrossed className="w-4 h-4" />

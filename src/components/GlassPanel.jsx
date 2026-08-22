@@ -102,8 +102,8 @@ export default function GlassPanelWrapper({ children }) {
           onClick={() => navigate('/')}>
           {/* Groot ghosted Bogèst-bull-logo op de achtergrond achter het paneel */}
           <img src={BULL_MARK} alt="" aria-hidden draggable={false}
-            className="absolute pointer-events-none select-none"
-            style={{ height: '72vh', width: 'auto', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', opacity: isLight ? 0.09 : 0.14, filter: 'grayscale(1) brightness(2.4)' }} />
+            className="absolute pointer-events-none select-none hidden md:block"
+            style={{ height: '80vh', width: 'auto', top: '50%', left: 'calc(100vw - min(82vw, 1200px))', transform: 'translate(-50%, -50%)', opacity: isLight ? 0.09 : 0.14, filter: 'grayscale(1) brightness(2.4)' }} />
         </motion.div>
 
         }

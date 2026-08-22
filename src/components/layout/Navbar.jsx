@@ -87,7 +87,7 @@ export default function Navbar() {
        className={`fixed left-0 right-0 z-[70] transition-all duration-500 rounded-b-2xl ${
          isTransparent
            ? 'bg-transparent'
-           : 'bg-background/30 backdrop-blur-2xl border-b border-white/10 shadow-sm'
+           : 'bg-background/30 backdrop-blur-lg border-b border-white/10 shadow-sm'
        }`}
        style={{ top: 'var(--bogest-banner-h, 0px)', ...(!isTransparent ? { boxShadow: '0 1px 0 rgba(255,255,255,0.08)' } : {}) }}
       >
@@ -105,7 +105,7 @@ export default function Navbar() {
             }}
             className={`flex-shrink-0 flex items-center transition-opacity duration-200 ${mobileOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
           >
-            <BogestLogo className="text-2xl md:text-3xl tracking-wide" />
+            <BogestLogo className="text-xl md:text-2xl tracking-wide" />
           </button>
 
           {/* Desktop Nav */}

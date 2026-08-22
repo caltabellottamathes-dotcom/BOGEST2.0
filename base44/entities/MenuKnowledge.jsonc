@@ -4,26 +4,7 @@
   "properties": {
     "category": {
       "type": "string",
-      "enum": [
-        "signature",
-        "starters",
-        "beef",
-        "masters",
-        "chicken",
-        "fish",
-        "veggie",
-        "pork",
-        "classics",
-        "sides",
-        "sauces",
-        "wines",
-        "beers",
-        "drinks",
-        "desserts",
-        "kids",
-        "seasonal"
-      ],
-      "description": "Menu category"
+      "description": "Menu category key \u2014 referentie naar MenuCategory (bijv. 'signature', 'beef', 'lunch'). Vrije tekst zodat admin-gemaakte categorie\u00ebn werken."
     },
     "item_name": {
       "type": "string",

@@ -4,12 +4,11 @@
   "properties": {
     "location": {
       "type": "string",
-      "enum": [
-        "hasselt",
-        "borgloon",
-        "heusden-zolder"
-      ],
-      "description": "Vestiging"
+      "description": "Vestiging-slug (vrije tekst, zodat admin een nieuwe vestiging kan toevoegen)"
+    },
+    "location_label": {
+      "type": "string",
+      "description": "Weergavenaam van de vestiging, bijv. 'Bog\u00e8st Hasselt' (vooral voor admin-toegevoegde vestigingen)"
     },
     "day_index": {
       "type": "number",

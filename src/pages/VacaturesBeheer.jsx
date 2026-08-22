@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 
-const LANGS = ['nl', 'fr', 'en'];
 const SLUGS = [
   { value: 'hasselt', label: 'Hasselt' },
   { value: 'borgloon', label: 'Borgloon' },
@@ -20,15 +20,49 @@ function emptyJob(sort_order) {
   };
 }
 
-// Beheer de vacatures. Meertalige velden (nl/fr/en) per functie; de site toont
-// de actieve vacatures live, met fallback op de statische standaardvacatures
-// zolang de entiteit leeg is.
+// Vertaal de Nederlandse velden automatisch naar Frans en Engels via de LLM,
+// zodat de admin alleen de Nederlandse tekst hoeft in te vullen.
+async function translateJob(job) {
+  const fields = ['title', 'type', 'desc', 'full_text'];
+  const source = {};
+  fields.forEach((f) => { source[f] = (job[`${f}_nl`] || '').trim(); });
+  // Alles al ingevuld in FR/EN? Dan hoeven we niet te vertalen.
+  const allFrFilled = fields.every((f) => (job[`${f}_fr`] || '').trim());
+  const allEnFilled = fields.every((f) => (job[`${f}_en`] || '').trim());
+  if (allFrFilled && allEnFilled) return job;
+
+  const res = await base44.integrations.Core.InvokeLLM({
+    prompt:
+      `Je bent een professionele vertaler voor een restaurant (Bogèst, een Limburgse grillbrasserie). ` +
+      `Vertaal de volgende Nederlandse vacature-velden naar het Frans en Engels. ` +
+      `Behoud toon, opmaak (witregels, streepjes "—") en betekenis. Geef uitsluitend JSON terug.\n\n` +
+      `Nederlands:\n${JSON.stringify(source, null, 2)}`,
+    response_json_schema: {
+      type: 'object',
+      properties: {
+        fr: { type: 'object', properties: { title: { type: 'string' }, type: { type: 'string' }, desc: { type: 'string' }, full_text: { type: 'string' } } },
+        en: { type: 'object', properties: { title: { type: 'string' }, type: { type: 'string' }, desc: { type: 'string' }, full_text: { type: 'string' } } },
+      },
+    },
+    model: 'gpt_5_mini',
+  });
+
+  const out = { ...job };
+  fields.forEach((f) => {
+    if (!out[`${f}_fr`]) out[`${f}_fr`] = res?.fr?.[f] || source[f] || '';
+    if (!out[`${f}_en`]) out[`${f}_en`] = res?.en?.[f] || source[f] || '';
+  });
+  return out;
+}
+
+// Beheer de vacatures. De admin vult alleen de Nederlandse velden in; bij het
+// opslaan worden deze automatisch naar het Frans en Engels vertaald.
 export default function VacaturesBeheer() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [lang, setLang] = useState('nl');
   const [openKey, setOpenKey] = useState(null);
   const [savingKey, setSavingKey] = useState(null);
+  const [err, setErr] = useState('');
 
   const load = async () => {
     setLoading(true);
@@ -54,15 +88,21 @@ export default function VacaturesBeheer() {
   const save = async (job) => {
     const k = jobs.indexOf(job);
     setSavingKey(k);
+    setErr('');
     try {
+      const translated = await translateJob(job);
+      // reflect translations in local state
+      setJobs(prev => prev.map(j => (j === job ? translated : j)));
       if (job.id) {
-        await base44.entities.Job.update(job.id, job);
+        await base44.entities.Job.update(job.id, translated);
       } else {
-        await base44.entities.Job.create(job);
+        await base44.entities.Job.create(translated);
       }
       await load();
       setOpenKey(null);
-    } catch {}
+    } catch (e) {
+      setErr('Opslaan mislukt: ' + (e?.message || 'vertaling of opslag faalde'));
+    }
     setSavingKey(null);
   };
 
@@ -72,21 +112,18 @@ export default function VacaturesBeheer() {
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-6 md:px-10 lg:px-16">
+    <div className="pt-8 md:pt-10 pb-20 px-6 md:px-10 lg:px-16">
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-4">
           <div>
             <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary block mb-2">Bogèst · Beheer</span>
             <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Vacatures</h1>
           </div>
           <button onClick={addNew} className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90">+ Nieuw</button>
         </div>
+        <p className="font-body text-xs text-muted-foreground mb-6">Vul alleen de Nederlandse tekst in — bij opslaan worden de Franse en Engelse versies automatisch vertaald.</p>
 
-        <div className="flex gap-2 mb-6">
-          {LANGS.map(l => (
-            <button key={l} onClick={() => setLang(l)} className={`px-3 py-1.5 rounded-full text-xs font-body uppercase tracking-widest border ${lang === l ? 'bg-primary text-primary-foreground border-primary' : 'border-border text-muted-foreground'}`}>{l}</button>
-          ))}
-        </div>
+        {err && <p className="font-body text-sm text-destructive mb-4">{err}</p>}
 
         {loading ? (
           <p className="font-body text-sm text-muted-foreground">Laden…</p>
@@ -97,31 +134,34 @@ export default function VacaturesBeheer() {
             {jobs.map((job, idx) => {
               const k = keyOf(job, idx);
               const open = openKey === k;
+              const saving = savingKey === idx;
               return (
                 <div key={k} className="rounded-2xl border border-border bg-card/40">
                   <button onClick={() => setOpenKey(open ? null : k)} className="w-full text-left p-4 flex items-center justify-between gap-3">
-                    <span className="font-heading text-base font-semibold text-foreground">{job[`title_${lang}`] || job.title_nl || '(naamloos)'}</span>
-                    <span className="font-body text-xs text-muted-foreground text-right">{job.location_name} · {job[`type_${lang}`] || job.type_nl}</span>
+                    <span className="font-heading text-base font-semibold text-foreground">{job.title_nl || '(naamloos)'}</span>
+                    <span className="font-body text-xs text-muted-foreground text-right">{job.location_name} · {job.type_nl}</span>
                   </button>
                   {open && (
                     <div className="p-4 pt-0 border-t border-border/50 space-y-3">
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        <Labeled label={`Titel (${lang})`} value={job[`title_${lang}`] || ''} onChange={v => update(job, { [`title_${lang}`]: v })} />
+                        <Labeled label="Titel (NL)" value={job.title_nl || ''} onChange={v => update(job, { title_nl: v })} />
                         <Labeled label="Vestiging (naam)" value={job.location_name || ''} onChange={v => update(job, { location_name: v })} />
-                        <Labeled label={`Type (${lang})`} value={job[`type_${lang}`] || ''} onChange={v => update(job, { [`type_${lang}`]: v })} />
+                        <Labeled label="Type (NL)" value={job.type_nl || ''} onChange={v => update(job, { type_nl: v })} />
                         <SelectLabeled label="Vestiging (slug)" value={job.location_slug || 'hasselt'} options={SLUGS} onChange={v => update(job, { location_slug: v })} />
                         <Labeled label="Sollicitatie-e-mail" value={job.apply_email || ''} onChange={v => update(job, { apply_email: v })} />
                         <Labeled label="Sollicitatie-telefoon" value={job.apply_phone || ''} onChange={v => update(job, { apply_phone: v })} />
                         <Labeled label="Langskomen — vraag naar" value={job.walk_in || ''} onChange={v => update(job, { walk_in: v })} />
                         <Labeled label="Volgorde" value={String(job.sort_order ?? 0)} onChange={v => update(job, { sort_order: Number(v) || 0 })} />
                       </div>
-                      <Labeled label={`Korte beschrijving (${lang})`} value={job[`desc_${lang}`] || ''} onChange={v => update(job, { [`desc_${lang}`]: v })} />
+                      <Labeled label="Korte beschrijving (NL)" value={job.desc_nl || ''} onChange={v => update(job, { desc_nl: v })} />
                       <label className="block">
-                        <span className="font-body text-xs text-muted-foreground">Volledige tekst ({lang})</span>
-                        <textarea value={job[`full_text_${lang}`] || ''} onChange={e => update(job, { [`full_text_${lang}`]: e.target.value })} rows={10} className="bogest-input mt-1 font-body" />
+                        <span className="font-body text-xs text-muted-foreground">Volledige tekst (NL)</span>
+                        <textarea value={job.full_text_nl || ''} onChange={e => update(job, { full_text_nl: e.target.value })} rows={10} className="bogest-input mt-1 font-body" />
                       </label>
                       <div className="flex items-center gap-3 pt-1">
-                        <button onClick={() => save(job)} disabled={savingKey === idx} className="px-4 py-2 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 disabled:opacity-40">{savingKey === idx ? 'Opslaan…' : 'Opslaan'}</button>
+                        <button onClick={() => save(job)} disabled={saving} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground font-body text-xs tracking-widest uppercase hover:bg-primary/90 disabled:opacity-40">
+                          {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}{saving ? 'Vertalen & opslaan…' : 'Opslaan'}
+                        </button>
                         <button onClick={() => remove(job)} className="px-4 py-2 rounded-full border border-border font-body text-xs tracking-widest uppercase text-muted-foreground hover:text-destructive">Verwijderen</button>
                       </div>
                     </div>

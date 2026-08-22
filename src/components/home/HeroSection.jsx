@@ -132,25 +132,15 @@ export default function HeroSection() {
             </motion.div>
           </div>
 
-          {/* H1 — formule + prijsrange (één H1 per pagina, zichtbaar boven de vouw) */}
+          {/* H1 — ondertitel (één H1 per pagina, zichtbaar boven de vouw) */}
           <motion.h1
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
-            className="font-body font-semibold text-[11px] md:text-sm tracking-[0.24em] uppercase text-white/90 max-w-lg mb-5 leading-relaxed"
-          >
-            {lang === 'fr' ? 'dès €26,90' : lang === 'en' ? 'from €26.90' : 'vanaf €26,90'}
-          </motion.h1>
-
-          {/* Subtitle */}
-          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
+            transition={{ duration: 0.8, delay: 0.35 }}
             className="font-body font-semibold text-[10px] md:text-xs tracking-[0.32em] uppercase text-white/80 max-w-sm mb-8"
           >
             {t('hero_subtitle')}
-          </motion.p>
+          </motion.h1>
 
           {/* CTAs */}
           <motion.div
