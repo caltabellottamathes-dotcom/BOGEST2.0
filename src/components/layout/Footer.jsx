@@ -234,12 +234,6 @@ export default function Footer() {
             </p>
           </div>
           <div className="flex items-center gap-4 flex-wrap justify-center md:justify-end md:pr-32">
-            <Link
-              to="/assets"
-              className="font-body text-[10px] tracking-widest uppercase text-foreground/20 hover:text-foreground/40 transition-colors duration-300"
-            >
-              Beeldbank
-            </Link>
             <Link to="/privacy" className="font-body text-xs text-muted-foreground hover:text-primary transition-colors duration-300">
               {t('footer_privacy')}
             </Link>

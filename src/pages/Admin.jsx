@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { CalendarDays, ShoppingBag, Gift, BarChart3, MapPin, Users, LayoutGrid, Search, Filter, LogOut, ArrowLeft, Package, Mail, Bell, RefreshCw, Settings } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import {
+  CalendarDays, ShoppingBag, Gift, BarChart3, MapPin, Users, LayoutGrid, Search, Filter, LogOut, ArrowLeft, Package, Mail, Bell, RefreshCw, Settings, Clock, Briefcase, Image as ImageIcon, UtensilsCrossed,
+} from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { Input } from '@/components/ui/input';
 import { LOCATIONS_DATA } from '@/lib/data';
@@ -10,7 +13,17 @@ import AdminOrders from '@/components/admin/AdminOrders';
 import AdminGiftPackages from '@/components/admin/AdminGiftPackages';
 import AdminContactRequests from '@/components/admin/AdminContactRequests';
 import AdminNotificationsPopup from '@/components/admin/AdminNotificationsPopup';
+import MenuBeheer from '@/pages/MenuBeheer';
+import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
+import VacaturesBeheer from '@/pages/VacaturesBeheer';
+import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
+import Assets from '@/pages/Assets';
+import BogestLogo from '@/components/BogestLogo';
 
+// Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
+// site-Layout). Alle beheerbare modules — operationeel (reserveringen, orders,
+// cadeaubonnen, contact, tafels) én inhoud (menukaart, openingsuren, vacatures,
+// meldingen) én media (Beeldbank) — zitten in één oppervlak met een zijbalk.
 function StatCard({ icon: Icon, label, value, sub, highlight, badge }) {
   return (
     <div className={`backdrop-blur-lg rounded-2xl p-5 border transition-all ${
@@ -33,33 +46,44 @@ function StatCard({ icon: Icon, label, value, sub, highlight, badge }) {
   );
 }
 
-export default function Admin() {
-  const [authed] = React.useState(() => sessionStorage.getItem('bogest-admin-auth') === '1');
-  React.useEffect(() => { if (!authed) window.location.href = '/admin-login'; }, [authed]);
-  if (!authed) return null;
-  return <AdminInner />;
-}
+const SECTIONS = [
+  { key: 'overzicht', label: 'Overzicht', icon: LayoutGrid, group: 'Operationeel' },
+  { key: 'reserveringen', label: 'Reserveringen', icon: CalendarDays, group: 'Operationeel' },
+  { key: 'takeaway', label: 'Takeaway', icon: ShoppingBag, group: 'Operationeel' },
+  { key: 'pakketten', label: 'Cadeaupakketten', icon: Package, group: 'Operationeel' },
+  { key: 'bonnen', label: 'Cadeaubonnen', icon: Gift, group: 'Operationeel' },
+  { key: 'contact', label: 'Contact', icon: Mail, group: 'Operationeel' },
+  { key: 'tafels', label: 'Tafelbeheer', icon: Users, group: 'Operationeel' },
+  { key: 'menu', label: 'Menukaart', icon: UtensilsCrossed, group: 'Inhoud' },
+  { key: 'uren', label: 'Openingsuren', icon: Clock, group: 'Inhoud' },
+  { key: 'vacatures', label: 'Vacatures', icon: Briefcase, group: 'Inhoud' },
+  { key: 'meldingen', label: 'Meldingen', icon: Bell, group: 'Inhoud' },
+  { key: 'beelden', label: 'Beeldbank', icon: ImageIcon, group: 'Media' },
+];
 
-function AdminInner() {
+const GROUPS = ['Operationeel', 'Inhoud', 'Media'];
+
+export default function Admin() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const section = searchParams.get('section') || 'overzicht';
+  const setSection = (s) => setSearchParams(s === 'overzicht' ? {} : { section: s }, { replace: true });
+
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [tab, setTab] = useState('reservations');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDate, setFilterDate] = useState('');
 
-  // Live counts for notifications & badges
   const [reservations, setReservations] = useState([]);
   const [orders, setOrders] = useState([]);
   const [giftPackages, setGiftPackages] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [giftCards, setGiftCards] = useState([]);
-  const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifDismissed, setNotifDismissed] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const today = new Date().toISOString().split('T')[0];
 
-  // Load all data for counts/notifications
   const loadData = async () => {
     const [res, ord, pkg, con, gc] = await Promise.all([
       base44.entities.Reservation.list('-created_date', 500),
@@ -78,7 +102,7 @@ function AdminInner() {
 
   useEffect(() => { loadData(); }, []);
 
-  // Build notifications from unseen items
+  const [notifications, setNotifications] = useState([]);
   useEffect(() => {
     if (!dataLoaded) return;
     const notifs = [];
@@ -106,7 +130,6 @@ function AdminInner() {
     if (notifs.length > 0 && !notifDismissed) setShowNotifications(true);
   }, [dataLoaded, reservations, orders, giftPackages, contacts, notifDismissed]);
 
-  // Real-time subscriptions for live badge counts
   useEffect(() => {
     const unsubs = [
       base44.entities.Reservation.subscribe(e => {
@@ -144,14 +167,12 @@ function AdminInner() {
     setShowNotifications(false);
   };
 
-  // Badge counts
   const unseenRes = reservations.filter(r => !r.seen).length;
   const unseenOrd = orders.filter(o => !o.seen).length;
   const unseenPkg = giftPackages.filter(p => !p.seen).length;
   const unseenCon = contacts.filter(c => !c.seen).length;
   const totalUnseen = unseenRes + unseenOrd + unseenPkg + unseenCon;
 
-  // Per-location stats
   const getLocStats = (slug) => ({
     todayRes: reservations.filter(r => r.location === slug && r.date === today && r.status !== 'cancelled').length,
     todayOrd: orders.filter(o => o.location === slug && o.pickup_date === today && o.status !== 'cancelled').length,
@@ -159,20 +180,34 @@ function AdminInner() {
     unseenCount: reservations.filter(r => r.location === slug && !r.seen).length + orders.filter(o => o.location === slug && !o.seen).length,
   });
 
-  const LOCATION_TABS = [
-    { id: 'reservations', label: 'Reserveringen', icon: CalendarDays, badge: unseenRes },
-    { id: 'orders', label: 'Takeaway', icon: ShoppingBag, badge: unseenOrd },
-    { id: 'packages', label: 'Cadeaupakketten', icon: Package, badge: unseenPkg },
-    { id: 'giftcards', label: 'Cadeaubonnen', icon: Gift, badge: 0 },
-    { id: 'contacts', label: 'Contactaanvragen', icon: Mail, badge: unseenCon },
-    { id: 'tables', label: 'Tafelbeheer', icon: LayoutGrid, badge: 0 },
-  ];
+  // Badge per operationele sectie
+  const sectionBadge = (key) => {
+    if (key === 'reserveringen') return unseenRes;
+    if (key === 'takeaway') return unseenOrd;
+    if (key === 'pakketten') return unseenPkg;
+    if (key === 'contact') return unseenCon;
+    return 0;
+  };
 
-  const locSlug = selectedLocation?.slug;
+  const logout = () => base44.auth.logout('/');
+
+  const isOverzicht = section === 'overzicht';
+  // Voor de operationele detailsecties (reserveringen/takeaway/…) werken we
+  // altijd binnen één vestiging: op het overzicht kies je er een, daarna blijven
+  // we daarbinnen tot je teruggaat.
+  const operationalDetail = ['reserveringen', 'takeaway', 'pakketten', 'bonnen', 'contact', 'tafels'].includes(section);
+
+  const renderContent = () => {
+    if (section === 'menu') return <MenuBeheer />;
+    if (section === 'uren') return <OpeningHoursBeheer />;
+    if (section === 'vacatures') return <VacaturesBeheer />;
+    if (section === 'meldingen') return <AnnouncementBeheer />;
+    if (section === 'beelden') return <Assets />;
+    return null; // operationeel wordt hieronder afgehandeld
+  };
 
   return (
-    <div className="w-full min-h-screen bg-background">
-      {/* Notifications popup */}
+    <div className="w-full min-h-screen bg-background flex">
       {showNotifications && (
         <AdminNotificationsPopup
           notifications={notifications}
@@ -181,214 +216,197 @@ function AdminInner() {
         />
       )}
 
-      {/* Top bar */}
-      <section className="w-full pt-24 pb-6 px-6 md:px-10 lg:px-16 border-b border-border/50">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-4">
-            {selectedLocation && (
-              <button onClick={() => { setSelectedLocation(null); setTab('reservations'); setSearchQuery(''); setFilterDate(''); }}
-                className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
+      {/* Zijbalk — desktop */}
+      <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-card/30 h-screen sticky top-0">
+        <SidebarContent
+          section={section} setSection={(s) => { setSection(s); setSelectedLocation(null); }}
+          sectionBadge={sectionBadge} totalUnseen={totalUnseen}
+          onLogout={logout}
+        />
+      </aside>
+
+      {/* Zijbalk — mobile drawer */}
+      {sidebarOpen && (
+        <div className="lg:hidden fixed inset-0 z-[120]">
+          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-background border-r border-border/50 flex flex-col">
+            <SidebarContent
+              section={section} setSection={(s) => { setSection(s); setSelectedLocation(null); setSidebarOpen(false); }}
+              sectionBadge={sectionBadge} totalUnseen={totalUnseen}
+              onLogout={logout}
+            />
+          </aside>
+        </div>
+      )}
+
+      <div className="flex-1 min-w-0 flex flex-col">
+        {/* Topbar */}
+        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border/50 px-5 lg:px-8 py-3.5 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center">
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            {(operationalDetail && selectedLocation) ? (
+              <button onClick={() => { setSelectedLocation(null); }} className="w-8 h-8 rounded-full border border-border/50 flex items-center justify-center hover:border-primary hover:text-primary transition-colors">
                 <ArrowLeft className="w-3.5 h-3.5" />
               </button>
-            )}
-            <div>
-              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary mb-1 block">Beheer</span>
-              <h1 className="font-heading text-2xl md:text-3xl font-bold text-foreground">
-                {selectedLocation ? selectedLocation.name : 'Dashboard'}
+            ) : null}
+            <div className="min-w-0">
+              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary block leading-none mb-1">Beheer</span>
+              <h1 className="font-heading text-xl md:text-2xl font-bold text-foreground truncate">
+                {operationalDetail && selectedLocation ? selectedLocation.name : (SECTIONS.find(s => s.key === section)?.label || 'Dashboard')}
               </h1>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Bell with badge */}
-            <button onClick={() => setShowNotifications(true)}
-              className="relative w-9 h-9 rounded-full border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+          <div className="flex items-center gap-2.5">
+            <button onClick={() => setShowNotifications(true)} className="relative w-9 h-9 rounded-full border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
               <Bell className="w-3.5 h-3.5" />
               {totalUnseen > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">
-                  {totalUnseen > 9 ? '9+' : totalUnseen}
-                </span>
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">{totalUnseen > 9 ? '9+' : totalUnseen}</span>
               )}
             </button>
-            <button onClick={loadData}
-              className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
+            <button onClick={loadData} className="w-9 h-9 rounded-full border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
               <RefreshCw className="w-3.5 h-3.5" />
             </button>
-            <button onClick={() => { sessionStorage.removeItem('bogest-admin-auth'); window.location.href = '/'; }}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 text-muted-foreground font-body text-xs tracking-widest uppercase hover:border-destructive hover:text-destructive transition-colors">
+            <button onClick={logout} className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 text-muted-foreground font-body text-xs tracking-widest uppercase hover:border-destructive hover:text-destructive transition-colors">
               <LogOut className="w-3 h-3" /> Uitloggen
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Search & filter — shown in location view */}
-        {selectedLocation && (
-          <div className="flex gap-3 flex-wrap mt-4">
+        {/* Zoek/filter — alleen binnen een geselecteerde vestiging */}
+        {operationalDetail && selectedLocation && (
+          <div className="px-5 lg:px-8 py-3 flex gap-3 flex-wrap border-b border-border/40">
             <div className="relative flex-1 min-w-56">
               <Search className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-              <Input placeholder="Zoeken op naam, email, telefoon..." value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)} className="pl-9 bg-card/40 border-primary/10" />
+              <Input placeholder="Zoeken op naam, email, telefoon..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-9 bg-card/40 border-primary/10" />
             </div>
             <div className="relative">
               <Filter className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-              <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)}
-                className="pl-9 pr-3 py-2 bg-card/40 border border-primary/10 rounded-lg font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
+              <input type="date" value={filterDate} onChange={e => setFilterDate(e.target.value)} className="pl-9 pr-3 py-2 bg-card/40 border border-primary/10 rounded-lg font-body text-sm focus:outline-none focus:ring-2 focus:ring-primary/40" />
             </div>
             {(searchQuery || filterDate) && (
-              <button onClick={() => { setSearchQuery(''); setFilterDate(''); }}
-                className="px-3 py-2 bg-destructive/10 text-destructive border border-destructive/30 rounded-lg font-body text-xs tracking-widest uppercase hover:bg-destructive/20 transition-colors">
-                Wissen
-              </button>
+              <button onClick={() => { setSearchQuery(''); setFilterDate(''); }} className="px-3 py-2 bg-destructive/10 text-destructive border border-destructive/30 rounded-lg font-body text-xs tracking-widest uppercase hover:bg-destructive/20 transition-colors">Wissen</button>
             )}
           </div>
         )}
-      </section>
 
-      {/* HOME — all locations overview */}
-      {!selectedLocation && (
-        <section className="w-full px-6 md:px-10 lg:px-16 py-10">
-          {/* Global stat cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            <StatCard icon={CalendarDays} label="Reserveringen vandaag" badge={unseenRes}
-              value={reservations.filter(r => r.date === today && r.status !== 'cancelled').length}
-              sub={`${reservations.filter(r => r.status === 'pending').length} in afwachting`}
-              highlight={unseenRes > 0} />
-            <StatCard icon={ShoppingBag} label="Takeaway bestellingen" badge={unseenOrd}
-              value={orders.filter(o => o.status !== 'completed' && o.status !== 'cancelled').length}
-              sub="In behandeling" highlight={unseenOrd > 0} />
-            <StatCard icon={Gift} label="Cadeaubonnen actief" badge={0}
-              value={giftCards.filter(g => g.status === 'active' || g.status === 'partially_used').length}
-              sub="Verkocht" />
-            <StatCard icon={Mail} label="Contactaanvragen" badge={unseenCon}
-              value={contacts.filter(c => c.status !== 'archived').length}
-              sub={`${unseenCon} ongelezen`} highlight={unseenCon > 0} />
-          </div>
+        {/* Inhoud */}
+        <main className="flex-1 overflow-y-auto">
+          {(['menu', 'uren', 'vacatures', 'meldingen', 'beelden'].includes(section)) && (
+            <div className="p-0">{renderContent()}</div>
+          )}
 
-          {/* Location tiles */}
-          <h2 className="font-heading text-xl font-bold text-foreground mb-5">Kies een vestiging</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
-            {LOCATIONS_DATA.map(loc => {
-              const isComingSoon = !loc.phone;
-              const stats = getLocStats(loc.slug);
-              const savedTables = (() => { try { const s = localStorage.getItem(`bogest-tables-${loc.slug}`); return s ? JSON.parse(s) : null; } catch { return null; } })();
-              const availSeats = savedTables ? savedTables.filter(t => t.enabled && !t.unavailable).reduce((s, t) => s + t.seats, 0) : '—';
-              return (
-                <button key={loc.slug} onClick={() => !isComingSoon && setSelectedLocation(loc)} disabled={isComingSoon}
-                  className={`group relative text-left rounded-2xl border backdrop-blur-lg transition-all duration-300 overflow-hidden ${
-                    isComingSoon ? 'opacity-50 cursor-not-allowed bg-card/20 border-primary/10' : 'hover:border-primary/40 bg-card/40 hover:bg-card/60 border-primary/10'
-                  }`}>
-                  {stats.unseenCount > 0 && (
-                    <span className="absolute top-3 right-3 z-10 w-5 h-5 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">
-                      {stats.unseenCount}
-                    </span>
-                  )}
-                  <div className="relative h-36 overflow-hidden">
-                    <img src={loc.image} alt={loc.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                      style={{ filter: 'saturate(0.6) brightness(0.8)' }} />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-3 left-3">
-                      <p className="font-heading text-sm font-bold text-white">{loc.city}</p>
-                    </div>
-                    {isComingSoon && (
-                      <div className="absolute top-3 right-3 bg-black/50 px-2 py-0.5 rounded-full">
-                        <span className="font-body text-[9px] tracking-widest uppercase text-white/70">Binnenkort</span>
+          {/* OPERATIONEEL */}
+          {section === 'overzicht' && !selectedLocation && (
+            <section className="px-5 lg:px-8 py-8">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <StatCard icon={CalendarDays} label="Reserveringen vandaag" badge={unseenRes} value={reservations.filter(r => r.date === today && r.status !== 'cancelled').length} sub={`${reservations.filter(r => r.status === 'pending').length} in afwachting`} highlight={unseenRes > 0} />
+                <StatCard icon={ShoppingBag} label="Takeaway bestellingen" badge={unseenOrd} value={orders.filter(o => o.status !== 'completed' && o.status !== 'cancelled').length} sub="In behandeling" highlight={unseenOrd > 0} />
+                <StatCard icon={Gift} label="Cadeaubonnen actief" badge={0} value={giftCards.filter(g => g.status === 'active' || g.status === 'partially_used').length} sub="Verkocht" />
+                <StatCard icon={Mail} label="Contactaanvragen" badge={unseenCon} value={contacts.filter(c => c.status !== 'archived').length} sub={`${unseenCon} ongelezen`} highlight={unseenCon > 0} />
+              </div>
+              <h2 className="font-heading text-lg font-bold text-foreground mb-4">Kies een vestiging</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                {LOCATIONS_DATA.map(loc => {
+                  const isComingSoon = !loc.phone;
+                  const stats = getLocStats(loc.slug);
+                  return (
+                    <button key={loc.slug} onClick={() => { if (!isComingSoon) { setSection('reserveringen'); setSelectedLocation(loc); } }} disabled={isComingSoon}
+                      className={`group relative text-left rounded-2xl border backdrop-blur-lg transition-all duration-300 overflow-hidden ${isComingSoon ? 'opacity-50 cursor-not-allowed bg-card/20 border-primary/10' : 'hover:border-primary/40 bg-card/40 hover:bg-card/60 border-primary/10'}`}>
+                      {stats.unseenCount > 0 && <span className="absolute top-3 right-3 z-10 w-5 h-5 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">{stats.unseenCount}</span>}
+                      <div className="relative h-32 overflow-hidden">
+                        <img src={loc.image} alt={loc.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" style={{ filter: 'saturate(0.6) brightness(0.8)' }} />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                        <div className="absolute bottom-3 left-3"><p className="font-heading text-sm font-bold text-white">{loc.city}</p></div>
+                        {isComingSoon && <div className="absolute top-3 right-3 bg-black/50 px-2 py-0.5 rounded-full"><span className="font-body text-[9px] tracking-widest uppercase text-white/70">Binnenkort</span></div>}
                       </div>
-                    )}
-                  </div>
-                  <div className="p-4">
-                    {isComingSoon ? (
-                      <p className="font-body text-xs text-muted-foreground">Informatie volgt binnenkort</p>
-                    ) : (
-                      <div className="grid grid-cols-3 gap-2">
-                        <div>
-                          <p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground">Res. vandaag</p>
-                          <p className="font-heading text-lg font-bold text-primary">{stats.todayRes}</p>
-                          {stats.pendingRes > 0 && <p className="font-body text-[9px] text-amber-600">● {stats.pendingRes}</p>}
-                        </div>
-                        <div>
-                          <p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground">Takeaway</p>
-                          <p className="font-heading text-lg font-bold text-primary">{stats.todayOrd}</p>
-                        </div>
-                        <div>
-                          <p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground">Stoelen</p>
-                          <p className="font-heading text-lg font-bold text-foreground">{availSeats}</p>
-                        </div>
+                      <div className="p-4">
+                        {isComingSoon ? <p className="font-body text-xs text-muted-foreground">Informatie volgt binnenkort</p> : (
+                          <div className="grid grid-cols-3 gap-2">
+                            <div><p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground">Res. vandaag</p><p className="font-heading text-lg font-bold text-primary">{stats.todayRes}</p>{stats.pendingRes > 0 && <p className="font-body text-[9px] text-amber-600">● {stats.pendingRes}</p>}</div>
+                            <div><p className="font-body text-[10px] uppercase tracking-widest text-muted-foreground">Takeaway</p><p className="font-heading text-lg font-bold text-primary">{stats.todayOrd}</p></div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                    </button>
+                  );
+                })}
+              </div>
+              <div className="mt-2">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="font-heading text-lg font-bold text-foreground flex items-center gap-2"><Mail className="w-4 h-4 text-primary" /> Contactaanvragen {unseenCon > 0 && <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">{unseenCon}</span>}</h2>
+                </div>
+                <AdminContactRequests searchQuery={searchQuery} />
+              </div>
+            </section>
+          )}
 
-          {/* Global Contact Requests */}
-          <div className="mt-4">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-heading text-lg font-bold text-foreground flex items-center gap-2">
-                <Mail className="w-4 h-4 text-primary" /> Contactaanvragen
-                {unseenCon > 0 && <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">{unseenCon}</span>}
-              </h2>
+          {operationalDetail && selectedLocation && (
+            <section className="px-5 lg:px-8 py-6">
+              {section === 'reserveringen' && <AdminReservations locationFilter={selectedLocation.slug} searchQuery={searchQuery} dateFilter={filterDate} />}
+              {section === 'takeaway' && <AdminOrders locationFilter={selectedLocation.slug} searchQuery={searchQuery} dateFilter={filterDate} />}
+              {section === 'pakketten' && <AdminGiftPackages locationFilter={selectedLocation.slug} searchQuery={searchQuery} dateFilter={filterDate} />}
+              {section === 'bonnen' && <GiftCardManager />}
+              {section === 'contact' && <AdminContactRequests searchQuery={searchQuery} />}
+              {section === 'tafels' && <TableManagement locationSlug={selectedLocation.slug} locationName={selectedLocation.city} />}
+            </section>
+          )}
+
+          {/* Operationele detailsectie zonder vestiging → toon vestigingskeuze */}
+          {operationalDetail && !selectedLocation && (
+            <section className="px-5 lg:px-8 py-8">
+              <p className="font-body text-sm text-muted-foreground mb-5">Kies eerst een vestiging om deze sectie te bekijken.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {LOCATIONS_DATA.filter(l => l.phone).map(loc => (
+                  <button key={loc.slug} onClick={() => setSelectedLocation(loc)} className="text-left rounded-2xl border border-primary/10 bg-card/40 hover:bg-card/60 hover:border-primary/40 p-4 transition-all">
+                    <p className="font-heading text-base font-bold text-foreground">{loc.city}</p>
+                    <p className="font-body text-xs text-muted-foreground mt-0.5">{getLocStats(loc.slug).todayRes} res. vandaag · {getLocStats(loc.slug).todayOrd} takeaway</p>
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+        </main>
+      </div>
+    </div>
+  );
+}
+
+function SidebarContent({ section, setSection, sectionBadge, totalUnseen, onLogout }) {
+  return (
+    <div className="flex flex-col h-full">
+      <div className="px-5 py-5 border-b border-border/40">
+        <BogestLogo className="text-2xl tracking-wide" />
+        <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mt-2">Admin Dashboard</p>
+      </div>
+      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
+        {GROUPS.map(group => (
+          <div key={group}>
+            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground/70 px-2 mb-2">{group}</p>
+            <div className="space-y-0.5">
+              {SECTIONS.filter(s => s.group === group).map(s => {
+                const active = section === s.key;
+                const badge = sectionBadge(s.key);
+                return (
+                  <button key={s.key} onClick={() => setSection(s.key)}
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-sm transition-all ${active ? 'bg-primary/15 text-primary border border-primary/30' : 'text-foreground/70 hover:text-foreground hover:bg-muted/50 border border-transparent'}`}>
+                    <s.icon className="w-4 h-4 shrink-0" />
+                    <span className="flex-1 text-left">{s.label}</span>
+                    {badge > 0 && <span className="w-5 h-5 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">{badge > 9 ? '9+' : badge}</span>}
+                  </button>
+                );
+              })}
             </div>
-            <AdminContactRequests searchQuery={searchQuery} />
           </div>
-        </section>
-      )}
-
-      {/* LOCATION VIEW */}
-      {selectedLocation && (
-        <section className="w-full px-6 md:px-10 lg:px-16 py-8">
-          {/* Location stat cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <StatCard icon={CalendarDays} label="Reserveringen vandaag"
-              value={reservations.filter(r => r.location === locSlug && r.date === today && r.status !== 'cancelled').length}
-              sub={selectedLocation.city} highlight={unseenRes > 0}
-              badge={reservations.filter(r => r.location === locSlug && !r.seen).length} />
-            <StatCard icon={ShoppingBag} label="Takeaway vandaag"
-              value={orders.filter(o => o.location === locSlug && o.pickup_date === today && o.status !== 'cancelled').length}
-              sub="In behandeling" highlight={unseenOrd > 0}
-              badge={orders.filter(o => o.location === locSlug && !o.seen).length} />
-            <StatCard icon={Package} label="Cadeaupakketten"
-              value={giftPackages.filter(p => p.location === locSlug && p.status !== 'completed' && p.status !== 'cancelled').length}
-              sub="In behandeling"
-              badge={giftPackages.filter(p => p.location === locSlug && !p.seen).length} />
-            <StatCard icon={Users} label="Gasten bevestigd"
-              value={reservations.filter(r => r.location === locSlug && r.status === 'confirmed' && r.date === today).reduce((s, r) => s + (r.guests || 0), 0)}
-              sub="Vandaag" />
-          </div>
-
-          {/* Tabs */}
-          <div className="flex gap-1 border-b border-border/50 mb-8 overflow-x-auto">
-            {LOCATION_TABS.map(t => (
-              <button key={t.id} onClick={() => setTab(t.id)}
-                className={`relative flex items-center gap-2 px-4 py-3 font-body text-xs whitespace-nowrap transition-all duration-200 border-b-2 -mb-px ${
-                  tab === t.id ? 'border-primary text-primary' : 'border-transparent text-muted-foreground hover:text-foreground'
-                }`}>
-                <t.icon className="w-3.5 h-3.5" />{t.label}
-                {t.badge > 0 && (
-                  <span className="w-4 h-4 rounded-full bg-primary text-primary-foreground font-body text-[9px] flex items-center justify-center">
-                    {t.badge}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-
-          {/* Tab content */}
-          {tab === 'reservations' && (
-            <AdminReservations locationFilter={locSlug} searchQuery={searchQuery} dateFilter={filterDate} />
-          )}
-          {tab === 'orders' && (
-            <AdminOrders locationFilter={locSlug} searchQuery={searchQuery} dateFilter={filterDate} />
-          )}
-          {tab === 'packages' && (
-            <AdminGiftPackages locationFilter={locSlug} searchQuery={searchQuery} dateFilter={filterDate} />
-          )}
-          {tab === 'giftcards' && <GiftCardManager />}
-          {tab === 'contacts' && <AdminContactRequests searchQuery={searchQuery} />}
-          {tab === 'tables' && (
-            <TableManagement locationSlug={selectedLocation.slug} locationName={selectedLocation.city} />
-          )}
-        </section>
-      )}
+        ))}
+      </nav>
+      <div className="px-3 py-4 border-t border-border/40">
+        {totalUnseen > 0 && <p className="font-body text-[10px] text-muted-foreground px-2 mb-3">{totalUnseen} ongelezen items</p>}
+        <button onClick={onLogout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl font-body text-xs tracking-widest uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors">
+          <LogOut className="w-3.5 h-3.5" /> Uitloggen
+        </button>
+      </div>
     </div>
   );
 }

@@ -33,16 +33,12 @@ import Terms from '@/pages/Terms';
 import CookiePolicy from '@/pages/CookiePolicy';
 import AiDisclaimer from '@/pages/AiDisclaimer';
 import Instagram from '@/pages/Instagram';
-import MenuBeheer from '@/pages/MenuBeheer';
+import Admin from '@/pages/Admin';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
-import Assets from '@/pages/Assets';
-import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
-import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
-import VacaturesBeheer from '@/pages/VacaturesBeheer';
 import SeoHead from '@/components/SeoHead';
 
 // Doorverwijzingen van oude Engelse paden → Nederlandse URL's. Behoudt de
@@ -102,6 +98,10 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
+      {/* Geünificeerd admin-dashboard — buiten de site-chrome, admin-gated */}
+      <Route element={<AdminGate />}>
+        <Route path="/admin" element={<Admin />} />
+      </Route>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
 
@@ -143,13 +143,12 @@ const AuthenticatedApp = () => {
         <Route path="/jobs" element={<Navigate to="/vacatures" replace />} />
         <Route path="/terms" element={<Navigate to="/voorwaarden" replace />} />
 
-        <Route element={<AdminGate />}>
-          <Route path="/assets" element={<Assets />} />
-          <Route path="/menu-beheer" element={<MenuBeheer />} />
-          <Route path="/meldingen-beheer" element={<AnnouncementBeheer />} />
-          <Route path="/uren-beheer" element={<OpeningHoursBeheer />} />
-          <Route path="/vacatures-beheer" element={<VacaturesBeheer />} />
-        </Route>
+        {/* Oude beheer-URL's → geünificeerd admin-dashboard */}
+        <Route path="/assets" element={<Navigate to="/admin?section=beelden" replace />} />
+        <Route path="/menu-beheer" element={<Navigate to="/admin?section=menu" replace />} />
+        <Route path="/meldingen-beheer" element={<Navigate to="/admin?section=meldingen" replace />} />
+        <Route path="/uren-beheer" element={<Navigate to="/admin?section=uren" replace />} />
+        <Route path="/vacatures-beheer" element={<Navigate to="/admin?section=vacatures" replace />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
