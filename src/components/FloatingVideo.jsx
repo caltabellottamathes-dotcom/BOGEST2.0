@@ -46,34 +46,28 @@ export default function FloatingVideo() {
   // on mobile. The card mirrors that exact shift so it floats above the orb's
   // right-top corner at all times.
   const [shift, setShift] = useState(0);
-  const [routePanelOpen, setRoutePanelOpen] = useState(false);
-  const [overlayPanelOpen, setOverlayPanelOpen] = useState(false);
+  // Track the shared `bogest-panel-open` body flag directly — GlassPanel
+  // (route panels) and OverlayPanelShell (widget overlays) both set it via
+  // openPanel(), so a single source of truth slides the card exactly like
+  // the ElevenLabs orb for every panel type.
+  const [routePanelOpen, setRoutePanelOpen] = useState(
+    () => typeof document !== 'undefined' && document.body.classList.contains('bogest-panel-open')
+  );
   useEffect(() => {
     const compute = () => {
       const w = window.innerWidth;
       if (w < 640) return 0; // mobile: the orb stays put when a panel opens
       return -Math.min(w * 0.82, 1200, w - 552); // match the orb's slide exactly
     };
-    // React to BOTH full route panels (menu, locations, ...) and smaller
-    // slide-in overlay panels (dish photo, map, reserve, ...) — either one
-    // should slide the card aside on desktop, matching the ElevenLabs orb.
-    const onRoute = (e) => setRoutePanelOpen(Boolean(e.detail?.open));
-    const onOverlay = (e) => setOverlayPanelOpen(Boolean(e.detail?.open));
     const onResize = () => setShift((s) => (s < 0 ? compute() : 0));
-    window.addEventListener('bogest:panel-visibility', onRoute);
-    window.addEventListener('bogest:overlay-panel-visibility', onOverlay);
     window.addEventListener('resize', onResize);
-    return () => {
-      window.removeEventListener('bogest:panel-visibility', onRoute);
-      window.removeEventListener('bogest:overlay-panel-visibility', onOverlay);
-      window.removeEventListener('resize', onResize);
-    };
+    return () => window.removeEventListener('resize', onResize);
   }, []);
   useEffect(() => {
     const w = window.innerWidth;
     if (w < 640) { setShift(0); return; }
-    setShift((routePanelOpen || overlayPanelOpen) ? -Math.min(w * 0.82, 1200, w - 552) : 0);
-  }, [routePanelOpen, overlayPanelOpen]);
+    setShift(routePanelOpen ? -Math.min(w * 0.82, 1200, w - 552) : 0);
+  }, [routePanelOpen]);
   const dragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0, moved: false });
 
@@ -139,8 +133,10 @@ export default function FloatingVideo() {
   // back, even if it was swiped away. (A page reload resets it too, naturally.)
   useEffect(() => {
     let wasOpen = document.body.classList.contains('bogest-panel-open');
+    setRoutePanelOpen(wasOpen);
     const obs = new MutationObserver(() => {
       const isOpen = document.body.classList.contains('bogest-panel-open');
+      setRoutePanelOpen(isOpen);
       if (wasOpen && !isOpen) setDismissed(false);
       wasOpen = isOpen;
     });
