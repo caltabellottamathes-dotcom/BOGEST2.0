@@ -560,7 +560,7 @@ export default function Jobs() {
             </div>
 
             <SectionReveal delay={0.1}>
-              <div id="langskomen" className="mt-8 p-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md shadow-lg">
+              <div id="langskomen" className="mt-8 p-5 rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-lg">
                 <h3 className="font-heading text-base font-semibold text-foreground mb-3">{ui.walkinTitle}</h3>
                 <p className="font-body text-sm text-muted-foreground mb-4">{ui.walkinDesc}</p>
                 <ul className="space-y-2 font-body text-sm text-muted-foreground">
@@ -579,7 +579,7 @@ export default function Jobs() {
 
           <SectionReveal id="solliciteren" direction="right" delay={0.1}>
             {success ? (
-              <div className="flex flex-col items-center text-center rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
+              <div className="flex flex-col items-center text-center rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
                 </div>
@@ -590,7 +590,7 @@ export default function Jobs() {
                 </button>
               </div>
             ) : (
-              <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
+              <div className="sticky top-24 relative overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
 
                 <div className="flex items-center gap-3 mb-3">
                   <span className="h-px w-10 bg-primary" />

@@ -55,7 +55,7 @@ export default function Contact() {
           <SectionReveal direction="left">
             {success ?
             <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }}
-            className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
+            className="relative overflow-hidden flex flex-col items-center text-center rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md p-10 md:p-14 shadow-lg">
 
                 <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-5">
                   <Check className="w-7 h-7 text-primary" />
@@ -66,7 +66,7 @@ export default function Contact() {
               className="mt-8 font-body text-sm text-primary hover:underline">{t('btn_another_message')}</button>
               </motion.div> :
 
-            <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-border bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
+            <form onSubmit={handleSubmit} className="relative overflow-hidden space-y-5 rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur-md p-6 md:p-8 shadow-lg">
 
                 <div className="flex items-center gap-3 mb-4">
                   <span className="h-px w-10 bg-primary" />

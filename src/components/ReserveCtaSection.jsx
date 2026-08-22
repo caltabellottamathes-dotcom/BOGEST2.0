@@ -1,59 +1,33 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ArrowRight, CalendarDays } from 'lucide-react';
+import { CalendarDays } from 'lucide-react';
 import { useLang } from '@/lib/LangContext';
+import OrderCtaSection from '@/components/OrderCtaSection';
 
-const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
+// Reserveer-CTA — exact hetzelfde systeem als de Traiteur- en Cadeaupakket-CTA
+// (OrderCtaSection): dezelfde glas-banner met bull-ghost en dezelfde zwevende
+// glazen kaart (icoon + Bogèst-eyebrow + titel + subtekst + knop), maar dan met
+// reserve-specifieke copy. Eén bron van waarheid voor alle "Reserveer"-CTA's
+// (/menu, /over-ons en de sub-paneelen).
+const CARD = {
+  nl: { title: 'Reserveer uw tafel', subtitle: 'Bogèst Hasselt, Borgloon of Heusden-Zolder. Wij houden een plaats voor u klaar.' },
+  fr: { title: 'Réservez votre table', subtitle: 'Bogèst Hasselt, Borgloon ou Heusden-Zolder. Une place vous attend.' },
+  en: { title: 'Reserve your table', subtitle: 'Bogèst Hasselt, Borgloon or Heusden-Zolder. A seat is kept for you.' },
+};
 
-// Compacte reserverings-CTA — glasmorphism-vlak met bull-ghost, met
-// banner-tekst (zoals OrderCtaSection) + zwevende glazen CTA-kaart.
-export default function ReserveCtaSection() {
-  const { t } = useLang();
+export default function ReserveCtaSection({ positionKey }) {
+  const { t, lang } = useLang();
+  const card = CARD[lang] || CARD.nl;
   return (
-    <section id="reserveer" className="w-full px-6 md:px-10 lg:px-16 pt-14 pb-16">
-      <div className="relative">
-        {/* Glasmorphism-banner met bull-ghost */}
-        <div
-          className="relative overflow-hidden rounded-2xl h-[200px] md:h-[260px] border border-border/50"
-          style={{ background: 'rgba(255,255,255,0.04)', backdropFilter: 'blur(20px) saturate(140%)', WebkitBackdropFilter: 'blur(20px) saturate(140%)' }}
-        >
-          <img
-            src={BULL_MARK}
-            alt=""
-            aria-hidden
-            draggable={false}
-            className="absolute pointer-events-none select-none"
-            style={{ height: '220%', width: 'auto', bottom: '-70%', left: '-4%', opacity: 0.10, filter: 'grayscale(1) brightness(2.4)' }}
-          />
-          {/* Tekst links */}
-          <div className="absolute left-6 md:left-8 lg:left-12 bottom-5 md:bottom-8 max-w-xs md:max-w-[15rem] lg:max-w-sm z-10">
-            <p className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-2">{t('btn_reserve')}</p>
-            <h2 className="font-heading text-xl md:text-2xl font-bold leading-tight text-foreground">
-              {t('res_title')}<span className="text-primary">.</span>
-            </h2>
-            <p className="font-body text-xs md:text-sm text-muted-foreground leading-relaxed mt-2 line-clamp-3">{t('res_subtitle')}</p>
-          </div>
-        </div>
-
-        {/* Zwevende glazen CTA-kaart — 1:1 OrderCtaSection */}
-        <div
-          className="relative mx-4 -mt-12 md:absolute md:-bottom-8 md:right-10 lg:right-14 md:mx-0 md:max-w-sm rounded-2xl p-5 md:p-6"
-          style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(24px) saturate(150%)', WebkitBackdropFilter: 'blur(24px) saturate(150%)', border: '1px solid rgba(255,255,255,0.14)', boxShadow: '0 24px 60px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.10)' }}
-        >
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: 'hsl(var(--primary) / 0.14)', border: '1px solid hsl(var(--primary) / 0.30)' }}>
-              <CalendarDays className="w-4 h-4 text-primary" />
-            </div>
-            <span className="font-body text-[10px] tracking-[0.25em] uppercase text-white/70">Bogèst</span>
-          </div>
-          <Link to="/reserve" className="group inline-flex items-center gap-3">
-            <span className="font-body text-xs tracking-[0.3em] uppercase text-white group-hover:text-primary transition-colors duration-300">{t('btn_reserve')}</span>
-            <span className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-white/40 text-white group-hover:border-primary group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
-              <ArrowRight className="w-4 h-4" />
-            </span>
-          </Link>
-        </div>
-      </div>
-    </section>
+    <OrderCtaSection
+      positionKey={positionKey}
+      eyebrow={t('btn_reserve')}
+      title={t('res_title')}
+      desc={t('res_subtitle')}
+      cardTitle={card.title}
+      cardSubtitle={card.subtitle}
+      buttonLabel={t('btn_reserve')}
+      to="/reserveren"
+      icon={CalendarDays}
+    />
   );
 }

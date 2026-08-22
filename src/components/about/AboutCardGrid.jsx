@@ -55,7 +55,7 @@ export default function AboutCardGrid() {
           to={c.to}
           className={`group relative block w-full max-w-sm md:w-[36%] ${LAYER[i]} ${MOBILE[i]}`}
         >
-          <div className="relative overflow-hidden rounded-2xl border border-border/50 aspect-[3/4] shadow-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:z-40">
+          <div className="relative overflow-hidden rounded-2xl border border-white/10 aspect-[3/4] shadow-2xl transition-all duration-500 group-hover:-translate-y-2 group-hover:z-40">
             <img
               src={siteImg(c.img)}
               data-bb-key={c.img}
