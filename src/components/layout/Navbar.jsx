@@ -69,7 +69,6 @@ export default function Navbar() {
     { label: t('nav_menu'), path: '/menu' },
     { label: t('nav_locations'), path: '/locations' },
     { label: t('nav_about'), path: '/about' },
-    { label: t('nav_takeaway'), path: '/takeaway' },
     { label: t('nav_giftcards'), path: '/gift-cards' },
     { label: t('nav_jobs'), path: '/jobs' },
     { label: t('nav_groups'), path: '/groups' },
@@ -84,12 +83,12 @@ export default function Navbar() {
        initial={{ y: 0 }}
        animate={{ y: 0 }}
        transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-       className={`fixed top-0 left-0 right-0 z-[70] transition-all duration-500 rounded-b-2xl ${
+       className={`fixed left-0 right-0 z-[70] transition-all duration-500 rounded-b-2xl ${
          isTransparent
            ? 'bg-transparent'
            : 'bg-background/30 backdrop-blur-2xl border-b border-white/10 shadow-sm'
        }`}
-       style={!isTransparent ? { boxShadow: '0 1px 0 rgba(255,255,255,0.08)' } : {}}
+       style={{ top: 'var(--bogest-banner-h, 0px)', ...(!isTransparent ? { boxShadow: '0 1px 0 rgba(255,255,255,0.08)' } : {}) }}
       >
         <nav className="w-full px-6 md:px-10 lg:px-16 h-16 md:h-20 flex items-center justify-between gap-6">
           {/* Logo — wordmark only, hide when mobile menu is open to avoid overlap */}
@@ -174,7 +173,7 @@ export default function Navbar() {
             {/* Reserve CTA */}
             <Link
               to="/reserve"
-              className={`hidden md:inline-flex px-5 py-2 rounded-full font-body text-xs tracking-widest uppercase transition-all duration-500 ${
+              className={`inline-flex px-4 py-2 rounded-full font-body text-xs tracking-widest uppercase transition-all duration-500 ${
                 isTransparent
                   ? 'border border-white/30 text-white hover:bg-white/10'
                   : 'bg-primary text-primary-foreground hover:bg-primary/90'

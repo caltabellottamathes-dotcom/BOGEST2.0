@@ -11,6 +11,28 @@ import { SuggestionCard, SUGGESTIONS, MONTH_NAMES, SECTION_LABELS } from '@/comp
 import ReserveCtaSection from '@/components/ReserveCtaSection';
 import KidsMenu from '@/components/menu/KidsMenu';
 import { dispatchUIAction } from '@/lib/uiActionDispatcher';
+import { base44 } from '@/api/base44Client';
+
+// Live prijzen uit MenuKnowledge (MenuBeheer) — valt terug op statische data.js
+// zolang de entiteit leeg is, zodat prijswijzigingen direct publiceren (C2).
+function useMenuPriceMap() {
+  const [map, setMap] = useState(() => new Map());
+  useEffect(() => {
+    let active = true;
+    base44.entities.MenuKnowledge.list('sort_order', 200)
+      .then((items) => {
+        if (!active || !items) return;
+        const m = new Map();
+        for (const it of items) {
+          if (it.item_name && it.price != null) m.set(it.item_name.trim().toLowerCase(), it.price);
+        }
+        if (active) setMap(m);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
+  return map;
+}
 
 function PageHero() {
   const { t } = useLang();
@@ -41,6 +63,7 @@ function CategoryRow({ cat, idx }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
   const { t, lang } = useLang();
+  const priceMap = useMenuPriceMap();
   return (
     <motion.div
       ref={ref}
@@ -59,17 +82,20 @@ function CategoryRow({ cat, idx }) {
         </div>
         <div className="lg:col-span-8">
           {cat.items.map(item => {
-            const priceStr = formatPrice(item.price, lang);
+            const livePrice = priceMap.get(loc(item.name, 'nl').trim().toLowerCase());
+            const effPrice = livePrice != null ? livePrice : item.price;
+            const priceStr = formatPrice(effPrice, lang);
             return (
               <div key={item.id} id={`gerecht-${slugify(loc(item.name, 'nl'))}`} data-highlight={slugify(loc(item.name, 'nl'))} className="group relative py-3.5 border-b border-border/40 last:border-0">
                 <div className="flex items-baseline gap-3">
-                  <span
+                  <button
+                    type="button"
                     onClick={() => dispatchUIAction({ type: 'showDishPhoto', args: [loc(item.name, 'nl'), 'gastronomy', 'all'] })}
                     title="Bekijk foto"
-                    className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300 cursor-pointer"
+                    className="font-heading text-base font-medium text-foreground group-hover:text-primary transition-colors duration-300 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 rounded"
                   >
                     {loc(item.name, lang)}
-                  </span>
+                  </button>
                   <span className="flex-1 border-b border-dotted border-border/50" />
                   {priceStr ? (
                     <span className="font-body text-sm font-medium text-primary whitespace-nowrap">{priceStr}</span>

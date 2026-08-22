@@ -9,6 +9,7 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import { getLocations } from '@/lib/data';
 import SubPageNav from '@/components/SubPageNav';
 import { askHost, spaceQuestion, hostHintLabel } from '@/lib/hostHint';
+import { trackPhone, trackRoute, trackReserveStart } from '@/lib/analytics';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -361,7 +362,7 @@ export default function LocationDetail() {
 
           {loc.zenchefId && (
             <div className="mt-10 flex flex-wrap gap-3 relative z-10">
-              <Link to={`/reserve?loc=${loc.slug}`}
+              <Link to={`/reserve?loc=${loc.slug}`} onClick={() => trackReserveStart(loc.slug)}
                 className="inline-flex items-center px-7 py-3 bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full transition-all duration-500">
                 {L.reserveCta}
               </Link>
@@ -425,7 +426,7 @@ export default function LocationDetail() {
                   <span className="font-body text-sm text-muted-foreground">{loc.address}</span>
                 </div>
                 {loc.phone && (
-                  <a href={`tel:${loc.phone.replace(/\s/g, '')}`} className="flex items-center gap-3 group">
+                  <a href={`tel:${loc.phone.replace(/\s/g, '')}`} onClick={() => trackPhone(loc.slug)} className="flex items-center gap-3 group">
                     <Phone className="w-4 h-4 text-primary flex-shrink-0" />
                     <span className="font-body text-sm text-muted-foreground group-hover:text-primary transition-colors">{loc.phone}</span>
                   </a>
@@ -439,13 +440,13 @@ export default function LocationDetail() {
               </div>
               <div className="pt-4 border-t border-border flex flex-col gap-2.5">
                 {loc.zenchefId && (
-                  <Link to={`/reserve?loc=${loc.slug}`}
+                  <Link to={`/reserve?loc=${loc.slug}`} onClick={() => trackReserveStart(loc.slug)}
                     className="inline-flex items-center justify-center px-5 py-3 bg-primary/15 text-primary border border-primary/40 backdrop-blur-md hover:bg-primary/25 hover:border-primary/60 font-body text-xs tracking-widest uppercase rounded-full transition-all duration-300">
                     {t('btn_reserve')}
                   </Link>
                 )}
                 <button type="button"
-                  onClick={() => window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug: loc.slug } }))}
+                  onClick={() => { trackRoute(loc.slug); window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug: loc.slug } })); }}
                   className="inline-flex items-center justify-center gap-2 px-5 py-3 border border-border text-foreground font-body text-xs tracking-widest uppercase rounded-full hover:border-primary hover:text-primary transition-all duration-300">
                   {L.routeCta} <ArrowUpRight className="w-3 h-3" />
                 </button>

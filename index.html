@@ -151,6 +151,23 @@
       }
     }
     </script>
+
+    <!-- Google Analytics 4 — vervang G-XXXXXXXXXX door de Bogèst GA4 property-ID
+         en verwijder de return om te activeren (zie overdracht-checklist). -->
+    <script>
+      (function () {
+        var BOGEST_GA_ID = 'G-XXXXXXXXXX';
+        if (!BOGEST_GA_ID || BOGEST_GA_ID === 'G-XXXXXXXXXX') return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + BOGEST_GA_ID;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', BOGEST_GA_ID, { anonymize_ip: true });
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

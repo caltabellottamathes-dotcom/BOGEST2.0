@@ -40,6 +40,8 @@ import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import Assets from '@/pages/Assets';
+import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
+import SeoHead from '@/components/SeoHead';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -107,6 +109,7 @@ const AuthenticatedApp = () => {
         <Route element={<AdminGate />}>
           <Route path="/assets" element={<Assets />} />
           <Route path="/menu-beheer" element={<MenuBeheer />} />
+          <Route path="/meldingen-beheer" element={<AnnouncementBeheer />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />
@@ -123,6 +126,7 @@ function App() {
             <QueryClientProvider client={queryClientInstance}>
               <Router>
                 <AuthenticatedApp />
+                <SeoHead />
               </Router>
               <Toaster />
             </QueryClientProvider>

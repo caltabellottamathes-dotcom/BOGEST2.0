@@ -1,6 +1,10 @@
 User-agent: *
 Allow: /
+
+# Interne beheer-tools niet indexeren
+Disallow: /assets
+Disallow: /menu-beheer
+Disallow: /meldingen-beheer
 Disallow: /admin
-Disallow: /checkout
 
 Sitemap: https://www.bogest.be/sitemap.xml

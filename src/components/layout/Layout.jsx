@@ -13,6 +13,8 @@ import DishPhotoPanel from '@/components/DishPhotoPanel';
 import WebsiteDispatcherBridge from '@/components/WebsiteDispatcherBridge';
 import BeeldbankEditor from '@/components/BeeldbankEditor';
 import CookieBanner from '@/components/CookieBanner';
+import MobileActionBar from '@/components/MobileActionBar';
+import AnnouncementBar from '@/components/AnnouncementBar';
 import CustomCursor from '@/components/CustomCursor';
 import { SiteImagesProvider } from '@/lib/SiteImageContext';
 import { observeAndMakeDraggable } from '@/lib/makeDraggable';
@@ -75,6 +77,7 @@ export default function Layout() {
   return (
     <SiteImagesProvider>
     <div className="min-h-screen flex flex-col bg-background" style={{ overflow: 'visible' }}>
+      <AnnouncementBar />
       <Navbar />
 
       {/* The homepage stays mounted across home↔panel transitions so the hero
@@ -124,6 +127,9 @@ export default function Layout() {
 
       {/* Beeldbank in-place editor — only renders when logged in as Beeldbank admin */}
       {!isAssets && <BeeldbankEditor />}
+
+      {/* Vaste mobiele actiebalk (Reserveren + Bellen) */}
+      <MobileActionBar />
 
       {/* Cookie / consent banner + preferences (AVG/ePrivacy) */}
       <CookieBanner />
