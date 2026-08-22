@@ -150,40 +150,6 @@ const PAGES = {
   },
 };
 
-const SCHEMA_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-const CLOSED_WORDS = new Set(['gesloten', 'fermé', 'closed', 'binnenkort beschikbaar', 'bientôt disponible', 'coming soon']);
-
-function hoursToSpec(hours) {
-  if (!hours || !hours.length) return [];
-  const byDay = {};
-  hours.forEach((h, i) => {
-    const t = (h.time || '').toLowerCase();
-    if (CLOSED_WORDS.has(t)) return;
-    // split on '/' for split shifts, each "17:00 – 22:00"
-    (h.time || '').split('/').forEach((range) => {
-      const parts = range.trim().split(/[–—-]/).map((s) => s.trim());
-      if (parts.length === 2 && /^\d{1,2}:\d{2}$/.test(parts[0]) && /^\d{1,2}:\d{2}$/.test(parts[1])) {
-        const day = SCHEMA_DAYS[i];
-        (byDay[day] = byDay[day] || []).push({ opens: parts[0], closes: parts[1] });
-      }
-    });
-  });
-  return Object.entries(byDay).map(([day, ranges]) => ({
-    '@type': 'OpeningHoursSpecification',
-    dayOfWeek: [day],
-    opens: ranges[0].opens,
-    closes: ranges[ranges.length - 1].closes,
-  }));
-}
-
-function phoneToIntl(phone) {
-  if (!phone) return undefined;
-  const digits = phone.replace(/\s/g, '');
-  if (digits.startsWith('+')) return digits;
-  if (digits.startsWith('0')) return '+32' + digits.slice(1);
-  return digits;
-}
-
 function locationSeo(loc, lang) {
   const city = loc.city || '';
   const region = loc.region || 'Limburg';
@@ -198,30 +164,6 @@ function locationSeo(loc, lang) {
     description: desc,
     image: loc.image || DEFAULT_IMG,
     canonicalPath: `/locations/${loc.slug}`,
-    schema: {
-      '@context': 'https://schema.org',
-      '@type': 'Restaurant',
-      name: loc.name,
-      description: desc,
-      image: loc.image ? [loc.image] : undefined,
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: loc.address.split(',')[0],
-        addressLocality: city,
-        addressRegion: region,
-        addressCountry: 'BE',
-      },
-      telephone: phoneToIntl(loc.phone),
-      email: loc.email || undefined,
-      url: `https://www.bogest.be/locations/${loc.slug}`,
-      servesCuisine: ['Steakhouse', 'Grill', 'Belgian'],
-      priceRange: '€€',
-      hasMenu: 'https://www.bogest.be/menu',
-      acceptsReservations: true,
-      geo: loc.lat && loc.lng ? { '@type': 'GeoCoordinates', latitude: loc.lat, longitude: loc.lng } : undefined,
-      hasMap: loc.mapsUrl,
-      openingHoursSpecification: hoursToSpec(loc.hours),
-    },
   };
 }
 

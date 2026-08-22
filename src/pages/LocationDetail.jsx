@@ -10,6 +10,7 @@ import { getLocations } from '@/lib/data';
 import SubPageNav from '@/components/SubPageNav';
 import { askHost, spaceQuestion, hostHintLabel } from '@/lib/hostHint';
 import { trackPhone, trackRoute, trackReserveStart } from '@/lib/analytics';
+import { useOpeningHours, hoursToSpec } from '@/lib/openingHours';
 
 const BULL_MARK = 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png';
 
@@ -197,6 +198,7 @@ export default function LocationDetail() {
   const locations = getLocations(lang);
   const loc = locations.find(l => l.slug === slug);
   const [showRestaurantPanel, setShowRestaurantPanel] = useState(false);
+  const hours = useOpeningHours(slug, lang);
 
   useEffect(() => {
     const openSpaces = () => setShowRestaurantPanel(true);
@@ -208,6 +210,45 @@ export default function LocationDetail() {
       window.removeEventListener('bogest:close-panel', closePanel);
     };
   }, []);
+
+  // Per-vestiging JSON-LD Restaurant-schema, dynamisch uit dezelfde uren-bron
+  // als de pagina (OpeningHours-entiteit → fallback data.js). Eén bron, één waarheid.
+  useEffect(() => {
+    if (!loc) return;
+    const phoneIntl = loc.phone ? (loc.phone.startsWith('+') ? loc.phone : '+32' + loc.phone.replace(/\s/g, '').slice(1)) : undefined;
+    const spec = {
+      '@context': 'https://schema.org',
+      '@type': 'Restaurant',
+      name: loc.name,
+      image: loc.image ? [loc.image] : undefined,
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: loc.address.split(',')[0],
+        addressLocality: loc.city,
+        addressRegion: loc.region || 'Limburg',
+        addressCountry: 'BE',
+      },
+      telephone: phoneIntl,
+      email: loc.email || undefined,
+      url: `https://www.bogest.be/locations/${loc.slug}`,
+      servesCuisine: ['Steakhouse', 'Grill', 'Belgian'],
+      priceRange: '€€',
+      hasMenu: 'https://www.bogest.be/menu',
+      acceptsReservations: true,
+      geo: loc.lat && loc.lng ? { '@type': 'GeoCoordinates', latitude: loc.lat, longitude: loc.lng } : undefined,
+      hasMap: loc.mapsUrl,
+      openingHoursSpecification: hoursToSpec(hours),
+    };
+    let el = document.getElementById('bogest-location-ld');
+    if (!el) {
+      el = document.createElement('script');
+      el.type = 'application/ld+json';
+      el.id = 'bogest-location-ld';
+      document.head.appendChild(el);
+    }
+    el.textContent = JSON.stringify(spec);
+    return () => { const e = document.getElementById('bogest-location-ld'); if (e) e.remove(); };
+  }, [loc, hours]);
 
   if (!loc) {
     return (
@@ -298,7 +339,7 @@ export default function LocationDetail() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-6 md:gap-0 md:divide-x md:divide-white/10">
           <StatCard icon={Users} label={L.totalCap} value={`${totalCapacity}p`} />
           <StatCard icon={Sparkles} label={L.spacesLabel} value={spaces.length} />
-          <LiveOpenCard hours={loc.hours} lang={lang} L={L} />
+          <LiveOpenCard hours={hours} lang={lang} L={L} />
           <StatCard icon={Car} label={L.parkingLabel} value={loc.parking ? (lang === 'fr' ? 'Oui' : lang === 'en' ? 'Yes' : 'Ja') : '—'} />
         </div>
       </section>
@@ -393,7 +434,7 @@ export default function LocationDetail() {
                   <Clock className="w-4 h-4 text-primary" /> {t('loc_hours')}
                 </h3>
                 <div className="space-y-0 rounded-xl border border-border overflow-hidden bg-card/40">
-                  {loc.hours.map((h, i) => (
+                  {hours.map((h, i) => (
                     <div key={h.day} className={`flex justify-between font-body text-sm px-4 py-2.5 ${i % 2 === 0 ? 'bg-card/30' : ''} border-b border-border/40 last:border-0`}>
                       <span className="text-foreground">{h.day}</span>
                       <span className={h.time === 'Gesloten' || h.time === 'Fermé' || h.time === 'Closed' || h.time.includes('beschikbaar') ? 'text-muted-foreground' : 'text-primary font-medium'}>

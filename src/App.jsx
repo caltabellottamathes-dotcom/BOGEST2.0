@@ -41,6 +41,7 @@ import ResetPassword from '@/pages/ResetPassword';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import Assets from '@/pages/Assets';
 import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
+import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
 import SeoHead from '@/components/SeoHead';
 
 const AuthenticatedApp = () => {
@@ -110,6 +111,7 @@ const AuthenticatedApp = () => {
           <Route path="/assets" element={<Assets />} />
           <Route path="/menu-beheer" element={<MenuBeheer />} />
           <Route path="/meldingen-beheer" element={<AnnouncementBeheer />} />
+          <Route path="/uren-beheer" element={<OpeningHoursBeheer />} />
         </Route>
       </Route>
       <Route path="*" element={<PageNotFound />} />

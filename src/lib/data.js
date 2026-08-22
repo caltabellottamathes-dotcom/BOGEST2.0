@@ -1,6 +1,6 @@
 // Bogèst — Real business data
 
-const HOURS = {
+export const HOURS = {
   hasselt: {
     nl: [
       { day: 'Maandag', time: 'Gesloten' },
