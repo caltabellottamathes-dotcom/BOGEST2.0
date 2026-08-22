@@ -108,7 +108,7 @@ export default function Contact() {
                 const selected = form.location === loc.slug;
                 return (
                   <button key={loc.slug} type="button" onClick={() => set('location', loc.slug)}
-                    className={`group relative w-full text-left rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}
+                    className={`group relative w-full text-left rounded-xl overflow-hidden border transition-all duration-300 hover:-translate-y-0.5 ${selected ? 'border-primary ring-1 ring-primary/30' : 'border-white/10 hover:border-primary/40'}`}
                     style={{ background: 'rgba(255,255,255,0.03)' }}>
                     <div className="flex">
                       {/* Image strip */}

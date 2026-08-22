@@ -392,7 +392,7 @@ function JobCard({ job, onSelect, isSelected, lang, num }) {
   const ui = UI[lang] || UI.nl;
 
   return (
-    <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-white/[0.04] backdrop-blur-md hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-border hover:border-primary/40'}`}>
+    <div className={`group relative rounded-2xl border transition-all duration-300 overflow-hidden bg-white/[0.04] backdrop-blur-md hover:-translate-y-0.5 hover:shadow-xl ${isSelected ? 'border-primary ring-1 ring-primary/30' : 'border-white/10 hover:border-primary/40'}`}>
       <span className="absolute right-4 top-3 font-heading font-bold text-primary/10 group-hover:text-primary/20 text-5xl leading-none select-none pointer-events-none transition-colors duration-300">{num}</span>
       <button onClick={() => setExpanded(e => !e)} className="w-full text-left p-5 relative">
         <div className="flex items-start justify-between gap-3">
