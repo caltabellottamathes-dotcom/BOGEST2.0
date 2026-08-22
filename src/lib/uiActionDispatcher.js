@@ -57,19 +57,19 @@ export async function dispatchUIAction({ type, args = [] }) {
 
     // The digital host only navigates — never opens a panel/pop-up.
     case 'openReservation':
-      return websiteAction({ action: 'navigate', target: '/reserve' });
+      return websiteAction({ action: 'navigate', target: '/reserveren' });
 
     case 'openContact':
       return websiteAction({ action: 'navigate', target: '/contact' });
 
     case 'openGiftCards':
-      return websiteAction({ action: 'navigate', target: '/gift-cards' });
+      return websiteAction({ action: 'navigate', target: '/cadeaubonnen' });
 
     case 'openGallery':
     case 'displaySocialPosts':
     case 'displayImages':
     case 'displayCarousel':
-      return websiteAction({ action: 'navigate', target: a[0] || '/instagram' });
+      return websiteAction({ action: 'navigate', target: a[0] || '/over-ons/instagram' });
 
     case 'displayReviews':
       return websiteAction({ action: 'navigate', target: a[0] || '/' });
@@ -80,7 +80,7 @@ export async function dispatchUIAction({ type, args = [] }) {
         window.dispatchEvent(new CustomEvent('bogest:open-map', { detail: { slug } }));
         return { success: true, via: 'map-panel' };
       }
-      return websiteAction({ action: 'navigate', target: '/locations' });
+      return websiteAction({ action: 'navigate', target: '/locaties' });
     }
 
     // Explicit pop-up actions are intentionally no-ops — the host navigates only.
