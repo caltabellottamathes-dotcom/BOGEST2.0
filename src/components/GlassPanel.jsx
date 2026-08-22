@@ -28,10 +28,22 @@ function GlassPanelSurface() {
 }
 
 // Pages that open as glass panels (not homepage)
+// Nederlandse routes (primair) + oude Engelse paden (voor backwards-compat / redirects).
 const PANEL_PATHS = [
-'/menu', '/about', '/locations', '/restaurant-spaces', '/reserve', '/takeaway',
-'/gift-cards', '/checkout', '/contact', '/groups', '/jobs',
-'/privacy', '/terms', '/cookies', '/ai-disclaimer', '/admin', '/gift-package'];
+  '/menukaart', '/menu',
+  '/over-ons', '/about',
+  '/locaties', '/locations',
+  '/restaurantruimtes', '/restaurant-spaces',
+  '/reserveren', '/reserve',
+  '/traiteur', '/takeaway',
+  '/cadeaubonnen', '/gift-cards',
+  '/checkout', '/contact',
+  '/groepen', '/groups',
+  '/vacatures', '/jobs',
+  '/privacy', '/voorwaarden', '/terms',
+  '/cookies', '/ai-disclaimer',
+  '/vraag-het-aan-bogest',
+  '/admin', '/gift-package'];
 
 
 export function isPanelPath(pathname) {
