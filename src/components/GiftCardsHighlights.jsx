@@ -5,7 +5,7 @@ import { useSiteImages } from '@/lib/SiteImageContext';
 import PanelSwitcher from '@/components/PanelSwitcher';
 
 const IMG_DEFAULTS = {
-  stays: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1756906792564-LXWK1DRHFSE5N4CODE8U/cadeaubon.jpeg',
+  stays: 'https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/960a0c303_WhatsAppImage2026-08-22at152324.jpeg',
   paper: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/1b9991fd-fc43-405b-acb6-a86317aaf9f1/5757bb8f-abdc-43e6-9219-e4e103f1a2e0.jpeg',
   locations: 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/b7c2edca-9db5-43c2-b109-4cc33197dfbe/veranda+hasselt.jpeg',
 };
