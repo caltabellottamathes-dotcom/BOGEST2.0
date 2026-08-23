@@ -157,6 +157,7 @@ const AuthenticatedApp = () => {
         <Route path="/specialeopeningsdagen-1" element={<Navigate to="/traiteur" replace />} />
         <Route path="/media" element={<Navigate to="/over-ons" replace />} />
         <Route path="/dentrecote" element={<Navigate to="/" replace />} />
+        <Route path="/bedrijfsfamiliefeestjesborgloon" element={<Navigate to="/groepen" replace />} />
         <Route path="/bedrijfsfamiliefeestjeshasselt" element={<Navigate to="/groepen" replace />} />
         <Route path="/bedrijfsfamiliefeestjeshasselt-1" element={<Navigate to="/groepen" replace />} />
         <Route path="/sfeerfotosborgloon" element={<Navigate to="/locaties/borgloon" replace />} />

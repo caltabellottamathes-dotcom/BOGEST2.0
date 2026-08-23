@@ -35,7 +35,7 @@ export default function StatsSection() {
   ];
 
   return (
-    <section ref={ref} id="stats" className="w-full py-16 md:py-24 border-b border-border relative overflow-hidden">
+    <section ref={ref} id="stats" className="w-full py-12 md:py-24 border-b border-border relative overflow-hidden">
       <div className="w-full px-6 md:px-10 lg:px-16 relative">
 
         {/* ── Mobile: hero stat with ghosted 10 + 3 small hairline stats ── */}

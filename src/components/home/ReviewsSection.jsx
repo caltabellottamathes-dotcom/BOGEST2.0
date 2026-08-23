@@ -135,7 +135,7 @@ export default function ReviewsSection() {
   }, [showAll, pages]);
 
   return (
-    <section id="ervaringen" className="w-full pt-16 md:pt-24 pb-20 relative overflow-hidden">
+    <section id="ervaringen" className="w-full pt-12 md:pt-24 pb-16 md:pb-20 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary/[0.04] via-transparent to-transparent pointer-events-none" />
 
       <div className="w-full px-6 md:px-10 lg:px-16">
@@ -145,7 +145,7 @@ export default function ReviewsSection() {
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.7 }}
-          className="flex flex-col md:flex-row md:items-end md:justify-between mb-12 md:mb-16 gap-6"
+          className="flex flex-col md:flex-row md:items-end md:justify-between mb-8 md:mb-16 gap-6"
         >
           <div>
             <div className="flex items-center gap-3 mb-4">

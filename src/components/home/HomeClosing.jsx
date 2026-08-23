@@ -62,7 +62,7 @@ export default function HomeClosing() {
           <blockquote className="font-heading italic text-primary/45 leading-[1.14] text-2xl sm:text-3xl md:text-4xl lg:text-[3.4rem] max-w-4xl text-center line-clamp-4">
             <span className="text-primary/60">“</span>{review.text}<span className="text-primary/60">”</span>
           </blockquote>
-          <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/40">
+          <p className="font-body text-[10px] tracking-[0.3em] uppercase text-white/55">
             {review.name}{review.location ? ` · ${review.location}` : ''}
           </p>
         </div>
@@ -74,7 +74,7 @@ export default function HomeClosing() {
       </div>
 
       {/* Brand sign-off — a quiet, refined end-of-home wordmark */}
-      <div className="relative z-10 flex flex-col items-center gap-3.5 pt-16 md:pt-20 pb-10 md:pb-14 px-6 text-center">
+      <div className="relative z-10 flex flex-col items-center gap-3.5 pt-12 md:pt-20 pb-8 md:pb-14 px-6 text-center">
         <div className="flex items-center gap-3">
           <span className="h-px w-8 bg-primary/40" />
           <span className="font-body text-[10px] tracking-[0.45em] uppercase text-primary">Bogèst</span>
@@ -85,11 +85,11 @@ export default function HomeClosing() {
           <span>SMAAK<span className="text-primary">.</span></span>
           <span>GEZEL<span className="text-primary">.</span></span>
         </h2>
-        <p className="font-heading italic text-white/45 text-xs md:text-sm tracking-wide">Een Beau Geste — vakmanschap in smaak</p>
+        <p className="font-heading italic text-white/60 text-xs md:text-sm tracking-wide">Een Beau Geste — vakmanschap in smaak</p>
       </div>
 
       {/* Empty space at the end — the footer rises and overlaps the banner + CTA a bit */}
-      <div className="relative z-10" style={{ height: '6rem' }} aria-hidden />
+      <div className="relative z-10" style={{ height: '4rem' }} aria-hidden />
     </section>
   );
 }

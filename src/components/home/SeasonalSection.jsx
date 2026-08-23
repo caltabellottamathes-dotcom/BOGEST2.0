@@ -145,7 +145,7 @@ export default function SeasonalSection() {
   };
 
   return (
-    <section id="suggesties" className="relative w-full py-16 md:py-24 overflow-hidden">
+    <section id="suggesties" className="relative w-full py-12 md:py-24 overflow-hidden">
       {/* Layered warm gradient + ghosted bull — recurring panel motif */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(135deg, rgba(60,55,42,0.12) 0%, transparent 55%)' }} />
       <div className="relative w-full px-6 md:px-10 lg:px-16">

@@ -79,7 +79,7 @@ export default function PhilosophySection() {
   const labels = LABELS[lang] || LABELS.nl;
 
   return (
-    <section id="filosofie" className="relative w-full py-16 md:py-24 overflow-hidden">
+    <section id="filosofie" className="relative w-full py-12 md:py-24 overflow-hidden">
       {/* Subtle warm tonal layer for depth */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: 'linear-gradient(160deg, hsl(var(--primary) / 0.06) 0%, transparent 45%)' }} />
       {/* Large ghosted bull mark — bleeding off the right edge, the recurring site motif */}
@@ -100,7 +100,7 @@ export default function PhilosophySection() {
         </SectionReveal>
 
         {/* Three chapters — hairline-separated editorial columns */}
-        <div className="mt-14 lg:mt-20 grid grid-cols-1 gap-12 lg:gap-0 lg:grid-cols-3 lg:divide-x lg:divide-border/50">
+        <div className="mt-10 lg:mt-20 grid grid-cols-1 gap-10 lg:gap-0 lg:grid-cols-3 lg:divide-x lg:divide-border/50">
           {labels.chapters.map((ch, i) => (
             <SectionReveal
               key={ch.num}
