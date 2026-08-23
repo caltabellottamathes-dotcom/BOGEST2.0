@@ -48,7 +48,9 @@
     <link rel="dns-prefetch" href="https://images.squarespace-cdn.com" />
     <link rel="dns-prefetch" href="https://bookings.zenchef.com" />
 
-    <!-- Structured Data: Restaurant Group with 3 locations -->
+    <!-- Structured Data: Restaurant Group with 3 locations. Openingsuren worden
+         NIET hier gedupliceerd — de per-vestiging pagina's voeden het dynamische
+         Restaurant-schema uit de OpeningHours-entiteit (E3, één bron). -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -81,11 +83,7 @@
             "addressCountry": "BE"
           },
           "geo": { "@type": "GeoCoordinates", "latitude": 50.9150, "longitude": 5.3750 },
-          "hasMap": "https://www.google.be/maps/dir//Luikersteenweg+516,+3501+Wimmertingen",
-          "openingHoursSpecification": [
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Tuesday","Wednesday","Friday","Saturday"], "opens": "17:00", "closes": "22:00" },
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "17:00", "closes": "22:00" }
-          ]
+          "hasMap": "https://www.google.be/maps/dir//Luikersteenweg+516,+3501+Wimmertingen"
         },
         {
           "@type": "Restaurant",
@@ -103,12 +101,7 @@
             "addressCountry": "BE"
           },
           "geo": { "@type": "GeoCoordinates", "latitude": 50.8009, "longitude": 5.3449 },
-          "hasMap": "https://www.google.be/maps/dir//Graethempoort+33,+3840+Borgloon",
-          "openingHoursSpecification": [
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday"], "opens": "17:00", "closes": "22:00" },
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "11:30", "closes": "14:00" },
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "17:00", "closes": "22:00" }
-          ]
+          "hasMap": "https://www.google.be/maps/dir//Graethempoort+33,+3840+Borgloon"
         },
         {
           "@type": "Restaurant",
@@ -126,12 +119,7 @@
             "addressCountry": "BE"
           },
           "geo": { "@type": "GeoCoordinates", "latitude": 51.0331, "longitude": 5.2869 },
-          "hasMap": "https://www.google.be/maps?q=Stationsstraat+67+Heusden-Zolder",
-          "openingHoursSpecification": [
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Wednesday","Thursday","Friday","Saturday"], "opens": "17:00", "closes": "22:00" },
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "11:30", "closes": "14:00" },
-            { "@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday", "opens": "17:00", "closes": "22:00" }
-          ]
+          "hasMap": "https://www.google.be/maps?q=Stationsstraat+67+Heusden-Zolder"
         }
       ]
     }
@@ -152,8 +140,8 @@
     }
     </script>
 
-    <!-- Google Analytics 4 — vervang G-XXXXXXXXXX door de Bogèst GA4 property-ID
-         en verwijder de return om te activeren (zie overdracht-checklist). -->
+    <!-- Google Analytics 4 — vul de echte GA4 property-ID in (G-XXXXXXXXXX) om
+         meting te activeren. Zie public/overdracht.md § Analytics. -->
     <script>
       (function () {
         var BOGEST_GA_ID = 'G-XXXXXXXXXX';
@@ -168,6 +156,7 @@
         gtag('config', BOGEST_GA_ID, { anonymize_ip: true });
       })();
     </script>
+    <noscript><style>*{opacity:1!important;transform:none!important}</style></noscript>
   </head>
   <body>
     <div id="root"></div>

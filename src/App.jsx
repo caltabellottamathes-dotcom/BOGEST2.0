@@ -143,6 +143,30 @@ const AuthenticatedApp = () => {
         <Route path="/jobs" element={<Navigate to="/vacatures" replace />} />
         <Route path="/terms" element={<Navigate to="/voorwaarden" replace />} />
 
+        {/* Oude Squarespace-URL's → nieuwe Nederlandse routes (éénstaps 301-style) */}
+        <Route path="/hasselt/overons" element={<Navigate to="/locaties/hasselt" replace />} />
+        <Route path="/borgloon/overons" element={<Navigate to="/locaties/borgloon" replace />} />
+        <Route path="/zolder" element={<Navigate to="/locaties/heusden-zolder" replace />} />
+        <Route path="/menu-1" element={<Navigate to="/menukaart" replace />} />
+        <Route path="/menu-english" element={<Navigate to="/menukaart" replace />} />
+        <Route path="/menu-french-1" element={<Navigate to="/menukaart" replace />} />
+        <Route path="/joinus" element={<Navigate to="/vacatures" replace />} />
+        <Route path="/cadeaubon" element={<Navigate to="/cadeaubonnen" replace />} />
+        <Route path="/cadeaubonchecker" element={<Navigate to="/cadeaubonnen" replace />} />
+        <Route path="/onze-producten-1" element={<Navigate to="/cadeaubonnen" replace />} />
+        <Route path="/specialeopeningsdagen-1" element={<Navigate to="/traiteur" replace />} />
+        <Route path="/media" element={<Navigate to="/over-ons" replace />} />
+        <Route path="/dentrecote" element={<Navigate to="/" replace />} />
+        <Route path="/bedrijfsfamiliefeestjeshasselt" element={<Navigate to="/groepen" replace />} />
+        <Route path="/bedrijfsfamiliefeestjeshasselt-1" element={<Navigate to="/groepen" replace />} />
+        <Route path="/sfeerfotosborgloon" element={<Navigate to="/locaties/borgloon" replace />} />
+        <Route path="/sfeerbeeldenhasselt" element={<Navigate to="/locaties/hasselt" replace />} />
+        <Route path="/sfeerbeeldenhasselt-1" element={<Navigate to="/locaties/heusden-zolder" replace />} />
+        <Route path="/nieuws" element={<Navigate to="/" replace />} />
+        <Route path="/nieuws/*" element={<Navigate to="/" replace />} />
+        <Route path="/shop" element={<Navigate to="/cadeaubonnen" replace />} />
+        <Route path="/shop/*" element={<Navigate to="/cadeaubonnen" replace />} />
+
         {/* Oude beheer-URL's → geünificeerd admin-dashboard */}
         <Route path="/assets" element={<Navigate to="/admin?section=beelden" replace />} />
         <Route path="/menu-beheer" element={<Navigate to="/admin?section=menu" replace />} />

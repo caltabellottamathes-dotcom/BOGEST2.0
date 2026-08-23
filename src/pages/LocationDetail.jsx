@@ -262,6 +262,8 @@ export default function LocationDetail() {
   }
 
   const L = STR[lang] || STR.nl;
+  const ABOUT_KEYS = { hasselt: 'loc_about_hasselt', borgloon: 'loc_about_borgloon', 'heusden-zolder': 'loc_about_heusden_zolder' };
+  const aboutText = ABOUT_KEYS[slug] ? t(ABOUT_KEYS[slug]) : t('loc_about_desc').replace('{city}', loc.city);
   const data = SPACES[lang]?.[slug] || SPACES.nl[slug];
   const spaces = data?.spaces || [];
   const totalCapacity = spaces.reduce((s, sp) => s + (sp.capacity || 0), 0);
@@ -424,8 +426,7 @@ export default function LocationDetail() {
             <SectionReveal>
               <span className="font-body text-[10px] tracking-[0.35em] uppercase text-primary mb-3 block">{t('loc_about')} {loc.city}</span>
               <h2 className="font-heading text-2xl md:text-4xl font-bold text-foreground mb-5 leading-tight">{loc.name}<span className="text-primary">.</span></h2>
-              <p className="font-body text-base text-muted-foreground leading-relaxed">{t('loc_about_desc').replace('{city}', loc.city)}</p>
-              <p className="font-body text-base text-muted-foreground leading-relaxed mt-4">{L.aboutExtra}</p>
+              <p className="font-body text-base text-muted-foreground leading-relaxed">{aboutText}</p>
             </SectionReveal>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">

@@ -301,9 +301,15 @@ body.bogest-chat-open div[class*="convai"] {
 
 /* Toegankelijkheid — zichtbare toetsenbordfocus (WCAG) */
 :focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; border-radius: 6px; }
-/* Form-invoer (ook de chat-input van de digitale gastheer) heeft een eigen
-   focus-stijl en karet; de gouden contour mag daar niet overheen verschijnen. */
-input:focus-visible, textarea:focus-visible, select:focus-visible { outline: none; }
+/* Form-invoer (ook de chat-input van de digitale gastheer) krijgt een zichtbare
+   gouden focusring, zodat het reserveringsformulier volledig via toetsenbord
+   te bedienen is (WCAG 2.2.1, G3). */
+input:focus-visible, textarea:focus-visible, select:focus-visible { outline: 2px solid hsl(var(--primary)); outline-offset: 2px; }
+
+/* Voorkeur minder beweging — content direct zichtbaar, geen hinderlijke animaties (F5) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}
 
 /* Mobiele actiebalk verbergen wanneer een paneel, chat of toetsenbord open is */
 .bogest-mobile-bar { transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease; }

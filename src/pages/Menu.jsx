@@ -1,5 +1,5 @@
 import React, { useState, useRef, useContext, useEffect } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useReducedMotion } from 'framer-motion';
 import { useLang } from '@/lib/LangContext';
 import { MENU_DATA, loc } from '@/lib/data';
 import { PanelScrollContext } from '@/components/GlassPanel';
@@ -62,14 +62,15 @@ function formatPrice(price, lang) {
 function CategoryRow({ cat, idx }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
+  const reduce = useReducedMotion();
   const { t, lang } = useLang();
   const priceMap = useMenuPriceMap();
   return (
     <motion.div
       ref={ref}
       id={cat.id}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      initial={reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+      animate={reduce ? { opacity: 1, y: 0 } : (inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 })}
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="scroll-mt-32 py-12 border-b border-border last:border-0"
     >

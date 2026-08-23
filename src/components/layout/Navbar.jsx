@@ -116,7 +116,7 @@ export default function Navbar() {
                 to={link.path}
                 className={`font-body text-xs tracking-widest uppercase transition-colors duration-300 hover:text-primary ${
                   isTransparent
-                    ? (location.pathname === link.path ? 'text-white' : 'text-white/60')
+                    ? (location.pathname === link.path ? 'text-white' : 'text-white/80')
                     : (location.pathname === link.path ? 'text-primary' : 'text-foreground/70')
                 }`}
               >
@@ -140,7 +140,7 @@ export default function Navbar() {
               <button
                 onClick={() => setLangOpen(!langOpen)}
                 className={`hidden md:flex items-center gap-1 px-2.5 py-1.5 rounded-md font-body text-xs tracking-widest uppercase transition-colors duration-300 ${
-                  isTransparent ? 'text-white/60 hover:text-white' : 'text-primary/70 hover:text-primary'
+                  isTransparent ? 'text-white/80 hover:text-white' : 'text-primary/70 hover:text-primary'
                 }`}
               >
                 {lang.toUpperCase()}

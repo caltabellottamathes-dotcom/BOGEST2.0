@@ -2,7 +2,8 @@
 // resolveSeo(pathname, lang) geeft { title, description, image, canonicalPath }.
 // Sleutels + canonicals gebruiken de Nederlandse URL's (B3); oude Engelse paden
 // worden in App.jsx doorverwezen naar deze Nederlandse routes.
-import { getLocations } from '@/lib/data';
+import { getLocations, MENU_DATA, loc } from '@/lib/data';
+import { translations } from '@/lib/i18n';
 
 const SITE = 'Bogèst';
 const DEFAULT_IMG = 'https://images.squarespace-cdn.com/content/v1/68b84525485ccc7e15a25577/b7c2edca-9db5-43c2-b109-4cc33197dfbe/veranda+hasselt.jpeg';
@@ -169,6 +170,31 @@ function locationSeo(loc, lang) {
   };
 }
 
+// JSON-LD Menu/MenuItem-schema — opgebouwd uit dezelfde MENU_DATA-bron als de
+// zichtbare kaart (E4). Prijzen als Offer; inbegrepen items zonder prijs.
+function buildMenuSchema(lang) {
+  const L = lang || 'nl';
+  const labels = translations[L] || translations.nl;
+  const sections = MENU_DATA.map((cat) => ({
+    '@type': 'MenuSection',
+    name: labels[cat.key] || cat.id,
+    hasMenuItem: cat.items.map((item) => {
+      const mi = { '@type': 'MenuItem', name: loc(item.name, L) };
+      if (item.price != null) {
+        mi.offers = { '@type': 'Offer', price: item.price.toFixed(2), priceCurrency: 'EUR' };
+      }
+      return mi;
+    }),
+  }));
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Menu',
+    name: L === 'fr' ? 'La carte de Bogèst' : L === 'en' ? 'Bogèst menu' : 'Menukaart van Bogèst',
+    inLanguage: L === 'fr' ? 'fr-BE' : L === 'en' ? 'en' : 'nl-BE',
+    hasMenuSection: sections,
+  };
+}
+
 export function resolveSeo(pathname, lang) {
   // Per-vestiging detail (Nederlandse route /locaties/:slug)
   const locMatch = pathname.match(/^\/locaties\/(.+)$/);
@@ -179,7 +205,9 @@ export function resolveSeo(pathname, lang) {
   const entry = PAGES[pathname];
   if (entry) {
     const t = entry[lang] || entry.nl;
-    return { title: t.title, description: t.description, image: DEFAULT_IMG, canonicalPath: pathname };
+    let schema;
+    if (pathname === '/menukaart') schema = buildMenuSchema(lang);
+    return { title: t.title, description: t.description, image: DEFAULT_IMG, canonicalPath: pathname, schema };
   }
   // Default
   return {
