@@ -9,19 +9,8 @@ import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import Assets from '@/pages/Assets';
 import BogestLogo from '@/components/BogestLogo';
 import AdminUsers from '@/components/admin/AdminUsers';
-import AdminPanelHero from '@/components/admin/AdminPanelHero';
-import { bogestImages } from '@/lib/bogestImages';
+import PanelHero from '@/components/PanelHero';
 import { motion } from 'framer-motion';
-
-// Achtergrondfoto per dashboard-sectie — echte Bogèst-beelden.
-const SECTION_IMAGES = {
-  menu: bogestImages.beef[0],
-  uren: bogestImages.interiors[3],
-  vacatures: bogestImages.interiors[0],
-  meldingen: bogestImages.interiors[1],
-  beelden: bogestImages.interiors[5],
-  gebruikers: bogestImages.interiors[6],
-};
 
 // Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
 // site-Layout). Bevat alleen de zelfbeheerbare inhoud- en mediamodules:
@@ -85,18 +74,29 @@ export default function Admin() {
             boxShadow: '0 0 60px -20px rgba(0,0,0,0.45)',
           }}
         >
-          <AdminPanelHero
-            label={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
-            title={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
-            image={SECTION_IMAGES[section]}
-            action={
-              <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-white/25 bg-black/20 backdrop-blur flex items-center justify-center text-white">
-                <UtensilsCrossed className="w-4 h-4" />
-              </button>
-            }
-          />
+          {/* Vaste header — zelfde PanelHero + vestigingen-foto als op de site */}
+          <div className="shrink-0 relative z-10">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden absolute top-4 left-4 z-30 w-9 h-9 rounded-lg border border-white/25 bg-black/20 backdrop-blur flex items-center justify-center text-white">
+              <UtensilsCrossed className="w-4 h-4" />
+            </button>
+            <PanelHero
+              positionKey="locations.hero"
+              label="Beheer"
+              title={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
+            />
+          </div>
 
-          <main className="flex-1 overflow-y-auto bogest-scroll">{renderContent()}</main>
+          {/* Frosted "skirt" — inhoud scrollt erin, header blijft staan */}
+          <main
+            className="flex-1 overflow-y-auto bogest-scroll relative z-20 -mt-16 md:-mt-20 rounded-t-[2rem] border-t border-white/10"
+            style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px) saturate(140%)', WebkitBackdropFilter: 'blur(12px) saturate(140%)', boxShadow: '0 -24px 50px -14px rgba(0,0,0,0.40)' }}
+          >
+            <div className="px-5 lg:px-8 py-8">{renderContent()}</div>
+            <footer className="flex flex-col items-center gap-3 py-10 px-6 select-none">
+              <span className="h-px w-10 bg-primary/40" />
+              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/70">Bogèst</span>
+            </footer>
+          </main>
         </motion.div>
       </div>
     </div>
