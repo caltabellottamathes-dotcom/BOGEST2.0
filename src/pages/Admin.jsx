@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { LogOut, Clock, Briefcase, Bell, Image as ImageIcon, UtensilsCrossed } from 'lucide-react';
+import { LogOut, Clock, Briefcase, Bell, Image as ImageIcon, UtensilsCrossed, Users } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import MenuBeheer from '@/pages/MenuBeheer';
 import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
@@ -8,6 +8,7 @@ import VacaturesBeheer from '@/pages/VacaturesBeheer';
 import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import Assets from '@/pages/Assets';
 import BogestLogo from '@/components/BogestLogo';
+import AdminUsers from '@/components/admin/AdminUsers';
 
 // Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
 // site-Layout). Bevat alleen de zelfbeheerbare inhoud- en mediamodules:
@@ -18,8 +19,9 @@ const SECTIONS = [
   { key: 'vacatures', label: 'Vacatures', icon: Briefcase, group: 'Inhoud' },
   { key: 'meldingen', label: 'Meldingen', icon: Bell, group: 'Inhoud' },
   { key: 'beelden', label: 'Beeldbank', icon: ImageIcon, group: 'Media' },
+  { key: 'gebruikers', label: 'Gebruikers', icon: Users, group: 'Accounts' },
 ];
-const GROUPS = ['Inhoud', 'Media'];
+const GROUPS = ['Inhoud', 'Media', 'Accounts'];
 
 export default function Admin() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +36,7 @@ export default function Admin() {
     if (section === 'vacatures') return <VacaturesBeheer />;
     if (section === 'meldingen') return <AnnouncementBeheer />;
     if (section === 'beelden') return <Assets />;
+    if (section === 'gebruikers') return <AdminUsers />;
     return <MenuBeheer />;
   };
 
