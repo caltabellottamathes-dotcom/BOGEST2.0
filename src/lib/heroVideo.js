@@ -3,7 +3,7 @@
 // Cached so repeated calls reuse the same in-flight preload.
 
 export const HERO_VIDEO_URL =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/2d4d5be6f_intro_hero.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/3fd4f7097_hero_video_bogest.mp4';
 
 let cached = null;
 
@@ -11,7 +11,7 @@ export function preloadHeroVideo(timeoutMs = 6000) {
   if (cached) return cached;
   cached = new Promise((resolve) => {
     const v = document.createElement('video');
-    v.preload = 'metadata';
+    v.preload = 'auto';
     v.muted = true;
     v.playsInline = true;
     v.src = HERO_VIDEO_URL;
