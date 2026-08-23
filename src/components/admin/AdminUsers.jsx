@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Mail, Shield, User as UserIcon, Loader2, KeyRound } from 'lucide-react';
+import { UserPlus, Mail, Shield, User as UserIcon, Loader2, KeyRound, Pencil, Check } from 'lucide-react';
+import AdminMyAccount from '@/components/admin/AdminMyAccount';
 
 // Gebruikersbeheer — nodig nieuwe admin/user-accounts uit en beheer bestaande.
 // Nieuwe accounts krijgen een uitnodigingsmail met een link om zelf een
@@ -12,6 +13,8 @@ export default function AdminUsers() {
   const [inviteRole, setInviteRole] = useState('admin');
   const [sending, setSending] = useState(false);
   const [feedback, setFeedback] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+  const [nameDraft, setNameDraft] = useState('');
 
   const load = async () => {
     setLoading(true);
@@ -54,6 +57,17 @@ export default function AdminUsers() {
     }
   };
 
+  const saveName = async (user) => {
+    try {
+      await base44.entities.User.update(user.id, { full_name: nameDraft.trim() });
+      setFeedback({ type: 'success', msg: 'Naam opgeslagen' });
+      setEditingId(null);
+      load();
+    } catch (err) {
+      setFeedback({ type: 'error', msg: err.message || 'Naam opslaan mislukt' });
+    }
+  };
+
   const setRole = async (user, role) => {
     try {
       await base44.entities.User.update(user.id, { role });
@@ -66,6 +80,9 @@ export default function AdminUsers() {
 
   return (
     <div className="px-5 lg:px-8 py-8 max-w-4xl mx-auto space-y-8">
+      {/* Eigen wachtwoord */}
+      <AdminMyAccount />
+
       {/* Uitnodigen */}
       <section className="bg-card rounded-2xl border border-border/50 p-6">
         <div className="flex items-center gap-3 mb-1">
@@ -130,8 +147,25 @@ export default function AdminUsers() {
                     : <UserIcon className="w-4 h-4 text-primary" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-body text-sm font-medium text-foreground truncate">{u.full_name || u.email}</p>
-                  <p className="font-body text-xs text-muted-foreground truncate">{u.email}</p>
+                  <p className="font-body text-sm font-medium text-foreground truncate">{u.email}</p>
+                  {editingId === u.id ? (
+                    <div className="flex items-center gap-1 mt-1">
+                      <input
+                        autoFocus
+                        value={nameDraft}
+                        onChange={(e) => setNameDraft(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') saveName(u); if (e.key === 'Escape') setEditingId(null); }}
+                        placeholder="Naam"
+                        className="bogest-input py-1 text-xs h-7 w-36"
+                      />
+                      <button onClick={() => saveName(u)} className="w-6 h-6 rounded flex items-center justify-center text-primary hover:bg-primary/10"><Check className="w-3.5 h-3.5" /></button>
+                    </div>
+                  ) : (
+                    <button onClick={() => { setEditingId(u.id); setNameDraft(u.full_name || ''); }} className="flex items-center gap-1 mt-0.5 group">
+                      <span className="font-body text-xs text-muted-foreground truncate">{u.full_name || '(geen naam)'}</span>
+                      <Pencil className="w-3 h-3 text-muted-foreground/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </button>
+                  )}
                 </div>
                 <select
                   value={u.role || 'user'}
