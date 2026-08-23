@@ -15,7 +15,7 @@ import { useRef, useState, useEffect } from 'react';
  * styled at all times.
  */
 const VIDEO_SRC =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/53f5d005a_Host_Salvo_VideoCard.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/4a6446ce9_VIdeoCardHost.mp4';
 const IDLE_VIDEO_SRC =
   'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/a94c6bef7_Hostinactive_new.mp4';
 

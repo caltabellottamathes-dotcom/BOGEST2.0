@@ -3,7 +3,7 @@
 // Cached so repeated calls reuse the same in-flight preload.
 
 export const HERO_VIDEO_URL =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/3fd4f7097_hero_video_bogest.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/9993f64fa_BogestHero.mp4';
 
 let cached = null;
 
@@ -31,9 +31,9 @@ export function preloadHeroVideo(timeoutMs = 6000) {
 // at app load, so by the time the entry pop-up mounts the video is already
 // cached and plays instantly instead of popping in late.
 export const WELCOME_VIDEO_URL =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/f33cb896e_popuphost.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/cd530b526_PopUpHost.mp4';
 export const MOBILE_WELCOME_VIDEO_URL =
-  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/a0758be5f_popuphost_.mp4';
+  'https://media.base44.com/videos/public/6a62118af65a96c8b1eb8e17/cd530b526_PopUpHost.mp4';
 
 let cachedWelcome = null;
 

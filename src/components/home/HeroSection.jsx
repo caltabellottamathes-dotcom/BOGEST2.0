@@ -25,24 +25,45 @@ export default function HeroSection() {
   }, [pastHero]);
 
   // Pause the hero video while a glass panel is open; resume when it closes.
+  // The hero plays UNMUTED. Browsers block unmuted autoplay without a prior
+  // gesture, so we try sound first; if that's blocked we play muted for motion
+  // and unmute on the visitor's first gesture (same pattern as the entry popup).
   const videoRef = useRef(null);
+  const unmutedSetupRef = useRef(false);
   useEffect(() => {
     const v = videoRef.current;
     if (!v) return;
-    const sync = () => {
-      if (document.body.classList.contains('bogest-panel-open')) {
-        v.pause();
-      } else {
+    const tryPlay = () => {
+      if (document.body.classList.contains('bogest-panel-open')) { v.pause(); return; }
+      v.play().catch(() => {});
+    };
+    if (!unmutedSetupRef.current) {
+      unmutedSetupRef.current = true;
+      v.muted = false;
+      v.play().catch(() => {
+        v.muted = true;
+        v.defaultMuted = true;
         v.play().catch(() => {});
-      }
+        const unmute = () => {
+          try { v.muted = false; v.play().catch(() => {}); } catch {}
+          window.removeEventListener('pointerdown', unmute, true);
+          window.removeEventListener('touchend', unmute, true);
+          window.removeEventListener('click', unmute, true);
+        };
+        window.addEventListener('pointerdown', unmute, { capture: true, passive: true });
+        window.addEventListener('touchend', unmute, { capture: true, passive: true });
+        window.addEventListener('click', unmute, { capture: true, passive: true });
+      });
+    }
+    const sync = () => {
+      if (document.body.classList.contains('bogest-panel-open')) v.pause();
+      else tryPlay();
     };
     sync();
     if (v.readyState >= 2) setVideoReady(true);
-    // Ensure the muted hero video actually starts playing once it has data —
-    // a single sync() on mount can run before the video is ready to play.
     const onReady = () => {
       setVideoReady(true);
-      if (!document.body.classList.contains('bogest-panel-open')) v.play().catch(() => {});
+      if (!document.body.classList.contains('bogest-panel-open')) tryPlay();
     };
     v.addEventListener('loadeddata', onReady);
     v.addEventListener('canplay', onReady);
@@ -62,7 +83,6 @@ export default function HeroSection() {
           className="absolute inset-0 w-full h-full object-cover hero-video"
           src={HERO_VIDEO_URL}
           autoPlay
-          muted
           loop
           playsInline
           preload="auto"
