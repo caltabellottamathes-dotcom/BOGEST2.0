@@ -11,7 +11,7 @@ export function preloadHeroVideo(timeoutMs = 6000) {
   if (cached) return cached;
   cached = new Promise((resolve) => {
     const v = document.createElement('video');
-    v.preload = 'auto';
+    v.preload = 'metadata';
     v.muted = true;
     v.playsInline = true;
     v.src = HERO_VIDEO_URL;
@@ -43,7 +43,7 @@ export function preloadWelcomeVideo(timeoutMs = 6000) {
   const src = isMobile ? MOBILE_WELCOME_VIDEO_URL : WELCOME_VIDEO_URL;
   cachedWelcome = new Promise((resolve) => {
     const v = document.createElement('video');
-    v.preload = 'auto';
+    v.preload = 'metadata';
     v.muted = true;
     v.playsInline = true;
     v.src = src;

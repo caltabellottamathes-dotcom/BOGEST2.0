@@ -36,7 +36,15 @@ export default function HeroSection() {
         v.play().catch(() => {});
       }
     };
-    sync();
+    // Defer the initial video load off the critical render path (F1). The hero
+    // shows a dark backdrop with the logo/headline immediately; the video
+    // fades in once it has loaded during an idle window — never blocking LCP.
+    const startPlay = () => {
+      if (document.body.classList.contains('bogest-panel-open')) return;
+      v.play().catch(() => {});
+    };
+    if (window.requestIdleCallback) window.requestIdleCallback(startPlay, { timeout: 2500 });
+    else setTimeout(startPlay, 1200);
     if (v.readyState >= 2) setVideoReady(true);
     // Ensure the muted hero video actually starts playing once it has data —
     // a single sync() on mount can run before the video is ready to play.
@@ -61,11 +69,10 @@ export default function HeroSection() {
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover hero-video"
           src={HERO_VIDEO_URL}
-          autoPlay
           muted
           loop
           playsInline
-          preload="auto"
+          preload="none"
           onCanPlay={(e) => { if (!document.body.classList.contains('bogest-panel-open')) e.currentTarget.play().catch(() => {}); }}
           style={{ opacity: videoReady ? 1 : 0, transition: 'opacity 0.4s ease' }}
         />
@@ -87,6 +94,8 @@ export default function HeroSection() {
               src="https://media.base44.com/images/public/6a62118af65a96c8b1eb8e17/76a540e68_Bogest_Logo_Goud.png"
               alt="Bogèst"
               draggable={false}
+              loading="eager"
+              fetchPriority="high"
               className="h-28 md:h-40 lg:h-52 w-auto opacity-90 select-none"
               style={{ filter: 'grayscale(1) brightness(2.2)', mixBlendMode: 'screen' }}
             />

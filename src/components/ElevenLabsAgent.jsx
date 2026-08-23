@@ -57,11 +57,22 @@ export default function ElevenLabsAgent() {
       script.setAttribute('data-elevenlabs-loaded', 'true');
       document.body.appendChild(script);
     };
-    if (window.requestIdleCallback) {
-      window.requestIdleCallback(injectScript, { timeout: 1500 });
-    } else {
-      setTimeout(injectScript, 500);
-    }
+    // Defer the widget script off the initial render path (F1 TBT): inject
+    // only after the first user interaction or a short post-load delay, so it
+    // never competes with LCP or main-thread work during initial load.
+    let injected = false;
+    const inject = () => {
+      if (injected) return;
+      injected = true;
+      ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) =>
+        window.removeEventListener(ev, inject, { capture: true })
+      );
+      injectScript();
+    };
+    ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) =>
+      window.addEventListener(ev, inject, { passive: true, capture: true, once: true })
+    );
+    setTimeout(inject, 3500);
 
     const el = widgetRef.current;
     if (!el) return;

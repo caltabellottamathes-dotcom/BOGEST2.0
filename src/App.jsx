@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Toaster } from "@/components/ui/toaster"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClientInstance } from '@/lib/query-client'
@@ -12,7 +12,7 @@ import { CartProvider } from '@/lib/CartContext';
 import Layout from '@/components/layout/Layout';
 import AdminGate from '@/components/AdminGate';
 import BogestLogo from '@/components/BogestLogo';
-import { preloadHeroVideo, preloadWelcomeVideo } from '@/lib/heroVideo';
+import { preloadWelcomeVideo } from '@/lib/heroVideo';
 
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
@@ -58,25 +58,16 @@ function SpacesRedirect() {
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
-  const [heroVideoReady, setHeroVideoReady] = useState(false);
 
-  // Preload the hero video during the loading entrance so the homepage is
-  // fully ready (video playing) the moment it reveals. Always preload in the
-  // background; only block the reveal when the guest actually lands on home.
+  // Warm the digital host's welcome-video metadata in the background so its
+  // entry pop-up is ready when opened. The hero video itself lazy-loads
+  // (poster-first) so the homepage reveals instantly without waiting on a
+  // 30+ MB video download (F1 LCP / F2 page-weight).
   useEffect(() => {
-    preloadHeroVideo().then(() => setHeroVideoReady(true));
-    // Warm the digital host's welcome video in parallel so its entry pop-up
-    // shows the video instantly instead of loading it late.
     preloadWelcomeVideo();
-    const path = window.location.pathname;
-    if (path !== '/' && path !== '') setHeroVideoReady(true);
   }, []);
 
-  // On the homepage, keep the branded loading screen up until the hero video
-  // has preloaded its first frame. The homepage then reveals with the video
-  // already playing — no black flash. Other routes don't wait for it.
-  const onHome = window.location.pathname === '/' || window.location.pathname === '';
-  if (isLoadingPublicSettings || isLoadingAuth || (onHome && !heroVideoReady)) {
+  if (isLoadingPublicSettings || isLoadingAuth) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-5">
