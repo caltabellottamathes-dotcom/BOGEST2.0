@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { UserPlus, Mail, Shield, User as UserIcon, Loader2, Trash2, Check } from 'lucide-react';
+import { UserPlus, Mail, Shield, User as UserIcon, Loader2, KeyRound } from 'lucide-react';
 
 // Gebruikersbeheer — nodig nieuwe admin/user-accounts uit en beheer bestaande.
 // Nieuwe accounts krijgen een uitnodigingsmail met een link om zelf een
@@ -41,6 +41,16 @@ export default function AdminUsers() {
       setFeedback({ type: 'error', msg: err.message || 'Uitnodigen mislukt' });
     } finally {
       setSending(false);
+    }
+  };
+
+  const sendReset = async (email) => {
+    setFeedback(null);
+    try {
+      await base44.auth.resetPasswordRequest(email);
+      setFeedback({ type: 'success', msg: `Reset-link verzonden naar ${email}. Check de mailbox (ook spam).` });
+    } catch (err) {
+      setFeedback({ type: 'error', msg: err.message || 'Reset-link versturen mislukt' });
     }
   };
 
@@ -131,6 +141,13 @@ export default function AdminUsers() {
                   <option value="admin">Admin</option>
                   <option value="user">Gebruiker</option>
                 </select>
+                <button
+                  onClick={() => sendReset(u.email)}
+                  title="Stuur wachtwoord-reset link"
+                  className="w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center text-muted-foreground hover:text-primary hover:border-primary/50 transition-colors shrink-0"
+                >
+                  <KeyRound className="w-4 h-4" />
+                </button>
               </div>
             ))}
           </div>
