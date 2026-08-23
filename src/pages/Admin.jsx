@@ -9,6 +9,7 @@ import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import Assets from '@/pages/Assets';
 import BogestLogo from '@/components/BogestLogo';
 import AdminUsers from '@/components/admin/AdminUsers';
+import { motion } from 'framer-motion';
 
 // Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
 // site-Layout). Bevat alleen de zelfbeheerbare inhoud- en mediamodules:
@@ -41,9 +42,9 @@ export default function Admin() {
   };
 
   return (
-    <div className="w-full min-h-screen bg-background flex">
+    <div className="w-full min-h-screen bg-background flex relative">
       {/* Zijbalk — desktop */}
-      <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-card/30 h-screen sticky top-0">
+      <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-card/30 h-screen sticky top-0 z-20">
         <SidebarContent section={section} setSection={setSection} onLogout={logout} />
       </aside>
 
@@ -57,9 +58,22 @@ export default function Admin() {
         </div>
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col">
-        <header className="sticky top-0 z-30 bg-background/80 backdrop-blur border-b border-border/50 px-5 lg:px-8 py-5 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 min-w-0">
+      {/* Inhoud — glaspaneel dat van rechts naar binnen schuift, zoals op de site */}
+      <div className="flex-1 min-w-0 flex p-0 lg:p-6 overflow-hidden">
+        <motion.div
+          key={section}
+          initial={{ x: '100%' }}
+          animate={{ x: 0 }}
+          transition={{ type: 'tween', ease: [0.22, 1, 0.36, 1], duration: 0.5 }}
+          className="flex-1 min-w-0 flex flex-col overflow-hidden border border-border/40 lg:rounded-l-3xl"
+          style={{
+            background: 'rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(22px) saturate(140%)',
+            WebkitBackdropFilter: 'blur(22px) saturate(140%)',
+            boxShadow: '0 0 60px -20px rgba(0,0,0,0.45)',
+          }}
+        >
+          <header className="sticky top-0 z-30 bg-background/40 backdrop-blur border-b border-border/40 px-5 lg:px-8 py-5 flex items-center gap-3">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center">
               <UtensilsCrossed className="w-4 h-4" />
             </button>
@@ -67,13 +81,10 @@ export default function Admin() {
               <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary block leading-none mb-1">Beheer</span>
               <h1 className="font-heading text-xl md:text-2xl font-bold text-foreground truncate">{SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}</h1>
             </div>
-          </div>
-          <button onClick={logout} className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 text-muted-foreground font-body text-xs tracking-widest uppercase hover:border-destructive hover:text-destructive transition-colors">
-            <LogOut className="w-3 h-3" /> Uitloggen
-          </button>
-        </header>
+          </header>
 
-        <main className="flex-1 overflow-y-auto">{renderContent()}</main>
+          <main className="flex-1 overflow-y-auto bogest-scroll">{renderContent()}</main>
+        </motion.div>
       </div>
     </div>
   );

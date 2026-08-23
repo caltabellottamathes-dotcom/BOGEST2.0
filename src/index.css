@@ -338,22 +338,27 @@ select option:focus {
   color: hsl(var(--primary));
 }
 
-/* Beheer-formulieren — eenvoudige, gelezen velden passend bij het huisstijlpalet */
-.bogest-input {
-  width: 100%;
-  background: rgba(0,0,0,0.04);
-  border: 1px solid hsl(var(--border));
-  border-radius: 0.5rem;
-  padding: 0.55rem 0.75rem;
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  color: hsl(var(--foreground));
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-.bogest-input:focus {
-  border-color: hsl(var(--primary) / 0.7);
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 0.18);
+/* Beheer-formulieren — eenvoudige, gelezen velden passend bij het huisstijlpalet.
+   In de components-layer geplaatst zodat Tailwind-utilities (zoals pl-10 bij
+   invoervelden met een icoon) de padding-left correct overschrijven — geen
+   overlap tussen icoon en placeholder. */
+@layer components {
+  .bogest-input {
+    width: 100%;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    padding: 0.55rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .bogest-input:focus {
+    border-color: hsl(var(--primary) / 0.7);
+    box-shadow: 0 0 0 3px hsl(var(--primary) / 0.18);
+  }
 }
 
 /* Mobile homepage — denser, tighter body text for a premium editorial read.
