@@ -6,6 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { LogIn, Mail, Lock, Loader2 } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import GoogleIcon from "@/components/GoogleIcon";
+import { safeReturnTo } from "@/lib/authReturnTo";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -24,6 +26,17 @@ export default function Login() {
     } catch (err) {
       setError(err.message || "Invalid email or password");
     } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogle = async () => {
+    setError("");
+    setLoading(true);
+    try {
+      await base44.auth.loginWithProvider("google", safeReturnTo());
+    } catch (err) {
+      setError(err.message || "Google login failed");
       setLoading(false);
     }
   };
@@ -49,6 +62,23 @@ export default function Login() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
+        <button
+          type="button"
+          onClick={handleGoogle}
+          disabled={loading}
+          className="w-full h-12 flex items-center justify-center gap-3 rounded-lg border border-border bg-background hover:bg-muted/50 transition-colors font-medium text-sm"
+        >
+          <GoogleIcon className="w-5 h-5" />
+          Continue with Google
+        </button>
+        <div className="relative my-2">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase tracking-wider">
+            <span className="bg-card px-2 text-muted-foreground">or</span>
+          </div>
+        </div>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
