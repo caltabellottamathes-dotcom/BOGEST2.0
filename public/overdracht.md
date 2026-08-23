@@ -141,20 +141,31 @@ Zonder deze export is er geen vergelijkingspunt tussen oud en nieuw.
 
 ## 11. Opleveringscontrole (vink af vóór factuur)
 
-- [ ] Reserveerknop zichtbaar zonder scrollen op elke pagina (mobiel + desktop)
-- [ ] Reserveren verloopt op bogest.be (Zenchef ingebed)
-- [ ] Ctrl+F op een gerechtnaam geeft een treffer op de menukaart
-- [ ] JSON-LD Restaurant-schema: nul fouten op de drie vestigingspagina's (Schema.org-validator)
-- [ ] JSON-LD Menu-schema herkend op de menukaart
-- [ ] Alle paginatitels uniek; alle pagina's hebben een meta-description
-- [ ] Oude Squarespace-URL's geven een redirect naar een bestaande pagina (geen 404)
-- [ ] Vier nevendomeinen 301 naar bogest.be op registrar-niveau (bogest-online.be niet)
-- [ ] Delen in WhatsApp toont Bogèst-beeld en Bogèst-tekst
-- [ ] Bogèst wijzigt zelf een prijs, een openingsuur en een melding (gedemonstreerd)
-- [ ] GA4 draait met Bogèst als beheerder; reserve_start, phone_click en route_click registreren per vestiging
-- [ ] Historische cijfers oude site geëxporteerd vóór opzegging Squarespace
-- [ ] Sitemap aangeboden in Search Console en succesvol verwerkt
-- [ ] Squarespace-CDN-foto's vervangen door eigen beeld via de Beeldbank
+Status per 23 augustus 2026. ✅ = gerealiseerd in de website · ⚠️ = deels / afhankelijk van actie buiten de app · ❌ = nog te doen door Bogèst.
+
+- ✅ Reserveerknop zichtbaar zonder scrollen op elke pagina (mobiel + desktop)
+- ✅ Reserveren verloopt op bogest.be (Zenchef ingebed)
+- ✅ Ctrl+F op een gerechtnaam geeft een treffer op de menukaart (kaart als tekst)
+- ✅ JSON-LD Restaurant-schema: dynamisch per vestiging uit de uren-entiteit (valideer met Schema.org-validator bij oplevering)
+- ✅ JSON-LD Menu/MenuItem-schema herkend op de menukaart (toegevoegd)
+- ✅ Alle paginatitels uniek; alle pagina's hebben een meta-description
+- ✅ Oude Squarespace-URL's (34 uit de briefing) geven een redirect naar een bestaande pagina — geen 404 (toegevoegd in de router)
+- ❌ Vier nevendomeinen 301 naar bogest.be op registrar-niveau — **actie Bogèst** (DNS/registrar, niet in de app); `bogest-online.be` laten zoals het is
+- ⚠️ Delen in WhatsApp toont Bogèst-beeld en Bogèst-tekst — OG-tags per pagina correct; standaard-OG-afbeelding staat nog op Squarespace-CDN tot vervanging via Beeldbank
+- ✅ Bogèst wijzigt zelf een prijs, een openingsuur en een melding (via `/admin`, direct live)
+- ❌ GA4 draait met Bogèst als beheerder — blok staat klaar; **actie Bogèst**: property-ID invullen in `index.html` (`G-XXXXXXXXXX`)
+- ❌ Historische cijfers oude site geëxporteerd vóór opzegging Squarespace — **actie Bogèst**
+- ❌ Sitemap aangeboden in Search Console en succesvol verwerkt — **actie Bogèst** (robots.txt en sitemap.xml staan klaar)
+- ❌ Squarespace-CDN-foto's vervangen door eigen beeld via de Beeldbank — **actie Bogèst** (verdwijnen bij opzegging Squarespace)
+
+### Wat is nog nodig van Bogèst
+
+1. **Nevendomeinen** op registrar-niveau 301 naar `bogest.be` (3 domeinen; `bogest-online.be` niet).
+2. **GA4 property-ID** aanmaken op eigen Google-account en invullen in `index.html`.
+3. **Sitemap aanbieden** in Google Search Console (op eigen account).
+4. **Historische cijfers** oude Squarespace-site exporteren vóór opzegging.
+5. **Eigen foto's** uploaden via de Beeldbank om de Squarespace-CDN-afbeeldingen te vervangen.
+6. **NAP-controleren**: adres/telefoon/uren op de site gelijktrekken met het Google Bedrijfsprofiel per vestiging.
 
 ---
 
