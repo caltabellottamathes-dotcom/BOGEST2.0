@@ -9,7 +9,19 @@ import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import Assets from '@/pages/Assets';
 import BogestLogo from '@/components/BogestLogo';
 import AdminUsers from '@/components/admin/AdminUsers';
+import AdminPanelHero from '@/components/admin/AdminPanelHero';
+import { bogestImages } from '@/lib/bogestImages';
 import { motion } from 'framer-motion';
+
+// Achtergrondfoto per dashboard-sectie — echte Bogèst-beelden.
+const SECTION_IMAGES = {
+  menu: bogestImages.beef[0],
+  uren: bogestImages.interiors[3],
+  vacatures: bogestImages.interiors[0],
+  meldingen: bogestImages.interiors[1],
+  beelden: bogestImages.interiors[5],
+  gebruikers: bogestImages.interiors[6],
+};
 
 // Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
 // site-Layout). Bevat alleen de zelfbeheerbare inhoud- en mediamodules:
@@ -73,15 +85,16 @@ export default function Admin() {
             boxShadow: '0 0 60px -20px rgba(0,0,0,0.45)',
           }}
         >
-          <header className="sticky top-0 z-30 bg-background/40 backdrop-blur border-b border-border/40 px-5 lg:px-8 py-5 flex items-center gap-3">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-border/50 flex items-center justify-center">
-              <UtensilsCrossed className="w-4 h-4" />
-            </button>
-            <div className="min-w-0">
-              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-primary block leading-none mb-1">Beheer</span>
-              <h1 className="font-heading text-xl md:text-2xl font-bold text-foreground truncate">{SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}</h1>
-            </div>
-          </header>
+          <AdminPanelHero
+            label={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
+            title={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
+            image={SECTION_IMAGES[section]}
+            action={
+              <button onClick={() => setSidebarOpen(true)} className="lg:hidden w-9 h-9 rounded-lg border border-white/25 bg-black/20 backdrop-blur flex items-center justify-center text-white">
+                <UtensilsCrossed className="w-4 h-4" />
+              </button>
+            }
+          />
 
           <main className="flex-1 overflow-y-auto bogest-scroll">{renderContent()}</main>
         </motion.div>
