@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { LogOut, Clock, Briefcase, Bell, Image as ImageIcon, UtensilsCrossed, Users } from 'lucide-react';
+import React from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
+import { LogOut, Clock, Briefcase, Bell, Image as ImageIcon, UtensilsCrossed, Users, Globe } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import MenuBeheer from '@/pages/MenuBeheer';
 import OpeningHoursBeheer from '@/pages/OpeningHoursBeheer';
@@ -9,29 +9,39 @@ import AnnouncementBeheer from '@/pages/AnnouncementBeheer';
 import Assets from '@/pages/Assets';
 import BogestLogo from '@/components/BogestLogo';
 import AdminUsers from '@/components/admin/AdminUsers';
-import PanelHero from '@/components/PanelHero';
-import { motion } from 'framer-motion';
 
-// Het geünificeerde admin-dashboard. Route /admin (AdminGate-gated, buiten de
-// site-Layout). Bevat alleen de zelfbeheerbare inhoud- en mediamodules:
-// menukaart, openingsuren, vacatures, meldingen en de Beeldbank.
+// Geünificeerd admin-dashboard: minimalistisch en rustig — een gewone zijbalk,
+// een gewone pagina, geen glas-effecten of aan-pop animaties (die veroorzaakten
+// de flikkerglitches). Alles werkt: menukaart, openingsuren, vacatures,
+// meldingen, beeldbank en gebruikers.
 const SECTIONS = [
-  { key: 'menu', label: 'Menukaart', icon: UtensilsCrossed, group: 'Inhoud' },
-  { key: 'uren', label: 'Openingsuren', icon: Clock, group: 'Inhoud' },
-  { key: 'vacatures', label: 'Vacatures', icon: Briefcase, group: 'Inhoud' },
-  { key: 'meldingen', label: 'Meldingen', icon: Bell, group: 'Inhoud' },
-  { key: 'beelden', label: 'Beeldbank', icon: ImageIcon, group: 'Media' },
-  { key: 'gebruikers', label: 'Gebruikers', icon: Users, group: 'Accounts' },
+  { key: 'menu', label: 'Menukaart', icon: UtensilsCrossed },
+  { key: 'uren', label: 'Openingsuren', icon: Clock },
+  { key: 'vacatures', label: 'Vacatures', icon: Briefcase },
+  { key: 'meldingen', label: 'Meldingen', icon: Bell },
+  { key: 'beelden', label: 'Beeldbank', icon: ImageIcon },
+  { key: 'gebruikers', label: 'Gebruikers', icon: Users },
 ];
-const GROUPS = ['Inhoud', 'Media', 'Accounts'];
 
 export default function Admin() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const section = searchParams.get('section') || 'menu';
   const setSection = (s) => setSearchParams({ section: s }, { replace: true });
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const logout = () => base44.auth.logout('/');
+
+  // Beeldbank-modus op de live website: zet de admin-vlag zodat de
+  // BeeldbankEditor verschijnt — daar kan de hele site doorklikt worden en
+  // kan elke foto aangeklikt en vervangen worden. "Afsluiten" op de site
+  // zet de modus terug uit.
+  const startBeeldbankMode = () => {
+    try {
+      sessionStorage.setItem('bogest-admin-auth', '1');
+      localStorage.setItem('bogest-admin-auth', '1');
+    } catch {}
+    navigate('/');
+  };
 
   const renderContent = () => {
     if (section === 'uren') return <OpeningHoursBeheer />;
@@ -42,97 +52,87 @@ export default function Admin() {
     return <MenuBeheer />;
   };
 
+  const activeLabel = SECTIONS.find((s) => s.key === section)?.label || 'Dashboard';
+
   return (
-    <div className="w-full min-h-screen bg-background flex relative">
-      {/* Zijbalk — desktop */}
-      <aside className="hidden lg:flex flex-col w-64 shrink-0 border-r border-border/50 bg-card/30 h-screen sticky top-0 z-20">
-        <SidebarContent section={section} setSection={setSection} onLogout={logout} />
+    <div className="min-h-screen bg-background flex">
+      {/* Zijbalk — desktop. Gewone, rustige lijst zonder effecten. */}
+      <aside className="hidden lg:flex flex-col w-60 shrink-0 border-r border-border bg-card/40">
+        <div className="px-5 py-5 border-b border-border">
+          <BogestLogo className="text-xl tracking-wide" />
+          <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mt-1.5">Beheer</p>
+        </div>
+        <nav className="flex-1 px-3 py-4 space-y-1">
+          {SECTIONS.map((s) => {
+            const active = section === s.key;
+            return (
+              <button
+                key={s.key}
+                onClick={() => setSection(s.key)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm transition-colors ${
+                  active ? 'bg-primary/10 text-primary' : 'text-foreground/70 hover:text-foreground hover:bg-muted/60'
+                }`}
+              >
+                <s.icon className="w-4 h-4 shrink-0" />
+                {s.label}
+              </button>
+            );
+          })}
+        </nav>
+        <div className="px-3 py-4 border-t border-border space-y-1">
+          <button onClick={startBeeldbankMode} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-primary hover:bg-primary/10 transition-colors" title="Blader door de website en wissel elke foto">
+            <Globe className="w-4 h-4" /> Beeldbank-modus
+          </button>
+          <button onClick={logout} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg font-body text-sm text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors">
+            <LogOut className="w-4 h-4" /> Uitloggen
+          </button>
+        </div>
       </aside>
 
-      {/* Zijbalk — mobile drawer */}
-      {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-[120]">
-          <div className="absolute inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <aside className="absolute left-0 top-0 bottom-0 w-72 bg-background border-r border-border/50 flex flex-col">
-            <SidebarContent section={section} setSection={(s) => { setSection(s); setSidebarOpen(false); }} onLogout={logout} />
-          </aside>
-        </div>
-      )}
-
-      {/* Inhoud — glaspaneel dat van rechts naar binnen schuift, zoals op de site */}
-      <div className="flex-1 min-w-0 flex p-0 lg:p-6 overflow-hidden">
-        <motion.div
-          key={section}
-          initial={{ x: '100%' }}
-          animate={{ x: 0 }}
-          transition={{ type: 'tween', ease: [0.22, 1, 0.36, 1], duration: 0.5 }}
-          className="flex-1 min-w-0 flex flex-col overflow-hidden border border-border/40 lg:rounded-l-3xl"
-          style={{
-            background: 'rgba(255,255,255,0.06)',
-            backdropFilter: 'blur(22px) saturate(140%)',
-            WebkitBackdropFilter: 'blur(22px) saturate(140%)',
-            boxShadow: '0 0 60px -20px rgba(0,0,0,0.45)',
-          }}
-        >
-          {/* Vaste header — zelfde PanelHero + vestigingen-foto als op de site */}
-          <div className="shrink-0 relative z-10">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden absolute top-4 left-4 z-30 w-9 h-9 rounded-lg border border-white/25 bg-black/20 backdrop-blur flex items-center justify-center text-white">
-              <UtensilsCrossed className="w-4 h-4" />
-            </button>
-            <PanelHero
-              positionKey="locations.hero"
-              label="Beheer"
-              title={SECTIONS.find(s => s.key === section)?.label || 'Dashboard'}
-            />
-          </div>
-
-          {/* Frosted "skirt" — inhoud scrollt erin, header blijft staan */}
-          <main
-            className="flex-1 overflow-y-auto bogest-scroll relative z-20 -mt-16 md:-mt-20 rounded-t-[2rem] border-t border-white/10"
-            style={{ background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(12px) saturate(140%)', WebkitBackdropFilter: 'blur(12px) saturate(140%)', boxShadow: '0 -24px 50px -14px rgba(0,0,0,0.40)' }}
-          >
-            <div className="px-5 lg:px-8 py-8">{renderContent()}</div>
-            <footer className="flex flex-col items-center gap-3 py-10 px-6 select-none">
-              <span className="h-px w-10 bg-primary/40" />
-              <span className="font-body text-[10px] tracking-[0.4em] uppercase text-muted-foreground/70">Bogèst</span>
-            </footer>
-          </main>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-function SidebarContent({ section, setSection, onLogout }) {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="px-5 py-5 border-b border-border/40">
-        <BogestLogo className="text-2xl tracking-wide" />
-        <p className="font-body text-[10px] tracking-[0.3em] uppercase text-primary mt-2">Admin Dashboard</p>
-      </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-5">
-        {GROUPS.map(group => (
-          <div key={group}>
-            <p className="font-body text-[10px] tracking-[0.25em] uppercase text-muted-foreground/70 px-2 mb-2">{group}</p>
-            <div className="space-y-0.5">
-              {SECTIONS.filter(s => s.group === group).map(s => {
-                const active = section === s.key;
-                return (
-                  <button key={s.key} onClick={() => setSection(s.key)}
-                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl font-body text-sm transition-all ${active ? 'bg-primary/15 text-primary border border-primary/30' : 'text-foreground/70 hover:text-foreground hover:bg-muted/50 border border-transparent'}`}>
-                    <s.icon className="w-4 h-4 shrink-0" />
-                    <span className="flex-1 text-left">{s.label}</span>
-                  </button>
-                );
-              })}
+      {/* Inhoud */}
+      <div className="flex-1 min-w-0 flex flex-col">
+        <header className="border-b border-border bg-background px-4 lg:px-8 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <BogestLogo className="lg:hidden text-lg shrink-0" />
+              <h1 className="font-heading text-lg font-bold truncate">{activeLabel}</h1>
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Mobiel: dezelfde acties als in de zijbalk */}
+              <button onClick={startBeeldbankMode} className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary/40 text-primary text-xs hover:bg-primary/10 transition-colors">
+                <Globe className="w-3.5 h-3.5" /> Beeldbank-modus
+              </button>
+              <button onClick={logout} className="lg:hidden inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-muted-foreground text-xs hover:text-destructive transition-colors">
+                <LogOut className="w-3.5 h-3.5" /> Uitloggen
+              </button>
             </div>
           </div>
-        ))}
-      </nav>
-      <div className="px-3 py-4 border-t border-border/40">
-        <button onClick={onLogout} className="w-full flex items-center gap-2 px-3 py-2.5 rounded-xl font-body text-xs tracking-widest uppercase text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors">
-          <LogOut className="w-3.5 h-3.5" /> Uitloggen
-        </button>
+          {/* Secties — op mobiel een simpele chip-rij */}
+          <div className="lg:hidden flex gap-1.5 overflow-x-auto -mx-1 px-1 mt-3 bogest-scroll">
+            {SECTIONS.map((s) => {
+              const active = section === s.key;
+              return (
+                <button
+                  key={s.key}
+                  onClick={() => setSection(s.key)}
+                  className={`whitespace-nowrap px-3 py-1.5 rounded-full font-body text-xs transition-colors ${
+                    active ? 'bg-primary text-primary-foreground' : 'text-muted-foreground border border-border'
+                  }`}
+                >
+                  {s.label}
+                </button>
+              );
+            })}
+          </div>
+        </header>
+
+        <main className="flex-1 px-4 lg:px-8 py-6">
+          {renderContent()}
+        </main>
+
+        <footer className="px-4 lg:px-8 py-4 border-t border-border">
+          <span className="font-body text-[10px] tracking-[0.3em] uppercase text-muted-foreground/50">Bogèst</span>
+        </footer>
       </div>
     </div>
   );

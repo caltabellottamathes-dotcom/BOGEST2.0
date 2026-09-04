@@ -141,7 +141,7 @@ export default function AdminPanel({ onClose, onChanged }) {
   // worden fixed-panelen anders verkeerd gepositioneerd; zo sluit het paneel
   // altijd zuiver over het hele scherm.
   return createPortal(
-    <>
+    <div data-bb-ui>
       <div className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed top-0 left-0 bottom-0 z-[111] w-full max-w-md bg-background border-r border-border overflow-y-auto flex flex-col">
         <div className="sticky top-0 z-10 bg-background/90 backdrop-blur px-5 py-3 border-b border-border flex items-center justify-between">
@@ -357,7 +357,7 @@ export default function AdminPanel({ onClose, onChanged }) {
         </div>
       </div>
       {showWebsite && <WebsiteImagesPanel onClose={() => setShowWebsite(false)} onChanged={onChanged} />}
-    </>,
+    </div>,
     document.body
   );
 }

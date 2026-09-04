@@ -40,6 +40,7 @@ import ForgotPassword from '@/pages/ForgotPassword';
 import ResetPassword from '@/pages/ResetPassword';
 import VraagHetAanBogest from '@/pages/VraagHetAanBogest';
 import SeoHead from '@/components/SeoHead';
+import { SiteImagesProvider } from '@/lib/SiteImageContext';
 
 // Doorverwijzingen van oude Engelse paden → Nederlandse URL's. Behoudt de
 // query-string (zoals ?loc=hasselt) en eventuele route-params.
@@ -94,9 +95,11 @@ const AuthenticatedApp = () => {
       <Route path="/register" element={<Register />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password" element={<ResetPassword />} />
-      {/* Geünificeerd admin-dashboard — buiten de site-chrome, admin-gated */}
+      {/* Geünificeerd admin-dashboard — buiten de site-chrome, admin-gated.
+          SiteImagesProvider eromheen zodat "Vervang op website" vanuit de
+          Beeldbank ook echt opslaat (anders is de context een no-op fallback). */}
       <Route element={<AdminGate />}>
-        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin" element={<SiteImagesProvider><Admin /></SiteImagesProvider>} />
       </Route>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
