@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Plus, Pencil, Trash2, Loader2, Star, Sparkles, ChevronDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { MENU_CATEGORIES, MENU_LOCATIONS } from '@/lib/menuCategories';
@@ -312,7 +313,7 @@ export default function MenuBeheer() {
         />
       )}
 
-      {confirmDel && (
+      {confirmDel && createPortal(
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/55 backdrop-blur-sm" onClick={() => setConfirmDel(null)}>
           <div onClick={(e) => e.stopPropagation()} className="w-full max-w-sm rounded-2xl border border-border bg-background shadow-2xl p-6">
             <h3 className="font-heading text-lg font-bold mb-1">Gerecht verwijderen?</h3>
@@ -322,7 +323,8 @@ export default function MenuBeheer() {
               <button onClick={del} className="px-4 py-2 rounded-lg bg-destructive text-destructive-foreground text-sm hover:opacity-90 transition-opacity">Verwijderen</button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -113,10 +113,10 @@ export default function Assets() {
   const activeLocLabel = LOCATIONS.find((l) => l.key === activeLoc)?.label;
 
   return (
-    <div className="min-h-screen md:pt-16">
+    <div>
       <div className="md:flex">
         {/* Sidebar */}
-        <aside className="md:w-72 md:flex-shrink-0 md:sticky md:top-16 md:h-[calc(100vh-4rem)] md:overflow-y-auto border-b md:border-b-0 md:border-r border-border/70 bg-background/60 backdrop-blur p-5 md:p-6 flex flex-col gap-7 bogest-scroll">
+        <aside className="md:w-72 md:flex-shrink-0 md:sticky md:top-0 md:max-h-[75vh] md:overflow-y-auto md:self-start border-b md:border-b-0 md:border-r border-border/70 bg-background/60 backdrop-blur p-5 md:p-6 flex flex-col gap-7 bogest-scroll">
           <div className="flex items-start justify-between gap-2">
             <div>
               <span className="font-body text-[10px] tracking-[0.3em] uppercase text-primary block mb-1">Bogèst</span>

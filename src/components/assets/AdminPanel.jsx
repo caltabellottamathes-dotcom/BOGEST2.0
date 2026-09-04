@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Loader2, Globe, Layers, Sparkles, Check, AlertCircle, Crosshair, Upload, Images } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import WebsiteImagesPanel from './WebsiteImagesPanel';
@@ -136,7 +137,10 @@ export default function AdminPanel({ onClose, onChanged }) {
     if (e.target) e.target.value = '';
   };
 
-  return (
+  // Portal naar document.body — binnen het admin-paneel (backdrop-filter/transform)
+  // worden fixed-panelen anders verkeerd gepositioneerd; zo sluit het paneel
+  // altijd zuiver over het hele scherm.
+  return createPortal(
     <>
       <div className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed top-0 left-0 bottom-0 z-[111] w-full max-w-md bg-background border-r border-border overflow-y-auto flex flex-col">
@@ -353,6 +357,7 @@ export default function AdminPanel({ onClose, onChanged }) {
         </div>
       </div>
       {showWebsite && <WebsiteImagesPanel onClose={() => setShowWebsite(false)} onChanged={onChanged} />}
-    </>
+    </>,
+    document.body
   );
 }

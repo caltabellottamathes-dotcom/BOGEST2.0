@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Download, Save, Trash2, ExternalLink, Copy, Check, Loader2, Globe, Sparkles } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import ReplaceOnWebsitePanel from '@/components/assets/ReplaceOnWebsitePanel';
@@ -162,7 +163,10 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
       .finally(() => { setDeleting(false); setConfirming(false); });
   };
 
-  return (
+  // Portal naar document.body — binnen het admin-paneel (backdrop-filter/transform)
+  // worden fixed-panelen anders verkeerd gepositioneerd; zo sluit het paneel
+  // altijd zuiver over het hele scherm.
+  return createPortal(
     <>
       <div className="fixed inset-0 z-[110] bg-black/50 backdrop-blur-sm" onClick={onClose} />
       <div className="fixed top-0 right-0 bottom-0 z-[111] w-full max-w-xl bg-background border-l border-border overflow-y-auto flex flex-col">
@@ -360,6 +364,7 @@ export default function AssetDetail({ asset, onClose, onSaved, onDeleted }) {
         </div>
       </div>
       {showReplace && <ReplaceOnWebsitePanel asset={asset} onClose={() => setShowReplace(false)} />}
-    </>
+    </>,
+    document.body
   );
 }

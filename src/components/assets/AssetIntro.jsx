@@ -4,7 +4,7 @@ import { ASSET_VIEWS } from '@/lib/assetViews';
 
 export default function AssetIntro({ onView, onAdmin, count }) {
   return (
-    <div className="min-h-screen pt-28 md:pt-36 pb-24 px-6 md:px-10 lg:px-16 flex items-center">
+    <div className="pt-4 md:pt-8 pb-16 px-6 md:px-10 lg:px-16 flex items-center">
       <div className="max-w-3xl mx-auto w-full">
         <div className="flex items-center gap-2.5 text-primary mb-8">
           <Images className="w-4 h-4" />

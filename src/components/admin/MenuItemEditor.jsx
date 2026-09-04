@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Check } from 'lucide-react';
 import { MENU_CATEGORIES, MENU_LOCATIONS } from '@/lib/menuCategories';
 
@@ -37,7 +38,10 @@ export default function MenuItemEditor({ item, saving, onSave, onCancel, categor
     });
   };
 
-  return (
+  // Portal naar document.body — het admin-paneel gebruikt backdrop-filter/transform
+  // waardoor fixed-vensters anders verkeerd gepositioneerd worden. Zo opent het
+  // venster altijd gecentreerd op de huidige schermpositie.
+  return createPortal(
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/55 backdrop-blur-sm" onClick={onCancel}>
       <div onClick={(e) => e.stopPropagation()} className="w-full max-w-lg max-h-[88vh] overflow-y-auto rounded-2xl border border-border bg-background shadow-2xl bogest-scroll">
         <div className="flex items-center justify-between px-6 py-4 border-b border-border sticky top-0 bg-background/95 backdrop-blur z-10">
@@ -112,6 +116,7 @@ export default function MenuItemEditor({ item, saving, onSave, onCancel, categor
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
